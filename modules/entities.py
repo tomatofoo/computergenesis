@@ -139,6 +139,8 @@ class Entity(object):
         return rect
 
     def update(self: Self, rel_game_speed: Real) -> None:
+        # I'm not sure if there is a reason that these 
+        # aren't being multiplied by delta time
         self._elevation += self._elevation_velocity
         if self._yaw_velocity:
             self.yaw += self._yaw_velocity
@@ -241,8 +243,8 @@ class Player(Entity):
                 self.yaw += event.rel[0] * self._settings['yaw_sensitivity']
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
-        pg.event.set_grab(1)
-        pg.mouse.set_visible(0)
+        pg.event.set_grab(1) # maybe temp?
+        pg.mouse.set_visible(0) # maybe temp?
 
         movement = (self._key_statuses[0] - self._key_statuses[1], # forward
                     self._key_statuses[2] - self._key_statuses[3], # right
@@ -262,21 +264,21 @@ class Player(Entity):
         )
 
         vel_mult = 0.90625**rel_game_speed # number used in Doom
+        elevation_update = 0
         if self._forward_velocity.magnitude() >= 0.001:
-            self._render_elevation = self._elevation + 0.005
+            elevation_update = 1
             self._forward_velocity *= vel_mult
         else:
             self._forward_velocity.update(0, 0)
         if self._right_velocity.magnitude() >= 0.001:
-            self._render_elevation = self._elevation + 0.005
-            # so it will satisfy the below if statement ^
-            # where it is actually being calculated
+            elevation_update = 1
             self._right_velocity *= vel_mult
         else:
             self._right_velocity.update(0, 0)
-        if abs(self._render_elevation - self._elevation) >= 0.005:
-            # self._render_elevation = render_elevation
-            self._render_elevation = self._elevation + (
+        
+        self._render_elevation = self._elevation
+        if elevation_update:
+            self._render_elevation += (
                 math.sin(level_timer * self._settings['bob_frequency'])
                 * self._settings['bob_strength']
                 * min(self._velocity2d.magnitude() * 20, 2)

@@ -193,7 +193,7 @@ class Camera(object):
                                          * walls.textures[texture].width)
                         # height * 5 is just a random number i chose btw
                         line_height = min(
-                            self._tile_size / depth * wall_tile['height'],
+                            self._tile_size / depth * wall_tile['height'] / 2,
                             height * 5,
                         )
 

@@ -1,0 +1,51 @@
+-- RAYCASTER ENGINE DATA SPECIFICATAION --
+
+Game data is stored in one directory.
+
+
+---- TILEMAPS ----
+
+Tilemaps are stored in JSON files.
+In the same directory that tilemaps are stored, a meta.py 
+file stores textures as FloorTexture and WallTexture objects.
+
+KEYS: "walls", "floor", "ceiling"
+
+------ "walls" ------
+
+This value represents the wall tilemap data.
+KEYS: "0", "1"
+
+"0" is the first tilemap data
+"1" is the second tilemap data
+
+-------- tilemap data --------
+
+There are two tilemaps, allowing for one wall on top of another.
+The tilemap keys are in "x;y" format.
+The values store the following properties of the wall:
+ - height
+ - y-value
+ - texture
+ - bottom color
+ - top color
+
+------ "floor" ------
+
+This value represents the floor data.
+KEYS: "height", "texture"
+
+"height" is the floor height. 
+"texture" is the texture to use for the floor.
+
+------ "ceiling" ------
+This value represents the ceiling data. 
+KEYS: "height", "texture"
+
+"height" is the ceiling height
+"texture" is the texture to use for the ceiling.
+
+
+---- TEXTURES ----
+
+Textures are stored in the same

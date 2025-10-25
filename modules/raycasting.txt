@@ -1,0 +1,28 @@
+0-- RAYCASTER ENGINE RENDERING SPECIFICATION --
+
+---- DEFINITIONS ----
+
+Depth Buffer: a buffer of all the sprite surfaces before they are rendered that is ordered based on the depth of the sprite; 
+this will contain every single image, its depth, and its position on the screen to render it.
+
+DDA Raycasting: A style of raycasting described at https://lodev.org/cgtutor/raycasting.html that only checks on tile borders, 
+meaning it is very fast and completely accurate.
+
+---- SPECIFICATION ----
+
+For every column on the screen, cast a ray outwards using DDA Raycasting until the ray's length is greater than the render 
+distance. During this cast, look for tiles in both tilemaps (the tilemap data specification can be found at data/spec.txt). 
+If a wall is encountered, calculate its y-coordinate on the display surface and add the line surface to the depth buffer.
+
+Next, the sprites are rendered. This is done by iterating through all the sprites. For each sprite, check if it is in front of 
+the camera, and if it is, adding it to the depth buffer to be rendered. To check if it is in front of the camera, get the 
+sprite's position relative to the camera using Pygame's Vector3D class. Use the relative position to determine if it is in 
+front. To get its position on screen, use the ratio of x:z and y:z of the sprite. To get the size to resize the surface, use 
+the z value (relative to the camera).
+
+After all the rays are casted, all the surfaces in the depth buffer will be rendered using the Depth Buffer's render().
+
+
+The main thread will be the event thread. The rendering thread will do all the rendering calculations, and will call the blit 
+function in the main thread using Queue.
+

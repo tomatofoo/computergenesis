@@ -261,15 +261,13 @@ class Player(Entity):
             * rel_game_speed
         )
 
-        magnitudes = (self._forward_velocity.magnitude(),
-                      self._right_velocity.magnitude())
-        vel_mult = 0.90625**rel_game_speed
-        if magnitudes[0] >= 0.001:
+        vel_mult = 0.90625**rel_game_speed # number used in Doom
+        if self._forward_velocity.magnitude() >= 0.001:
             self._render_elevation = self._elevation + 0.005
             self._forward_velocity *= vel_mult
         else:
             self._forward_velocity.update(0, 0)
-        if magnitudes[1] >= 0.001:
+        if self._right_velocity.magnitude() >= 0.001:
             self._render_elevation = self._elevation + 0.005
             # so it will satisfy the below if statement ^
             # where it is actually being calculated

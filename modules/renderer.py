@@ -18,7 +18,7 @@ class Camera(object):
                  tile_size: Real,
                  wall_render_distance: Real,
                  player: Player,
-                 bob_strength: Real=0.075,
+                 bob_strength: Real=0.0375,
                  bob_frequency: Real=10) -> None:
         
         try:
@@ -132,7 +132,7 @@ class Camera(object):
             # basically, some of the vertical camera plane is below the ground
             # intersection between ground and ray is behind the plane
             # (not in front); we use this multiplier
-            mult = self._tile_size / 2 * (1 + self._player._render_elevation)
+            mult = self._tile_size * self._player._render_elevation
             start_points_x = mult / offsets * rays[0][0]
             start_points_y = mult / offsets * rays[0][1]
 
@@ -193,14 +193,16 @@ class Camera(object):
                                          * walls.textures[texture].width)
                         # height * 5 is just a random number i chose btw
                         line_height = min(
-                            self._tile_size / depth * wall_tile['height'] / 2,
+                            self._tile_size / depth * wall_tile['height'],
                             height * 5,
                         )
 
                         # elevation offset
                         offset = (
-                            (self._player._render_elevation 
-                             - wall_tile['elevation'])
+                             # accounts for weird coordinate system
+                            (self._player._render_elevation * 2
+                             - wall_tile['elevation'] * 2
+                             - wall_tile['height'])
                             * self._tile_size / 2 / depth
                         )
                         # check if line is visible
@@ -208,9 +210,9 @@ class Camera(object):
                             < height + line_height / 2 - offset):
                             line = pg.transform.scale(
                                 walls.textures[texture][dex],
-                                (1, line_height + 2)
+                                (1, line_height + 1)
                             )
-                            # ^ +2 to avoid pixel glitches at edges of wall
+                            # ^ +1 to avoid pixel glitches at edges of wall
                             pg.transform.hsl(
                                 line, 0, 0, max(-dist / 6, -1), line,
                             )

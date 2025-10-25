@@ -23,7 +23,7 @@ class Entity(object):
         self.velocity2d = (0, 0)
         self.elevation_velocity = 0
         self.yaw_velocity = 0
-        self.elevation = 0
+        self.elevation = 0.5
         self.yaw = 0
         self.width = width # width of rect
     

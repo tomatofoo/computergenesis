@@ -7,7 +7,7 @@ from modules.level import Level
 from modules.level import WallTexture
 from modules.level import Walls
 from modules.level import Floor
-from modules.level import _FALLBACK_SURF
+from modules.level import _FALLBACK_SURF # temporary
 from modules.renderer import Camera
 from modules.entities import Player
 from modules.entities import EntityManager

@@ -128,7 +128,7 @@ class Entity(object):
         for offset in self._TILE_OFFSETS:
             offset_tile = tile + offset
             level_string = f'{int(offset_tile.x)};{int(offset_tile.y)}'
-            for walls in self._level.walls: # might create duplicates btw
+            for walls in self._level._walls: # might create duplicates btw
                 if walls.tilemap.get(level_string) != None:
                     tiles.append(pg.Rect(offset_tile.x, offset_tile.y, 1, 1))
         return tiles

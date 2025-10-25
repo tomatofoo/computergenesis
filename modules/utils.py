@@ -16,12 +16,12 @@ def generate_composite(tilemap: dict[str, int],
             # regular if (not elif) in case there is only one tile
             if (lowest[0] - coords[0] + lowest[1] - coords[1]) > 0:
                 lowest = coords
-        size = (highest[0] - lowest[0] + 1, highest[1] - lowest[1] + 1)
-        surf = pg.Surface((size[0] * tile_size[0], size[1] * tile_size[1]))
+        scale = (highest[0] - lowest[0] + 1, highest[1] - lowest[1] + 1)
+        surf = pg.Surface((scale[0] * tile_size[0], scale[1] * tile_size[1]))
         for tile, texture in tilemap.items():
             coords = (int(item) for item in tile.split(';'))
-            render_coords = (coords[0] % size[0] * tile_size[0],
-                             coords[1] % size[1] * tile_size[1])
+            render_coords = (coords[0] % scale[0] * tile_size[0],
+                             coords[1] % scale[1] * tile_size[1])
             surf.blit(textures[texture], render_coords)
-        return surf, size
+        return surf, scale
 

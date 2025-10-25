@@ -183,7 +183,7 @@ class Camera(object):
             tile_key = None
             # keep on changing end_pos until hitting a wall (DDA)
             while depth > 0:
-                for walls in self._player._level.walls:
+                for walls in self._player._level._walls:
                     wall_tile = walls.tilemap.get(tile_key)
                     if wall_tile != None:
                         # distance already does fisheye correction because it 
@@ -191,11 +191,18 @@ class Camera(object):
                         texture = wall_tile['texture']
                         dex = math.floor(end_pos[side] % 1
                                          * walls.textures[texture].width)
-                        line_height = min(self._tile_size / depth, height * 5)
+                        # height * 5 is just a random number i chose btw
+                        line_height = min(
+                            self._tile_size / depth * wall_tile['height'],
+                            height * 5,
+                        )
 
                         # elevation offset
-                        offset = (self._player._render_elevation
-                                  * self._tile_size / 2 / depth)
+                        offset = (
+                            (self._player._render_elevation 
+                             - wall_tile['elevation'])
+                            * self._tile_size / 2 / depth
+                        )
                         # check if line is visible
                         if (-line_height / 2 - offset < horizon 
                             < height + line_height / 2 - offset):

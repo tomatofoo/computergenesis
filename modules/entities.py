@@ -292,6 +292,12 @@ class EntityManager(object):
     def __init__(self: Self, **kwargs: Entity) -> None:
         self.entities = kwargs.copy()
 
+        # a dictionary where each key is a tile position and the value is the 
+        # set of all entities in that position
+        self._sets = {} 
+        for entity in self._entities:
+            self._add_to_set(entity)
+
     @property
     def entities(self: Self) -> dict:
         return self._entities.copy()
@@ -299,14 +305,30 @@ class EntityManager(object):
     @entities.setter
     def entities(self: Self, value: dict) -> None:
         self._entities = value.copy()
+        for entity in self._entities:
+            self._add_to_set(entity)
+
+    @property
+    def sets(self: Self):
+        return self._sets.copy()
+    
+    def _add_to_set(self: Self, entity: Entity) -> None:
+        key = f'{int(math.floor(entity.x))};{int(math.floor(entity.y))}'
+        if self._sets.get(key) == None:
+            self._sets[key] = set()
+        self._sets[key].add(entity)
 
     def add_entity(self: Self, entity: Entity, id: object) -> None:
         self._entities[id] = entity
+        self._add_to_set(entity)
 
     def remove_entity(self: Self, id: object) -> None:
+        entity = self._entities[id]
+        key = f'{int(math.floor(entity.x))};{int(math.floor(entity.y))}'
+        self._sets[key].remove(entity) # remove from set
         del self._entities[id]
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
-        for entity in self._entities:
+        for entity in self._entities.values():
             entity.update(rel_game_speed, level_timer)
 

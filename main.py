@@ -4,13 +4,13 @@ from typing import Self
 import pygame as pg
 
 from modules.level import Level
-from modules.level import WallTexture
+from modules.level import ColumnTexture
 from modules.level import Walls
 from modules.level import Floor
-from modules.level import _FALLBACK_SURF # temporary
+from modules.level import Entity 
+from modules.level import Player
+from modules.level import EntityManager 
 from modules.renderer import Camera
-from modules.entities import Player
-from modules.entities import EntityManager
 
 
 class Game(object):
@@ -120,15 +120,20 @@ class Game(object):
         }
         
         self._wall_textures = (
-            WallTexture(_FALLBACK_SURF),
+            ColumnTexture('data/images/redbrick.png'),
         )
-
+        
+        entities = {
+            0: Entity(texture=ColumnTexture('data/images/greystone.png')),
+        }
+        entities[0].pos = (6.5, 6)
+        self._player = Player()
         self._level = Level(
             Floor('data/images/greystone.png'),
             (Walls(walls, self._wall_textures),),
+            EntityManager(self._player, entities),
        )
 
-        self._player = Player(self._level)
         self._camera = Camera(
             90, 
             self._SURF_SIZE[0] / 2,

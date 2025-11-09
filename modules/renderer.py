@@ -8,8 +8,9 @@ import numpy as np
 import pygame as pg
 from pygame.typing import Point
 
-from modules.entities import Player
-from modules.entities import EntityManager
+from modules.level import Entity 
+from modules.level import Player
+from modules.level import EntityManager
 
 
 class Camera(object):
@@ -74,10 +75,14 @@ class Camera(object):
     @fov.setter
     def fov(self: Self, value: Real) -> None:
         self._fov = value
+        # fov_mult is for entity rendering
         try:
-            self._yaw_magnitude = float(1 / math.tan(math.radians(value) / 2))
+            rad = math.radians(value) / 2
+            self._yaw_magnitude = float(1 / math.tan(rad))
+            self._fov_mult = math.cos(rad) / self._yaw_magnitude
         except ValueError:
             self._yaw_magnitude = 0
+            self._fov_mult = math.inf
 
     @property
     def horizon(self: Self) -> Real:
@@ -145,7 +150,7 @@ class Camera(object):
             x_points = self._player._pos.x + start_points_x + step_x * x_pixels
             y_points = self._player._pos.y + start_points_y + step_y * x_pixels
             
-            texture = self._player.level.floor
+            texture = self._player._manager._level.floor
             scale = texture.scale
             # change the divisor before the mod to change size of texture 
             texture_xs = np.floor(x_points / scale[0] % 1 * texture.width)
@@ -163,10 +168,16 @@ class Camera(object):
                                    width: Real,
                                    height: Real,
                                    horizon: Real) -> None:
+
         # the per-pixel alpha with (0, 0, 0, 0) doesn't seem to affect
         # fps at all
         self._walls_and_entities = pg.Surface((width, height), pg.SRCALPHA)
         self._walls_and_entities.fill((0, 0, 0, 0))
+        
+        semiwidth = int(width / 2)
+        semiheight = int(height / 2)
+        projections = {} # cache for projected entities
+        level = self._player._manager._level
 
         # Wall Casting
         for x in range(width):
@@ -183,7 +194,8 @@ class Camera(object):
             tile_key = None
             # keep on changing end_pos until hitting a wall (DDA)
             while depth > 0:
-                for walls in self._player._level._walls:
+                # RENDER WALLS
+                for walls in level._walls:
                     wall_tile = walls.tilemap.get(tile_key)
                     if wall_tile != None:
                         # distance already does fisheye correction because it 
@@ -220,6 +232,7 @@ class Camera(object):
                             self._walls_and_entities.blit(
                                 line, (x, horizon - line_height / 2 + offset),
                             )
+                
                 last_tile = tile.copy()
                 # displacements until hit tile
                 disp_x = tile.x + dir[0] - end_pos.x
@@ -244,7 +257,7 @@ class Camera(object):
                     side = 0
                 dist = depth * mag
                 tile_key = f'{int(last_tile.x)};{int(last_tile.y)}'
-                    
+
     def render(self: Self, surf: pg.Surface) -> None:
         width = surf.width
         height = surf.height

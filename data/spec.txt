@@ -7,7 +7,7 @@ Game data is stored in one directory.
 
 Tilemaps are stored in JSON files.
 In the same directory that tilemaps are stored, a meta.py 
-file stores textures as FloorTexture and WallTexture objects.
+file stores textures as FloorTexture and ColumnTexture objects.
 
 KEYS: "walls", "floor", "ceiling"
 

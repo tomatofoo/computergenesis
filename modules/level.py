@@ -1,7 +1,8 @@
+from __future__ import annotations
+
 import math
 from numbers import Real
 from typing import Self
-from collections.abc import Sequence
 
 import pygame as pg
 from pygame.typing import Point
@@ -12,8 +13,8 @@ pg.draw.rect(_FALLBACK_SURF, (255, 0, 255), pg.Rect(1, 0, 1, 1))
 pg.draw.rect(_FALLBACK_SURF, (255, 0, 255), pg.Rect(0, 1, 1, 1))
 
 
-class WallTexture(object):
-    def __init__(self: Self, obj: pg.Surface | str) -> None:
+class ColumnTexture(object):
+    def __init__(self: Self, obj: pg.Surface | str=_FALLBACK_SURF) -> None:
         surf = obj
         if isinstance(obj, str):
             try:
@@ -22,11 +23,9 @@ class WallTexture(object):
                 surf = _FALLBACK_SURF
         self._surf = surf
         self._lines = []
-        self._width = surf.width
-        height = surf.height
-        for i in range(self._width):
-            line = pg.Surface((1, height))
-            line.blit(surf, (0, 0), area=pg.Rect(i, 0, 1, height))
+        for i in range(surf.width):
+            line = pg.Surface((1, surf.height))
+            line.blit(surf, (0, 0), area=pg.Rect(i, 0, 1, surf.height))
             self._lines.append(line)
 
     def __getitem__(self: Self, dex: int) -> pg.Surface:
@@ -37,8 +36,12 @@ class WallTexture(object):
         return self._surf
 
     @property
-    def width(self: Self) -> Real:
-        return self._width
+    def width(self: Self) -> int:
+        return self._surf.width
+
+    @property
+    def height(self: Self) -> int:
+        return self._surf.height
 
 
 class Floor(object):
@@ -83,7 +86,7 @@ class Floor(object):
 class Walls(object):
     def __init__(self: Self,
                  tilemap: dict,
-                 textures: tuple[WallTexture]) -> None:
+                 textures: tuple[ColumnTexture]) -> None:
 
         self._tilemap = tilemap.copy()
         self._textures = list(textures)
@@ -113,10 +116,15 @@ class Walls(object):
 
 
 class Level(object):
-    def __init__(self: Self, floor: Floor, walls: tuple[Walls]) -> None:
+    def __init__(self: Self,
+                 floor: Floor,
+                 walls: tuple[Walls],
+                 entities: EntityManager) -> None:
 
         self._floor = floor
         self._walls = list(walls)
+        self._entities = entities
+        entities._level = self
 
     @property
     def floor(self: Self) -> Floor:
@@ -133,10 +141,383 @@ class Level(object):
     @walls.setter
     def walls(self: Self, value: Walls) -> None:
         self._walls = list(value)
+
+    @property
+    def entities(self: Self) -> EntityManager:
+        return self._entities
+
+    @entities.setter
+    def entities(self: Self, value: EntityManager) -> None:
+        self._entities._level = None
+        self._entities = value
+        value._level = self
     
     def add_walls(self: Self, walls: Walls) -> None:
         self._walls.append(walls)
 
     def remove_walls(self: Self, dex: int) -> None:
-        del self._walls[dex]
+        return self._walls.pop(dex)
+
+
+class Entity(object):
+
+    _TILE_OFFSETS = (
+        (-1, 1), (0, 1), (1, 1),
+        (-1, 0), (0, 0), (1, 0),
+        (-1, -1), (0, -1), (1, -1),
+    )
+
+    def __init__(self: Self, 
+                 width: Real=0.5,
+                 texture: ColumnTexture=ColumnTexture()) -> None:
+
+        self.texture = texture
+        self.pos = (0, 0)
+        self.velocity2d = (0, 0)
+        self.elevation_velocity = 0
+        self.yaw_velocity = 0
+        self.elevation = 0.5
+        self.yaw = 0
+        self.width = width # width of rect
+        self._manager = None
+  
+    @property
+    def pos(self: Self) -> tuple:
+        return tuple(self._pos)
+
+    @pos.setter
+    def pos(self: Self, value: Point) -> None:
+        self._pos = pg.Vector2(value)
+
+    @property
+    def x(self: Self) -> Real:
+        return self._pos.x
+
+    @x.setter
+    def x(self: Self, value: Real) -> None:
+        self._pos.x = value
+
+    @property
+    def y(self: Self) -> Real:
+        return self._pos.y
+
+    @y.setter
+    def y(self: Self, value: Real) -> None:
+        self._pos.y = value
+
+    @property
+    def forward(self: Self) -> pg.Vector2:
+        return self._yaw
+
+    @property
+    def right(self: Self) -> pg.Vector2:
+        return self._plane
+
+    @property
+    def elevation(self: Self) -> Real:
+        return self._elevation
+
+    @elevation.setter
+    def elevation(self: Self, value: Real) -> None:
+        if value <= -1:
+            raise ValueError('elevation must be greater than -1')
+        self._elevation = value
+
+    @property
+    def yaw(self: Self) -> float:
+        return self._yaw_value
+
+    @yaw.setter
+    def yaw(self: Self, value: Real) -> None:
+        self._yaw_value = value
+        self._yaw = pg.Vector2(0, 1).rotate(value)
+        self._semiplane = pg.Vector2(-self._yaw.y, self._yaw.x)
+        # -1 because direction is flipped
+        # the plane is for the camera but it is also the right vector
+
+    @property
+    def width(self: Self) -> Real:
+        return self._width
+
+    @width.setter
+    def width(self: Self, value: Real) -> None:
+        self._width = value
+
+    @property
+    def velocity2d(self: Self) -> tuple:
+        return tuple(self._velocity2d)
+
+    @velocity2d.setter
+    def velocity2d(self: Self, value: Point) -> None:
+        self._velocity2d = pg.Vector2(value)
+
+    @property
+    def elevation_velocity(self: Self) -> Real:
+        return self._elevation_velocity
+
+    @elevation_velocity.setter
+    def elevation_velocity(self: Self, value: Real) -> None:
+        self._elevation_velocity = value
+
+    @property
+    def yaw_velocity(self: Self) -> Real:
+        return self._yaw_velocity
+
+    @yaw_velocity.setter
+    def yaw_velocity(self: Self, value: Real) -> None:
+        self._yaw_velocity = value
+
+    @property
+    def manager(self: Self) -> EntityManager:
+        return self._manager
+
+    @property
+    def texture(self: Self) -> ColumnTexture:
+        return self._texture
+
+    @texture.setter
+    def texture(self: Self, value: ColumnTexture) -> None:
+        self._texture = value
+
+    @property
+    def manager(self: Self) -> EntityManager:
+        if self._manager == None:
+            raise ValueError('Must assign manager to this entity')
+        return self._manager
+
+    def _get_rects_around(self: Self) -> list:
+        tile = pg.Vector2(math.floor(self._pos.x),
+                               math.floor(self._pos.y))
+        tiles = []
+        for offset in self._TILE_OFFSETS:
+            offset_tile = tile + offset
+            level_string = f'{int(offset_tile.x)};{int(offset_tile.y)}'
+            for walls in self.manager.level._walls: # might create duplicates btw
+                if walls.tilemap.get(level_string) != None:
+                    tiles.append(pg.Rect(offset_tile.x, offset_tile.y, 1, 1))
+        return tiles
+
+    def rect(self: Self) -> pg.Rect:
+        rect = pg.FRect(0, 0, self._width, self._width)
+        rect.center = self._pos
+        return rect
+
+    def vector(self: Self) -> pg.Vector3:
+        return pg.Vector3(self._pos.x, self._elevation, self._pos.y)
+
+    def update(self: Self, rel_game_speed: Real) -> None:
+        # I'm not sure if there is a reason that these 
+        # aren't being multiplied by delta time
+        self._elevation += self._elevation_velocity
+        if self._yaw_velocity:
+            self.yaw += self._yaw_velocity
+         
+        self._pos.x += self._velocity2d.x * rel_game_speed
+        entity_rect = self.rect()
+        for rect in self._get_rects_around():
+            if entity_rect.colliderect(rect):
+                if self._velocity2d.x > 0:
+                    entity_rect.right = rect.left
+                elif self._velocity2d.x < 0:
+                    entity_rect.left = rect.right
+                self._pos.x = entity_rect.centerx
+        self._pos.y += self._velocity2d.y * rel_game_speed
+        entity_rect = self.rect()
+        for rect in self._get_rects_around():
+            if entity_rect.colliderect(rect):
+                if self._velocity2d.y > 0:
+                    entity_rect.bottom = rect.top
+                elif self._velocity2d.y < 0:
+                    entity_rect.top = rect.bottom
+                self._pos.y = entity_rect.centery
+ 
+
+class Player(Entity):
+    def __init__(self: Self,
+                 width: Real=0.5,
+                 yaw_sensitivity: Real=0.125,
+                 mouse_enabled: bool=1,
+                 keyboard_look_enabled: bool=1) -> None:
+
+        super().__init__(width)
+        self._forward_velocity = pg.Vector2(0, 0)
+        self._right_velocity = pg.Vector2(0, 0)
+        self._key_statuses = [0, 0, 0, 0, 0, 0]
+        # w, s, d, a, right, left
+        self._render_elevation = self._elevation
+        
+        self._settings = {
+            'bob_strength': 0,
+            'bob_frequency': 0,
+        }
+        self.yaw_sensitivity = yaw_sensitivity
+        self.mouse_enabled = mouse_enabled
+        self.keyboard_look_enabled = keyboard_look_enabled
+
+    @property
+    def yaw_sensitivity(self: Self) -> Real:
+        return self._settings['yaw_sensitivity']
+
+    @yaw_sensitivity.setter
+    def yaw_sensitivity(self: Self, value: Real) -> None:
+        self._settings['yaw_sensitivity'] = value
+
+    @property
+    def mouse_enabled(self: Self) -> bool:
+        return bool(self._settings['mouse_enabled'])
+
+    @mouse_enabled.setter
+    def mouse_enabled(self: Self, value: bool) -> None:
+        self._settings['mouse_enabled'] = value
+
+    @property
+    def keyboard_look_enabled(self: Self) -> bool:
+        return bool(self._settings['keyboard_look_enabled'])
+
+    @keyboard_look_enabled.setter
+    def keyboard_look_enabled(self: Self, value: bool) -> None:
+        self._settings['keyboard_look_enabled'] = value
+
+    def handle_events(self: Self, event: pg.Event) -> None:
+        if event.type == pg.KEYDOWN:
+            if event.key == pg.K_w:
+                self._key_statuses[0] = 1
+            elif event.key == pg.K_s:
+                self._key_statuses[1] = 1
+            elif event.key == pg.K_d:
+                self._key_statuses[2] = 1
+            elif event.key == pg.K_a:
+                self._key_statuses[3] = 1
+            elif event.key == pg.K_RIGHT:
+                self._key_statuses[4] = 1
+            elif event.key == pg.K_LEFT:
+                self._key_statuses[5] = 1
+        elif event.type == pg.KEYUP:
+            if event.key == pg.K_w:
+                self._key_statuses[0] = 0
+            elif event.key == pg.K_s:
+                self._key_statuses[1] = 0
+            elif event.key == pg.K_d:
+                self._key_statuses[2] = 0
+            elif event.key == pg.K_a:
+                self._key_statuses[3] = 0
+            elif event.key == pg.K_RIGHT:
+                self._key_statuses[4] = 0
+            elif event.key == pg.K_LEFT:
+                self._key_statuses[5] = 0
+        elif event.type == pg.MOUSEMOTION and self._settings['mouse_enabled']:
+            if event.rel[0]:
+                self.yaw += event.rel[0] * self._settings['yaw_sensitivity']
+
+    def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
+        pg.event.set_grab(1) # maybe temp?
+        pg.mouse.set_visible(0) # maybe temp?
+
+        movement = (self._key_statuses[0] - self._key_statuses[1], # forward
+                    self._key_statuses[2] - self._key_statuses[3], # right
+                    self._key_statuses[4] - self._key_statuses[5]) # look right
+
+        if movement[0]:
+            self._forward_velocity.update(self._yaw * 0.05 * movement[0])
+        if movement[1]:
+            self._right_velocity.update(self._semiplane * 0.05 * movement[1])
+        
+        self._yaw_velocity = (
+            self._settings['keyboard_look_enabled']
+            * self._settings['yaw_sensitivity']
+            * movement[2]
+            * 18
+            * rel_game_speed
+        )
+
+        vel_mult = 0.90625**rel_game_speed # number used in Doom
+        elevation_update = 0
+        if self._forward_velocity.magnitude() >= 0.001:
+            elevation_update = 1
+            self._forward_velocity *= vel_mult
+        else:
+            self._forward_velocity.update(0, 0)
+        if self._right_velocity.magnitude() >= 0.001:
+            elevation_update = 1
+            self._right_velocity *= vel_mult
+        else:
+            self._right_velocity.update(0, 0)
+        
+        self._render_elevation = self._elevation
+        if elevation_update:
+            self._render_elevation += (
+                math.sin(level_timer * self._settings['bob_frequency'])
+                * self._settings['bob_strength']
+                * min(self._velocity2d.magnitude() * 20, 2)
+            )
+
+        self._velocity2d = self._forward_velocity + self._right_velocity
+        super().update(rel_game_speed)
+        
+
+class EntityManager(object):
+    def __init__(self: Self, 
+                 player: Player, 
+                 entities: dict[object, Entity]) -> None:
+        self._player = player
+        player._manager = self
+        self._entities = entities.copy()
+        self._sets = {}
+        for entity in self._entities.values():
+            self._add_to_sets(entity)
+            entity._manager = self
+        self._level = None
+
+        # _sets is a dictionary where each key is a tile position and the value
+        # is the set of all entities in that position
+
+    @property
+    def entities(self: Self) -> dict:
+        return self._entities.copy()
+
+    @entities.setter
+    def entities(self: Self, value: dict) -> None:
+        for entity in self._entities.values():
+            entity._manager = None
+
+        self._entities = value.copy()
+        self._sets = {}
+        for entity in self._entities.values():
+            self._add_to_sets(entity)
+            entity._manager = self
+
+    @property
+    def player(self: Self) -> Player:
+        return self._player
+
+    @player.setter
+    def player(self: Self, value: Player) -> None:
+        self._player = value
+
+    @property
+    def level(self: Self) -> Level:
+        if self._level == None:
+            raise ValueError('Must assign level to manager')
+        return self._level
+
+    def _add_to_sets(self: Self, entity: Entity) -> None:
+        key = f'{int(math.floor(entity.x))};{int(math.floor(entity.y))}'
+        if self._sets.get(key) == None:
+            self._sets[key] = set()
+        self._sets[key].add(entity)
+
+    def add_entity(self: Self, entity: Entity, id: object) -> None:
+        self._entities[id] = entity
+        self._add_to_set(entity)
+
+    def remove_entity(self: Self, id: object) -> None:
+        entity = self._entities[id]
+        key = f'{int(math.floor(entity.x))};{int(math.floor(entity.y))}'
+        self._sets[key].remove(entity) # remove from set
+        entity._manager = None
+        return self._entities.pop(id)
+
+    def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
+        for entity in self._entities.values():
+            entity.update(rel_game_speed, level_timer)
 

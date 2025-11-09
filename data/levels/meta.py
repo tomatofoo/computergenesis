@@ -1,11 +1,11 @@
 import pygame as pg
 
-from modules.texture import WallTexture
+from modules.texture import ColumnTexture
 from modules.texture import FloorTexture
 
 
 WALL_TEXTURES = [
-    WallTexture('data/images/greystone.png'),
+    ColumnTexture('data/images/greystone.png'),
 ]
 
 FLOOR_TEXTURES = [

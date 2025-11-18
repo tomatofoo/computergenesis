@@ -1,24 +1,24 @@
 CC=gcc-15
-CFLAGS=-Ilib -fms-extensions $$(pkg-config --cflags --libs gsl sdl2 sdl2_image sdl2_mixer)
-L_D=lib
-O_D=macho
+CFLAGS=-Iinclude -fms-extensions $$(pkg-config --cflags --libs gsl sdl2 sdl2_image sdl2_mixer)
+INCLUDE=include
+LIB=lib
 
 # Marigold
-MARIGOLD_L_D=$(L_D)/marigold
-MARIGOLD_M_D=$(MARIGOLD_L_D)/modules
-MARIGOLD_O_D=$(O_D)/marigold
+MARIGOLD_INCLUDE=$(INCLUDE)/marigold
+MARIGOLD_MODULES=$(MARIGOLD_INCLUDE)/modules
+MARIGOLD_LIB=$(LIB)/marigold
 
-MARIGOLD_ENTITIES_I=$(MARIGOLD_M_D)/entities.c
-MARIGOLD_ENTITIES_H=$(MARIGOLD_M_D)/entities.h
-MARIGOLD_ENTITIES_O=$(MARIGOLD_O_D)/entities.o
+MARIGOLD_ENTITIES_I=$(MARIGOLD_MODULES)/entities.c
+MARIGOLD_ENTITIES_H=$(MARIGOLD_MODULES)/entities.h
+MARIGOLD_ENTITIES_O=$(MARIGOLD_LIB)/entities.o
 
-MARIGOLD_LEVEL_I=$(MARIGOLD_M_D)/level.c
-MARIGOLD_LEVEL_H=$(MARIGOLD_M_D)/level.h
-MARIGOLD_LEVEL_O=$(MARIGOLD_O_D)/level.o
+MARIGOLD_LEVEL_I=$(MARIGOLD_MODULES)/level.c
+MARIGOLD_LEVEL_H=$(MARIGOLD_MODULES)/level.h
+MARIGOLD_LEVEL_O=$(MARIGOLD_LIB)/level.o
 
-MARIGOLD_RENDERER_I=$(MARIGOLD_M_D)/renderer.c
-MARIGOLD_RENDERER_H=$(MARIGOLD_M_D)/renderer.h
-MARIGOLD_RENDERER_O=$(MARIGOLD_O_D)/renderer.o
+MARIGOLD_RENDERER_I=$(MARIGOLD_MODULES)/renderer.c
+MARIGOLD_RENDERER_H=$(MARIGOLD_MODULES)/renderer.h
+MARIGOLD_RENDERER_O=$(MARIGOLD_LIB)/renderer.o
 
 MARIGOLD_MODULES_I=$(MARIGOLD_ENTITIES_I) \
 				   $(MARIGOLD_LEVEL_I) 	  \
@@ -31,17 +31,17 @@ MARIGOLD_MODULES_O=$(MARIGOLD_ENTITIES_O) \
 				   $(MARIGOLD_LEVEL_O)    \
 				   $(MARIGOLD_RENDERER_O)
 
-MARIGOLD_I=$(MARIGOLD_L_D)/marigold.c
-MARIGOLD_H=$(MARIGOLD_L_D)/marigold.h
-MARIGOLD_O=$(MARIGOLD_O_D)/marigold.o
+MARIGOLD_I=$(MARIGOLD_INCLUDE)/marigold.c
+MARIGOLD_H=$(MARIGOLD_INCLUDE)/marigold.h
+MARIGOLD_O=$(MARIGOLD_LIB)/marigold.o
 
 # microui
-MICROUI_L_D=$(L_D)/microui
-MICROUI_O_D=$(O_D)/microui
+MICROUI_INCLUDE=$(INCLUDE)/microui
+MICROUI_LIB=$(LIB)/microui
 
-MICROUI_I=$(MICROUI_L_D)/microui.c
-MICROUI_H=$(MICROUI_L_D)/microui.h
-MICROUI_O=$(MICROUI_O_D)/microui.o
+MICROUI_I=$(MICROUI_INCLUDE)/microui.c
+MICROUI_H=$(MICROUI_INCLUDE)/microui.h
+MICROUI_O=$(MICROUI_LIB)/microui.o
 
 # lib
 LIB_I=$(MARIGOLD_I) \
@@ -54,7 +54,7 @@ LIB_O=$(MARIGOLD_O) \
 
 # main
 MAIN_I=main.c
-MAIN_O=$(O_D)/main.o
+MAIN_O=$(LIB)/main.o
 
 # Link
 LINK_I=$(MARIGOLD_MODULES_O) \

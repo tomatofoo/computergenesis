@@ -95,7 +95,7 @@ strmapi_set(strmap_item_t* arr,
         index = (index + 1) % capacity;
     }
     
-    arr[index].ikey = (char *)key; /* typecast was in guide */
+    arr[index].ikey = strdup(key);
     arr[index].ivalue = value;
 }
 
@@ -109,7 +109,7 @@ strmap_set(strmap_t* map, const char* key, void* value) {
         }
     }
 
-    strmapi_set(map->iarr, map->icapacity, strdup(key), value);
+    strmapi_set(map->iarr, map->icapacity, key, value);
     map->ilength++;
     return true;
 }
@@ -139,6 +139,25 @@ strmap_expand(strmap_t* map) {
     return true;
 }
 
+void* strmap_pop(strmap_t* map, const char* key) {
+    assert(key != NULL);
+
+    size_t index = fnv1a32(key) % map->icapacity;
+    while (map->iarr[index].ikey != NULL) {
+        if (strcmp(map->iarr[index].ikey, key) == 0) {
+            free(map->iarr[index].ikey);
+            void* value = map->iarr[index].ivalue;
+            map->iarr[index].ikey = NULL; /* not accessing a freed value */
+            map->iarr[index].ivalue = NULL;
+
+            return value;
+        }
+        index = (index + 1) % map->icapacity;
+    }
+
+    return NULL;
+}
+
 size_t
 strmapa_capacity(strmap_t* map) {
     return map->icapacity;
@@ -152,9 +171,12 @@ strmapa_length(strmap_t* map) {
 int 
 main() {
     strmap_t* map = strmap_new(64);
-    
-    strmap_set(map, "arag", "sigma");
 
+    strmap_set(map, "key", "value");
+
+    printf("%d\n", strmapa_capacity(map));
+    printf("%d\n", strmapa_length(map));
+    
     strmap_destroy(map);
 }
 

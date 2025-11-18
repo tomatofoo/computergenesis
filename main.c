@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#include <glib.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -15,17 +14,10 @@
 #define SURFACE_WIDTH 320
 #define SURFACE_HEIGHT 240
 
-#define ADD_IMG(game, key, img) g_hash_table_insert(game->images, key, img)
-#define IMG(game, key) g_hash_table_lookup(game->images, key)
-#define ADD_SOUND(game, key, sound) g_hash_table_insert(game->sounds, key, sound)
-#define SOUND(game, key) g_hash_table_lookup(game->sounds, key)
-
 struct Game {
     SDL_Window *window;
     SDL_Renderer *renderer;
     SDL_Surface *surface;
-    GHashTable *images;
-    GHashTable *sounds;
 };
 
 int init(struct Game* game);
@@ -38,8 +30,6 @@ int main(int argc, char** argv) {
         .window = NULL,
         .renderer = NULL,
         .surface = NULL,
-        .images = NULL,
-        .sounds = NULL,
     };
     if (init(&game)) {
         cleanup(&game);
@@ -48,7 +38,6 @@ int main(int argc, char** argv) {
 
     loop(&game);
 
-    printf("Exiting...\n");
     cleanup(&game);
 
     return 0;
@@ -91,11 +80,6 @@ int init(struct Game* game) {
         return 1;
     }
 
-    /* Images */
-    game->images = g_hash_table_new_full(NULL, NULL, NULL, free_img);
-    ADD_IMG(game, "redbrick", IMG_Load("data/images/redbrick.png"));
-    ADD_IMG(game, "greystone", IMG_Load("data/images/greystone.png"));
-    
     return 0;
 }
 
@@ -104,8 +88,6 @@ void cleanup(struct Game* game) {
     SDL_DestroyRenderer(game->renderer);
     SDL_FreeSurface(game->surface);
 
-    g_hash_table_destroy(game->images);
-       
     SDL_Quit();
 }
 
@@ -137,9 +119,5 @@ void loop(struct Game* game) { /* Main Loop */
 
     /* Clean up local variables */ 
     SDL_DestroyTexture(texture);
-}
-
-void free_img(void *img) {
-    SDL_FreeSurface(img);
 }
 

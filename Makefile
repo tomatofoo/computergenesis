@@ -1,6 +1,7 @@
 CC=gcc-15
-CFLAGS=-fms-extensions $$(pkg-config --cflags --libs glib-2.0 gsl sdl2 sdl2_image sdl2_mixer)
+CFLAGS=-fms-extensions $$(pkg-config --cflags --libs gsl sdl2 sdl2_image sdl2_mixer)
 M=modules
+L=lib
 O=macho
 
 ENTITIES_I=$(M)/entities.c
@@ -18,18 +19,28 @@ RENDERER_O=$(O)/renderer.o
 MODULES_I=$(ENTITIES_I) $(LEVEL_I) $(RENDERER_I) $(ENTITIES_H) $(LEVEL_H) $(RENDERER_H)
 MODULES_O=$(ENTITIES_O) $(LEVEL_O) $(RENDERER_O)
 
+MICROUI_I=$(L)/microui.c
+MICROUI_H=$(L)/microui.h
+MICROUI_O=$(O)/microui.o
+
+LIB_I=$(MICROUI_I) $(MICROUI_H)
+LIB_O=$(MICROUI_O)
+
 MAIN_I=main.c
 MAIN_O=$(O)/main.o
 
-LINK_I=$(MODULES_O) $(MAIN_O)
+LINK_I=$(MODULES_O) $(LIB_O) $(MAIN_O)
 LINK_O=main
 
-all: $(MODULES_O) $(MAIN_O) $(LINK_O)
+all: $(MODULES_O) $(LIB_O) $(MAIN_O) $(LINK_O)
 
 $(MODULES_O): $(MODULES_I)
 	$(CC) $(ENTITIES_I) -c -o $(ENTITIES_O) $(CFLAGS)
 	$(CC) $(LEVEL_I) -c -o $(LEVEL_O) $(CFLAGS)
 	$(CC) $(RENDERER_I) -c -o $(RENDERER_O) $(CFLAGS)
+
+$(LIB_O): $(LIB_I)
+	$(CC) $(MICROUI_I) -c -o $(MICROUI_O) $(CFLAGS)
 
 $(MAIN_O): $(MAIN_I)
 	$(CC) $(MAIN_I) -c -o $(MAIN_O) $(CFLAGS)

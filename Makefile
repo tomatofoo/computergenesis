@@ -1,45 +1,78 @@
 CC=gcc-15
-CFLAGS=-fms-extensions $$(pkg-config --cflags --libs gsl sdl2 sdl2_image sdl2_mixer)
-M=modules
-L=lib
-O=macho
+CFLAGS=-Ilib -fms-extensions $$(pkg-config --cflags --libs gsl sdl2 sdl2_image sdl2_mixer)
+L_D=lib
+O_D=macho
 
-ENTITIES_I=$(M)/entities.c
-ENTITIES_H=$(M)/entities.h
-ENTITIES_O=$(O)/entities.o
+# Marigold
+MARIGOLD_L_D=$(L_D)/marigold
+MARIGOLD_M_D=$(MARIGOLD_L_D)/modules
+MARIGOLD_O_D=$(O_D)/marigold
 
-LEVEL_I=$(M)/level.c
-LEVEL_H=$(M)/level.h
-LEVEL_O=$(O)/level.o
+MARIGOLD_ENTITIES_I=$(MARIGOLD_M_D)/entities.c
+MARIGOLD_ENTITIES_H=$(MARIGOLD_M_D)/entities.h
+MARIGOLD_ENTITIES_O=$(MARIGOLD_O_D)/entities.o
 
-RENDERER_I=$(M)/renderer.c
-RENDERER_H=$(M)/renderer.h
-RENDERER_O=$(O)/renderer.o
+MARIGOLD_LEVEL_I=$(MARIGOLD_M_D)/level.c
+MARIGOLD_LEVEL_H=$(MARIGOLD_M_D)/level.h
+MARIGOLD_LEVEL_O=$(MARIGOLD_O_D)/level.o
 
-MODULES_I=$(ENTITIES_I) $(LEVEL_I) $(RENDERER_I) $(ENTITIES_H) $(LEVEL_H) $(RENDERER_H)
-MODULES_O=$(ENTITIES_O) $(LEVEL_O) $(RENDERER_O)
+MARIGOLD_RENDERER_I=$(MARIGOLD_M_D)/renderer.c
+MARIGOLD_RENDERER_H=$(MARIGOLD_M_D)/renderer.h
+MARIGOLD_RENDERER_O=$(MARIGOLD_O_D)/renderer.o
 
-MICROUI_I=$(L)/microui.c
-MICROUI_H=$(L)/microui.h
-MICROUI_O=$(O)/microui.o
+MARIGOLD_MODULES_I=$(MARIGOLD_ENTITIES_I) \
+				   $(MARIGOLD_LEVEL_I) 	  \
+				   $(MARIGOLD_RENDERER_I) \
+				   $(MARIGOLD_ENTITIES_H) \
+				   $(MARIGOLD_LEVEL_H)    \
+				   $(MARIGOLD_RENDERER_H)
 
-LIB_I=$(MICROUI_I) $(MICROUI_H)
-LIB_O=$(MICROUI_O)
+MARIGOLD_MODULES_O=$(MARIGOLD_ENTITIES_O) \
+				   $(MARIGOLD_LEVEL_O)    \
+				   $(MARIGOLD_RENDERER_O)
 
+MARIGOLD_I=$(MARIGOLD_L_D)/marigold.c
+MARIGOLD_H=$(MARIGOLD_L_D)/marigold.h
+MARIGOLD_O=$(MARIGOLD_O_D)/marigold.o
+
+# microui
+MICROUI_L_D=$(L_D)/microui
+MICROUI_O_D=$(O_D)/microui
+
+MICROUI_I=$(MICROUI_L_D)/microui.c
+MICROUI_H=$(MICROUI_L_D)/microui.h
+MICROUI_O=$(MICROUI_O_D)/microui.o
+
+# lib
+LIB_I=$(MARIGOLD_I) \
+	  $(MICROUI_I)  \
+	  $(MARIGOLD_H) \
+	  $(MICROUI_H)
+
+LIB_O=$(MARIGOLD_O) \
+	  $(MICROUI_O)
+
+# main
 MAIN_I=main.c
-MAIN_O=$(O)/main.o
+MAIN_O=$(O_D)/main.o
 
-LINK_I=$(MODULES_O) $(LIB_O) $(MAIN_O)
+# Link
+LINK_I=$(MARIGOLD_MODULES_O) \
+	   $(LIB_O)              \
+	   $(MAIN_O)
+
 LINK_O=main
 
-all: $(MODULES_O) $(LIB_O) $(MAIN_O) $(LINK_O)
+# Targets
+all: $(LINK_I) $(LINK_O)
 
-$(MODULES_O): $(MODULES_I)
-	$(CC) $(ENTITIES_I) -c -o $(ENTITIES_O) $(CFLAGS)
-	$(CC) $(LEVEL_I) -c -o $(LEVEL_O) $(CFLAGS)
-	$(CC) $(RENDERER_I) -c -o $(RENDERER_O) $(CFLAGS)
+$(MARIGOLD_MODULES_O): $(MARIGOLD_MODULES_I)
+	$(CC) $(MARIGOLD_ENTITIES_I) -c -o $(MARIGOLD_ENTITIES_O) $(CFLAGS)
+	$(CC) $(MARIGOLD_LEVEL_I) -c -o $(MARIGOLD_LEVEL_O) $(CFLAGS)
+	$(CC) $(MARIGOLD_RENDERER_I) -c -o $(MARIGOLD_RENDERER_O) $(CFLAGS)
 
 $(LIB_O): $(LIB_I)
+	$(CC) $(MARIGOLD_I) -c -o $(MARIGOLD_O) $(CFLAGS)
 	$(CC) $(MICROUI_I) -c -o $(MICROUI_O) $(CFLAGS)
 
 $(MAIN_O): $(MAIN_I)

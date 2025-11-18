@@ -1,7 +1,7 @@
 CC=gcc-15
-CFLAGS=-Iinclude -fms-extensions $$(pkg-config --cflags --libs gsl sdl2 sdl2_image sdl2_mixer)
 INCLUDE=include
 LIB=lib
+CFLAGS=-I$(INCLUDE) -fms-extensions $$(pkg-config --cflags --libs gsl sdl2 sdl2_image sdl2_mixer)
 
 # Marigold
 MARIGOLD_INCLUDE=$(INCLUDE)/marigold

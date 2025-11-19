@@ -24,16 +24,6 @@ fnv1a32(const char* str) {
 
 /* credit to https://benhoyt.com/writings/hash-table-in-c/ */
 /* Variable-sized hashmp with string keys */
-typedef struct strmap_item {
-    char* ikey;
-    void* ivalue;
-} strmap_item_t;
-
-typedef struct strmap {
-    size_t icapacity;
-    size_t ilength; /* Amount of entries that have been set */
-    struct strmap_item *iarr;
-} strmap_t;
 
 strmap_t* 
 strmap_new(size_t capacity) {

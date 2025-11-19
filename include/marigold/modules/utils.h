@@ -5,8 +5,16 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-typedef struct strmap_item strmap_item_t;
-typedef struct strmap strmap_t;
+typedef struct strmap_item {
+    char* ikey;
+    void* ivalue;
+} strmap_item_t;
+
+typedef struct strmap {
+    size_t icapacity;
+    size_t ilength; /* Amount of entries that have been set */
+    struct strmap_item *iarr;
+} strmap_t;
 
 unsigned int fnv1a32(const char* str);
 

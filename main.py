@@ -120,31 +120,34 @@ class Game(object):
             '9;11': {'elevation': 0, 'height': 1, 'texture': 0}, 
             '10;11': {'elevation': 0, 'height': 1, 'texture': 0},
         }
-        
+
         self._wall_textures = (
             ColumnTexture(pg.image.load('data/images/redbrick.png').convert()),
         )
         
         entities = {
-            0: Entity(height=0.6, texture=pg.image.load('data/images/GrenadeZombie.png')),
+            0: Entity(
+                height=0.6,
+                texture=pg.image.load('data/images/GrenadeZombie.png')
+            ),
         }
         entities[0].pos = (6.5, 6)
         self._player = Player()
         self._level = Level(
-            Floor(pg.image.load('data/images/wood.png').convert()),
-            Sky(pg.image.load('data/images/nightsky.png').convert()),
-            Walls(walls, self._wall_textures),
-            EntityManager(self._player, entities),
+            floor=Floor(pg.image.load('data/images/wood.png').convert()),
+            ceiling=Sky(pg.image.load('data/images/nightsky.png').convert()),
+            walls=Walls(walls, self._wall_textures),
+            entities=EntityManager(self._player, entities),
        )
 
         self._camera = Camera(
-            90,
-            self._SURF_SIZE[0] / 2,
-            10,
-            self._player,
+            fov=90,
+            tile_size=self._SURF_SIZE[0] / 2,
+            wall_render_distance=8,
+            player=self._player,
         )
         self._player.pos = (6.5, 6)
-        self._camera.horizon = self._SURF_SIZE[1] / 2
+        self._camera.horizon = 0.5
         self._level_timer = 0
 
     def run(self: Self) -> None:
@@ -178,8 +181,9 @@ class Game(object):
                 self._level_timer,
                 movement[0],
                 movement[1],
-                movement[2]
+                movement[2],
             )
+            self._camera.horizon -= movement[3] * 0.025
 
             self._level._walls._tilemap['8;11']['elevation'] = math.sin(self._level_timer)
 

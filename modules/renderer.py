@@ -50,7 +50,7 @@ class Camera(object):
 
         def __lt__(self: Self, obj: Self):
             # so objects are rendered farthest to last
-            return self._depth > obj._depth 
+            return self._depth < obj._depth 
 
     def __init__(self: Self,
                  fov: Real,
@@ -58,7 +58,9 @@ class Camera(object):
                  wall_render_distance: Real,
                  player: Player,
                  bob_strength: Real=0.0375,
-                 bob_frequency: Real=10) -> None:
+                 bob_frequency: Real=10,
+                 line_addition: int=2,
+                 min_entity_dist: Real=0.05) -> None:
         
         try:
             self._yaw_magnitude = float(1 / math.tan(math.radians(fov) / 2))
@@ -66,10 +68,12 @@ class Camera(object):
             self._yaw_magnitude = 0
         # already sets yaw V
         self.fov = min(abs(fov), 180) # _fov is in degrees
-        self._horizon = None
+        self._horizon = 0.5
         self._player = player
         self._tile_size = tile_size
         self._wall_render_distance = wall_render_distance
+        self._line_addition = line_addition
+        self._min_entity_dist = min_entity_dist
 
         self.bob_strength = bob_strength
         self.bob_frequency = bob_frequency
@@ -119,13 +123,11 @@ class Camera(object):
 
     @property
     def horizon(self: Self) -> Real:
-        if self._horizon == None:
-            raise AttributeError('set a horizon first')
         return self._horizon
 
     @horizon.setter
     def horizon(self: Self, value: Real) -> None:
-        self._horizon = value
+        self._horizon = pg.math.clamp(value, 0, 1)
 
     @property
     def tile_size(self: Self) -> Real:
@@ -142,6 +144,22 @@ class Camera(object):
     @wall_render_distance.setter
     def wall_render_distance(self: Self, value: Real) -> None:
         self._wall_render_distance = value
+
+    @property
+    def line_addition(self: Self) -> int:
+        return self._line_addition
+
+    @line_addition.setter
+    def line_addition(self: Self, value: int) -> None:
+        self._line_addition = value
+
+    @property
+    def min_entity_dist(self: Self) -> Real:
+        return self._min_entity_dist
+
+    @min_entity_dist.setter
+    def min_entity_dist(self: Self, value: Real) -> None:
+        self._min_entity_dist = value
 
     def _render_floor_and_ceiling(self: Self,
                                   width: Real,
@@ -183,16 +201,18 @@ class Camera(object):
 
         # Sky stuff
         semiheight = height / 2
-        sky_speed = width / 120
+        sky_speed = width / 100
 
         # Actual Render
         obj = self._player._manager._level._floor
         if obj and isinstance(obj, Sky):
-            floor = obj.scroll(
-                -self._player.yaw * sky_speed,
-                width,
-                obj._height,
-            ).subsurface(rect)
+            rect = pg.Rect(0, horizon, width, height - horizon)
+            if rect.top >= 0 and rect.bottom < obj._height:
+                self._floor = obj.scroll(
+                    -self._player.yaw * sky_speed,
+                    width,
+                    obj._height,
+                ).subsurface(rect)
         else:
             # Floor Casting
             difference = int(height - horizon)
@@ -210,7 +230,7 @@ class Camera(object):
                 texture = obj
                 floor = _generate_array(mult, offsets, texture)
 
-                # lighting
+                # lighting (maybe temp?)
                 offsets = np.vstack(offsets)
                 lighting = np.minimum(offsets / semiheight, 1)**0.97
                 floor = floor * lighting
@@ -220,12 +240,13 @@ class Camera(object):
         obj = self._player._manager._level._ceiling
         # Ceiling Casting
         if obj and isinstance(obj, Sky):
-            rect = pg.Rect(0, obj._height / horizon, width, horizon)
-            self._ceiling = obj.scroll(
-                -self._player.yaw * sky_speed,
-                width,
-                obj._height,
-            ).subsurface(rect)
+            rect = pg.Rect(0, obj._height - horizon, width, horizon)
+            if rect.top > 0 and rect.bottom <= obj._height:
+                self._ceiling = obj.scroll(
+                    -self._player.yaw * sky_speed,
+                    width,
+                    obj._height,
+                ).subsurface(rect)
         else:
             amount_of_offsets = int(min(horizon, height))
             if horizon >= 1:
@@ -240,9 +261,9 @@ class Camera(object):
                 texture = obj
                 ceiling = _generate_array(mult, offsets, texture)
 
-                # lighting
+                # lighting (maybe temp ?)
                 offsets = np.vstack(offsets)
-                lighting = np.minimum(offsets / (height / 2), 1)**0.97
+                lighting = np.minimum(offsets / semiheight, 1)**0.97
                 ceiling = ceiling * lighting
                 # can't do *= ^
                 self._ceiling = pg.surfarray.make_surface(ceiling)
@@ -303,7 +324,7 @@ class Camera(object):
                             self._tile_size / depth * data['height'],
                             height * 10,
                         )
-                        render_line_height = line_height + 2 
+                        render_line_height = line_height + self._line_addition
                         # ^ pixel glitches at bottoms of wall are avoided
                         # elevation offset
                         offset = ((self._player._render_elevation * 2
@@ -322,6 +343,8 @@ class Camera(object):
                                 textures[texture][dex],
                                 (1, render_line_height)
                             )
+
+                            # temp
                             pg.transform.hsl(line, 0, 0, max(-dist / 6, -1), line)
                             
                             # Reverse Painter's Algorithm
@@ -376,7 +399,6 @@ class Camera(object):
                 dist = depth * mag
             # the objects are added in closest-to-farthest
             # reverse so that depth buffer works
-            render_buffer[x].reverse()
         
         # Entity Rendering
         for tile_key in empty_tiles:
@@ -387,7 +409,7 @@ class Camera(object):
                     # rotation
                     rel_vector.rotate_y_ip(self._player._yaw_value)
                     depth = rel_vector.z
-                    if depth > 0.05:
+                    if depth >= self._min_entity_dist:
                         ratios = (
                             rel_vector.x / rel_vector.z,
                             rel_vector.y / rel_vector.z,
@@ -396,7 +418,7 @@ class Camera(object):
                         mult = self._fov_mult * semiwidth
                         projection = pg.Vector2(
                             -ratios[0] * mult + semiwidth,
-                            -ratios[1] * mult + semiheight,
+                            -ratios[1] * mult + horizon,
                         )
                         
                         dex = int(projection.x)
@@ -421,8 +443,8 @@ class Camera(object):
                                 bisect.insort(render_buffer[pos[0]], obj)
 
         for blits in render_buffer:
-            for obj in blits:
-                args = obj._args
+            for i in range(len(blits) - 1, -1, -1):
+                args = blits[i]._args
                 self._walls_and_entities.blit(*args)
 
     def render(self: Self, surf: pg.Surface) -> None:
@@ -434,7 +456,7 @@ class Camera(object):
         self._ceiling = None
         self._floor = None
  
-        horizon = self._horizon
+        horizon = self._horizon * height
         if self._horizon == None:
             horizon = int(height / 2)
 

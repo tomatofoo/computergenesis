@@ -1,7 +1,19 @@
 import math
+from typing import Self
 
 import pygame as pg
 from pygame.typing import Point
+
+
+class Box(object):
+    def __init__(self: Self,
+                 left: Real,
+                 top: Real,
+                 far: Real,
+                 width: Real,
+                 height: Real,
+                 depth: Real) -> None:
+        pass
 
 
 def generate_composite(tilemap: dict[str, int],

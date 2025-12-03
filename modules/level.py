@@ -252,10 +252,6 @@ class Entity(object):
         return pg.Vector3(self._pos.x, self._elevation, self._pos.y)
 
     @property
-    def _render_vector3(self: Self) -> pg.Vector3:
-        return pg.Vector3(self._pos.x, self._render_elevation, self._pos.y)
-
-    @property
     def yaw(self: Self) -> float:
         return self._yaw_value
 
@@ -391,6 +387,10 @@ class Player(Entity):
             'bob_strength': 0,
             'bob_frequency': 0,
         }
+
+    @property
+    def _render_vector3(self: Self) -> pg.Vector3:
+        return pg.Vector3(self._pos.x, self._render_elevation, self._pos.y)
 
     def update(self: Self,
                rel_game_speed: Real,

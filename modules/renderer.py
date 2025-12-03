@@ -290,6 +290,7 @@ class Camera(object):
         
         # entity stuff
         empty_tiles = set() # tiles checked without tiles
+        projection_mult = self._fov_mult * semiwidth
 
         # Wall Casting
         for x in range(width):
@@ -414,10 +415,9 @@ class Camera(object):
                             rel_vector.y / rel_vector.z,
                         )
                         # final projection
-                        mult = self._fov_mult * semiwidth
                         projection = pg.Vector2(
-                            -ratios[0] * mult + semiwidth,
-                            -ratios[1] * mult + horizon,
+                            -ratios[0] * projection_mult + semiwidth,
+                            -ratios[1] * projection_mult + horizon,
                         )
                         
                         dex = int(projection.x)

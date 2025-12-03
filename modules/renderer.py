@@ -274,7 +274,6 @@ class Camera(object):
                                    horizon: Real) -> None:
 
         semiwidth = width / 2
-        semiheight = height / 2
 
         # the per-pixel alpha with (0, 0, 0, 0) doesn't seem to affect
         # fps at all

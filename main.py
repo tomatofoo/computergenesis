@@ -183,7 +183,7 @@ class Game(object):
                 movement[1],
                 movement[2],
             )
-            self._camera.horizon -= movement[3] * 0.02
+            self._camera.horizon -= movement[3] * 0.025
 
             self._level._walls._tilemap['8;11']['elevation'] = math.sin(self._level_timer)
 

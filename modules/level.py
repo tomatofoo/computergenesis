@@ -9,6 +9,8 @@ import numpy as np
 import pygame as pg
 from pygame.typing import Point
 
+from modules.utils import gen_tile_key
+
 
 _FALLBACK_SURF = pg.Surface((2, 2))
 pg.draw.rect(_FALLBACK_SURF, (255, 0, 255), pg.Rect(1, 0, 1, 1))
@@ -248,6 +250,10 @@ class Entity(object):
         self._elevation = value
 
     @property
+    def vector2(self: Self) -> pg.Vector2:
+        return self._pos.copy()
+
+    @property
     def vector3(self: Self) -> pg.Vector3:
         return pg.Vector3(self._pos.x, self._elevation, self._pos.y)
 
@@ -304,10 +310,6 @@ class Entity(object):
         self._yaw_velocity = value
 
     @property
-    def manager(self: Self) -> EntityManager:
-        return self._manager
-
-    @property
     def texture(self: Self) -> ColumnTexture:
         return self._texture
 
@@ -322,8 +324,7 @@ class Entity(object):
         return self._manager
 
     def _get_rects_around(self: Self) -> list:
-        tile = pg.Vector2(math.floor(self._pos.x),
-                               math.floor(self._pos.y))
+        tile = pg.Vector2(math.floor(self._pos.x), math.floor(self._pos.y))
         tiles = []
         for offset in self._TILE_OFFSETS:
             offset_tile = tile + offset
@@ -337,16 +338,15 @@ class Entity(object):
         rect = pg.FRect(0, 0, self._width, self._width)
         rect.center = self._pos
         return rect
+    
+    def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
+        old_pos = self._pos.copy()
 
-    def vector(self: Self) -> pg.Vector3:
-        return pg.Vector3(self._pos.x, self._elevation, self._pos.y)
-
-    def update(self: Self, rel_game_speed: Real) -> None:
         # I'm not sure if there is a reason that these 
         # aren't being multiplied by delta time
-        self._elevation += self._elevation_velocity
+        self._elevation += self._elevation_velocity * rel_game_speed
         if self._yaw_velocity:
-            self.yaw += self._yaw_velocity
+            self.yaw += self._yaw_velocity * rel_game_speed
          
         self._pos.x += self._velocity2.x * rel_game_speed
         entity_rect = self.rect()
@@ -366,7 +366,7 @@ class Entity(object):
                 elif self._velocity2.y < 0:
                     entity_rect.top = rect.bottom
                 self._pos.y = entity_rect.centery
- 
+
 
 class Player(Entity):
     def __init__(self: Self,
@@ -404,7 +404,7 @@ class Player(Entity):
         if right:
             self._right_velocity.update(self._semiplane * right)
         
-        self._yaw_velocity = yaw * rel_game_speed
+        self._yaw_velocity = yaw
 
         vel_mult = 0.90625**rel_game_speed # number used in Doom
         elevation_update = 0
@@ -428,7 +428,7 @@ class Player(Entity):
             )
 
         self._velocity2 = self._forward_velocity + self._right_velocity
-        super().update(rel_game_speed)
+        super().update(rel_game_speed, level_timer)
         
 
 class EntityManager(object):
@@ -440,13 +440,16 @@ class EntityManager(object):
         player._manager = self
         self._entities = entities.copy()
         self._sets = {}
-        for entity in self._entities.values():
+        for entity in entities.values():
             self._add_to_sets(entity)
             entity._manager = self
         self._level = None
 
         # _sets is a dictionary where each key is a tile position and the value
         # is the set of all entities in that position
+
+    def __getitem__(self: Self, key: object) -> Entity:
+        return self._entities[key]
     
     @property
     def entities(self: Self) -> dict:
@@ -478,7 +481,7 @@ class EntityManager(object):
         return self._level
 
     def _add_to_sets(self: Self, entity: Entity) -> None:
-        key = f'{int(math.floor(entity.x))};{int(math.floor(entity.y))}'
+        key = gen_tile_key(entity._pos)
         if self._sets.get(key) == None:
             self._sets[key] = set()
         self._sets[key].add(entity)
@@ -489,12 +492,22 @@ class EntityManager(object):
 
     def remove_entity(self: Self, id: object) -> None:
         entity = self._entities[id]
-        key = f'{int(math.floor(entity.x))};{int(math.floor(entity.y))}'
+        key = gen_tile_key(entity._pos)
         self._sets[key].remove(entity) # remove from set
         entity._manager = None
         return self._entities.pop(id)
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         for entity in self._entities.values():
+            old_key = gen_tile_key(entity._pos)
             entity.update(rel_game_speed, level_timer)
+            key = gen_tile_key(entity._pos)
+            if key != old_key:
+                self._sets[old_key].remove(entity)
+                if not self._sets.get(key):
+                    self._sets[key] = set()
+                self._sets[key].add(entity)
+
+            if not self._sets[old_key]:
+                self._sets.pop(old_key)
 

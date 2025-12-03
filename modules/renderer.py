@@ -10,6 +10,7 @@ import numpy as np
 import pygame as pg
 from pygame.typing import Point
 
+from modules.utils import gen_tile_key
 from modules.level import ColumnTexture
 from modules.level import Sky
 from modules.level import Player
@@ -312,7 +313,7 @@ class Camera(object):
             # keep on changing end_pos until hitting a wall (DDA)
             while dist < self._wall_render_distance:
                 # Tile Rendering
-                tile_key = f'{int(tile.x)};{int(tile.y)}'
+                tile_key = gen_tile_key(tile)
                 if tilemap.get(tile_key) != None:
                     if depth and not limits.full(0, height):
 

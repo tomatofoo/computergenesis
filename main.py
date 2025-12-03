@@ -1,5 +1,6 @@
 import time
 import math
+import random
 from typing import Self
 
 import pygame as pg
@@ -124,21 +125,24 @@ class Game(object):
         self._wall_textures = (
             ColumnTexture(pg.image.load('data/images/redbrick.png').convert()),
         )
-        
+
+        self._player = Player()
         entities = {
             0: Entity(
                 height=0.6,
                 texture=pg.image.load('data/images/GrenadeZombie.png')
             ),
         }
-        entities[0].pos = (6.5, 6)
-        self._player = Player()
+        entities[0].pos = (6.5, 3)
+        self._entities = EntityManager(self._player, entities)
+
         self._level = Level(
             floor=Floor(pg.image.load('data/images/wood.png').convert()),
             ceiling=Sky(pg.image.load('data/images/nightsky.png').convert()),
             walls=Walls(walls, self._wall_textures),
-            entities=EntityManager(self._player, entities),
-       )
+            entities=self._entities,
+        )
+        pg.mouse.set_relative_mode(1)
 
         self._camera = Camera(
             fov=90,
@@ -167,6 +171,10 @@ class Game(object):
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     self._running = 0
+                # temp
+                elif event.type == pg.MOUSEMOTION:
+                    rel = pg.mouse.get_rel()
+                    self._player.yaw += rel[0] * 0.2
 
             keys = pg.key.get_pressed()
             movement = (
@@ -175,7 +183,7 @@ class Game(object):
                 (keys[pg.K_RIGHT] - keys[pg.K_LEFT]) * 2.5,
                 (keys[pg.K_DOWN] - keys[pg.K_UP]),
             )
-
+            
             self._player.update(
                 rel_game_speed,
                 self._level_timer,
@@ -185,10 +193,18 @@ class Game(object):
             )
             self._camera.horizon -= movement[3] * 0.025
 
+            # temp super basic nextbot
+            rel_vector = (self._player.vector2 - self._entities[0].vector2)
+            if rel_vector and self._level_timer > 5:
+                self._entities[0].velocity2 = (rel_vector.normalize() * 0.05).rotate(random.randint(-23, 23))
+            self._entities.update(rel_game_speed, self._level_timer)
+            if self._entities[0].vector2.distance_to(self._player.vector2) < 0.25:
+                print('score:', int(self._level_timer) * 100)
+                self._running = 0
             self._level._walls._tilemap['8;11']['elevation'] = math.sin(self._level_timer)
 
             self._camera.render(self._surface)
-            self._surface.blit(gun, (self._SURF_SIZE[0] - gun.width, self._SURF_SIZE[1] - gun.height))
+            # self._surface.blit(gun, (self._SURF_SIZE[0] - gun.width, self._SURF_SIZE[1] - gun.height))
             pg.display.set_caption(str(1 / delta_time) if delta_time else 'inf')
 
             resized_surf = pg.transform.scale(self._surface, self._SCREEN_SIZE)

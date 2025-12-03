@@ -1,4 +1,5 @@
 import math
+from numbers import Real
 from typing import Self
 
 import pygame as pg
@@ -14,6 +15,10 @@ class Box(object):
                  height: Real,
                  depth: Real) -> None:
         pass
+
+
+def gen_tile_key(obj: Point):
+    return f'{int(math.floor(obj[0]))};{int(math.floor(obj[1]))}'
 
 
 def generate_composite(tilemap: dict[str, int],

@@ -5,7 +5,6 @@ import random
 from typing import Self
 
 import pygame as pg
-from pygame import mixer as mx
 
 from modules.utils import Pathfinder
 from modules.level import Level

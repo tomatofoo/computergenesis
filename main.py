@@ -5,6 +5,7 @@ import random
 from typing import Self
 
 import pygame as pg
+from pygame import mixer as mx
 
 from modules.utils import Pathfinder
 from modules.level import Level
@@ -79,7 +80,7 @@ class Game(object):
             entities=self._entities,
         )
         #temp
-        pg.mouse.set_relative_mode(1)
+        # pg.mouse.set_relative_mode(1)
 
         self._camera = Camera(
             fov=90,
@@ -90,6 +91,7 @@ class Game(object):
         self._camera.horizon = 0.5
         self._level_timer = 0
 
+
         self._font = pg.font.SysFont('Arial', 30)
         self._small_font = pg.font.SysFont('Arial', 12)
 
@@ -98,6 +100,10 @@ class Game(object):
         start_time = time.time()
         
         gun = pg.image.load('data/images/gun.png')
+        sound = mx.Sound('data/sounds/scream.mp3')
+        deathsound = mx.Sound('data/sounds/dead.mp3')
+        #sound.play(loops=-1)
+        sound.set_volume(0)
 
         while self._running:
             delta_time = time.time() - start_time
@@ -131,6 +137,9 @@ class Game(object):
                         self._pathfinder.end = player_tile
                         self._pathfinder.pathfind()
                         self._next_path_dex = 1
+                        deathsound.set_volume(0)
+                        #sound.play(-1)
+                        sound.set_volume(0)
                     elif event.key == pg.K_m:
                         self._minimap = not self._minimap
 
@@ -184,6 +193,8 @@ class Game(object):
 
                 pathfind_vector = wanted_pos - entity_vector               
                 rel_vector = player_vector - entity_vector
+                sound.set_volume(min(0.5 / rel_vector.magnitude(), 1))
+
                 if pathfind_vector and rel_vector:
                     pathfind_vector = pathfind_vector.normalize()
                     rel_vector = rel_vector.normalize()
@@ -191,12 +202,15 @@ class Game(object):
                     vector = pathfind_vector * 0.9 + rel_vector * 0.1
                 
                     if self._level_timer > 5 and vector:
-                        self._entities[0].velocity2 = (vector.normalize() * 0.09)
+                        self._entities[0].velocity2 = (vector.normalize() * 0.1)
 
                 self._entities.update(rel_game_speed, self._level_timer)
 
                 if self._entities[0].vector2.distance_to(player_vector) < 0.25:
                     self._dead = 1
+                    deathsound.set_volume(1)
+                    #deathsound.play()
+                    #sound.stop()
                     score = self._level_timer
 
                 # moving wall

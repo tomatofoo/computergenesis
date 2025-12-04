@@ -111,7 +111,7 @@ class Walls(object):
                  height: Real,
                  texture: int):
 
-        self._walls[f'{pos[0]};{pos[1]}'] = {
+        self._tilemap[f'{pos[0]};{pos[1]}'] = {
             'elevation': elevation,
             'height': height,
             'texture': texture,
@@ -197,23 +197,27 @@ class Entity(object):
                  texture: pg.Surface=_FALLBACK_SURF) -> None:
 
         self.texture = texture
-        self.pos = (0, 0)
+        self.yaw = 0
         self.velocity2 = (0, 0)
         self.elevation_velocity = 0
         self.yaw_velocity = 0
         self.elevation = 0
-        self.yaw = 0
+        self._pos = pg.Vector2(0, 0)
         self._width = width # width of rect
         self._height = height
         self._manager = None
   
     @property
-    def pos(self: Self) -> tuple:
-        return tuple(self._pos)
+    def pos(self: Self) -> pg.Vector2:
+        return self._pos.copy()
 
     @pos.setter
     def pos(self: Self, value: Point) -> None:
+        old_key = gen_tile_key(self._pos)
         self._pos = pg.Vector2(value)
+        key = gen_tile_key(self._pos)
+        if self._manager:
+            self._update_manager_sets(old_key, key)
 
     @property
     def x(self: Self) -> Real:
@@ -245,14 +249,17 @@ class Entity(object):
 
     @elevation.setter
     def elevation(self: Self, value: Real) -> None:
-        if value <= -1:
-            raise ValueError('elevation must be greater than -1')
-        self._elevation = value
+        self._elevation = max(value, 0)
+
+    @property
+    def tile(self: Self) -> None:
+        return (int(math.floor(self._pos[0])),
+                int(math.floor(self._pos[1])))
 
     @property
     def vector2(self: Self) -> pg.Vector2:
         return self._pos.copy()
-
+    
     @property
     def vector3(self: Self) -> pg.Vector3:
         return pg.Vector3(self._pos.x, self._elevation, self._pos.y)
@@ -286,8 +293,8 @@ class Entity(object):
         self._height = value
 
     @property
-    def velocity2(self: Self) -> tuple:
-        return tuple(self._velocity2)
+    def velocity2(self: Self) -> pg.Vector2:
+        return self._velocity2.copy()
 
     @velocity2.setter
     def velocity2(self: Self, value: Point) -> None:
@@ -329,10 +336,19 @@ class Entity(object):
         for offset in self._TILE_OFFSETS:
             offset_tile = tile + offset
             level_string = f'{int(offset_tile.x)};{int(offset_tile.y)}'
-            walls = self._manager._level._walls
+            walls = self.manager._level._walls
             if walls._tilemap.get(level_string) != None:
                 tiles.append(pg.Rect(offset_tile.x, offset_tile.y, 1, 1))
         return tiles
+
+    def _update_manager_sets(self: Self, old_key: str, key: str) -> None:
+        if old_key != key:
+            self._manager._sets[old_key].remove(self)
+            if not self._manager._sets[old_key]:
+                self._manager._sets.pop(old_key)
+            if not self._manager._sets.get(key):
+                self._manager._sets[key] = set()
+            self._manager._sets[key].add(self)
 
     def rect(self: Self) -> pg.Rect:
         rect = pg.FRect(0, 0, self._width, self._width)
@@ -340,8 +356,6 @@ class Entity(object):
         return rect
     
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
-        old_pos = self._pos.copy()
-
         # I'm not sure if there is a reason that these 
         # aren't being multiplied by delta time
         self._elevation += self._elevation_velocity * rel_game_speed
@@ -389,8 +403,26 @@ class Player(Entity):
         }
 
     @property
+    def pos(self: Self) -> pg.Vector2:
+        return self._pos.copy()
+
+    @pos.setter
+    def pos(self: Self, value: Point) -> None:
+        self._pos = pg.Vector2(value)
+
+    @property
     def _render_vector3(self: Self) -> pg.Vector3:
         return pg.Vector3(self._pos.x, self._render_elevation, self._pos.y)
+
+    @property
+    def velocity2(self: Self) ->  pg.Vector2:
+        return self._velocity2
+
+    @velocity2.setter
+    def velocity2(self: Self, value: Point) -> None:
+        self._velocity2 = pg.Vector2(value)
+        self._forward_velocity = self._velocity2.project(self._yaw)
+        self._right_velocity = self._velocity2.project(self._semiplane)
 
     def update(self: Self,
                rel_game_speed: Real,
@@ -502,12 +534,5 @@ class EntityManager(object):
             old_key = gen_tile_key(entity._pos)
             entity.update(rel_game_speed, level_timer)
             key = gen_tile_key(entity._pos)
-            if key != old_key:
-                self._sets[old_key].remove(entity)
-                if not self._sets.get(key):
-                    self._sets[key] = set()
-                self._sets[key].add(entity)
-
-            if not self._sets[old_key]:
-                self._sets.pop(old_key)
+            entity._update_manager_sets(old_key, key)
 

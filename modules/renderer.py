@@ -318,6 +318,16 @@ class Camera(object):
 
         return (line_height, render_line_height, offset)
 
+    def _transform_line(self: Self, line: pg.Surface, dist: Real) -> None:
+        if self._darkness:
+            pg.transform.hsl(
+                line,
+                0, 0,
+                # magic numbers were found by testing
+                max(-dist**0.9 * self._darkness / 7, -1),
+                line,
+            )
+
     def _render_walls_and_entities(self: Self,
                                    width: Real,
                                    height: Real,
@@ -386,25 +396,18 @@ class Camera(object):
                         back_line_height = y + render_line_height - render_y
                         color = data['bottom']
                     
-                    # 1 was found through testing
-                    line = pg.Surface((1, back_line_height + 1)).convert()
+                    # this offset was found through testing
+                    render_back_line_height = back_line_height + 1
+                    line = pg.Surface((1, render_back_line_height))
                     line.fill(color)
-                    """
-                    pg.transform.hsl(
-                        line,
-                        0, 0,
-                        # magic numbers were found by testing
-                        max(-dist**0.9 * self._darkness / 7, -1),
-                        line,
-                    ) """
-
+                    self._transform_line(line, dist)
+                    
                     obj = self._DepthBufferObject(
                         depth, (line, (x, render_y), None),
                     )
                     render_buffer[x].append(obj)
-                    render_back = 3 # used to indicate already rendered
-                    # ^ will get set to zero if not found tile
-                    limits.add(render_y, render_y + back_line_height)
+                    render_back = 0
+                    limits.add(render_y, render_y + render_back_line_height)
 
                 tile_key = gen_tile_key(tile)
                 data = tilemap.get(tile_key)
@@ -423,8 +426,6 @@ class Camera(object):
                         elif horizon > render_end:
                             render_back = 2
                             back_edge = render_end
-                        else:
-                            render_back = 0
 
                         # check if line is visible
                         if (-line_height / 2 - offset < horizon 
@@ -438,16 +439,8 @@ class Camera(object):
                                 textures[texture][dex],
                                 (1, render_line_height)
                             )
-                            
-                            if self._darkness:
-                                pg.transform.hsl(
-                                    line,
-                                    0, 0,
-                                    # magic numbers were found by testing
-                                    max(-dist**0.9 * self._darkness / 7, -1),
-                                    line,
-                                )
-                            
+                            self._transform_line(line, dist)
+ 
                             # Reverse Painter's Algorithm
                             segments = limits._limits
                             amount = len(segments)
@@ -459,7 +452,7 @@ class Camera(object):
                                 if y < start and render_end > end:
                                     render_y = max(end, y)
                                     rect = pg.Rect(
-                                        0, render_y - y, 1, start - render_y + 1,
+                                        0, render_y - y, 1, start - render_y,
                                     )
                                     
                                     obj = self._DepthBufferObject(
@@ -471,7 +464,6 @@ class Camera(object):
                                         break
                             limits.add(y, render_end)
                 else:
-                    render_back = 0
                     empty_tiles.add(tile_key)
 
                 # displacements until hit tile

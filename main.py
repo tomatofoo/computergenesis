@@ -46,8 +46,6 @@ class Game(object):
         with open('data/map.json', 'r') as file:
             walls = json.loads(file.read())
 
-        walls['8;11']['bottom'] = (255, 255, 255)
-
         self._wall_textures = (
             ColumnTexture(pg.image.load('data/images/redbrick.png').convert()),
         )
@@ -130,6 +128,8 @@ class Game(object):
                 elevation=math.sin(self._level_timer),
                 height=1,
                 texture=0,
+                top=(255, 255, 255),
+                bottom=(255, 255, 255),
             )
 
             self._camera.render(self._surface)

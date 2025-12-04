@@ -38,8 +38,8 @@ class Limits(object):
                 and self._limits[0][0] <= start
                 and self._limits[0][1] >= end)
 
-    def get(self: Self) -> set:
-        return self._limits.copy()
+    def get(self: Self) -> list:
+        return self._limits
 
 
 class Camera(object):

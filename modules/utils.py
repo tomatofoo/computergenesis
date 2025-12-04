@@ -56,11 +56,11 @@ class Pathfinder(object): # 4-path pathfinder using A*
     
     @property
     def tilemap(self: Self) -> dict:
-        return self._tilemap.copy()
+        return self._tilemap
 
     @tilemap.setter
     def tilemap(self: Self, value: dict) -> None:
-        self._tilemap = value.copy()
+        self._tilemap = value
 
     @property
     def path(self: Self) -> list:

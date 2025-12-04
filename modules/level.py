@@ -42,8 +42,8 @@ class Floor(object):
                  surf: pg.Surface=_FALLBACK_SURF,
                  scale: Point=(1, 1)) -> None:
 
-        self._surf = surf
-        self._scale = list(scale)
+        self.surf = surf
+        self.scale = scale
         self._array = pg.surfarray.array3d(surf)
     
     def __getitem__(self: Self, dex: object):
@@ -51,11 +51,19 @@ class Floor(object):
 
     @property
     def surf(self: Self) -> pg.Surface:
-        return self._surf.copy()
+        return self._surf
 
     @surf.setter
     def surf(self: Self, value: pg.Surface) -> None:
-        self._surf = value.copy()
+        self._surf = value
+
+    @property
+    def scale(self: Self) -> tuple:
+        return self._scale
+
+    @property
+    def scale(self: Self, value: Point) -> None:
+        self._scale = tuple(value)
 
     @property
     def width(self: Self) -> Real:
@@ -65,21 +73,12 @@ class Floor(object):
     def height(self: Self) -> Real:
         return self._surf.height
 
-    @property
-    def scale(self: Self) -> tuple:
-        return tuple(self._scale)
 
 class Sky(object):
     def __init__(self: Self,
-                 obj: pg.Surface | str,
+                 surf: pg.Surface=_FALLBACK_SURF,
                  height: Optional[int]=None) -> None:
 
-        surf = obj
-        if isinstance(obj, str):
-            try:
-                surf = pg.image.load(obj)
-            except FileNotFoundError:
-                surf = _FALLBACK_SURF
         self._surf = surf
         self._height = height
         if height == None:
@@ -100,10 +99,10 @@ class Sky(object):
 class Walls(object):
     def __init__(self: Self,
                  tilemap: dict,
-                 textures: tuple[ColumnTexture]) -> None:
+                 textures: list[ColumnTexture]) -> None:
 
-        self._tilemap = tilemap.copy()
-        self._textures = list(textures)
+        self._tilemap = tilemap
+        self._textures = textures
 
     def set_tile(self: Self,
                  pos: Point,
@@ -122,11 +121,11 @@ class Walls(object):
 
     @property
     def tilemap(self: Self) -> dict:
-        return self._tilemap.copy()
+        return self._tilemap
 
     @property
     def textures(self: Self) -> tuple:
-        return tuple(self._textures)
+        return self._textures
 
 
 class Level(object):
@@ -209,7 +208,7 @@ class Entity(object):
   
     @property
     def pos(self: Self) -> pg.Vector2:
-        return self._pos.copy()
+        return self._pos
 
     @pos.setter
     def pos(self: Self, value: Point) -> None:
@@ -258,7 +257,7 @@ class Entity(object):
 
     @property
     def vector2(self: Self) -> pg.Vector2:
-        return self._pos.copy()
+        return self._pos
     
     @property
     def vector3(self: Self) -> pg.Vector3:
@@ -294,7 +293,7 @@ class Entity(object):
 
     @property
     def velocity2(self: Self) -> pg.Vector2:
-        return self._velocity2.copy()
+        return self._velocity2
 
     @velocity2.setter
     def velocity2(self: Self, value: Point) -> None:
@@ -404,7 +403,7 @@ class Player(Entity):
 
     @property
     def pos(self: Self) -> pg.Vector2:
-        return self._pos.copy()
+        return self._pos
 
     @pos.setter
     def pos(self: Self, value: Point) -> None:
@@ -415,7 +414,7 @@ class Player(Entity):
         return pg.Vector3(self._pos.x, self._render_elevation, self._pos.y)
 
     @property
-    def velocity2(self: Self) ->  pg.Vector2:
+    def velocity2(self: Self) -> pg.Vector2:
         return self._velocity2
 
     @velocity2.setter
@@ -470,7 +469,7 @@ class EntityManager(object):
                  entities: dict[object, Entity]) -> None:
         self._player = player
         player._manager = self
-        self._entities = entities.copy()
+        self._entities = entities
         self._sets = {}
         for entity in entities.values():
             self._add_to_sets(entity)
@@ -485,16 +484,16 @@ class EntityManager(object):
     
     @property
     def entities(self: Self) -> dict:
-        return self._entities.copy()
+        return self._entities
 
     @entities.setter
     def entities(self: Self, value: dict) -> None:
         for entity in self._entities.values():
             entity._manager = None
 
-        self._entities = value.copy()
+        self._entities = value
         self._sets = {}
-        for entity in self._entities.values():
+        for entity in value.values():
             self._add_to_sets(entity)
             entity._manager = self
 

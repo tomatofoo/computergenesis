@@ -246,7 +246,9 @@ class Camera(object):
                 #lighting
                 if self._darkness:
                     offsets = np.vstack(offsets)
-                    lighting = np.minimum(offsets / semiheight / self._darkness, 1)
+                    lighting = np.minimum(
+                        offsets / semiheight / self._darkness, 1,
+                    )
                     floor = floor * lighting
                     # can't do *= ^
 
@@ -281,7 +283,9 @@ class Camera(object):
                 # lighting
                 if self._darkness:
                     offsets = np.vstack(offsets)
-                    lighting = np.minimum(offsets / semiheight / self._darkness, 1)
+                    lighting = np.minimum(
+                        offsets / semiheight / self._darkness, 1,
+                    )
                     ceiling = ceiling * lighting
                     # can't do *= ^
 

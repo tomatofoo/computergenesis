@@ -38,6 +38,13 @@ class Limits(object):
         return (self._limits
                 and self._limits[0][0] <= start
                 and self._limits[0][1] >= end)
+        # not sure which one to choose, currently using ^
+        if not self._limits:
+            return False
+        for limit in self._limits:
+            if limit[0] <= start and limit[1] >= end:
+                return True
+        return False
 
     def get(self: Self) -> list:
         return self._limits
@@ -62,7 +69,7 @@ class Camera(object):
                  bob_strength: Real=0.0375,
                  bob_frequency: Real=10,
                  darkness: Real=1,
-                 line_addition: int=2,
+                 max_line_height: Real=10,
                  min_entity_dist: Real=0.05) -> None:
         
         try:
@@ -75,7 +82,7 @@ class Camera(object):
         self._player = player
         self._tile_size = tile_size
         self._wall_render_distance = wall_render_distance
-        self._line_addition = line_addition
+        self._max_line_height = max_line_height
         self._min_entity_dist = min_entity_dist
         self._darkness = darkness
 
@@ -150,12 +157,12 @@ class Camera(object):
         self._wall_render_distance = value
 
     @property
-    def line_addition(self: Self) -> int:
-        return self._line_addition
+    def max_line_height(self: Self) -> int:
+        return self._max_line_height
 
-    @line_addition.setter
-    def line_addition(self: Self, value: int) -> None:
-        self._line_addition = value
+    @max_line_height.setter
+    def max_line_height(self: Self, value: int) -> None:
+        self._max_line_height = value
 
     @property
     def min_entity_dist(self: Self) -> Real:
@@ -216,7 +223,7 @@ class Camera(object):
 
         # Actual Render
         obj = self._player._manager._level._floor
-        if obj and isinstance(obj, Sky):
+        if isinstance(obj, Sky):
             rect = pg.Rect(0, horizon, width, height - horizon)
             if rect.top >= 0 and rect.bottom < obj._height:
                 self._floor = obj.scroll(
@@ -224,7 +231,7 @@ class Camera(object):
                     width,
                     obj._height,
                 ).subsurface(rect)
-        else:
+        elif obj:
             # Floor Casting
             difference = int(height - horizon)
             amount_of_offsets = min(difference, height)
@@ -256,7 +263,7 @@ class Camera(object):
 
         obj = self._player._manager._level._ceiling
         # Ceiling Casting
-        if obj and isinstance(obj, Sky):
+        if isinstance(obj, Sky):
             rect = pg.Rect(0, obj._height - horizon, width, horizon)
             if rect.top > 0 and rect.bottom <= obj._height:
                 self._ceiling = obj.scroll(
@@ -264,7 +271,7 @@ class Camera(object):
                     width,
                     obj._height,
                 ).subsurface(rect)
-        else:
+        elif obj:
             amount_of_offsets = int(min(horizon, height))
             if horizon >= 1:
                 offsets = np.linspace(
@@ -290,6 +297,26 @@ class Camera(object):
                     # can't do *= ^
 
                 self._ceiling = pg.surfarray.make_surface(ceiling)
+    
+    def _calculate_line(self: Self, depth: Real, data: dict) -> tuple:
+        # distance already does fisheye correction because it 
+        # divides by the magnitude of ray (when "depth" is 1)
+        line_height = min(
+            self._tile_size / depth * data['height'],
+            self._tile_size * self._max_line_height,
+        )
+        # 2 was found through testing
+        render_line_height = line_height + 2
+        # ^ pixel glitches at bottoms of wall are avoided
+        # elevation offset
+        offset = (
+            (self._player._render_elevation * 2
+             - data['elevation'] * 2
+             - data['height'])
+            * self._tile_size / 2 / depth
+        )
+
+        return (line_height, render_line_height, offset)
 
     def _render_walls_and_entities(self: Self,
                                    width: Real,
@@ -303,6 +330,7 @@ class Camera(object):
         self._walls_and_entities = pg.Surface((width, height), pg.SRCALPHA)
         self._walls_and_entities.fill((0, 0, 0, 0))
         
+        # level manager stuff
         manager = self._player._manager
         tilemap = manager._level._walls._tilemap
         textures = manager._level._walls._textures
@@ -331,28 +359,72 @@ class Camera(object):
             dist = 0
             
             limits = Limits()
-
+            
+            # 0 to not render back of wall
+            # 1 if rendering top of back of wall
+            # 2 if rendering bottom of back of wall
+            render_back = 0
+            back_edge = None # edge where rectangle back starts or ends
+            back_line_height = 0
+            # ^ variable is needed because the back line might not be 
+            # the full height
+        
             # keep on changing end_pos until hitting a wall (DDA)
             while dist < self._wall_render_distance:
                 # Tile Rendering
-                tile_key = gen_tile_key(tile)
-                if tilemap.get(tile_key) != None:
-                    if depth and not limits.full(0, height):
-                        data = tilemap[tile_key] # tile data
+                if render_back:
+                    calculation = self._calculate_line(depth, data)
+                    line_height, render_line_height, offset = calculation
+                    y = horizon - line_height / 2 + offset
 
-                        # distance already does fisheye correction because it 
-                        # divides by the magnitude of ray (when "depth" is 1)
-                        line_height = min(
-                            self._tile_size / depth * data['height'],
-                            height * 10,
-                        )
-                        render_line_height = line_height + self._line_addition
-                        # ^ pixel glitches at bottoms of wall are avoided
-                        # elevation offset
-                        offset = ((self._player._render_elevation * 2
-                                   - data['elevation'] * 2
-                                   - data['height'])
-                                  * self._tile_size / 2 / depth)
+                    if render_back == 1: # render back on top
+                        render_y = horizon - line_height / 2 + offset
+                        back_line_height = back_edge - render_y
+                        color = data['top']
+                    elif render_back == 2: # render back at bottom
+                        render_y = back_edge
+                        back_line_height = y + render_line_height - render_y
+                        color = data['bottom']
+                    
+                    # 1 was found through testing
+                    line = pg.Surface((1, back_line_height + 1)).convert()
+                    line.fill(color)
+                    pg.transform.hsl(
+                        line,
+                        0, 0,
+                        # magic numbers were found by testing
+                        max(-dist**0.9 * self._darkness / 7, -1),
+                        line,
+                    ) 
+
+                    obj = self._DepthBufferObject(
+                        depth, (line, (x, render_y), None),
+                    )
+                    render_buffer[x].append(obj)
+                    render_back = 3 # used to indicate already rendered
+                    # ^ will get set to zero if not found tile
+                    limits.add(render_y, render_y + back_line_height)
+
+                tile_key = gen_tile_key(tile)
+                data = tilemap.get(tile_key)
+                if data != None:
+                    if depth and not limits.full(0, height):
+                        calculation = self._calculate_line(depth, data)
+
+                        line_height, render_line_height, offset = calculation
+                        y = horizon - line_height / 2 + offset
+                        render_end = y + render_line_height
+
+                        if horizon < y: # render back of tile on top
+                            render_back = 1
+                            back_edge = y
+                        # render back of tile on bottom
+                        elif horizon > render_end:
+                            render_back = 2
+                            back_edge = render_end
+                        else:
+                            render_back = 0
+
                         # check if line is visible
                         if (-line_height / 2 - offset < horizon 
                             < height + line_height / 2 - offset):
@@ -376,8 +448,6 @@ class Camera(object):
                                 )
                             
                             # Reverse Painter's Algorithm
-                            y = horizon - line_height / 2 + offset
-                            render_end = y + render_line_height
                             segments = limits._limits
                             amount = len(segments)
                             # not enumerated because + 1
@@ -398,9 +468,9 @@ class Camera(object):
 
                                     if rect.bottom >= render_line_height:
                                         break
-
                             limits.add(y, render_end)
                 else:
+                    render_back = 0
                     empty_tiles.add(tile_key)
 
                 # displacements until hit tile

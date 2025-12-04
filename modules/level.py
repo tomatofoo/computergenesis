@@ -8,6 +8,7 @@ from typing import Union
 import numpy as np
 import pygame as pg
 from pygame.typing import Point
+from pygame.typing import ColorLike
 
 from modules.utils import gen_tile_key
 
@@ -108,12 +109,16 @@ class Walls(object):
                  pos: Point,
                  elevation: Real,
                  height: Real,
-                 texture: int):
+                 texture: int,
+                 top: ColorLike=(0, 0, 0),
+                 bottom: ColorLike=(0, 0, 0)):
 
         self._tilemap[f'{pos[0]};{pos[1]}'] = {
             'elevation': elevation,
             'height': height,
             'texture': texture,
+            'top': top,
+            'bottom': bottom,
         }
 
     def remove_tile(self: Self, pos: Point):

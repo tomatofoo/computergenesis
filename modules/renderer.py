@@ -389,13 +389,14 @@ class Camera(object):
                     # 1 was found through testing
                     line = pg.Surface((1, back_line_height + 1)).convert()
                     line.fill(color)
+                    """
                     pg.transform.hsl(
                         line,
                         0, 0,
                         # magic numbers were found by testing
                         max(-dist**0.9 * self._darkness / 7, -1),
                         line,
-                    ) 
+                    ) """
 
                     obj = self._DepthBufferObject(
                         depth, (line, (x, render_y), None),

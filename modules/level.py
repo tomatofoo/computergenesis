@@ -61,7 +61,7 @@ class Floor(object):
     def scale(self: Self) -> tuple:
         return self._scale
 
-    @property
+    @scale.setter
     def scale(self: Self, value: Point) -> None:
         self._scale = tuple(value)
 

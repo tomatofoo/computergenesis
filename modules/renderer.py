@@ -12,6 +12,7 @@ from pygame.typing import Point
 
 from modules.utils import gen_tile_key
 from modules.level import ColumnTexture
+from modules.level import Floor
 from modules.level import Sky
 from modules.level import Player
 
@@ -60,6 +61,7 @@ class Camera(object):
                  player: Player,
                  bob_strength: Real=0.0375,
                  bob_frequency: Real=10,
+                 darkness: Real=1,
                  line_addition: int=2,
                  min_entity_dist: Real=0.05) -> None:
         
@@ -75,6 +77,7 @@ class Camera(object):
         self._wall_render_distance = wall_render_distance
         self._line_addition = line_addition
         self._min_entity_dist = min_entity_dist
+        self._darkness = darkness
 
         self.bob_strength = bob_strength
         self.bob_frequency = bob_frequency
@@ -161,39 +164,46 @@ class Camera(object):
     @min_entity_dist.setter
     def min_entity_dist(self: Self, value: Real) -> None:
         self._min_entity_dist = value
+        
+    def _generate_array(self: Self,
+                        width: Real,
+                        rays: tuple,
+                        x_pixels: np.ndarray,
+                        mult: Real,
+                        offsets: np.ndarray,
+                        texture: Floor):
+        # takes into account elevation
+        # basically, some of the vertical camera plane is below the ground
+        # intersection between ground and ray is behind the plane
+        # (not in front); we use this multiplier
+        start_points_x = mult / offsets * rays[0][0]
+        start_points_y = mult / offsets * rays[0][1]
+
+        end_points_x = mult / offsets * rays[1][0]
+        end_points_y = mult / offsets * rays[1][1]
+
+        step_x = (end_points_x - start_points_x) / width
+        step_y = (end_points_y - start_points_y) / width
+        
+        x_points = self._player._pos.x + start_points_x + step_x * x_pixels
+        y_points = self._player._pos.y + start_points_y + step_y * x_pixels
+        
+        # change the multiplier before the mod to change size of texture
+        texture_xs = np.floor(x_points * 1 % 1 * texture.width)
+        texture_ys = np.floor(y_points * 1 % 1 * texture.height)
+        texture_xs = texture_xs.astype('int')
+        texture_ys = texture_ys.astype('int')
+
+        array = texture[texture_xs, texture_ys]
+
+        return array
 
     def _render_floor_and_ceiling(self: Self,
                                   width: Real,
                                   height: Real,
                                   horizon: Real) -> None:
 
-        def _generate_array(mult, offsets, texture):
-            # takes into account elevation
-            # basically, some of the vertical camera plane is below the ground
-            # intersection between ground and ray is behind the plane
-            # (not in front); we use this multiplier
-            start_points_x = mult / offsets * rays[0][0]
-            start_points_y = mult / offsets * rays[0][1]
-
-            end_points_x = mult / offsets * rays[1][0]
-            end_points_y = mult / offsets * rays[1][1]
-
-            step_x = (end_points_x - start_points_x) / width
-            step_y = (end_points_y - start_points_y) / width
-            
-            x_points = self._player._pos.x + start_points_x + step_x * x_pixels
-            y_points = self._player._pos.y + start_points_y + step_y * x_pixels
-            
-            # change the multiplier before the mod to change size of texture
-            texture_xs = np.floor(x_points * 1 % 1 * texture.width)
-            texture_ys = np.floor(y_points * 1 % 1 * texture.height)
-            texture_xs = texture_xs.astype('int')
-            texture_ys = texture_ys.astype('int')
-
-            array = texture[texture_xs, texture_ys]
-
-            return array
-
+        
         # Setup (in both floor & ceiling)
         rays = (self._yaw - self._player._semiplane,
                 self._yaw + self._player._semiplane)
@@ -229,13 +239,17 @@ class Camera(object):
 
                 mult = self._tile_size * self._player._render_elevation
                 texture = obj
-                floor = _generate_array(mult, offsets, texture)
+                floor = self._generate_array(
+                    width, rays, x_pixels, mult, offsets, texture,
+                )
+                
+                #lighting
+                if self._darkness:
+                    offsets = np.vstack(offsets)
+                    lighting = np.minimum(offsets / semiheight / self._darkness, 1)
+                    floor = floor * lighting
+                    # can't do *= ^
 
-                # lighting (maybe temp?)
-                offsets = np.vstack(offsets)
-                lighting = np.minimum(offsets / semiheight, 1)**0.97
-                floor = floor * lighting
-                # can't do *= ^
                 self._floor = pg.surfarray.make_surface(floor)
 
         obj = self._player._manager._level._ceiling
@@ -260,13 +274,17 @@ class Camera(object):
 
                 mult = self._tile_size * (1 - self._player._render_elevation)
                 texture = obj
-                ceiling = _generate_array(mult, offsets, texture)
+                ceiling = self._generate_array(
+                    width, rays, x_pixels, mult, offsets, texture,
+                )
+                
+                # lighting
+                if self._darkness:
+                    offsets = np.vstack(offsets)
+                    lighting = np.minimum(offsets / semiheight / self._darkness, 1)
+                    ceiling = ceiling * lighting
+                    # can't do *= ^
 
-                # lighting (maybe temp ?)
-                offsets = np.vstack(offsets)
-                lighting = np.minimum(offsets / semiheight, 1)**0.97
-                ceiling = ceiling * lighting
-                # can't do *= ^
                 self._ceiling = pg.surfarray.make_surface(ceiling)
 
     def _render_walls_and_entities(self: Self,
@@ -316,7 +334,6 @@ class Camera(object):
                 tile_key = gen_tile_key(tile)
                 if tilemap.get(tile_key) != None:
                     if depth and not limits.full(0, height):
-
                         data = tilemap[tile_key] # tile data
 
                         # distance already does fisheye correction because it 
@@ -344,9 +361,15 @@ class Camera(object):
                                 textures[texture][dex],
                                 (1, render_line_height)
                             )
-
-                            # temp
-                            pg.transform.hsl(line, 0, 0, max(-dist / 6, -1), line)
+                            
+                            if self._darkness:
+                                pg.transform.hsl(
+                                    line,
+                                    0, 0,
+                                    # magic numbers were found by testing
+                                    max(-dist**0.9 * self._darkness / 7, -1),
+                                    line,
+                                )
                             
                             # Reverse Painter's Algorithm
                             y = horizon - line_height / 2 + offset

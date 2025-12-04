@@ -155,6 +155,7 @@ class Game(object):
             tile_size=self._SURF_SIZE[0] / 2,
             wall_render_distance=8,
             player=self._player,
+            darkness=5,
         )
         self._camera.horizon = 0.5
         self._level_timer = 0
@@ -183,8 +184,8 @@ class Game(object):
 
             keys = pg.key.get_pressed()
             movement = (
-                (keys[pg.K_w] - keys[pg.K_s]) * 0.1,
-                (keys[pg.K_d] - keys[pg.K_a]) * 0.1,
+                (keys[pg.K_w] - keys[pg.K_s]) * 0.05,
+                (keys[pg.K_d] - keys[pg.K_a]) * 0.05,
                 (keys[pg.K_RIGHT] - keys[pg.K_LEFT]) * 2.5,
                 (keys[pg.K_DOWN] - keys[pg.K_UP]),
             )

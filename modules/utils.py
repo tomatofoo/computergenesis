@@ -39,16 +39,16 @@ class Pathfinder(object): # 4-path pathfinder using A*
         self._parent = {}
 
     @property
-    def start(self: Self) -> Point:
-        return tuple(self._start)
+    def start(self: Self) -> tuple:
+        return self._start
 
     @start.setter
     def start(self: Self, value: Point) -> None:
         self._start = tuple(value)
 
     @property
-    def end(self: Self) -> Point:
-        return tuple(self._end)
+    def end(self: Self) -> tuple:
+        return self._end
 
     @end.setter
     def end(self: Self, value: Point) -> None:

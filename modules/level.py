@@ -91,8 +91,8 @@ class Sky(object):
                height: int) -> pg.Surface:
 
         surf = self._surf.copy()
-        surf.scroll(int(offset), 0, pg.SCROLL_REPEAT)
         surf = pg.transform.scale(surf, (width, height))
+        surf.scroll(int(offset), 0, pg.SCROLL_REPEAT)
 
         return surf
 

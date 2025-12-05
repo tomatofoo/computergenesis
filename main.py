@@ -70,7 +70,7 @@ class Game(object):
             entities=self._entities,
         )
         #temp
-        # pg.mouse.set_relative_mode(1)
+        pg.mouse.set_relative_mode(1)
 
         self._camera = Camera(
             fov=90,
@@ -118,7 +118,7 @@ class Game(object):
                 movement[1],
                 movement[2],
             )
-            self._camera.horizon -= movement[3] * 0.025
+            self._camera.horizon -= movement[3] * 0.025 * rel_game_speed
             
             self._entities.update(rel_game_speed, self._level_timer)
 
@@ -128,8 +128,8 @@ class Game(object):
                 elevation=math.sin(self._level_timer),
                 height=1,
                 texture=0,
-                top=(255, 255, 255),
-                bottom=(255, 255, 255),
+                top=(64, 64, 64),
+                bottom=(64, 64, 64),
             )
 
             self._camera.render(self._surface)

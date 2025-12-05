@@ -35,9 +35,10 @@ class Limits(object):
         self._limits = output
 
     def full(self: Self, start: int, end: int) -> bool:
+        """
         return (self._limits
                 and self._limits[0][0] <= start
-                and self._limits[0][1] >= end)
+                and self._limits[0][1] >= end)"""
         # not sure which one to choose, currently using ^
         if not self._limits:
             return False
@@ -315,8 +316,9 @@ class Camera(object):
              - data['height'])
             * self._tile_size / 2 / depth
         )
-
-        return (line_height, render_line_height, offset)
+        
+        # inting accounts for some pixel glitch errors
+        return (int(line_height), int(render_line_height), int(offset))
 
     def _transform_line(self: Self, line: pg.Surface, dist: Real) -> None:
         if self._darkness:
@@ -396,9 +398,9 @@ class Camera(object):
                         back_line_height = y + render_line_height - render_y
                         color = data['bottom']
                     
-                    # this offset was found through testing
+                    # this + 1 helps with pixel glitches (found by testing)
                     render_back_line_height = back_line_height + 1
-                    line = pg.Surface((1, render_back_line_height))
+                    line = pg.Surface((1, max(render_back_line_height, 0)))
                     line.fill(color)
                     self._transform_line(line, dist)
                     
@@ -428,8 +430,7 @@ class Camera(object):
                             back_edge = render_end
 
                         # check if line is visible
-                        if (-line_height / 2 - offset < horizon 
-                            < height + line_height / 2 - offset):
+                        if not limits.full(y, render_end):
                             
                             # Transformation
                             texture = data['texture']
@@ -452,7 +453,12 @@ class Camera(object):
                                 if y < start and render_end > end:
                                     render_y = max(end, y)
                                     rect = pg.Rect(
-                                        0, render_y - y, 1, start - render_y,
+                                        0,
+                                        render_y - y,
+                                        1,
+                                        # + 1 was found through testing
+                                        # helps w/ pixel glitches
+                                        start - render_y + 1,
                                     )
                                     
                                     obj = self._DepthBufferObject(

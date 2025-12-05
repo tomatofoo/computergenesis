@@ -66,7 +66,7 @@ class Camera(object):
                  bob_frequency: Real=10,
                  darkness: Real=1,
                  max_line_height: Real=10,
-                 min_entity_dist: Real=0.05) -> None:
+                 min_entity_depth: Real=0.05) -> None:
         
         try:
             self._yaw_magnitude = float(1 / math.tan(math.radians(fov) / 2))
@@ -79,7 +79,7 @@ class Camera(object):
         self._tile_size = tile_size
         self._wall_render_distance = wall_render_distance
         self._max_line_height = max_line_height
-        self._min_entity_dist = min_entity_dist
+        self._min_entity_depth = min_entity_depth
         self._darkness = darkness
 
         self.bob_strength = bob_strength
@@ -125,8 +125,7 @@ class Camera(object):
         semiradians = math.radians(value / 2)
 
         self._fov = value
-        self._fov_mult = math.tan(semiradians)
-        self._yaw_magnitude = float(1 / self._fov_mult)
+        self._yaw_magnitude = 1 / math.tan(semiradians)
 
     @property
     def horizon(self: Self) -> Real:
@@ -161,12 +160,12 @@ class Camera(object):
         self._max_line_height = value
 
     @property
-    def min_entity_dist(self: Self) -> Real:
-        return self._min_entity_dist
+    def min_entity_depth(self: Self) -> Real:
+        return self._min_entity_depth
 
-    @min_entity_dist.setter
-    def min_entity_dist(self: Self, value: Real) -> None:
-        self._min_entity_dist = value
+    @min_entity_depth.setter
+    def min_entity_depth(self: Self, value: Real) -> None:
+        self._min_entity_depth = value
         
     def _generate_array(self: Self,
                         width: Real,
@@ -316,7 +315,7 @@ class Camera(object):
         # not inting offset because some walls seem to "bounce"
         return (int(line_height), int(render_line_height), offset)
 
-    def _transform_line(self: Self, line: pg.Surface, dist: Real) -> None:
+    def _darken_line(self: Self, line: pg.Surface, dist: Real) -> None:
         if self._darkness:
             pg.transform.hsl(
                 line,
@@ -349,7 +348,7 @@ class Camera(object):
         
         # entity stuff
         empty_tiles = set() # tiles checked without tiles
-        projection_mult = self._fov_mult * semiwidth
+        projection_mult = self._yaw_magnitude * semiwidth
 
         dists = {} # distance to center of each tile (top/bottom rendering)
 
@@ -365,7 +364,7 @@ class Camera(object):
             slope = ray.y / ray.x if ray.x else math.inf
             tile = pg.Vector2(math.floor(end_pos.x), math.floor(end_pos.y))
             dir = (ray.x > 0, ray.y > 0)
-            depth = 0
+            rel_depth = 0 # relative to yaw magnitude
             dist = 0
             
             limits = Limits()
@@ -383,7 +382,7 @@ class Camera(object):
             while dist < self._wall_render_distance:
                 # Tile Rendering
                 if render_back: # back of wall rendering
-                    calculation = self._calculate_line(depth, data)
+                    calculation = self._calculate_line(rel_depth, data)
                     line_height, render_line_height, offset = calculation
                     y = horizon - line_height / 2 + offset
 
@@ -395,46 +394,51 @@ class Camera(object):
                         render_y = back_edge
                         back_line_height = y + render_line_height - render_y
                         color = data['bottom']
-                    
-                    # this + 1 helps with pixel glitches (found by testing)
+
                     render_back_line_height = back_line_height + 1
+                    # this + 1 helps with pixel glitches (found by testing)
                     line = pg.Surface((1, max(render_back_line_height, 0)))
                     line.fill(color)
-                    self._transform_line(line, dists[tup])
+                    self._darken_line(line, dists[tup])
                     
                     obj = self._DepthBufferObject(
-                        depth, (line, (x, render_y), None),
+                        rel_depth, (line, (x, render_y), None),
                     )
+
                     render_buffer[x].append(obj)
-                    render_back = 0
                     limits.add(render_y, render_y + render_back_line_height)
+
+                    render_back = 0
 
                 tile_key = gen_tile_key(tile)
                 data = tilemap.get(tile_key)
                 if data != None: # front of wall rendering
-                    if depth and not limits.full(0, height):
-                        calculation = self._calculate_line(depth, data)
+                    if rel_depth and not limits.full(0, height):
 
+                        calculation = self._calculate_line(rel_depth, data)
                         line_height, render_line_height, offset = calculation
                         y = horizon - line_height / 2 + offset
                         render_end = y + render_line_height
 
-                        
+                        tup = tuple(tile) # tuple of last tile
                         # render back of tile on to
                         if horizon < y:
                             render_back = 1
                             back_edge = int(y)
+                            if dists.get(tup) == None: # calc dist to center
+                                dists[tup] = (tile + (0.5, 0.5)).distance_to(
+                                    self._player._pos,
+                                )
+
                         # render back of tile on bottom
                         elif horizon > render_end:
                             render_back = 2
                             back_edge = int(render_end)
                             # ^ inting helps with pixel glitch
-                        # calculate distance to center
-                        tup = tuple(tile) # tuple of last tile
-                        if dists.get(tup) == None:
-                            dists[tup] = (tile + (0.5, 0.5)).distance_to(
-                                self._player._pos,
-                            )
+                            if dists.get(tup) == None: # calc dist to center
+                                dists[tup] = (tile + (0.5, 0.5)).distance_to(
+                                    self._player._pos,
+                                )
                             
                         # check if line is visible
                         if not limits.full(y, render_end):
@@ -446,7 +450,7 @@ class Camera(object):
                                 textures[texture][dex],
                                 (1, render_line_height)
                             )
-                            self._transform_line(line, dist)
+                            self._darken_line(line, dist)
  
                             # Reverse Painter's Algorithm
                             segments = limits._limits
@@ -468,7 +472,7 @@ class Camera(object):
                                     )
                                     
                                     obj = self._DepthBufferObject(
-                                        depth, (line, (x, render_y), rect),
+                                        rel_depth, (line, (x, render_y), rect),
                                     )
                                     render_buffer[x].append(obj)
 
@@ -491,15 +495,15 @@ class Camera(object):
                     tile.x += step_x
                     end_pos.x += disp_x
                     end_pos.y += disp_x * slope
-                    depth += len_x
+                    rel_depth += len_x
                     side = 1
                 else:
                     tile.y += step_y
                     end_pos.x += disp_y / slope if slope else math.inf
                     end_pos.y += disp_y
-                    depth += len_y
+                    rel_depth += len_y
                     side = 0
-                dist = depth * mag
+                dist = rel_depth * mag
             # the objects are added in closest-to-farthest
             # reverse so that depth buffer works
         
@@ -511,8 +515,7 @@ class Camera(object):
                     rel_vector = entity.vector3 - self._player._render_vector3
                     # rotation
                     rel_vector.rotate_y_ip(self._player._yaw_value)
-                    depth = rel_vector.z
-                    if depth >= self._min_entity_dist:
+                    if rel_vector.z >= self._min_entity_depth:
                         ratios = (
                             rel_vector.x / rel_vector.z,
                             rel_vector.y / rel_vector.z,
@@ -522,9 +525,10 @@ class Camera(object):
                             -ratios[0] * projection_mult + semiwidth,
                             -ratios[1] * projection_mult + horizon,
                         )
-                        
+
+                        rel_depth = rel_vector.z / self._yaw_magnitude
                         dex = int(projection.x)
-                        scale = self._tile_size / depth
+                        scale = self._tile_size / rel_depth
                         texture = pg.transform.scale(
                             entity._texture,
                             (entity._width * scale,
@@ -537,7 +541,7 @@ class Camera(object):
                             )
                             if 0 < pos[0] < width:
                                 obj = self._DepthBufferObject(
-                                    depth,
+                                    rel_depth,
                                     (texture,
                                      pos,
                                      pg.Rect(i, 0, 1, texture.height)),

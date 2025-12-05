@@ -53,14 +53,37 @@ class Game(object):
         #temp
         self._player = Player()
         self._player.pos = (6.5, 6)
+        self._player.yaw = 180
         #n
         entities = {
             0: Entity(
                 height=0.6,
                 texture=pg.image.load('data/images/GrenadeZombie.png')
-            ),
-        }
+            ),}
+        """
+        1: Entity(
+            height=0.6,
+            texture=pg.image.load('data/images/GrenadeZombie.png')
+        ),
+        2: Entity(
+            height=0.6,
+            texture=pg.image.load('data/images/GrenadeZombie.png')
+        ),
+        3: Entity(
+            height=0.6,
+            texture=pg.image.load('data/images/GrenadeZombie.png')
+        ),
+        4: Entity(
+            height=0.6,
+            texture=pg.image.load('data/images/GrenadeZombie.png')
+        ),
+        }"""
         entities[0].pos = (6.5, 6)
+        # entities[1].pos = (6.5, 5)
+        # entities[2].pos = (6.5, 4)
+        # entities[3].pos = (6.5, 3)
+        # entities[4].pos = (6.5, 2)
+
         self._entities = EntityManager(self._player, entities)
 
         self._level = Level(
@@ -131,8 +154,8 @@ class Game(object):
                 top=(64, 64, 64),
                 bottom=(64, 64, 64),
             )
-
             self._camera.render(self._surface)
+
             # self._surface.blit(
             #     gun,
             #     (self._SURF_SIZE[0] - gun.width,

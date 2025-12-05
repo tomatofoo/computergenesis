@@ -356,6 +356,8 @@ class Camera(object):
         empty_tiles = set() # tiles checked without tiles
         projection_mult = self._fov_mult * semiwidth
 
+        dists = {} # distance to center of each tile (top/bottom rendering)
+
         # Wall Casting
         for x in range(width):
             render_buffer.append([]) # add empty list
@@ -403,7 +405,7 @@ class Camera(object):
                     render_back_line_height = back_line_height + 1
                     line = pg.Surface((1, max(render_back_line_height, 0)))
                     line.fill(color)
-                    self._transform_line(line, dist)
+                    self._transform_line(line, dists[tup])
                     
                     obj = self._DepthBufferObject(
                         depth, (line, (x, render_y), None),
@@ -423,6 +425,11 @@ class Camera(object):
                         render_end = y + render_line_height
 
                          # render back of tile on top
+                        tup = tuple(tile) # tuple of last tile
+                        if dists.get(tup) == None:
+                            dists[tup] = (tile + (0.5, 0.5)).distance_to(
+                                self._player._pos,
+                            )
                         if horizon < y:
                             render_back = 1
                             back_edge = int(y)
@@ -430,7 +437,7 @@ class Camera(object):
                         elif horizon > render_end:
                             render_back = 2
                             back_edge = int(render_end)
-                            # inting helps with pixel glitch
+                            # ^ inting helps with pixel glitch
 
                         # check if line is visible
                         if not limits.full(y, render_end):

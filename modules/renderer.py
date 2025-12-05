@@ -1,4 +1,5 @@
 import math
+import cProfile
 import bisect
 from numbers import Real
 from typing import Self
@@ -318,7 +319,8 @@ class Camera(object):
         )
         
         # inting accounts for some pixel glitch errors
-        return (int(line_height), int(render_line_height), int(offset))
+        # not inting offset because some walls seem to "bounce"
+        return (int(line_height), int(render_line_height), offset)
 
     def _transform_line(self: Self, line: pg.Surface, dist: Real) -> None:
         if self._darkness:
@@ -384,7 +386,7 @@ class Camera(object):
             # keep on changing end_pos until hitting a wall (DDA)
             while dist < self._wall_render_distance:
                 # Tile Rendering
-                if render_back:
+                if render_back: # back of wall rendering
                     calculation = self._calculate_line(depth, data)
                     line_height, render_line_height, offset = calculation
                     y = horizon - line_height / 2 + offset
@@ -413,7 +415,7 @@ class Camera(object):
 
                 tile_key = gen_tile_key(tile)
                 data = tilemap.get(tile_key)
-                if data != None:
+                if data != None: # front of wall rendering
                     if depth and not limits.full(0, height):
                         calculation = self._calculate_line(depth, data)
 
@@ -421,13 +423,15 @@ class Camera(object):
                         y = horizon - line_height / 2 + offset
                         render_end = y + render_line_height
 
-                        if horizon < y: # render back of tile on top
+                         # render back of tile on top
+                        if horizon < y:
                             render_back = 1
-                            back_edge = y
+                            back_edge = int(y)
                         # render back of tile on bottom
                         elif horizon > render_end:
                             render_back = 2
-                            back_edge = render_end
+                            back_edge = int(render_end)
+                            # inting helps with pixel glitch
 
                         # check if line is visible
                         if not limits.full(y, render_end):
@@ -471,7 +475,7 @@ class Camera(object):
                             limits.add(y, render_end)
                 else:
                     empty_tiles.add(tile_key)
-
+                
                 # displacements until hit tile
                 disp_x = tile.x + dir[0] - end_pos.x
                 disp_y = tile.y + dir[1] - end_pos.y

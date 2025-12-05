@@ -35,11 +35,6 @@ class Limits(object):
         self._limits = output
 
     def full(self: Self, start: int, end: int) -> bool:
-        """
-        return (self._limits
-                and self._limits[0][0] <= start
-                and self._limits[0][1] >= end)"""
-        # not sure which one to choose, currently using ^
         if not self._limits:
             return False
         for limit in self._limits:
@@ -424,12 +419,8 @@ class Camera(object):
                         y = horizon - line_height / 2 + offset
                         render_end = y + render_line_height
 
-                         # render back of tile on top
-                        tup = tuple(tile) # tuple of last tile
-                        if dists.get(tup) == None:
-                            dists[tup] = (tile + (0.5, 0.5)).distance_to(
-                                self._player._pos,
-                            )
+                        
+                        # render back of tile on to
                         if horizon < y:
                             render_back = 1
                             back_edge = int(y)
@@ -438,10 +429,15 @@ class Camera(object):
                             render_back = 2
                             back_edge = int(render_end)
                             # ^ inting helps with pixel glitch
-
+                        # calculate distance to center
+                        tup = tuple(tile) # tuple of last tile
+                        if dists.get(tup) == None:
+                            dists[tup] = (tile + (0.5, 0.5)).distance_to(
+                                self._player._pos,
+                            )
+                            
                         # check if line is visible
                         if not limits.full(y, render_end):
-                            
                             # Transformation
                             texture = data['texture']
                             dex = math.floor(end_pos[side] % 1

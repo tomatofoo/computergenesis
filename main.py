@@ -59,30 +59,29 @@ class Game(object):
             0: Entity(
                 height=0.6,
                 texture=pg.image.load('data/images/GrenadeZombie.png')
-            ),}
-        """
-        1: Entity(
-            height=0.6,
-            texture=pg.image.load('data/images/GrenadeZombie.png')
-        ),
-        2: Entity(
-            height=0.6,
-            texture=pg.image.load('data/images/GrenadeZombie.png')
-        ),
-        3: Entity(
-            height=0.6,
-            texture=pg.image.load('data/images/GrenadeZombie.png')
-        ),
-        4: Entity(
-            height=0.6,
-            texture=pg.image.load('data/images/GrenadeZombie.png')
-        ),
-        }"""
+            ),
+            1: Entity(
+                height=0.6,
+                texture=pg.image.load('data/images/GrenadeZombie.png')
+            ),
+            2: Entity(
+                height=0.6,
+                texture=pg.image.load('data/images/GrenadeZombie.png')
+            ),
+            3: Entity(
+                height=0.6,
+                texture=pg.image.load('data/images/GrenadeZombie.png')
+            ),
+            4: Entity(
+                height=0.6,
+                texture=pg.image.load('data/images/GrenadeZombie.png')
+            ),
+        }
         entities[0].pos = (6.5, 6)
-        # entities[1].pos = (6.5, 5)
-        # entities[2].pos = (6.5, 4)
-        # entities[3].pos = (6.5, 3)
-        # entities[4].pos = (6.5, 2)
+        entities[1].pos = (6.5, 5)
+        entities[2].pos = (6.5, 4)
+        entities[3].pos = (6.5, 3)
+        entities[4].pos = (6.5, 2)
 
         self._entities = EntityManager(self._player, entities)
 
@@ -148,7 +147,7 @@ class Game(object):
             # moving wall
             self._level.walls.set_tile(
                 pos=(8, 11),
-                elevation=math.sin(self._level_timer),
+                elevation=math.sin(self._level_timer) + 1,
                 height=1,
                 texture=0,
                 top=(64, 64, 64),

@@ -35,8 +35,6 @@ class Limits(object):
         self._limits = output
 
     def full(self: Self, start: int, end: int) -> bool:
-        if not self._limits:
-            return False
         for limit in self._limits:
             if limit[0] <= start and limit[1] >= end:
                 return True
@@ -534,6 +532,7 @@ class Camera(object):
                             (entity._width * scale,
                              entity._height * scale),
                         )
+
                         for i in range(texture.width):
                             pos = (
                                 int(dex - texture.width / 2 + i),

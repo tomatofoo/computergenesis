@@ -11,11 +11,216 @@ class Box(object): # 3D Box
     def __init__(self: Self,
                  left: Real,
                  top: Real,
-                 far: Real,
+                 near: Real,
                  width: Real,
                  height: Real,
                  depth: Real) -> None:
-        pass
+        
+        self._left = left
+        self._top = top
+        self._near = near
+        self._width = width
+        self._height = height
+        self._depth = depth
+
+    @property
+    def left(self: Self) -> Real:
+        return self._left
+
+    @left.setter
+    def left(self: Self, value: Real) -> None:
+        self._left = value
+
+    @property
+    def x(self: Self) -> Real:
+        return self._left
+
+    @x.setter
+    def x(self: Self, value: Real) -> None:
+        self._left = value
+
+    @property
+    def right(self: Self) -> Real:
+        return self._left + self._width
+
+    @right.setter
+    def right(self: Self, value: Real) -> None:
+        self._left = value - self._width
+
+    @property
+    def top(self: Self) -> Real:
+        return self._top
+
+    @top.setter
+    def top(self: Self, value: Real) -> None:
+        self._top = value
+
+    @property
+    def y(self: Self) -> Real:
+        return self._top
+
+    @y.setter
+    def y(self: Self, value: Real) -> None:
+        self._top = value
+
+    @property
+    def bottom(self: Self) -> Real:
+        return self._top + self._height
+
+    @bottom.setter
+    def bottom(self: Self, value: Real) -> None:
+        self._top = value - self._height
+
+    @property
+    def near(self: Self) -> Real:
+        return self._near
+
+    @near.setter
+    def near(self: Self, value: Real) -> None:
+        self._near = value
+
+    @property
+    def z(self: Self) -> Real:
+        return self._near
+
+    @z.setter
+    def z(self: Self, value: Real) -> None:
+        self._near = value
+
+    @property
+    def far(self: Self) -> Real:
+        return self._near + self._depth
+
+    @far.setter
+    def far(self: Self, value: Real) -> None:
+        self._near = value - self._depth
+
+    @property
+    def width(self: Self) -> Real:
+        return self._width
+
+    @width.setter
+    def width(self: Self, value: Real) -> None:
+        self._width = value
+
+    @property
+    def w(self: Self) -> Real:
+        return self._width
+    
+    @w.setter
+    def w(self: Self, value: Real) -> None:
+        self._width = value
+
+    @property
+    def height(self: Self) -> Real:
+        return self._height
+
+    @height.setter
+    def height(self: Self, value: Real) -> None:
+        self._height = value
+
+    @property
+    def h(self: Self) -> Real:
+        return self._height
+
+    @h.setter
+    def h(self: Self, value: Real) -> None:
+        self._height = value
+
+    @property
+    def depth(self: Self) -> Real:
+        return self._depth
+
+    @depth.setter
+    def depth(self: Self, value: Real) -> None:
+        self._depth = value
+
+    @property
+    def d(self: Self) -> Real:
+        return self._depth
+
+    @d.setter
+    def d(self: Self, value: Real) -> None:
+        self._depth = value
+
+    @property
+    def center(self: Self) -> pg.Vector3:
+        return pg.Vector3(self.centerx, self.centery, self.centerz)
+
+    @center.setter
+    def center(self: Self, value: pg.Vector3) -> None:
+        self.centerx = value[0]
+        self.centery = value[1]
+        self.centerz = value[2]
+
+    @property
+    def centerx(self: Self) -> Real:
+        return self._left + self._width / 2
+
+    @centerx.setter
+    def centerx(self: Self, value: Real) -> None:
+        self._left = value - self._width / 2
+
+    @property
+    def centery(self: Self) -> Real:
+        return self._top + self._height / 2
+
+    @centery.setter
+    def centery(self: Self, value: Real) -> None:
+        self._top = value - self._height / 2
+
+    @property
+    def centerz(self: Self) -> Real:
+        return self._near + self._depth / 2
+
+    @centerz.setter
+    def centerz(self: Self, value: Real) -> None:
+        self._near = value - self._depth / 2
+
+    def copy(self: Self) -> Self:
+        return Box(
+            self._left,
+            self._top,
+            self._near,
+            self._width,
+            self._height,
+            self._depth,
+        )
+
+    def update(self: Self,
+               left: Real,
+               top: Real,
+               near: Real,
+               width: Real,
+               height: Real,
+               depth: Real) -> None:
+
+        self._left = left
+        self._top = top
+        self._near = near
+        self._width = width
+        self._height = height
+        self._depth = depth
+    
+    def collidepoint(self: Self, point: pg.Vector3) -> bool:
+        return (
+            point[0] > self._left
+            and point[0] < self.right
+            and point[1] > self._top
+            and point[1] < self.bottom
+            and point[2] > self._near
+            and point[2] < self.far
+        )
+
+    def collidebox(self: Self, box: Self) -> bool:
+        return not (
+            self._left > box.right
+            or self.right < box._left
+            or self._top > box.bottom
+            or self.bottom < box._top
+            or self._near > box.far
+            or self.far < box._near
+        )
 
 
 def gen_tile_key(obj: Point):

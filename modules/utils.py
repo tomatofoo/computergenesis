@@ -10,14 +10,14 @@ from pygame.typing import Point
 class Box(object): # 3D Box
     def __init__(self: Self,
                  left: Real,
-                 top: Real,
+                 bottom: Real,
                  near: Real,
                  width: Real,
                  height: Real,
                  depth: Real) -> None:
         
         self._left = left
-        self._top = top
+        self._bottom = bottom
         self._near = near
         self._width = width
         self._height = height
@@ -48,28 +48,28 @@ class Box(object): # 3D Box
         self._left = value - self._width
 
     @property
-    def top(self: Self) -> Real:
-        return self._top
-
-    @top.setter
-    def top(self: Self, value: Real) -> None:
-        self._top = value
-
-    @property
-    def y(self: Self) -> Real:
-        return self._top
-
-    @y.setter
-    def y(self: Self, value: Real) -> None:
-        self._top = value
-
-    @property
     def bottom(self: Self) -> Real:
-        return self._top + self._height
+        return self._bottom
 
     @bottom.setter
     def bottom(self: Self, value: Real) -> None:
-        self._top = value - self._height
+        self._bottom = value
+
+    @property
+    def y(self: Self) -> Real:
+        return self._bottom
+
+    @y.setter
+    def y(self: Self, value: Real) -> None:
+        self._bottom = value
+
+    @property
+    def top(self: Self) -> Real:
+        return self._bottom + self._height
+
+    @top.setter
+    def top(self: Self, value: Real) -> None:
+        self._bottom = value - self._height
 
     @property
     def near(self: Self) -> Real:
@@ -144,16 +144,6 @@ class Box(object): # 3D Box
         self._depth = value
 
     @property
-    def center(self: Self) -> pg.Vector3:
-        return pg.Vector3(self.centerx, self.centery, self.centerz)
-
-    @center.setter
-    def center(self: Self, value: pg.Vector3) -> None:
-        self.centerx = value[0]
-        self.centery = value[1]
-        self.centerz = value[2]
-
-    @property
     def centerx(self: Self) -> Real:
         return self._left + self._width / 2
 
@@ -163,11 +153,11 @@ class Box(object): # 3D Box
 
     @property
     def centery(self: Self) -> Real:
-        return self._top + self._height / 2
+        return self._bottom + self._height / 2
 
     @centery.setter
     def centery(self: Self, value: Real) -> None:
-        self._top = value - self._height / 2
+        self._bottom = value - self._height / 2
 
     @property
     def centerz(self: Self) -> Real:
@@ -180,7 +170,7 @@ class Box(object): # 3D Box
     def copy(self: Self) -> Self:
         return Box(
             self._left,
-            self._top,
+            self._bottom,
             self._near,
             self._width,
             self._height,
@@ -189,14 +179,14 @@ class Box(object): # 3D Box
 
     def update(self: Self,
                left: Real,
-               top: Real,
+               bottom: Real,
                near: Real,
                width: Real,
                height: Real,
                depth: Real) -> None:
 
         self._left = left
-        self._top = top
+        self._bottom = bottom
         self._near = near
         self._width = width
         self._height = height
@@ -206,20 +196,20 @@ class Box(object): # 3D Box
         return (
             point[0] > self._left
             and point[0] < self.right
-            and point[1] > self._top
-            and point[1] < self.bottom
+            and point[1] > self._bottom
+            and point[1] < self.top
             and point[2] > self._near
             and point[2] < self.far
         )
 
     def collidebox(self: Self, box: Self) -> bool:
         return not (
-            self._left > box.right
-            or self.right < box._left
-            or self._top > box.bottom
-            or self.bottom < box._top
-            or self._near > box.far
-            or self.far < box._near
+            self._left >= box.right
+            or self.right <= box._left
+            or self._bottom >= box.top
+            or self.top <= box._bottom
+            or self._near >= box.far
+            or self.far <= box._near
         )
 
 

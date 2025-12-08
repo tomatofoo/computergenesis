@@ -206,10 +206,19 @@ class Entity(object):
         self.elevation_velocity = 0
         self.yaw_velocity = 0
         self.elevation = 0
+        self._glowing = 0
         self._pos = pg.Vector2(0, 0)
         self._width = width # width of rect
         self._height = height
         self._manager = None
+
+    @property
+    def glowing(self: Self) -> int:
+        return self._glowing
+
+    @glowing.setter
+    def glowing(self: Self, value: bool) -> None:
+        self._glowing = value
   
     @property
     def pos(self: Self) -> pg.Vector2:

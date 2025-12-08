@@ -24,7 +24,7 @@ class Limits(object):
 
     def add(self: Self, start: int, end: int) -> None:
         # https://stackoverflow.com/a/15273749
-        bisect.insort(self._limits, [int(start), int(end)])
+        bisect.insort(self._limits, [start, end])
 
         output = []
         for limit in self._limits:
@@ -315,13 +315,9 @@ class Camera(object):
 
     def _darken_line(self: Self, line: pg.Surface, dist: Real) -> None:
         if self._darkness:
-            pg.transform.hsl(
-                line,
-                0, 0,
-                # magic numbers were found by testing
-                max(-dist**0.9 * self._darkness / 7, -1),
-                line,
-            )
+            # magic numbers found through testing
+            factor = -dist**0.9 * self._darkness / 7
+            pg.transform.hsl(line, 0, 0, max(factor, -1), line)
 
     def _render_walls_and_entities(self: Self,
                                    width: Real,
@@ -404,7 +400,10 @@ class Camera(object):
                     )
 
                     render_buffer[x].append(obj)
-                    limits.add(render_y, render_y + render_back_line_height)
+                    limits.add( # looks kinda weird when not int
+                        int(render_y),
+                        int(render_y + render_back_line_height),
+                    )
 
                     render_back = 0
 
@@ -476,7 +475,8 @@ class Camera(object):
 
                                     if rect.bottom >= render_line_height:
                                         break
-                            limits.add(y, render_end)
+                            # looks kinda weird when not int
+                            limits.add(int(y), int(render_end))
                 else:
                     empty_tiles.add(tile_key)
                 
@@ -527,8 +527,21 @@ class Camera(object):
                         rel_depth = rel_vector.z / self._yaw_magnitude
                         dex = int(projection.x)
                         scale = self._tile_size / rel_depth
+                        
+                        texture = entity._texture
+
+                        # lighting
+                        if not entity._glowing and self._darkness:
+                            # mgaic numbers found by testing
+                            factor = -rel_vector.z**0.9 * self._darkness / 7
+                            texture = pg.transform.hsl(
+                                texture,
+                                0, 0,
+                                max(factor, -1),
+                            )
+
                         texture = pg.transform.scale(
-                            entity._texture,
+                            texture,
                             (entity._width * scale,
                              entity._height * scale),
                         )

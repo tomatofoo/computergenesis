@@ -100,7 +100,7 @@ cdef class Camera:
                  float max_line_height=10,
                  float min_entity_depth=0.05) -> None:
         
-        self._yaw_magnitude = float(1 / tan(radians(fov) / 2))
+        self._yaw_magnitude = 1 / tan(radians(fov) / 2)
         # already sets yaw V
         self.fov = fmin(fabs(fov), 180) # _fov is in degrees
         self._horizon = 0.5
@@ -200,9 +200,10 @@ cdef class Camera:
         self: Self,
         int width,
         float mult,
-        texture: Floor,
         left_ray: pg.Vector2,
         right_ray: pg.Vector2,
+        scale: tuple,
+        cnp.ndarray[char, ndim=3] texture,
         cnp.ndarray[double, ndim=2] x_pixels,
         cnp.ndarray[double, ndim=1] offsets
     ):
@@ -218,7 +219,6 @@ cdef class Camera:
             cnp.ndarray[double, ndim=2, mode='c'] y_points
             cnp.ndarray[long, ndim=2, mode='c'] texture_xs
             cnp.ndarray[long, ndim=2, mode='c'] texture_ys
-            cnp.ndarray[char, ndim=3, mode='c'] array
 
         # takes into account elevation
         # basically, some of the vertical camera plane is below the ground
@@ -238,15 +238,14 @@ cdef class Camera:
         
         # change the multiplier before the mod to change size of texture
         texture_xs = np.floor(
-            x_points * texture._scale[0] % 1 * texture.width,
+            x_points * scale[0] % 1 * texture.shape[0],
         ).astype('int')
         texture_ys = np.floor(
-            y_points * texture._scale[1] % 1 * texture.height,
+            y_points * scale[1] % 1 * texture.shape[1],
         ).astype('int')
 
-        array = texture[texture_xs, texture_ys]
+        return texture[texture_xs, texture_ys]
 
-        return array
 
     cdef void _render_floor_and_ceiling(self: Self,
                                         int width,
@@ -302,9 +301,10 @@ cdef class Camera:
                 array = self._generate_array(
                     width=width,
                     mult=mult,
-                    texture=obj,
                     left_ray=left_ray,
                     right_ray=right_ray,
+                    scale=obj._scale,
+                    texture=obj._array,
                     x_pixels=x_pixels,
                     offsets=offsets,
                 )
@@ -344,9 +344,10 @@ cdef class Camera:
                 array = self._generate_array(
                     width=width,
                     mult=mult,
-                    texture=obj,
                     left_ray=left_ray,
                     right_ray=right_ray,
+                    scale=obj._scale,
+                    texture=obj._array,
                     x_pixels=x_pixels,
                     offsets=offsets,
                 )
@@ -413,6 +414,8 @@ cdef class Camera:
             int render_line_height
             int back_line_height
             int render_back_line_height
+            int start
+            int end
             int[2] dir
             int[3] color
             int[3] calculation

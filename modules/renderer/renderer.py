@@ -191,7 +191,7 @@ class Camera(object):
         texture_xs = texture_xs.astype('int')
         texture_ys = texture_ys.astype('int')
 
-        array = texture[texture_xs, texture_ys]
+        array = texture._array[texture_xs, texture_ys]
 
         return array
 

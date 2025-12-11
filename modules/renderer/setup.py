@@ -3,10 +3,14 @@ from setuptools import Extension
 
 from Cython.Build import cythonize
 
+import numpy as np
+
+
 ext_modules = [
     Extension(
-        "renderer",
-        sources=["renderer.pyx"],
+        name='renderer',
+        sources=['renderer.pyx'],
+        include_dirs=[np.get_include()],
     )
 ]
 

@@ -217,8 +217,8 @@ class Camera(object):
         # Actual Render
         obj = self._player._manager._level._floor
         if isinstance(obj, Sky):
-            rect = pg.Rect(0, horizon, width, height - horizon)
-            if rect.top >= 0 and rect.bottom < obj._height:
+            rect = (0, horizon, width, height - horizon)
+            if height < obj._height:
                 self._floor = obj.scroll(
                     -self._player.yaw * sky_speed,
                     width,
@@ -257,8 +257,8 @@ class Camera(object):
         obj = self._player._manager._level._ceiling
         # Ceiling Casting
         if isinstance(obj, Sky):
-            rect = pg.Rect(0, obj._height - horizon, width, horizon)
-            if rect.top > 0 and rect.bottom <= obj._height:
+            rect = (0, obj._height - horizon, width, horizon)
+            if obj._height > horizon:
                 self._ceiling = obj.scroll(
                     -self._player.yaw * sky_speed,
                     width,
@@ -353,7 +353,6 @@ class Camera(object):
             ray = self._yaw + self._player._semiplane * (2 * x / width - 1)
             mag = ray.magnitude()
 
-            has_hit = 0
             end_pos = self._player._pos.copy()
             slope = ray.y / ray.x if ray.x else math.inf
             tile = pg.Vector2(math.floor(end_pos.x), math.floor(end_pos.y))

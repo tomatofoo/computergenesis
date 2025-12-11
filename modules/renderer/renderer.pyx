@@ -2,10 +2,16 @@ cimport cython
 from libc.math cimport M_PI
 from libc.math cimport tan
 from libc.math cimport floor
+from libc.math cimport fabs
+from libc.math cimport fmax
+from libc.math cimport fmin
 
 import bisect
 from threading import Thread
+from typing import Self
 
+cimport numpy as cnp
+cnp.import_array()
 import numpy as np
 import pygame as pg
 
@@ -21,6 +27,7 @@ cdef double radians(double degrees):
 
 
 @cython.boundscheck(False)
+@cython.wraparound(False)
 # 1-Dimensional integer
 cdef class Limits:
 
@@ -29,7 +36,7 @@ cdef class Limits:
     def __init__(self):
         self._limits = []
 
-    cdef void add(self, int start, int end):
+    cdef void add(self: Self, int start, int end):
         # https://stackoverflow.com/a/15273749
         bisect.insort(self._limits, [start, end])
         
@@ -37,13 +44,13 @@ cdef class Limits:
         output = [self._limits[0]]
         for limit in self._limits[1:]:
             if output[cur][1] >= limit[0] - 1:
-                output[cur][1] = max(output[cur][1], limit[1])
+                output[cur][1] = fmax(output[cur][1], limit[1])
             else:
                 cur += 1
                 output.append(limit)
         self._limits = output
 
-    cdef bool full(self, int start, int end):
+    cdef bool full(self: Self, int start, int end):
         for limit in self._limits:
             if limit[0] <= start and limit[1] >= end:
                 return True
@@ -54,16 +61,16 @@ cdef class _DepthBufferObject:
     cdef public float _depth
     cdef public tuple _args
 
-    def __init__(self, float depth, args):
+    def __init__(self: Self, float depth, args: tuple):
         self._depth = depth
         self._args = args # blit args
 
-    def __lt__(self, obj) -> bool:
+    def __lt__(self: Self, obj: Self) -> bool:
         # so objects are rendered farthest to last
         return self._depth < obj._depth 
 
-
 @cython.boundscheck(False)
+@cython.wraparound(False)
 cdef class Camera:
 
     cdef public float _fov
@@ -82,7 +89,7 @@ cdef class Camera:
     cdef public object _ceiling
     cdef public object _walls_and_entities
 
-    def __init__(self,
+    def __init__(self: Self,
                  float fov,
                  float tile_size,
                  float wall_render_distance,
@@ -98,7 +105,7 @@ cdef class Camera:
         except ValueError:
             self._yaw_magnitude = 0
         # already sets yaw V
-        self.fov = min(abs(fov), 180) # _fov is in degrees
+        self.fov = fmin(fabs(fov), 180) # _fov is in degrees
         self._horizon = 0.5
         self._player = player
         self._tile_size = tile_size
@@ -111,30 +118,30 @@ cdef class Camera:
         self.bob_frequency = bob_frequency
 
     @property
-    def bob_strength(self):
+    def bob_strength(self: Self):
         return self._bob_stength
 
     @bob_strength.setter
-    def bob_strength(self, float value):
-        value = max(min(value, 0.5), -0.5)
+    def bob_strength(self: Self, float value):
+        value = fmax(fmin(value, 0.5), -0.5)
         self._bob_strength = value
         self._player._settings['bob_strength'] = value
 
     @property
-    def bob_frequency(self):
+    def bob_frequency(self: Self):
         return self._bob_frequency
 
     @bob_frequency.setter
-    def bob_frequency(self, float value):
+    def bob_frequency(self: Self, float value):
         self._bob_frequency = value
         self._player._settings['bob_frequency'] = value
 
     @property
-    def player(self) -> Player:
+    def player(self: Self) -> Player:
         return self._player
 
     @player.setter
-    def player(self, value: Player):
+    def player(self: Self, value: Player):
         self._player._settings['bob_frequency'] = 0
         self._player._settings['bob_strength'] = 0
         self._player = value
@@ -142,72 +149,88 @@ cdef class Camera:
         value._settings['bob_strength'] = self._bob_strength
 
     @property
-    def fov(self):
+    def fov(self: Self):
         return self._fov
 
     @fov.setter
-    def fov(self, float value):
+    def fov(self: Self, float value):
         semiradians = radians(value / 2)
 
         self._fov = value
         self._yaw_magnitude = 1 / tan(semiradians)
 
     @property
-    def horizon(self):
+    def horizon(self: Self):
         return self._horizon
 
     @horizon.setter
-    def horizon(self, float value):
-        self._horizon = max(min(value, 1), 0)
+    def horizon(self: Self, float value):
+        self._horizon = fmax(fmin(value, 1), 0)
 
     @property
-    def tile_size(self):
+    def tile_size(self: Self):
         return self._tile_size
 
     @tile_size.setter
-    def tile_size(self, float value):
+    def tile_size(self: Self, float value):
         self._tile_size = value
 
     @property
-    def wall_render_distance(self):
+    def wall_render_distance(self: Self):
         return self._wall_render_distance
 
     @wall_render_distance.setter
-    def wall_render_distance(self, float value):
+    def wall_render_distance(self: Self, float value):
         self._wall_render_distance = value
 
     @property
-    def max_line_height(self):
+    def max_line_height(self: Self):
         return self._max_line_height
 
     @max_line_height.setter
-    def max_line_height(self, float value):
+    def max_line_height(self: Self, float value):
         self._max_line_height = value
 
     @property
-    def min_entity_depth(self):
+    def min_entity_depth(self: Self):
         return self._min_entity_depth
 
     @min_entity_depth.setter
-    def min_entity_depth(self, float value):
+    def min_entity_depth(self: Self, float value):
         self._min_entity_depth = value
-        
-    cdef _generate_array(self,
-                         int width,
-                         rays: tuple,
-                         x_pixels: np.ndarray,
-                         double mult,
-                         offsets: np.ndarray,
-                         texture: Floor):
+
+    cdef cnp.ndarray[char, ndim=3] _generate_array(
+        self: Self,
+        int width,
+        float mult,
+        texture: Floor,
+        left_ray: pg.Vector2,
+        right_ray: pg.Vector2,
+        cnp.ndarray[double, ndim=2] x_pixels,
+        cnp.ndarray[double, ndim=1] offsets
+    ):
+
+        cdef cnp.ndarray[double, ndim=1, mode='c'] start_points_x
+        cdef cnp.ndarray[double, ndim=1, mode='c'] start_points_y
+        cdef cnp.ndarray[double, ndim=1, mode='c'] end_points_x
+        cdef cnp.ndarray[double, ndim=1, mode='c'] end_points_y
+        cdef cnp.ndarray[double, ndim=1, mode='c'] step_x
+        cdef cnp.ndarray[double, ndim=1, mode='c'] step_y
+        cdef cnp.ndarray[double, ndim=2, mode='c'] x_points
+        cdef cnp.ndarray[double, ndim=2, mode='c'] y_points
+        cdef cnp.ndarray[long, ndim=2, mode='c'] texture_xs
+        cdef cnp.ndarray[long, ndim=2, mode='c'] texture_ys
+        cdef cnp.ndarray[char, ndim=3, mode='c'] array
+
         # takes into account elevation
         # basically, some of the vertical camera plane is below the ground
         # intersection between ground and ray is behind the plane
         # (not in front); we use this multiplier
-        start_points_x = mult / offsets * rays[0][0]
-        start_points_y = mult / offsets * rays[0][1]
+        start_points_x = mult / offsets * left_ray[0]
+        start_points_y = mult / offsets * left_ray[1]
 
-        end_points_x = mult / offsets * rays[1][0]
-        end_points_y = mult / offsets * rays[1][1]
+        end_points_x = mult / offsets * right_ray[0]
+        end_points_y = mult / offsets * right_ray[1]
 
         step_x = (end_points_x - start_points_x) / width
         step_y = (end_points_y - start_points_y) / width
@@ -216,27 +239,38 @@ cdef class Camera:
         y_points = self._player._pos.y + start_points_y + step_y * x_pixels
         
         # change the multiplier before the mod to change size of texture
-        texture_xs = np.floor(x_points * 1 % 1 * texture.width)
-        texture_ys = np.floor(y_points * 1 % 1 * texture.height)
-        texture_xs = texture_xs.astype('int')
-        texture_ys = texture_ys.astype('int')
+        texture_xs = np.floor(
+            x_points * texture._scale[0] % 1 * texture.width,
+        ).astype('int')
+        texture_ys = np.floor(
+            y_points * texture._scale[1] % 1 * texture.height,
+        ).astype('int')
 
         array = texture[texture_xs, texture_ys]
 
         return array
 
-    cdef void _render_floor_and_ceiling(self,
+    cdef void _render_floor_and_ceiling(self: Self,
                                         int width,
                                         int height,
                                         int horizon):
 
         
         # Setup (in both floor & ceiling)
-        cdef tuple rays = (self._yaw - self._player._semiplane,
-                           self._yaw + self._player._semiplane)
-
-        x_pixels = np.linspace(0, width, num=width, endpoint=0) 
-        x_pixels = np.vstack(x_pixels) # all x values
+        cdef object left_ray = self._yaw - self._player._semiplane
+        cdef object right_ray = self._yaw + self._player._semiplane
+        cdef object obj
+        cdef int[4] rect
+        cdef int difference
+        cdef int amount_of_offsets
+        
+        # all x values
+        cdef cnp.ndarray[double, ndim=2, mode='c'] x_pixels = np.vstack(
+            np.linspace(0, width, num=width, endpoint=0),
+        )
+        cdef cnp.ndarray[double, ndim=1, mode='c'] offsets
+        cdef cnp.ndarray[double, ndim=2, mode='c'] lighting
+        cdef cnp.ndarray[char, ndim=3, mode='c'] array
 
         # Sky stuff
         cdef float semiheight = height / 2
@@ -246,8 +280,8 @@ cdef class Camera:
         # Actual Render
         obj = self._player._manager._level._floor
         if isinstance(obj, Sky):
-            rect = pg.Rect(0, horizon, width, height - horizon)
-            if rect.top >= 0 and rect.bottom < obj._height:
+            rect = (0, horizon, width, height - horizon)
+            if height < obj._height:
                 self._floor = obj.scroll(
                     -self._player.yaw * sky_speed,
                     width,
@@ -260,34 +294,39 @@ cdef class Camera:
 
             if difference >= 1:
                 offsets = np.linspace(
-                    max(-horizon, 1),
-                    amount_of_offsets + max(-horizon, 0),
+                    fmax(-horizon, 1),
+                    amount_of_offsets + fmax(-horizon, 0),
                     num=amount_of_offsets,
                     endpoint=0
                 ) # offsets from horizon to render
 
                 mult = self._tile_size * self._player._render_elevation
-                texture = obj
-                floor = self._generate_array(
-                    width, rays, x_pixels, mult, offsets, texture,
+                array = self._generate_array(
+                    width=width,
+                    mult=mult,
+                    texture=obj,
+                    left_ray=left_ray,
+                    right_ray=right_ray,
+                    x_pixels=x_pixels,
+                    offsets=offsets,
                 )
                 
                 #lighting
                 if self._darkness:
-                    offsets = np.vstack(offsets)
                     lighting = np.minimum(
-                        offsets / semiheight / self._darkness, 1,
+                        np.vstack(offsets) / semiheight / self._darkness,
+                        1,
                     )
-                    floor = floor * lighting
+                    array = (array * lighting).astype('uint8')
                     # can't do *= ^
 
-                self._floor = pg.surfarray.make_surface(floor)
+                self._floor = pg.surfarray.make_surface(array)
 
         obj = self._player._manager._level._ceiling
         # Ceiling Casting
         if isinstance(obj, Sky):
-            rect = pg.Rect(0, obj._height - horizon, width, horizon)
-            if rect.top > 0 and rect.bottom <= obj._height:
+            rect = (0, obj._height - horizon, width, horizon)
+            if obj._height > horizon:
                 self._ceiling = obj.scroll(
                     -self._player.yaw * sky_speed,
                     width,
@@ -304,26 +343,32 @@ cdef class Camera:
                 ) # offsets from horizon to render
 
                 mult = self._tile_size * (1 - self._player._render_elevation)
-                texture = obj
-                ceiling = self._generate_array(
-                    width, rays, x_pixels, mult, offsets, texture,
+                array = self._generate_array(
+                    width=width,
+                    mult=mult,
+                    texture=obj,
+                    left_ray=left_ray,
+                    right_ray=right_ray,
+                    x_pixels=x_pixels,
+                    offsets=offsets,
                 )
                 
                 # lighting
                 if self._darkness:
-                    offsets = np.vstack(offsets)
                     lighting = np.minimum(
-                        offsets / semiheight / self._darkness, 1,
+                        np.vstack(offsets) / semiheight / self._darkness,
+                        1,
                     )
-                    ceiling = ceiling * lighting
+                    array = (array * lighting).astype('uint8')
                     # can't do *= ^
 
-                self._ceiling = pg.surfarray.make_surface(ceiling)
+                self._ceiling = pg.surfarray.make_surface(array)
     
-    cdef tuple _calculate_line(self, double depth, data: dict):
+    cdef tuple _calculate_line(self: Self, double depth, data: dict):
         cdef int line_height
         cdef int render_line_height
         cdef float offset
+
         # distance already does fisheye correction because it 
         # divides by the magnitude of ray (when "depth" is 1)
         line_height = min(
@@ -345,25 +390,32 @@ cdef class Camera:
         # not inting offset because some walls seem to "bounce"
         return (line_height, render_line_height, offset)
 
-    cdef void _darken_line(self, line: pg.Surface, double dist):
+    cdef void _darken_line(self: Self, line: pg.Surface, double dist):
         cdef double factor
 
         if self._darkness:
             # magic numbers found through testing
             factor = -dist**0.9 * self._darkness / 7
-            pg.transform.hsl(line, 0, 0, max(factor, -1), line)
+            pg.transform.hsl(line, 0, 0, fmax(factor, -1), line)
 
-    cdef void _render_walls_and_entities(self,
+    cdef void _render_walls_and_entities(self: Self,
                                          int width,
                                          int height,
                                          int horizon):
 
-        cdef float semiwidth = width / 2
-        cdef double mag
-        cdef int has_hit
         cdef int render_back
+        cdef int back_edge
         cdef int side
-        cdef float back_line_height
+        cdef int y
+        cdef int amount
+        cdef int render_y
+        cdef int dex
+        cdef int line_height
+        cdef int render_line_height
+        cdef int back_line_height
+        cdef int render_back_line_height
+        cdef int[2] dir
+        cdef int[3] calculation
         cdef float dist
         cdef float rel_depth
         cdef float slope
@@ -372,6 +424,23 @@ cdef class Camera:
         cdef float step_x
         cdef float step_y
         cdef float factor
+        cdef float semiwidth = width / 2
+        cdef float mag
+        cdef float[2] tile
+        cdef float[2] center
+        cdef str tile_key
+        cdef dict data
+        cdef object texture
+
+        # entity stuff
+        cdef float projection_mult = self._yaw_magnitude * semiwidth
+        cdef set empty_tiles = set() # empty tiles that could have entities
+
+        # stores all walls and all that to be rendered
+        # entities will be added after walls are computed
+        cdef list render_buffer = []
+        # distance to center of each tile (top/bottom rendering)
+        cdef dict dists = {} 
 
         # the per-pixel alpha with (0, 0, 0, 0) doesn't seem to affect
         # fps at all
@@ -379,20 +448,10 @@ cdef class Camera:
         self._walls_and_entities.fill((0, 0, 0, 0))
         
         # level manager stuff
-        manager = self._player._manager
-        tilemap = manager._level._walls._tilemap
+        cdef object manager = self._player._manager
+        cdef dict tilemap = manager._level._walls._tilemap
         textures = manager._level._walls._textures
         
-        # stores all walls and all that to be rendered
-        # entities will be added after walls are computed
-        render_buffer = [] 
-        
-        # entity stuff
-        empty_tiles = set() # tiles checked without tiles
-        projection_mult = self._yaw_magnitude * semiwidth
-
-        dists = {} # distance to center of each tile (top/bottom rendering)
-
         # Wall Casting
         for x in range(width):
             render_buffer.append([]) # add empty list
@@ -400,7 +459,6 @@ cdef class Camera:
             ray = self._yaw + self._player._semiplane * (2 * x / width - 1)
             mag = ray.magnitude()
 
-            has_hit = 0
             end_pos = self._player._pos.copy()
             slope = ray.y / ray.x if ray.x else 2147483647
             tile = [floor(end_pos.x), floor(end_pos.y)]
@@ -414,7 +472,6 @@ cdef class Camera:
             # 1 if rendering top of back of wall
             # 2 if rendering bottom of back of wall
             render_back = 0
-            back_edge = None # edge where rectangle back starts or ends
             back_line_height = 0
             # ^ variable is needed because the back line might not be 
             # the full height
@@ -438,7 +495,7 @@ cdef class Camera:
 
                     render_back_line_height = back_line_height + 1
                     # this + 1 helps with pixel glitches (found by testing)
-                    line = pg.Surface((1, max(render_back_line_height, 0)))
+                    line = pg.Surface((1, fmax(render_back_line_height, 0)))
                     line.fill(color)
                     self._darken_line(line, dists[tup])
                     
@@ -448,8 +505,8 @@ cdef class Camera:
 
                     render_buffer[x].append(obj)
                     limits.add( # looks kinda weird when not int
-                        int(render_y),
-                        int(render_y + render_back_line_height),
+                        render_y,
+                        render_y + render_back_line_height,
                     )
 
                     render_back = 0
@@ -491,8 +548,9 @@ cdef class Camera:
                             and not limits.full(y, render_end)):
                             # Transformation
                             texture = data['texture']
-                            dex = floor(end_pos[side] % 1
-                                        * textures[texture].width)
+                            dex = int(floor(
+                                end_pos[side] % 1 * textures[texture].width,
+                            ))
                             line = pg.transform.scale(
                                 textures[texture][dex],
                                 (1, render_line_height)
@@ -500,12 +558,14 @@ cdef class Camera:
                             self._darken_line(line, dist)
  
                             # Reverse Painter's Algorithm
-                            segments = limits._limits
-                            amount = len(segments)
+                            amount = len(limits._limits)
                             # not enumerated because + 1
                             for i in range(amount + 1):
-                                end = segments[i - 1][1] if i else 0
-                                start = segments[i][0] if i < amount else height
+                                end = limits._limits[i - 1][1] if i else 0
+                                if i < amount:
+                                    start = limits._limits[i][0]
+                                else:
+                                    start = height
 
                                 if y < start and render_end > end:
                                     render_y = max(end, y)
@@ -537,8 +597,8 @@ cdef class Camera:
                 step_x = dir[0] * 2 - 1 # 1 if yes, -1 if no
                 step_y = dir[1] * 2 - 1 
 
-                len_x = abs(disp_x / ray.x) if ray.x else 2147483647
-                len_y = abs(disp_y / ray.y) if ray.y else 2147483647
+                len_x = fabs(disp_x / ray.x) if ray.x else 2147483647
+                len_y = fabs(disp_y / ray.y) if ray.y else 2147483647
                 if len_x < len_y:
                     tile[0] += step_x
                     end_pos.x += disp_x
@@ -555,6 +615,9 @@ cdef class Camera:
             # the objects are added in closest-to-farthest
             # reverse so that depth buffer works
         
+        cdef int[2] projection
+        cdef float scale
+
         # Entity Rendering
         for tile_key in empty_tiles:
             entities = manager._sets.get(tile_key)
@@ -569,13 +632,13 @@ cdef class Camera:
                             rel_vector.y / rel_vector.z,
                         )
                         # final projection
-                        projection = pg.Vector2(
+                        projection = (
                             -ratios[0] * projection_mult + semiwidth,
                             -ratios[1] * projection_mult + horizon,
                         )
 
                         rel_depth = rel_vector.z / self._yaw_magnitude
-                        dex = int(projection.x)
+                        dex = int(projection[0])
                         scale = self._tile_size / rel_depth
                         
                         texture = entity._texture
@@ -599,7 +662,7 @@ cdef class Camera:
                         for i in range(texture.width):
                             pos = (
                                 int(dex - texture.width / 2 + i),
-                                projection.y - texture.height,
+                                projection[1] - texture.height,
                             )
                             if 0 < pos[0] < width:
                                 obj = _DepthBufferObject(
@@ -615,7 +678,7 @@ cdef class Camera:
                 args = blits[i]._args
                 self._walls_and_entities.blit(*args)
 
-    def render(self, surf: pg.Surface) -> None:
+    def render(self: Self, surf: pg.Surface) -> None:
         cdef int width = surf.width
         cdef int height = surf.height
 

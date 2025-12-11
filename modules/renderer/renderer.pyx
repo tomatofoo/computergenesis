@@ -1,3 +1,5 @@
+#cython: language_level=3, profile=True, boundscheck=False, wraparound=False, initializedcheck=False, cdivision=True, cpow=True
+
 cimport cython
 from libc.math cimport M_PI
 from libc.math cimport tan
@@ -26,8 +28,6 @@ cdef double radians(double degrees):
     return degrees / 180.0 * M_PI
 
 
-@cython.boundscheck(False)
-@cython.wraparound(False)
 # 1-Dimensional integer
 cdef class Limits:
 
@@ -69,25 +69,25 @@ cdef class _DepthBufferObject:
         # so objects are rendered farthest to last
         return self._depth < obj._depth 
 
-@cython.boundscheck(False)
-@cython.wraparound(False)
-cdef class Camera:
 
-    cdef public float _fov
-    cdef public float _yaw_magnitude
-    cdef public float _horizon
-    cdef public float _tile_size
-    cdef public float _wall_render_distance
-    cdef public float _bob_strength
-    cdef public float _bob_frequency
-    cdef public float _darkness
-    cdef public float _max_line_height
-    cdef public float _min_entity_depth
-    cdef public object _yaw
-    cdef public object _player
-    cdef public object _floor
-    cdef public object _ceiling
-    cdef public object _walls_and_entities
+cdef class Camera:
+    
+    cdef:
+        public float _fov
+        public float _yaw_magnitude
+        public float _horizon
+        public float _tile_size
+        public float _wall_render_distance
+        public float _bob_strength
+        public float _bob_frequency
+        public float _darkness
+        public float _max_line_height
+        public float _min_entity_depth
+        public object _yaw
+        public object _player
+        public object _floor
+        public object _ceiling
+        public object _walls_and_entities
 
     def __init__(self: Self,
                  float fov,
@@ -209,18 +209,19 @@ cdef class Camera:
         cnp.ndarray[double, ndim=2] x_pixels,
         cnp.ndarray[double, ndim=1] offsets
     ):
-
-        cdef cnp.ndarray[double, ndim=1, mode='c'] start_points_x
-        cdef cnp.ndarray[double, ndim=1, mode='c'] start_points_y
-        cdef cnp.ndarray[double, ndim=1, mode='c'] end_points_x
-        cdef cnp.ndarray[double, ndim=1, mode='c'] end_points_y
-        cdef cnp.ndarray[double, ndim=1, mode='c'] step_x
-        cdef cnp.ndarray[double, ndim=1, mode='c'] step_y
-        cdef cnp.ndarray[double, ndim=2, mode='c'] x_points
-        cdef cnp.ndarray[double, ndim=2, mode='c'] y_points
-        cdef cnp.ndarray[long, ndim=2, mode='c'] texture_xs
-        cdef cnp.ndarray[long, ndim=2, mode='c'] texture_ys
-        cdef cnp.ndarray[char, ndim=3, mode='c'] array
+        
+        cdef: 
+            cnp.ndarray[double, ndim=1, mode='c'] start_points_x
+            cnp.ndarray[double, ndim=1, mode='c'] start_points_y
+            cnp.ndarray[double, ndim=1, mode='c'] end_points_x
+            cnp.ndarray[double, ndim=1, mode='c'] end_points_y
+            cnp.ndarray[double, ndim=1, mode='c'] step_x
+            cnp.ndarray[double, ndim=1, mode='c'] step_y
+            cnp.ndarray[double, ndim=2, mode='c'] x_points
+            cnp.ndarray[double, ndim=2, mode='c'] y_points
+            cnp.ndarray[long, ndim=2, mode='c'] texture_xs
+            cnp.ndarray[long, ndim=2, mode='c'] texture_ys
+            cnp.ndarray[char, ndim=3, mode='c'] array
 
         # takes into account elevation
         # basically, some of the vertical camera plane is below the ground
@@ -255,27 +256,27 @@ cdef class Camera:
                                         int height,
                                         int horizon):
 
+        cdef: 
+            # Setup (in both floor & ceiling)
+            object left_ray = self._yaw - self._player._semiplane
+            object right_ray = self._yaw + self._player._semiplane
+            object obj
+            int[4] rect
+            int difference
+            int amount_of_offsets
         
-        # Setup (in both floor & ceiling)
-        cdef object left_ray = self._yaw - self._player._semiplane
-        cdef object right_ray = self._yaw + self._player._semiplane
-        cdef object obj
-        cdef int[4] rect
-        cdef int difference
-        cdef int amount_of_offsets
-        
-        # all x values
-        cdef cnp.ndarray[double, ndim=2, mode='c'] x_pixels = np.vstack(
-            np.linspace(0, width, num=width, endpoint=0),
-        )
-        cdef cnp.ndarray[double, ndim=1, mode='c'] offsets
-        cdef cnp.ndarray[double, ndim=2, mode='c'] lighting
-        cdef cnp.ndarray[char, ndim=3, mode='c'] array
+            # all x values
+            cnp.ndarray[double, ndim=2, mode='c'] x_pixels = np.vstack(
+                np.linspace(0, width, num=width, endpoint=0),
+            )
+            cnp.ndarray[double, ndim=1, mode='c'] offsets
+            cnp.ndarray[double, ndim=2, mode='c'] lighting
+            cnp.ndarray[char, ndim=3, mode='c'] array
 
-        # Sky stuff
-        cdef float semiheight = height / 2
-        cdef float sky_speed = width / 100
-        cdef double mult
+            # Sky stuff
+            float semiheight = height / 2
+            float sky_speed = width / 100
+            double mult
 
         # Actual Render
         obj = self._player._manager._level._floor
@@ -365,9 +366,10 @@ cdef class Camera:
                 self._ceiling = pg.surfarray.make_surface(array)
     
     cdef tuple _calculate_line(self: Self, double depth, data: dict):
-        cdef int line_height
-        cdef int render_line_height
-        cdef float offset
+        cdef:
+            int line_height
+            int render_line_height
+            float offset
 
         # distance already does fisheye correction because it 
         # divides by the magnitude of ray (when "depth" is 1)
@@ -402,45 +404,49 @@ cdef class Camera:
                                          int width,
                                          int height,
                                          int horizon):
+        cdef:
+            int render_back
+            int back_edge
+            int side
+            int y
+            int amount
+            int render_y
+            int dex
+            int line_height
+            int render_line_height
+            int back_line_height
+            int render_back_line_height
+            int[2] dir
+            int[3] color
+            int[3] calculation
+            float dist
+            float rel_depth
+            float slope
+            float disp_x
+            float disp_y
+            float step_x
+            float step_y
+            float factor
+            float semiwidth = width / 2
+            float mag
+            float[2] tile
+            float[2] center
+            str tile_key
+            dict data
+            object texture
+            object manager = self._player._manager
+            dict tilemap = manager._level._walls._tilemap
+            Limits limits
 
-        cdef int render_back
-        cdef int back_edge
-        cdef int side
-        cdef int y
-        cdef int amount
-        cdef int render_y
-        cdef int dex
-        cdef int line_height
-        cdef int render_line_height
-        cdef int back_line_height
-        cdef int render_back_line_height
-        cdef int[2] dir
-        cdef int[3] calculation
-        cdef float dist
-        cdef float rel_depth
-        cdef float slope
-        cdef float disp_x
-        cdef float disp_y
-        cdef float step_x
-        cdef float step_y
-        cdef float factor
-        cdef float semiwidth = width / 2
-        cdef float mag
-        cdef float[2] tile
-        cdef float[2] center
-        cdef str tile_key
-        cdef dict data
-        cdef object texture
+            # entity stuff
+            float projection_mult = self._yaw_magnitude * semiwidth
+            set empty_tiles = set() # empty tiles that could have entities
 
-        # entity stuff
-        cdef float projection_mult = self._yaw_magnitude * semiwidth
-        cdef set empty_tiles = set() # empty tiles that could have entities
-
-        # stores all walls and all that to be rendered
-        # entities will be added after walls are computed
-        cdef list render_buffer = []
-        # distance to center of each tile (top/bottom rendering)
-        cdef dict dists = {} 
+            # stores all walls and all that to be rendered
+            # entities will be added after walls are computed
+            list[width] render_buffer = []
+            # distance to center of each tile (top/bottom rendering)
+            dict dists = {} 
 
         # the per-pixel alpha with (0, 0, 0, 0) doesn't seem to affect
         # fps at all
@@ -448,8 +454,6 @@ cdef class Camera:
         self._walls_and_entities.fill((0, 0, 0, 0))
         
         # level manager stuff
-        cdef object manager = self._player._manager
-        cdef dict tilemap = manager._level._walls._tilemap
         textures = manager._level._walls._textures
         
         # Wall Casting
@@ -615,8 +619,9 @@ cdef class Camera:
             # the objects are added in closest-to-farthest
             # reverse so that depth buffer works
         
-        cdef int[2] projection
-        cdef float scale
+        cdef:
+            int[2] projection
+            float scale
 
         # Entity Rendering
         for tile_key in empty_tiles:
@@ -679,15 +684,16 @@ cdef class Camera:
                 self._walls_and_entities.blit(*args)
 
     def render(self: Self, surf: pg.Surface) -> None:
-        cdef int width = surf.width
-        cdef int height = surf.height
+        cdef:
+            int width = surf.width
+            int height = surf.height
+            int horizon = int(self._horizon * height)
 
         surf.fill((0, 0, 0))
         self._ceiling = None
         self._floor = None
         self._yaw = self._player._yaw * self._yaw_magnitude
  
-        cdef int horizon = int(self._horizon * height)
         if self._horizon == None:
             horizon = int(height / 2)
         

@@ -598,3 +598,4 @@ class Camera(object):
 
         surf.blit(self._walls_and_entities, (0, 0))
 
+

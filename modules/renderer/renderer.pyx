@@ -18,7 +18,6 @@ import numpy as np
 import pygame as pg
 
 from modules.utils import gen_tile_key
-from modules.level import ColumnTexture
 from modules.level import Floor
 from modules.level import Sky
 from modules.level import Player
@@ -38,7 +37,7 @@ cdef class Limits:
 
     cdef void add(self: Self, int start, int end):
         # https://stackoverflow.com/a/15273749
-        bisect.insort(self._limits, [start, end])
+        bisect.insort_left(self._limits, [start, end])
         
         cdef size_t cur = 0
         output = [self._limits[0]]
@@ -680,7 +679,7 @@ cdef class Camera:
                                      pos,
                                      pg.Rect(i, 0, 1, texture.height)),
                                 )
-                                bisect.insort(render_buffer[pos[0]], obj)
+                                bisect.insort_left(render_buffer[pos[0]], obj)
 
         for blits in render_buffer:
             for i in range(len(blits) - 1, -1, -1):

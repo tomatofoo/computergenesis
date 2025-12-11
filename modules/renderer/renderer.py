@@ -66,10 +66,7 @@ class Camera(object):
                  max_line_height: Real=10,
                  min_entity_depth: Real=0.05) -> None:
         
-        try:
-            self._yaw_magnitude = float(1 / math.tan(math.radians(fov) / 2))
-        except ValueError:
-            self._yaw_magnitude = 0
+        self._yaw_magnitude = float(1 / math.tan(math.radians(fov) / 2))
         # already sets yaw V
         self.fov = min(abs(fov), 180) # _fov is in degrees
         self._horizon = 0.5

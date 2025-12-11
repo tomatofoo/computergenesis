@@ -33,7 +33,7 @@ cdef class Limits:
 
     cdef public list _limits
 
-    def __init__(self):
+    def __init__(self: Self) -> None:
         self._limits = []
 
     cdef void add(self: Self, int start, int end):
@@ -61,7 +61,7 @@ cdef class _DepthBufferObject:
     cdef public float _depth
     cdef public tuple _args
 
-    def __init__(self: Self, float depth, args: tuple):
+    def __init__(self: Self, float depth, args: tuple) -> None:
         self._depth = depth
         self._args = args # blit args
 
@@ -100,10 +100,7 @@ cdef class Camera:
                  float max_line_height=10,
                  float min_entity_depth=0.05) -> None:
         
-        try:
-            self._yaw_magnitude = float(1 / tan(radians(fov) / 2))
-        except ValueError:
-            self._yaw_magnitude = 0
+        self._yaw_magnitude = float(1 / tan(radians(fov) / 2))
         # already sets yaw V
         self.fov = fmin(fabs(fov), 180) # _fov is in degrees
         self._horizon = 0.5
@@ -284,21 +281,21 @@ cdef class Camera:
             rect = (0, horizon, width, height - horizon)
             if height < obj._height:
                 self._floor = obj.scroll(
-                    -self._player.yaw * sky_speed,
+                    -self._player._yaw_value * sky_speed,
                     width,
                     obj._height,
                 ).subsurface(rect)
         elif obj:
             # Floor Casting
-            difference = int(height - horizon)
-            amount_of_offsets = min(difference, height)
+            difference = height - horizon
+            amount_of_offsets = int(fmin(difference, height))
 
-            if difference >= 1:
+            if difference > 0:
                 offsets = np.linspace(
                     fmax(-horizon, 1),
                     amount_of_offsets + fmax(-horizon, 0),
                     num=amount_of_offsets,
-                    endpoint=0
+                    endpoint=0,
                 ) # offsets from horizon to render
 
                 mult = self._tile_size * self._player._render_elevation
@@ -329,18 +326,18 @@ cdef class Camera:
             rect = (0, obj._height - horizon, width, horizon)
             if obj._height > horizon:
                 self._ceiling = obj.scroll(
-                    -self._player.yaw * sky_speed,
+                    -self._player._yaw_value * sky_speed,
                     width,
                     obj._height,
                 ).subsurface(rect)
         elif obj:
-            amount_of_offsets = int(min(horizon, height))
-            if horizon >= 1:
+            amount_of_offsets = int(fmin(horizon, height))
+            if horizon > 0:
                 offsets = np.linspace(
                     amount_of_offsets,
                     0,
                     num=amount_of_offsets,
-                    endpoint=0
+                    endpoint=0,
                 ) # offsets from horizon to render
 
                 mult = self._tile_size * (1 - self._player._render_elevation)
@@ -373,10 +370,10 @@ cdef class Camera:
 
         # distance already does fisheye correction because it 
         # divides by the magnitude of ray (when "depth" is 1)
-        line_height = min(
+        line_height = int(fmin(
             self._tile_size / depth * data['height'],
             self._tile_size * self._max_line_height,
-        )
+        ))
         # 2 was found through testing
         render_line_height = line_height + 2
         # ^ pixel glitches at bottoms of wall are avoided
@@ -405,9 +402,9 @@ cdef class Camera:
                                          int height,
                                          int horizon):
         cdef:
+            bool side # false for x, true for y
             int render_back
             int back_edge
-            int side
             int y
             int amount
             int render_y
@@ -590,7 +587,7 @@ cdef class Camera:
                                     if rect.bottom >= render_line_height:
                                         break
                             # looks kinda weird when not int
-                            limits.add(int(y), int(render_end))
+                            limits.add(y, render_end)
                 else:
                     empty_tiles.add(tile_key)
                 
@@ -608,20 +605,24 @@ cdef class Camera:
                     end_pos.x += disp_x
                     end_pos.y += disp_x * slope
                     rel_depth += len_x
-                    side = 1
+                    side = True
                 else:
                     tile[1] += step_y
                     end_pos.x += disp_y / slope if slope else 2147483647
                     end_pos.y += disp_y
                     rel_depth += len_y
-                    side = 0
+                    side = False
                 dist = rel_depth * mag
             # the objects are added in closest-to-farthest
             # reverse so that depth buffer works
         
         cdef:
-            int[2] projection
+            int[2] pos
             float scale
+            float[2] projection
+            float[2] ratios
+            set entities
+            object rel_vector
 
         # Entity Rendering
         for tile_key in empty_tiles:
@@ -680,8 +681,7 @@ cdef class Camera:
 
         for blits in render_buffer:
             for i in range(len(blits) - 1, -1, -1):
-                args = blits[i]._args
-                self._walls_and_entities.blit(*args)
+                self._walls_and_entities.blit(*blits[i]._args)
 
     def render(self: Self, surf: pg.Surface) -> None:
         cdef:
@@ -717,5 +717,4 @@ cdef class Camera:
             surf.blit(self._ceiling, (0, 0))
 
         surf.blit(self._walls_and_entities, (0, 0))
-
 

@@ -1,4 +1,4 @@
-#cython: language_level=3, profile=True, boundscheck=False, wraparound=False, initializedcheck=False, cdivision=True, cpow=True
+# cython: language_level=3, profile=True, boundscheck=True, wraparound=False, initializedcheck=False, cdivision=True, cpow=True
 
 cimport cython
 from libc.math cimport M_PI
@@ -37,17 +37,22 @@ cdef class Limits:
 
     cdef void add(self: Self, int start, int end):
         # https://stackoverflow.com/a/15273749
-        bisect.insort_left(self._limits, [start, end])
+        limit = [start, end]
+        cdef list arr = self._limits.copy()
+        cdef int dex = bisect.bisect_left(arr, limit)
+        arr.insert(dex, limit)
         
-        cdef size_t cur = 0
-        output = [self._limits[0]]
-        for limit in self._limits[1:]:
-            if output[cur][1] >= limit[0] - 1:
-                output[cur][1] = fmax(output[cur][1], limit[1])
+        cdef int cur = 0
+        last = arr[0]
+        self._limits = [last]
+        for i in range(dex - 1, len(arr)):
+            item = arr[i]
+            if last[1] >= item[0] - 1:
+                last[1] = fmax(last[1], item[1])
             else:
                 cur += 1
-                output.append(limit)
-        self._limits = output
+                self._limits.append(item)
+                last = item
 
     cdef bool full(self: Self, int start, int end):
         for limit in self._limits:
@@ -203,21 +208,13 @@ cdef class Camera:
         right_ray: pg.Vector2,
         scale: tuple,
         cnp.ndarray[char, ndim=3] texture,
-        cnp.ndarray[double, ndim=2] x_pixels,
-        cnp.ndarray[double, ndim=1] offsets
+        x_pixels: np.ndarray,
+        offsets: np.ndarray,
     ):
         
         cdef: 
-            cnp.ndarray[double, ndim=1, mode='c'] start_points_x
-            cnp.ndarray[double, ndim=1, mode='c'] start_points_y
-            cnp.ndarray[double, ndim=1, mode='c'] end_points_x
-            cnp.ndarray[double, ndim=1, mode='c'] end_points_y
-            cnp.ndarray[double, ndim=1, mode='c'] step_x
-            cnp.ndarray[double, ndim=1, mode='c'] step_y
-            cnp.ndarray[double, ndim=2, mode='c'] x_points
-            cnp.ndarray[double, ndim=2, mode='c'] y_points
-            cnp.ndarray[long, ndim=2, mode='c'] texture_xs
-            cnp.ndarray[long, ndim=2, mode='c'] texture_ys
+            cnp.ndarray[long, ndim=2] texture_xs
+            cnp.ndarray[long, ndim=2] texture_ys
 
         # takes into account elevation
         # basically, some of the vertical camera plane is below the ground
@@ -256,22 +253,18 @@ cdef class Camera:
             object left_ray = self._yaw - self._player._semiplane
             object right_ray = self._yaw + self._player._semiplane
             object obj
-            int[4] rect
             int difference
             int amount_of_offsets
         
             # all x values
-            cnp.ndarray[double, ndim=2, mode='c'] x_pixels = np.vstack(
-                np.linspace(0, width, num=width, endpoint=0),
-            )
-            cnp.ndarray[double, ndim=1, mode='c'] offsets
-            cnp.ndarray[double, ndim=2, mode='c'] lighting
-            cnp.ndarray[char, ndim=3, mode='c'] array
+            cnp.ndarray[char, ndim=3] array
 
             # Sky stuff
             float semiheight = height / 2
             float sky_speed = width / 100
             double mult
+
+        x_pixels = np.vstack(np.linspace(0, width, num=width, endpoint=0))
 
         # Actual Render
         obj = self._player._manager._level._floor
@@ -405,14 +398,15 @@ cdef class Camera:
             bool side # false for x, true for y
             int render_back
             int back_edge
+            int dex # errors arise when is size_t
             int y
             int amount
             int render_y
-            int dex
             int line_height
             int render_line_height
             int back_line_height
             int render_back_line_height
+            int render_end
             int start
             int end
             int[2] dir
@@ -486,7 +480,7 @@ cdef class Camera:
                     calculation = self._calculate_line(rel_depth, data)
                     line_height, render_line_height, offset = calculation
                     y = horizon - line_height / 2 + offset
-
+                    
                     if render_back == 1: # render back on top
                         render_y = horizon - line_height / 2 + offset
                         back_line_height = back_edge - render_y
@@ -498,19 +492,22 @@ cdef class Camera:
 
                     render_back_line_height = back_line_height + 1
                     # this + 1 helps with pixel glitches (found by testing)
-                    line = pg.Surface((1, fmax(render_back_line_height, 0)))
-                    line.fill(color)
-                    self._darken_line(line, dists[tup])
+                    render_end = render_y + render_back_line_height
                     
-                    obj = _DepthBufferObject(
-                        rel_depth, (line, (x, render_y), None),
-                    )
+                    if (render_end > 0
+                        and y < height
+                        and not limits.full(y, render_end)):
+                    
+                        line = pg.Surface((1, fmax(render_back_line_height, 0)))
+                        line.fill(color)
+                        self._darken_line(line, dists[tile_key])
+                        
+                        obj = _DepthBufferObject(
+                            rel_depth, (line, (x, render_y), None),
+                        )
+                        render_buffer[x].append(obj)
 
-                    render_buffer[x].append(obj)
-                    limits.add( # looks kinda weird when not int
-                        render_y,
-                        render_y + render_back_line_height,
-                    )
+                        limits.add(render_y, render_end)
 
                     render_back = 0
 
@@ -524,24 +521,23 @@ cdef class Camera:
                         y = horizon - line_height / 2 + offset
                         render_end = y + render_line_height
 
-                        tup = tuple(tile) # tuple of last tile
                         center = (tile[0] + 0.5, tile[1] + 0.5)
                         # render back of tile on to
                         if horizon < y:
                             render_back = 1
-                            back_edge = int(y)
-                            if dists.get(tup) == None: # calc dist to center
-                                dists[tup] = self._player._pos.distance_to(
+                            back_edge = y
+                            if dists.get(tile_key) == None: # calc dist to center
+                                dists[tile_key] = self._player._pos.distance_to(
                                     center,
                                 )
 
                         # render back of tile on bottom
                         elif horizon > render_end:
                             render_back = 2
-                            back_edge = int(render_end)
+                            back_edge = render_end
                             # ^ inting helps with pixel glitch
-                            if dists.get(tup) == None: # calc dist to center
-                                dists[tup] = self._player._pos.distance_to(
+                            if dists.get(tile_key) == None: # calc dist to center
+                                dists[tile_key] = self._player._pos.distance_to(
                                     center,
                                 )
                             

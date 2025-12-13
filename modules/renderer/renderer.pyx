@@ -2,8 +2,6 @@
 
 cimport cython
 from libc.math cimport M_PI
-from libc.math cimport sin
-from libc.math cimport cos
 from libc.math cimport tan
 from libc.math cimport floor
 from libc.math cimport fabs
@@ -217,8 +215,8 @@ cdef class Camera:
     ):
         
         cdef: 
-            cnp.ndarray[long, ndim=2] texture_xs
-            cnp.ndarray[long, ndim=2] texture_ys
+            cnp.ndarray[long, ndim=2, mode='c'] texture_xs
+            cnp.ndarray[long, ndim=2, mode='c'] texture_ys
 
         # takes into account elevation
         # basically, some of the vertical camera plane is below the ground

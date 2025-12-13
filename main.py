@@ -134,6 +134,9 @@ class Game(object):
                     rel = pg.mouse.get_rel()
                     self._player.yaw += rel[0] * 0.2
 
+                elif event.type == pg.MOUSEBUTTONDOWN:
+                    self._player.shoot(50)
+
             keys = pg.key.get_pressed()
             movement = (
                 (keys[pg.K_w] - keys[pg.K_s]) * 0.05,
@@ -169,6 +172,7 @@ class Game(object):
             #     (self._SURF_SIZE[0] - gun.width,
             #      self._SURF_SIZE[1] - gun.height),
             # )
+            pg.draw.rect(self._surface, (255, 255, 255), (155, 115, 10, 10))
 
             # temp draw minimap
             for tile in self._level.walls._tilemap:
@@ -187,7 +191,7 @@ class Game(object):
             pg.draw.rect(self._surface, (0, 255, 0), player_rect)
 
 
-            pg.display.set_caption(str(1 / delta_time) if delta_time else 'inf')
+            pg.display.set_caption(str(int(1 / delta_time)) if delta_time else 'inf')
 
             resized_surf = pg.transform.scale(self._surface, self._SCREEN_SIZE)
             self._screen.blit(resized_surf, (0, 0))

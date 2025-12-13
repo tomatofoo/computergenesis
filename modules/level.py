@@ -198,6 +198,7 @@ class Entity(object):
     def __init__(self: Self, 
                  width: Real=0.5,
                  height: Real=1,
+                 health: Real=100,
                  texture: pg.Surface=_FALLBACK_SURF) -> None:
 
         self.texture = texture
@@ -210,6 +211,7 @@ class Entity(object):
         self._pos = pg.Vector2(0, 0)
         self._width = width # width of rect
         self._height = height
+        self._health = health
         self._manager = None
 
     @property
@@ -306,6 +308,14 @@ class Entity(object):
         self._height = value
 
     @property
+    def health(self: Self) -> Real:
+        return self._health
+
+    @health.setter
+    def health(self: Self, value: Real) -> None:
+        self._health = value
+
+    @property
     def velocity2(self: Self) -> pg.Vector2:
         return self._velocity2
 
@@ -399,11 +409,16 @@ class Player(Entity):
     def __init__(self: Self,
                  width: Real=0.5,
                  height: Real=1,
+                 melee_range: Real=0.2,
+                 shot_range: Real=10,
                  yaw_sensitivity: Real=0.125,
                  mouse_enabled: bool=1,
                  keyboard_look_enabled: bool=1) -> None:
 
         super().__init__(width)
+        self._melee_range = melee_range
+        self._shot_range = shot_range
+
         self._forward_velocity = pg.Vector2(0, 0)
         self._right_velocity = pg.Vector2(0, 0)
         # offset for camera's viewpoint
@@ -474,7 +489,77 @@ class Player(Entity):
 
         self._velocity2 = self._forward_velocity + self._right_velocity
         super().update(rel_game_speed, level_timer)
-        
+
+    def shoot(self: Self, damage: Real, precision: int=2):
+        ray = self._yaw.normalize()
+
+        end_pos = self._pos.copy()
+        last_end_pos = end_pos.copy()
+        slope = ray.y / ray.x if ray.x else math.inf
+        tile = pg.Vector2(math.floor(end_pos.x), math.floor(end_pos.y))
+        dir = (ray.x > 0, ray.y > 0)
+        dist = 0
+        entities = 0 # if possible collision
+
+        tilemap = self._manager._level._walls._tilemap
+
+        surf = pg.Surface((1000, 1000))
+
+        # keep on changing end_pos until hitting a wall (DDA)
+        while dist < self._shot_range:
+            
+            # displacements until hit tile
+            disp_x = tile.x + dir[0] - end_pos.x
+            disp_y = tile.y + dir[1] - end_pos.y
+            # step for tile (for each displacement)
+            step_x = dir[0] * 2 - 1 # 1 if yes, -1 if no
+            step_y = dir[1] * 2 - 1 
+
+            len_x = abs(disp_x / ray.x) if ray.x else math.inf
+            len_y = abs(disp_y / ray.y) if ray.y else math.inf
+            if len_x < len_y:
+                tile.x += step_x
+                end_pos.x += disp_x
+                end_pos.y += disp_x * slope
+                dist += len_x
+                side = 1
+            else:
+                tile.y += step_y
+                end_pos.x += disp_y / slope if slope else math.inf
+                end_pos.y += disp_y
+                dist += len_y
+                side = 0
+
+            tile_key = gen_tile_key(tile)
+            data = tilemap.get(tile_key)
+            if entities:
+                for entity in entities:
+                    mult = 10**precision
+                    rect = entity.rect()
+                    rect.update(
+                        rect.x * mult,
+                        rect.y * mult,
+                        rect.w * mult,
+                        rect.h * mult,
+                    )
+                    pg.draw.rect(surf, (255, 255, 255), rect, 3)
+                    pg.draw.line(surf, (255, 0, 0), last_end_pos * mult, end_pos * mult)
+                    surf.set_at(tile * mult, (0, 255, 0))
+
+                    if rect.clipline(last_end_pos * mult, end_pos * mult):
+                        entity._health -= damage
+                        print("SHOT")
+                entities = 0
+
+                if data != None:
+                    break
+            else:
+                entities = self._manager._sets.get(tile_key)
+
+            last_end_pos = end_pos.copy()
+
+        pg.image.save(surf, "intersect.png")
+
 
 class EntityManager(object):
     

@@ -157,7 +157,7 @@ cdef class Camera:
 
     @fov.setter
     def fov(self: Self, float value):
-        semiradians = radians(value / 2)
+        cdef float semiradians = radians(value / 2)
 
         self._fov = value
         self._yaw_magnitude = 1 / tan(semiradians)
@@ -264,9 +264,9 @@ cdef class Camera:
 
             # Sky stuff
             float semiheight = height / 2
-            float sky_speed = width / 100
             float mult
 
+        sky_speed = width / 100
         x_pixels = np.vstack(np.linspace(0, width, num=width, endpoint=0))
 
         # Actual Render
@@ -292,7 +292,7 @@ cdef class Camera:
                     endpoint=0,
                 ) # offsets from horizon to render
 
-                mult = self._tile_size * self._player._render_elevation
+                mult = self._tile_size * <float>self._player._render_elevation
                 array = self._generate_array(
                     width=width,
                     mult=mult,
@@ -361,36 +361,30 @@ cdef class Camera:
 
                 self._ceiling = pg.surfarray.make_surface(array)
     
-    cdef tuple _calculate_line(self: Self,
-                               float rel_depth,
-                               float height,
-                               float elevation):
-        cdef:
-            int line_height
-            int render_line_height
-            float offset
-
+    cdef void _calculate_line(self: Self,
+                              float rel_depth,
+                              float height,
+                              float elevation,
+                              int[3] calculation):
+        
         # distance already does fisheye correction because it 
         # divides by the magnitude of ray (when "depth" is 1)
-        line_height = int(fmin(
+        calculation[0] = int(fmin( # line height
             self._tile_size / rel_depth * height,
             self._tile_size * self._max_line_height,
         ))
         # 2 was found through testing
-        render_line_height = line_height + 2
+        calculation[1] = calculation[0] + 2 # render_line_height
         # ^ pixel glitches at bottoms of wall are avoided
+
         # elevation offset
-        offset = (
+        calculation[2] = int( # offset
             (<float>self._player._render_elevation * 2
              - elevation * 2
              - height)
             * self._tile_size / 2 / rel_depth
         )
         
-        # inting accounts for some pixel glitch errors
-        # not inting offset because some walls seem to "bounce"
-        return (line_height, render_line_height, offset)
-
     cdef void _darken_line(self: Self, line: pg.Surface, float dist):
         cdef float factor
 
@@ -493,12 +487,14 @@ cdef class Camera:
             while dist < self._wall_render_distance:
                 # Tile Rendering
                 if render_back: # back of wall rendering
-                    calculation = self._calculate_line(
+                    self._calculate_line(
                         rel_depth,
                         data['height'],
                         data['elevation'],
+                        calculation,
                     )
                     line_height, render_line_height, offset = calculation
+
                     y = horizon - line_height / 2 + offset
                     
                     if render_back == 1: # render back on top
@@ -535,12 +531,14 @@ cdef class Camera:
                 data = tilemap.get(tile_key)
                 if data != None: # front of wall rendering
                     if rel_depth and not limits.full(0, height):
-                        calculation = self._calculate_line(
+                        self._calculate_line(
                             rel_depth,
                             data['height'],
                             data['elevation'],
+                            calculation,
                         )
                         line_height, render_line_height, offset = calculation
+
                         y = horizon - line_height / 2 + offset
                         render_end = y + render_line_height
 

@@ -257,7 +257,6 @@ cdef class Camera:
             object obj
             int difference
             int amount_of_offsets
-            int[4] rect
         
             # all x values
             cnp.ndarray[char, ndim=3] array
@@ -589,7 +588,7 @@ cdef class Camera:
 
                                 if y < start and render_end > end:
                                     render_y = max(end, y)
-                                    rect = pg.Rect(
+                                    rect = (
                                         0,
                                         render_y - y,
                                         1,
@@ -602,10 +601,10 @@ cdef class Camera:
                                         rel_depth, (line, (x, render_y), rect),
                                     )
                                     render_buffer[x].append(obj)
-
-                                    if rect.bottom >= render_line_height:
+                                    # rect bottom
+                                    if start - y + 1 >= render_line_height:
                                         break
-                            # looks kinda weird when not int
+
                             limits.add(y, render_end)
                 else:
                     empty_tiles.add(tile_key)
@@ -636,7 +635,6 @@ cdef class Camera:
             # reverse so that depth buffer works
         
         cdef:
-            int[2] pos
             float scale
             float[2] projection
             float[2] ratios
@@ -675,9 +673,7 @@ cdef class Camera:
                             # mgaic numbers found by testing
                             factor = -rel_vector[2]**0.9 * self._darkness / 7
                             texture = pg.transform.hsl(
-                                texture,
-                                0, 0,
-                                fmax(factor, -1),
+                                texture, 0, 0, fmax(factor, -1),
                             )
 
                         texture = pg.transform.scale(
@@ -688,8 +684,8 @@ cdef class Camera:
 
                         for i in range(texture.width):
                             pos = (
-                                int(dex - texture.width / 2 + i),
-                                projection[1] - texture.height,
+                                int(dex - <int>texture.width / 2 + i),
+                                projection[1] - <int>texture.height,
                             )
                             if 0 < pos[0] < width:
                                 obj = _DepthBufferObject(

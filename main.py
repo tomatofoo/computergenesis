@@ -56,7 +56,7 @@ class Game(object):
         self._player = Player()
         self._player.pos = (6.5, 6)
         self._player.yaw = 180
-        self._player.elevation = 0
+        self._player.elevation = 1
         #n
         entities = {
             0: Entity(
@@ -118,6 +118,12 @@ class Game(object):
         
         gun = pg.image.load('data/images/gun.png')
 
+        from statistics import mean
+        frames = []
+        fps = 0
+        second = pg.event.custom_type()
+        pg.time.set_timer(second, 1000)
+
         while self._running:
             delta_time = time.time() - start_time
             start_time = time.time()
@@ -136,6 +142,10 @@ class Game(object):
 
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     self._player.shoot(50)
+
+                elif event.type == second:
+                    fps = mean(frames)
+                    frames = []
 
             keys = pg.key.get_pressed()
             movement = (
@@ -190,8 +200,8 @@ class Game(object):
 
             pg.draw.rect(self._surface, (0, 255, 0), player_rect)
 
-
-            pg.display.set_caption(str(int(1 / delta_time)) if delta_time else 'inf')
+            frames.append(1 / delta_time if delta_time else math.inf)
+            pg.display.set_caption(str(int(fps)))
 
             resized_surf = pg.transform.scale(self._surface, self._SCREEN_SIZE)
             self._screen.blit(resized_surf, (0, 0))

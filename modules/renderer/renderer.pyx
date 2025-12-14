@@ -1,6 +1,9 @@
 # cython: language_level=3, profile=True, boundscheck=True, wraparound=False, initializedcheck=False, cdivision=True, cpow=True
 
 cimport cython
+from cpython.mem cimport PyMem_Calloc
+from cpython.mem cimport PyMem_Free
+
 from libc.math cimport M_PI
 from libc.math cimport tan
 from libc.math cimport floor
@@ -31,39 +34,48 @@ cdef float radians(float degrees):
 # 1-Dimensional integer
 cdef class Limits:
 
-    cdef public list _limits
+    cdef public list[int[2]] _limits
+    cdef public int _amount
 
     def __init__(self: Self) -> None:
         self._limits = []
+        self._amount = 0
 
     cdef void add(self: Self, int start, int end):
         # https://stackoverflow.com/a/15273749
-        limit = [start, end]
+        cdef int[2] limit = [start, end]
         cdef list arr = self._limits.copy()
         cdef int dex = bisect.bisect_left(arr, limit)
         arr.insert(dex, limit)
         
         cdef int cur = 0
-        last = arr[0]
+        cdef int[2] item
+        cdef int[2] last = arr[0]
         self._limits = [last]
+        self._amount = 1
+
         cdef int i
         for i in range(dex - 1, len(arr)):
             item = arr[i]
             if last[1] >= item[0] - 1:
-                last[1] = fmax(last[1], item[1])
+                last[1] = int(fmax(last[1], item[1]))
             else:
                 cur += 1
+                self._amount += 1
                 self._limits.append(item)
                 last = item
 
     cdef bool full(self: Self, int start, int end):
-        for limit in self._limits:
+        cdef int i
+        cdef int[2] limit
+        for i in range(self._amount):
+            limit = self._limits[i]
             if limit[0] <= start and limit[1] >= end:
                 return True
         return False
 
 
-cdef class _DepthBufferObject:
+cdef class DepthBufferObject:
     cdef public float _depth
     cdef public tuple _args
 
@@ -455,6 +467,7 @@ cdef class Camera:
         
         # level manager stuff
         textures = manager._level._walls._textures
+        limits = Limits()
         
         # Wall Casting
         for x in range(width):
@@ -472,7 +485,8 @@ cdef class Camera:
             rel_depth = 0 # relative to yaw magnitude
             dist = 0
             
-            limits = Limits()
+            limits._limits = []
+            limits._amount = 0
             
             # 0 to not render back of wall
             # 1 if rendering top of back of wall
@@ -517,7 +531,7 @@ cdef class Camera:
                         line.fill(color)
                         self._darken_line(line, dists[tile_key])
                         
-                        obj = _DepthBufferObject(
+                        obj = DepthBufferObject(
                             rel_depth, (line, (x, render_y)),
                         )
                         render_buffer[x].append(obj)
@@ -578,7 +592,7 @@ cdef class Camera:
                             self._darken_line(line, dist)
  
                             # Reverse Painter's Algorithm
-                            amount = len(limits._limits)
+                            amount = limits._amount
                             # not enumerated because + 1
                             for i in range(amount + 1):
                                 end = limits._limits[i - 1][1] if i else 0
@@ -598,7 +612,7 @@ cdef class Camera:
                                         start - render_y + 1,
                                     )
                                     
-                                    obj = _DepthBufferObject(
+                                    obj = DepthBufferObject(
                                         rel_depth, (line, (x, render_y), rect),
                                     )
                                     render_buffer[x].append(obj)
@@ -689,7 +703,7 @@ cdef class Camera:
                                 projection[1] - <int>texture.height,
                             )
                             if 0 < pos[0] < width:
-                                obj = _DepthBufferObject(
+                                obj = DepthBufferObject(
                                     rel_depth,
                                     (texture,
                                      pos,

@@ -73,7 +73,7 @@ cdef class _DepthBufferObject:
 
     def __lt__(self: Self, obj: Self) -> bool:
         # so objects are rendered farthest to last
-        return self._depth < obj._depth 
+        return self._depth < obj._depth
 
 
 cdef class Camera:
@@ -400,7 +400,6 @@ cdef class Camera:
             object texture
             object color
             object manager = self._player._manager
-            bool side # false for x, true for y
             int i
             int x
             int render_back
@@ -432,10 +431,11 @@ cdef class Camera:
             float[2] ray
             float[2] tile
             float[2] end_pos
-            tuple center
+            bool side # false for x, true for y
             str tile_key
             dict data
             dict tilemap = manager._level._walls._tilemap
+            tuple center
             Limits limits
             # len_x and len_y are not one here because they do python interaction
 
@@ -458,8 +458,8 @@ cdef class Camera:
         
         # Wall Casting
         for x in range(width):
-            render_buffer.append([]) # add empty list
-            
+            render_buffer.append([])
+
             factor = 2 * x / float(width) - 1
             obj = self._yaw + self._player._semiplane * factor
             ray = (obj[0], obj[1])
@@ -518,7 +518,7 @@ cdef class Camera:
                         self._darken_line(line, dists[tile_key])
                         
                         obj = _DepthBufferObject(
-                            rel_depth, (line, (x, render_y), None),
+                            rel_depth, (line, (x, render_y)),
                         )
                         render_buffer[x].append(obj)
 
@@ -546,7 +546,7 @@ cdef class Camera:
                         if horizon < y:
                             render_back = 1
                             back_edge = y
-                            if dists.get(tile_key) == None: # calc dist to center
+                            if dists.get(tile_key) is None: # calc dist to center
                                 dists[tile_key] = self._player._pos.distance_to(
                                     center,
                                 )
@@ -556,7 +556,8 @@ cdef class Camera:
                             render_back = 2
                             back_edge = render_end
                             # ^ inting helps with pixel glitch
-                            if dists.get(tile_key) == None: # calc dist to center
+                            # faster than == None in cython
+                            if dists.get(tile_key) is None: # calc dist to center
                                 dists[tile_key] = self._player._pos.distance_to(
                                     center,
                                 )
@@ -692,11 +693,12 @@ cdef class Camera:
                                     rel_depth,
                                     (texture,
                                      pos,
-                                     pg.Rect(i, 0, 1, texture.height)),
+                                     (i, 0, 1, texture.height)),
                                 )
                                 bisect.insort_left(render_buffer[pos[0]], obj)
 
-        for blits in render_buffer:
+        for x in range(width):
+            blits = render_buffer[x]
             for i in range(len(blits) - 1, -1, -1):
                 self._walls_and_entities.blit(*blits[i]._args)
 

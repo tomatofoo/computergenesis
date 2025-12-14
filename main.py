@@ -56,7 +56,7 @@ class Game(object):
         self._player = Player()
         self._player.pos = (6.5, 6)
         self._player.yaw = 180
-        self._player.elevation = 1
+        self._player.elevation = 0
         #n
         entities = {
             0: Entity(
@@ -154,7 +154,7 @@ class Game(object):
                 (keys[pg.K_RIGHT] - keys[pg.K_LEFT]) * 2.5,
                 (keys[pg.K_DOWN] - keys[pg.K_UP]),
             )
-            
+
             self._player.update(
                 rel_game_speed,
                 self._level_timer,

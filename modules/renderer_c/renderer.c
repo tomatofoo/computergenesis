@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdbool.h>
-#include <string.h>
 #include <math.h>
 #include <stdio.h>
 
@@ -45,7 +44,6 @@ limits_new(size_t capacity) {
     }
 
     limits->icapacity = capacity;
-    limits->iamount = 0;
     limits_reset(limits);
 
     return limits;
@@ -57,6 +55,7 @@ void limits_destroy(limits_t* limits) {
 
 void limits_reset(limits_t* limits) {
     memset(limits->iarr, 0, limits->icapacity * sizeof(limit_t));
+    limits->iamount = 0;
 }
 
 void limitsi_reset_amount(limits_t* limits) {

@@ -1,3 +1,5 @@
+# original python rendering engine with some changes made
+
 import math
 import bisect
 from numbers import Real

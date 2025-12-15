@@ -56,7 +56,7 @@ class Game(object):
         self._player = Player()
         self._player.pos = (6.5, 6)
         self._player.yaw = 180
-        self._player.elevation = 1
+        self._player.elevation = 0
         #n
         entities = {
             0: Entity(
@@ -206,7 +206,7 @@ class Game(object):
             resized_surf = pg.transform.scale(self._surface, self._SCREEN_SIZE)
             self._screen.blit(resized_surf, (0, 0))
 
-            pg.display.flip()
+            pg.display.update()
 
         pg.quit()
 

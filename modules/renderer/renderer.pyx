@@ -11,6 +11,7 @@ from libc.math cimport fabs
 from libc.math cimport fmax
 from libc.math cimport fmin
 from libc.math cimport sqrt
+from libc.string cimport memset
 
 import bisect
 from threading import Thread
@@ -31,51 +32,100 @@ cdef float radians(float degrees):
     return degrees / 180.0 * M_PI
 
 
-# 1-Dimensional integer
-cdef class Limits:
+cdef struct _Limit:
+    int _start
+    int _end
 
-    cdef public list[int[2]] _limits
-    cdef public int _amount
+cdef struct _Limits:
+    size_t _capacity
+    size_t _amount
+    _Limit* _arr
 
-    def __init__(self: Self) -> None:
-        self._limits = []
-        self._amount = 0
+cdef int _limit_cmp(_Limit limit1, _Limit limit2):
+    if limit1._start == limit2._start:
+        if limit1._end < limit2._end:
+            return -1
+        elif limit1._end == limit2._end:
+            return 0
+        else:
+            return 1
+    return -1 if limit1._start < limit2._start else 1
 
-    cdef void add(self: Self, int start, int end):
-        # https://stackoverflow.com/a/15273749
-        cdef int[2] limit = [start, end]
-        cdef list arr = self._limits.copy()
-        cdef int dex = bisect.bisect_left(arr, limit)
-        arr.insert(dex, limit)
-        
-        cdef int cur = 0
-        cdef int[2] item
-        cdef int[2] last = arr[0]
-        self._limits = [last]
-        self._amount = 1
+cdef _Limits _limits_new(size_t capacity):
+    cdef _Limits limits = _Limits(
+        capacity,
+        0,
+        <_Limit *>PyMem_Calloc(capacity, sizeof(_Limit)),
+    )
+    if not limits._arr:
+        raise MemoryError()
 
-        cdef int i
-        for i in range(dex - 1, len(arr)):
-            item = arr[i]
-            if last[1] >= item[0] - 1:
-                last[1] = int(fmax(last[1], item[1]))
-            else:
-                cur += 1
-                self._amount += 1
-                self._limits.append(item)
-                last = item
+    return limits
 
-    cdef bool full(self: Self, int start, int end):
-        cdef int i
-        cdef int[2] limit
-        for i in range(self._amount):
-            limit = self._limits[i]
-            if limit[0] <= start and limit[1] >= end:
-                return True
+cdef void _limits_destroy(_Limits *limits):
+    PyMem_Free(limits._arr)
+
+cdef void _limits_reset(_Limits *limits):
+    memset(limits._arr, 0, limits._capacity * sizeof(_Limit))
+    limits._amount = 0
+
+cdef bool _limits_add(_Limits* limits, int start, int end):
+    if limits._amount >= limits._capacity:
         return False
 
+    cdef:
+        _Limit limit = _Limit(start, end)
+        _Limit item
+        size_t dex = 0
+        size_t cur = 0
+        size_t i
+        int cur_end
+    
+    # three-step insertion
+    for i in range(limits._amount + 1): # find dex
+        item = limits._arr[i]
+        if i >= limits._amount or _limit_cmp(limit, item) < 1:
+            dex = i
+            break
 
-cdef class DepthBufferObject:
+    if dex < limits._amount: # avoid unnecessary shifting
+        for i in range(limits._amount, dex, -1): # shift elements
+            limits._arr[i] = limits._arr[i - 1]
+
+    limits._arr[dex] = limit # insert
+    limits._amount += 1
+    
+    # condense inplace
+    # don't need to set value to zero after condensing
+    # because we will only iterate until _amount
+    for i in range(1, limits._amount):
+        item = limits._arr[i]
+        cur_end = limits._arr[cur]._end
+        if cur_end >= item._start - 1:
+            limits._arr[cur]._end = int(fmax(
+                cur_end,
+                item._end,
+            ))
+        else:
+            cur += 1
+            limits._arr[cur] = item
+
+    limits._amount = cur + 1
+
+    return True
+
+cdef bool _limits_full(_Limits *limits, int start, int end):
+    cdef:
+        _Limit item
+        size_t i
+    for i in range(limits._amount):
+        item = limits._arr[i]
+        if item._start <= start and item._end >= end:
+            return True
+    return False
+
+
+cdef class _DepthBufferObject:
     cdef public float _depth
     cdef public tuple _args
 
@@ -91,21 +141,21 @@ cdef class DepthBufferObject:
 cdef class Camera:
     
     cdef:
-        public float _fov
-        public float _yaw_magnitude
-        public float _horizon
-        public float _tile_size
-        public float _wall_render_distance
-        public float _bob_strength
-        public float _bob_frequency
-        public float _darkness
-        public float _max_line_height
-        public float _min_entity_depth
-        public object _yaw
-        public object _player
-        public object _floor
-        public object _ceiling
-        public object _walls_and_entities
+        float _fov
+        float _yaw_magnitude
+        float _horizon
+        float _tile_size
+        float _wall_render_distance
+        float _bob_strength
+        float _bob_frequency
+        float _darkness
+        float _max_line_height
+        float _min_entity_depth
+        object _yaw
+        object _player
+        object _floor
+        object _ceiling
+        object _walls_and_entities
 
     def __init__(self: Self,
                  float fov,
@@ -448,7 +498,7 @@ cdef class Camera:
             dict data
             dict tilemap = manager._level._walls._tilemap
             tuple center
-            Limits limits
+            _Limits limits = _limits_new(height / 2)
             # len_x and len_y are not one here because they do python interaction
 
             # entity stuff
@@ -467,7 +517,6 @@ cdef class Camera:
         
         # level manager stuff
         textures = manager._level._walls._textures
-        limits = Limits()
         
         # Wall Casting
         for x in range(width):
@@ -485,8 +534,7 @@ cdef class Camera:
             rel_depth = 0 # relative to yaw magnitude
             dist = 0
             
-            limits._limits = []
-            limits._amount = 0
+            _limits_reset(&limits)
             
             # 0 to not render back of wall
             # 1 if rendering top of back of wall
@@ -525,25 +573,25 @@ cdef class Camera:
                     
                     if (render_end > 0
                         and y < height
-                        and not limits.full(y, render_end)):
+                        and not _limits_full(&limits, y, render_end)):
                     
                         line = pg.Surface((1, fmax(render_back_line_height, 0)))
                         line.fill(color)
                         self._darken_line(line, dists[tile_key])
                         
-                        obj = DepthBufferObject(
+                        obj = _DepthBufferObject(
                             rel_depth, (line, (x, render_y)),
                         )
                         render_buffer[x].append(obj)
 
-                        limits.add(render_y, render_end)
+                        _limits_add(&limits, render_y, render_end)
 
                     render_back = 0
 
                 tile_key = gen_tile_key(tile)
                 data = tilemap.get(tile_key)
                 if data != None: # front of wall rendering
-                    if rel_depth and not limits.full(0, height):
+                    if rel_depth and not _limits_full(&limits, 0, height):
                         self._calculate_line(
                             rel_depth,
                             data['height'],
@@ -579,7 +627,7 @@ cdef class Camera:
                         # check if line is visible
                         if (render_end > 0
                             and y < height
-                            and not limits.full(y, render_end)):
+                            and not _limits_full(&limits, y, render_end)):
                             # Transformation
                             texture = data['texture']
                             dex = int(floor(
@@ -595,9 +643,9 @@ cdef class Camera:
                             amount = limits._amount
                             # not enumerated because + 1
                             for i in range(amount + 1):
-                                end = limits._limits[i - 1][1] if i else 0
+                                end = limits._arr[i - 1]._end if i else 0
                                 if i < amount:
-                                    start = limits._limits[i][0]
+                                    start = limits._arr[i]._start
                                 else:
                                     start = height
 
@@ -612,7 +660,7 @@ cdef class Camera:
                                         start - render_y + 1,
                                     )
                                     
-                                    obj = DepthBufferObject(
+                                    obj = _DepthBufferObject(
                                         rel_depth, (line, (x, render_y), rect),
                                     )
                                     render_buffer[x].append(obj)
@@ -620,7 +668,7 @@ cdef class Camera:
                                     if start - y + 1 >= render_line_height:
                                         break
 
-                            limits.add(y, render_end)
+                            _limits_add(&limits, y, render_end)
                 else:
                     empty_tiles.add(tile_key)
                 
@@ -648,6 +696,8 @@ cdef class Camera:
                 dist = rel_depth * mag
             # the objects are added in closest-to-farthest
             # reverse so that depth buffer works
+
+        _limits_destroy(&limits)
         
         cdef:
             float scale
@@ -703,7 +753,7 @@ cdef class Camera:
                                 projection[1] - <int>texture.height,
                             )
                             if 0 < pos[0] < width:
-                                obj = DepthBufferObject(
+                                obj = _DepthBufferObject(
                                     rel_depth,
                                     (texture,
                                      pos,

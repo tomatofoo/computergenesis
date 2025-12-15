@@ -56,6 +56,7 @@ class Game(object):
         self._player = Player()
         self._player.pos = (6.5, 6)
         self._player.yaw = 180
+        self._player.elevation = 1
 
         entities = {
             0: Entity(
@@ -191,7 +192,7 @@ class Game(object):
             #     (self._SURF_SIZE[0] - gun.width,
             #      self._SURF_SIZE[1] - gun.height),
             # )
-            pg.draw.rect(self._surface, (255, 255, 255), (155, 115, 10, 10))
+            pg.draw.rect(self._surface, (255, 255, 255), (159, 119, 2, 2))
 
             # temp draw minimap
             for tile in self._level.walls._tilemap:

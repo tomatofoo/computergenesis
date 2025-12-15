@@ -6,8 +6,8 @@ from cpython.mem cimport PyMem_Free
 
 from libc.math cimport M_PI
 from libc.math cimport tan
-from libc.math cimport floor
-from libc.math cimport ceil
+from libc.math cimport floorf
+from libc.math cimport ceilf
 from libc.math cimport fabs
 from libc.math cimport fmax
 from libc.math cimport fmin
@@ -166,7 +166,7 @@ cdef class Camera:
                  float bob_strength=0.0375,
                  float bob_frequency=10,
                  float darkness=1,
-                 float max_line_height=10,
+                 float max_line_height=50,
                  float min_entity_depth=0.05) -> None:
         
         self._yaw_magnitude = 1 / tan(radians(fov) / 2)
@@ -473,6 +473,8 @@ cdef class Camera:
             int y
             int line_height
             int render_line_height
+            int old_y
+            int old_render_end
             int back_line_height
             int render_back_line_height
             int render_end
@@ -500,6 +502,7 @@ cdef class Camera:
             float[2] end_pos
             bool side # false for x, true for y
             str tile_key
+            str side_key
             dict data
             dict tilemap = manager._level._walls._tilemap
             tuple center
@@ -512,8 +515,8 @@ cdef class Camera:
             # stores all walls and all that to be rendered
             # entities will be added after walls are computed
             list[width] render_buffer = []
-            # distance to center of each tile (top/bottom rendering)
-            dict dists = {} 
+            # colors of each tile (top/bottom rendering)
+            dict colors = {} 
 
         # the per-pixel alpha with (0, 0, 0, 0) doesn't seem to affect
         # fps at all
@@ -534,7 +537,7 @@ cdef class Camera:
 
             end_pos = [self._player._pos[0], self._player._pos[1]]
             slope = ray[1] / ray[0] if ray[0] else 2147483647
-            tile = [floor(end_pos[0]), floor(end_pos[1])]
+            tile = [floorf(end_pos[0]), floorf(end_pos[1])]
             dir = (ray[0] > 0, ray[1] > 0)
             rel_depth = 0 # relative to yaw magnitude
             dist = 0
@@ -566,11 +569,11 @@ cdef class Camera:
                     if render_back == 1: # render back on top
                         render_y = horizon - line_height / 2 + offset
                         back_line_height = back_edge - render_y
-                        color = data['top']
+                        side_key = 'top'
                     elif render_back == 2: # render back at bottom
                         render_y = back_edge
                         back_line_height = y + render_line_height - render_y
-                        color = data['bottom']
+                        side_key = 'bottom'
 
                     render_back_line_height = back_line_height + 1
                     # this + 1 helps with pixel glitches (found by testing)
@@ -578,10 +581,17 @@ cdef class Camera:
                     if (render_end > 0
                         and y < height
                         and not _limits_full(&limits, y, render_end)):
-                    
+                        
                         line = pg.Surface((1, render_back_line_height))
-                        line.fill(color)
-                        self._darken_line(line, dists[tile_key])
+                        color = colors.get(tile_key)
+                        if color:
+                            line.fill(color)
+                        else:
+                            line.fill(data[side_key])
+                            self._darken_line(
+                                line, self._player._pos.distance_to(center),
+                            )
+                            colors[tile_key] = line.get_at((0, 0))
                         
                         obj = _DepthBufferObject(
                             rel_depth, (line, (x, render_y)),
@@ -612,10 +622,6 @@ cdef class Camera:
                         if horizon < y:
                             render_back = 1
                             back_edge = y
-                            if dists.get(tile_key) is None: # calc dist to center
-                                dists[tile_key] = self._player._pos.distance_to(
-                                    center,
-                                )
 
                         # render back of tile on bottom
                         elif horizon > render_end:
@@ -623,10 +629,6 @@ cdef class Camera:
                             back_edge = render_end
                             # ^ inting helps with pixel glitch
                             # faster than == None in cython
-                            if dists.get(tile_key) is None: # calc dist to center
-                                dists[tile_key] = self._player._pos.distance_to(
-                                    center,
-                                )
                             
                         # check if line is visible
                         if (render_end > 0
@@ -634,20 +636,23 @@ cdef class Camera:
                             and not _limits_full(&limits, y, render_end)):
                             # Transformation
                             texture = textures[data['texture']]
-                            dex = int(floor(
+                            dex = int(floorf(
                                 end_pos[side] % 1 * <int>texture.width,
                             ))
-
+                            
                             # only resize the part that is visible
-                            scale = render_line_height / texture.height
-                            top = int(floor(fmax(-y, 0) / scale))
-                            bottom = int(ceil(
-                                fmin(height - y, render_line_height) / scale
+                            scale = render_line_height / <float>texture.height
+                            top = int(floorf(fmax(-y / scale, 0)))
+                            bottom = int(ceilf(
+                                fmin(height - y, render_line_height) / scale,
                             ))
                             rect_height = bottom - top
-
+                            
+                            old_y = y
+                            old_render_end = render_end
                             # adjust variables accordingly
-                            y += int(top * scale)
+                            # for some reason needs angle brackets to use C
+                            y += <int>ceilf(top * scale)
                             render_line_height = int(rect_height * scale)
                             render_end = y + render_line_height
                             
@@ -686,8 +691,8 @@ cdef class Camera:
                                     # rect bottom
                                     if start - y + 1 >= render_line_height:
                                         break
-
-                            _limits_add(&limits, y, render_end)
+                            # old variables because of the full check
+                            _limits_add(&limits, old_y, old_render_end)
                 else:
                     empty_tiles.add(tile_key)
                 

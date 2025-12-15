@@ -7,6 +7,7 @@ from cpython.mem cimport PyMem_Free
 from libc.math cimport M_PI
 from libc.math cimport tan
 from libc.math cimport floor
+from libc.math cimport ceil
 from libc.math cimport fabs
 from libc.math cimport fmax
 from libc.math cimport fmin
@@ -480,6 +481,10 @@ cdef class Camera:
             int[2] dir
             int[3] calculation
             int offset
+            int top
+            int bottom
+            int rect_height
+            float scale
             float dist
             float rel_depth
             float slope
@@ -570,12 +575,11 @@ cdef class Camera:
                     render_back_line_height = back_line_height + 1
                     # this + 1 helps with pixel glitches (found by testing)
                     render_end = render_y + render_back_line_height
-                    
                     if (render_end > 0
                         and y < height
                         and not _limits_full(&limits, y, render_end)):
                     
-                        line = pg.Surface((1, fmax(render_back_line_height, 0)))
+                        line = pg.Surface((1, render_back_line_height))
                         line.fill(color)
                         self._darken_line(line, dists[tile_key])
                         
@@ -629,12 +633,27 @@ cdef class Camera:
                             and y < height
                             and not _limits_full(&limits, y, render_end)):
                             # Transformation
-                            texture = data['texture']
+                            texture = textures[data['texture']]
                             dex = int(floor(
-                                end_pos[side] % 1 * <int>textures[texture].width,
+                                end_pos[side] % 1 * <int>texture.width,
                             ))
+
+                            # only resize the part that is visible
+                            scale = render_line_height / texture.height
+                            top = int(floor(fmax(-y, 0) / scale))
+                            bottom = int(ceil(
+                                fmin(height - y, render_line_height) / scale
+                            ))
+                            rect_height = bottom - top
+
+                            # adjust variables accordingly
+                            y += int(top * scale)
+                            render_line_height = int(rect_height * scale)
+                            render_end = y + render_line_height
+                            
+                            line = texture[dex]
                             line = pg.transform.scale(
-                                textures[texture][dex],
+                                line.subsurface(0, top, 1, rect_height),
                                 (1, render_line_height)
                             )
                             self._darken_line(line, dist)
@@ -700,7 +719,6 @@ cdef class Camera:
         _limits_destroy(&limits)
         
         cdef:
-            float scale
             float[2] projection
             float[2] ratios
             float[3] rel_vector

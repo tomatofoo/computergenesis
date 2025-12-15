@@ -23,7 +23,7 @@ class ColumnTexture(object):
         self._surf = surf
 
     def __getitem__(self: Self, dex: int) -> pg.Surface:
-        return self._surf.subsurface(pg.Rect(dex, 0, 1, self._surf.height))
+        return self._surf.subsurface((dex, 0, 1, self._surf.height))
 
     @property
     def surf(self: Self) -> pg.Surface:
@@ -379,9 +379,7 @@ class Entity(object):
         return rect
     
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
-        # I'm not sure if there is a reason that these 
-        # aren't being multiplied by delta time
-        self._elevation += self._elevation_velocity * rel_game_speed
+        self.elevation += self._elevation_velocity * rel_game_speed
         if self._yaw_velocity:
             self.yaw += self._yaw_velocity * rel_game_speed
          
@@ -457,13 +455,15 @@ class Player(Entity):
                level_timer: Real,
                forward: Real,
                right: Real,
-               yaw: Real) -> None:
+               yaw: Real,
+               up: Real=0) -> None:
 
         if forward:
             self._forward_velocity.update(self._yaw * forward)
         if right:
             self._right_velocity.update(self._semiplane * right)
-        
+
+        self._elevation_velocity = up
         self._yaw_velocity = yaw
 
         vel_mult = 0.90625**rel_game_speed # number used in Doom

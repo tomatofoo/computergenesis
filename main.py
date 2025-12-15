@@ -56,8 +56,7 @@ class Game(object):
         self._player = Player()
         self._player.pos = (6.5, 6)
         self._player.yaw = 180
-        self._player.elevation = 0
-        #n
+
         entities = {
             0: Entity(
                 height=0.6,
@@ -161,6 +160,7 @@ class Game(object):
                 movement[0],
                 movement[1],
                 movement[2],
+                (keys[pg.K_SPACE] - keys[pg.K_LSHIFT]) * 0.05
             )
             self._camera.horizon -= movement[3] * 0.025 * rel_game_speed
             
@@ -169,12 +169,21 @@ class Game(object):
             # moving wall
             self._level.walls.set_tile(
                 pos=(8, 11),
-                elevation=math.sin(self._level_timer) + 1,
+                elevation=math.sin(self._level_timer + math.pi) + 1,
                 height=1,
                 texture=0,
                 top=(64, 64, 64),
                 bottom=(64, 64, 64),
             )
+            self._level.walls.set_tile(
+                pos=(9, 11),
+                elevation=0,
+                height=math.sin(self._level_timer) + 1,
+                texture=0,
+                top=(64, 64, 64),
+                bottom=(64, 64, 64),
+            )
+
             self._camera.render(self._surface)
 
             # self._surface.blit(
@@ -206,7 +215,7 @@ class Game(object):
             resized_surf = pg.transform.scale(self._surface, self._SCREEN_SIZE)
             self._screen.blit(resized_surf, (0, 0))
 
-            pg.display.update()
+            pg.display.flip()
 
         pg.quit()
 

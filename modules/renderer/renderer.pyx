@@ -129,10 +129,15 @@ cdef bool _limits_full(_Limits *limits, int start, int end):
 cdef class _DepthBufferObject:
     cdef public float _depth
     cdef public tuple _args
+    cdef public bool _is_rect
 
-    def __init__(self: Self, float depth, args: tuple) -> None:
+    def __init__(self: Self,
+                 float depth,
+                 args: tuple,
+                 is_rect: bool=False) -> None:
         self._depth = depth
         self._args = args # blit args
+        self._is_rect = is_rect
 
     def __lt__(self: Self, obj: Self) -> bool:
         # so objects are rendered farthest to last
@@ -461,7 +466,6 @@ cdef class Camera:
                                          int horizon):
         cdef:
             object texture
-            object color
             object manager = self._player._manager
             int i
             int x
@@ -582,19 +586,20 @@ cdef class Camera:
                         and y < height
                         and not _limits_full(&limits, y, render_end)):
                         
-                        line = pg.Surface((1, render_back_line_height))
                         color = colors.get(tile_key)
-                        if color:
-                            line.fill(color)
-                        else:
-                            line.fill(data[side_key])
+                        if not color:
+                            line = pg.Surface((1, 1))
+                            line.set_at((0, 0), data[side_key])
                             self._darken_line(
                                 line, self._player._pos.distance_to(center),
                             )
-                            colors[tile_key] = line.get_at((0, 0))
+                            color = line.get_at((0, 0))
+                            colors[tile_key] = color
                         
                         obj = _DepthBufferObject(
-                            rel_depth, (line, (x, render_y)),
+                            rel_depth,
+                            (color, (x, render_y, 1, render_back_line_height)),
+                            is_rect=1,
                         )
                         render_buffer[x].append(obj)
 
@@ -790,7 +795,11 @@ cdef class Camera:
         for x in range(width):
             blits = render_buffer[x]
             for i in range(len(blits) - 1, -1, -1):
-                self._walls_and_entities.blit(*blits[i]._args)
+                obj = blits[i]
+                if obj._is_rect:
+                    pg.draw.rect(self._walls_and_entities, *obj._args)
+                else:
+                    self._walls_and_entities.blit(*obj._args)
 
     def render(self: Self, surf: pg.Surface) -> None:
         cdef:

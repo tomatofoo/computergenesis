@@ -140,6 +140,7 @@ class Game(object):
                 elif event.type == pg.MOUSEMOTION:
                     rel = pg.mouse.get_rel()
                     self._player.yaw += rel[0] * 0.2
+                    #self._camera.horizon -= rel[1] * 0.0025
 
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     self._player.shoot(50)

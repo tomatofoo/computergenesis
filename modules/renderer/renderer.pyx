@@ -693,6 +693,9 @@ cdef class Camera:
                                         break
                             # old variables because of the full check
                             _limits_add(&limits, old_y, old_render_end)
+                            # stop raycasting if full screen
+                            if _limits_full(&limits, 0, height):
+                                break
                 else:
                     empty_tiles.add(tile_key)
                 

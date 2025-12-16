@@ -100,6 +100,7 @@ class Game(object):
             walls=Walls(walls, self._wall_textures),
             entities=self._entities,
         )
+        
         #temp
         pg.mouse.set_relative_mode(1)
 

@@ -349,13 +349,12 @@ cdef class Camera:
         elif obj:
             # Floor Casting
             difference = height - horizon
-            amount_of_offsets = int(fmin(difference, height))
 
             if difference > 0:
                 offsets = np.linspace(
-                    fmax(-horizon, 1),
-                    amount_of_offsets + fmax(-horizon, 0),
-                    num=amount_of_offsets,
+                    1,
+                    difference,
+                    num=difference,
                     endpoint=0,
                 ) # offsets from horizon to render
 
@@ -393,12 +392,11 @@ cdef class Camera:
                     obj._height,
                 ).subsurface(rect)
         elif obj:
-            amount_of_offsets = int(fmin(horizon, height))
             if horizon > 0:
                 offsets = np.linspace(
-                    amount_of_offsets,
+                    horizon,
                     0,
-                    num=amount_of_offsets,
+                    num=horizon,
                     endpoint=0,
                 ) # offsets from horizon to render
 

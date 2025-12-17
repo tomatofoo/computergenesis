@@ -541,6 +541,9 @@ cdef class Camera:
             slope = ray[1] / ray[0] if ray[0] else 2147483647
             tile = [floorf(end_pos[0]), floorf(end_pos[1])]
             dir = (ray[0] > 0, ray[1] > 0)
+            # step for tile (for each displacement)
+            step_x = dir[0] * 2 - 1 # 1 if yes, -1 if no
+            step_y = dir[1] * 2 - 1 
             rel_depth = 0 # relative to yaw magnitude
             dist = 0
             
@@ -705,9 +708,6 @@ cdef class Camera:
                 # displacements until hit tile
                 disp_x = tile[0] + dir[0] - end_pos[0]
                 disp_y = tile[1] + dir[1] - end_pos[1]
-                # step for tile (for each displacement)
-                step_x = dir[0] * 2 - 1 # 1 if yes, -1 if no
-                step_y = dir[1] * 2 - 1 
 
                 len_x = fabs(disp_x / ray[0]) if ray[0] else 2147483647
                 len_y = fabs(disp_y / ray[1]) if ray[1] else 2147483647

@@ -497,23 +497,22 @@ class Player(Entity):
         last_end_pos = end_pos.copy()
         slope = ray.y / ray.x if ray.x else math.inf
         tile = pg.Vector2(math.floor(end_pos.x), math.floor(end_pos.y))
+        tile_key = gen_tile_key(tile)
+        last_tile = tile_key
         dir = (ray.x > 0, ray.y > 0)
-        dist = 0
-        entities = 0 # if possible collision
-
+        # step for tile (for each displacement)
+        step_x = dir[0] * 2 - 1 # 1 if yes, -1 if no
+        step_y = dir[1] * 2 - 1 
+        dist = 0 # equals depth when ray is in perfet center
         tilemap = self._manager._level._walls._tilemap
 
-        surf = pg.Surface((1000, 1000))
+        closest = (math.inf, None)
 
         # keep on changing end_pos until hitting a wall (DDA)
         while dist < self._shot_range:
-            
             # displacements until hit tile
             disp_x = tile.x + dir[0] - end_pos.x
             disp_y = tile.y + dir[1] - end_pos.y
-            # step for tile (for each displacement)
-            step_x = dir[0] * 2 - 1 # 1 if yes, -1 if no
-            step_y = dir[1] * 2 - 1 
 
             len_x = abs(disp_x / ray.x) if ray.x else math.inf
             len_y = abs(disp_y / ray.y) if ray.y else math.inf
@@ -530,20 +529,35 @@ class Player(Entity):
                 dist += len_y
                 side = 0
 
-            tile_key = gen_tile_key(tile)
             entities = self._manager._sets.get(last_tile)
             if entities:
                 for entity in entities:
-                    pass
+                    if entity._health <= 0:
+                        continue
+                    mult = 10**precision
+                    rect = entity.rect()
+                    rect.update(
+                        rect.x * mult,
+                        rect.y * mult,
+                        rect.w * mult,
+                        rect.h * mult,
+                    )
+                    if rect.clipline(last_end_pos * mult, end_pos * mult):
+                        entity_dist = self.vector3.distance_to(entity.vector3)
+                        if entity_dist < closest[0]:
+                            closest = (entity_dist, entity)
 
+            tile_key = gen_tile_key(tile)
             data = tilemap.get(tile_key)
             if data != None:
                 break
 
             last_tile = tile_key
             last_end_pos = end_pos.copy()
-
-        pg.image.save(surf, "intersect.png")
+        
+        entity = closest[1]
+        if entity != None:
+            entity._health -= damage
 
 
 class EntityManager(object):

@@ -608,7 +608,7 @@ cdef class Camera:
                 tile_key = gen_tile_key(tile)
                 data = tilemap.get(tile_key)
                 if data != None: # front of wall rendering
-                    if rel_depth and not _limits_full(&limits, 0, height):
+                    if rel_depth:
                         self._calculate_line(
                             rel_depth,
                             data['height'],

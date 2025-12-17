@@ -531,31 +531,16 @@ class Player(Entity):
                 side = 0
 
             tile_key = gen_tile_key(tile)
-            data = tilemap.get(tile_key)
+            entities = self._manager._sets.get(last_tile)
             if entities:
                 for entity in entities:
-                    mult = 10**precision
-                    rect = entity.rect()
-                    rect.update(
-                        rect.x * mult,
-                        rect.y * mult,
-                        rect.w * mult,
-                        rect.h * mult,
-                    )
-                    pg.draw.rect(surf, (255, 255, 255), rect, 3)
-                    pg.draw.line(surf, (255, 0, 0), last_end_pos * mult, end_pos * mult)
-                    surf.set_at(tile * mult, (0, 255, 0))
+                    pass
 
-                    if rect.clipline(last_end_pos * mult, end_pos * mult):
-                        entity._health -= damage
-                        print("SHOT")
-                entities = 0
+            data = tilemap.get(tile_key)
+            if data != None:
+                break
 
-                if data != None:
-                    break
-            else:
-                entities = self._manager._sets.get(tile_key)
-
+            last_tile = tile_key
             last_end_pos = end_pos.copy()
 
         pg.image.save(surf, "intersect.png")

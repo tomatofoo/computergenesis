@@ -144,7 +144,9 @@ class Game(object):
                     self._camera.horizon -= rel[1] * 0.0025
 
                 elif event.type == pg.MOUSEBUTTONDOWN:
+                    start = time.time()
                     self._player.shoot(50)
+                    print(time.time() - start)
 
                 elif event.type == second:
                     fps = mean(frames)

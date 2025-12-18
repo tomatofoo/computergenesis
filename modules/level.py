@@ -550,15 +550,15 @@ class Player(Entity):
               foa: Real=60, # field of attack
               precision: int=2):
 
-        ray = self._yaw.normalize()
+        ray = tuple(self._yaw.normalize())
 
-        end_pos = self._pos.copy()
+        end_pos = list(self._pos)
         last_end_pos = end_pos.copy()
-        slope = ray.y / ray.x if ray.x else math.inf
-        tile = pg.Vector2(math.floor(end_pos.x), math.floor(end_pos.y))
+        slope = ray[1] / ray[0] if ray[0] else math.inf
+        tile = [math.floor(end_pos[0]), math.floor(end_pos[1])]
         tile_key = gen_tile_key(tile)
         last_tile = tile_key
-        dir = (ray.x > 0, ray.y > 0)
+        dir = (ray[0] > 0, ray[1] > 0)
         # step for tile (for each displacement)
         step_x = dir[0] * 2 - 1 # 1 if yes, -1 if no
         step_y = dir[1] * 2 - 1 
@@ -572,28 +572,29 @@ class Player(Entity):
         vector = self.vector3
 
         # keep on changing end_pos until hitting a wall (DDA)
-        while dist < shot_range:
+        while dist < shot_range and dist < closest[0]:
             # displacements until hit tile
-            disp_x = tile.x + dir[0] - end_pos.x
-            disp_y = tile.y + dir[1] - end_pos.y
+            disp_x = tile[0] + dir[0] - end_pos[0]
+            disp_y = tile[1] + dir[1] - end_pos[1]
 
-            len_x = abs(disp_x / ray.x) if ray.x else math.inf
-            len_y = abs(disp_y / ray.y) if ray.y else math.inf
+            len_x = abs(disp_x / ray[0]) if ray[0] else math.inf
+            len_y = abs(disp_y / ray[1]) if ray[1] else math.inf
             if len_x < len_y:
-                tile.x += step_x
-                end_pos.x += disp_x
-                end_pos.y += disp_x * slope
+                tile[0] += step_x
+                end_pos[0] += disp_x
+                end_pos[1] += disp_x * slope
                 dist += len_x
                 side = 1
             else:
-                tile.y += step_y
-                end_pos.x += disp_y / slope if slope else math.inf
-                end_pos.y += disp_y
+                tile[1] += step_y
+                end_pos[0] += disp_y / slope if slope else math.inf
+                end_pos[1] += disp_y
                 dist += len_y
                 side = 0
 
             entities = self.manager._sets.get(last_tile)
             if entities:
+                amount = len(slope_ranges)
                 for entity in entities:
                     entity_dist = self._pos.distance_to(entity._pos)
                     if entity._health <= 0 or not entity_dist:
@@ -602,7 +603,6 @@ class Player(Entity):
                         (self._elevation - entity._elevation) / entity_dist
                     )
                     hit_tile = 1
-                    amount = len(slope_ranges)
                     for i in range(amount + 1):
                         end = slope_ranges[i - 1][1] if i else -tangent
                         if i < amount:
@@ -624,7 +624,12 @@ class Player(Entity):
                         rect.w * mult,
                         rect.h * mult,
                     )
-                    if rect.clipline(last_end_pos * mult, end_pos * mult):
+                    if rect.clipline(
+                        last_end_pos[0] * mult,
+                        last_end_pos[1] * mult,
+                        end_pos[0] * mult,
+                        end_pos[1] * mult,
+                    ):
                         entity_dist = vector.distance_to(entity.vector3)
                         if entity_dist < closest[0]:
                             closest = (entity_dist, entity)

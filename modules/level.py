@@ -411,7 +411,7 @@ class Entity(object):
             self.die()
 
     def die(self: Self) -> None:
-        pass
+        self._width = 0
 
     def rect(self: Self) -> pg.Rect:
         rect = pg.FRect(0, 0, self._width, self._width)

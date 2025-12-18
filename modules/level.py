@@ -411,7 +411,7 @@ class Entity(object):
             self.die()
 
     def die(self: Self) -> None:
-        self._width = 0
+        pass
 
     def rect(self: Self) -> pg.Rect:
         rect = pg.FRect(0, 0, self._width, self._width)
@@ -595,7 +595,6 @@ class Player(Entity):
 
             entities = self.manager._sets.get(last_tile)
             if entities:
-                amount = len(slope_ranges)
                 for entity in entities:
                     entity_dist = self._pos.distance_to(entity._pos)
                     if entity._health <= 0 or not entity_dist:
@@ -651,7 +650,7 @@ class Player(Entity):
                     amount = 0
                     arr = []
                     # https://stackoverflow.com/a/15273749
-                    for start, end in slope_ranges[1:]:
+                    for start, end in slope_ranges:
                         if arr and arr[-1][1] >= start:
                             arr[-1][1] = max(arr[-1][1], end)
                         else:

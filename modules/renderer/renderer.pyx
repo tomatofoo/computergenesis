@@ -540,6 +540,9 @@ cdef class Camera:
             end_pos = [self._player._pos[0], self._player._pos[1]]
             slope = ray[1] / ray[0] if ray[0] else 2147483647
             tile = [floorf(end_pos[0]), floorf(end_pos[1])]
+            center = (tile[0] + 0.5, tile[1] + 0.5)
+            tile_key = gen_tile_key(tile)
+            data = tilemap.get(tile_key)
             dir = (ray[0] > 0, ray[1] > 0)
             # step for tile (for each displacement)
             step_x = dir[0] * 2 - 1 # 1 if yes, -1 if no
@@ -554,11 +557,40 @@ cdef class Camera:
             # 2 if rendering bottom of back of wall
             render_back = 0
             back_line_height = 0
+            if data is not None:
+                if self._player._render_elevation < data['elevation']:
+                    render_back = 2
+                    back_edge = 0
+                elif (self._player._render_elevation
+                      > data['elevation'] + data['height']):
+                    render_back = 1
+                    back_edge = height
+
             # ^ variable is needed because the back line might not be 
             # the full height
         
             # keep on changing end_pos until hitting a wall (DDA)
             while dist < self._wall_render_distance:
+                # displacements until hit tile
+                disp_x = tile[0] + dir[0] - end_pos[0]
+                disp_y = tile[1] + dir[1] - end_pos[1]
+
+                len_x = fabs(disp_x / ray[0]) if ray[0] else 2147483647
+                len_y = fabs(disp_y / ray[1]) if ray[1] else 2147483647
+                if len_x < len_y:
+                    tile[0] += step_x
+                    end_pos[0] += disp_x
+                    end_pos[1] += disp_x * slope
+                    rel_depth += len_x
+                    side = True
+                else:
+                    tile[1] += step_y
+                    end_pos[0] += disp_y / slope if slope else 2147483647
+                    end_pos[1] += disp_y
+                    rel_depth += len_y
+                    side = False
+                dist = rel_depth * mag
+
                 # Tile Rendering
                 if render_back: # back of wall rendering
                     self._calculate_line(
@@ -704,26 +736,6 @@ cdef class Camera:
                                 break
                 else:
                     empty_tiles.add(tile_key)
-                
-                # displacements until hit tile
-                disp_x = tile[0] + dir[0] - end_pos[0]
-                disp_y = tile[1] + dir[1] - end_pos[1]
-
-                len_x = fabs(disp_x / ray[0]) if ray[0] else 2147483647
-                len_y = fabs(disp_y / ray[1]) if ray[1] else 2147483647
-                if len_x < len_y:
-                    tile[0] += step_x
-                    end_pos[0] += disp_x
-                    end_pos[1] += disp_x * slope
-                    rel_depth += len_x
-                    side = True
-                else:
-                    tile[1] += step_y
-                    end_pos[0] += disp_y / slope if slope else 2147483647
-                    end_pos[1] += disp_y
-                    rel_depth += len_y
-                    side = False
-                dist = rel_depth * mag
 
         _limits_destroy(&limits)
         

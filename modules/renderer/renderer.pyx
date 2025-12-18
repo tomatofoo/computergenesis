@@ -22,11 +22,17 @@ cimport numpy as cnp
 cnp.import_array()
 import numpy as np
 import pygame as pg
+from pygame.typing import Point
 
-from modules.utils import gen_tile_key
 from modules.level import Floor
 from modules.level import Sky
 from modules.level import Player
+
+
+# is getting called a lot so not using python implementation
+cdef str gen_tile_key(obj: Point):
+    # <int> faster than int()
+    return f'{<int>floorf(obj[0])};{<int>floorf(obj[1])}'
 
 
 cdef float radians(float degrees):

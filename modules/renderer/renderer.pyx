@@ -639,7 +639,6 @@ cdef class Camera:
                         if horizon < y:
                             render_back = 1
                             back_edge = y
-
                         # render back of tile on bottom
                         elif horizon > render_end:
                             render_back = 2

@@ -615,6 +615,7 @@ class Player(Entity):
             entity._health -= damage
             if entity._health <= 0:
                 entity._die()
+                entity._texture = _FALLBACK_SURF
 
 
 class EntityManager(object):

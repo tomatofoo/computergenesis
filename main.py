@@ -57,7 +57,7 @@ class Game(object):
         self._player.pos = (6.5, 6)
         self._player.yaw = 180
         self._player.elevation = 1
-        #self._player.width = 0
+        self._player.height = 0.6
 
         entities = {
             0: Entity(

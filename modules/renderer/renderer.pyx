@@ -579,7 +579,9 @@ cdef class Camera:
             # keep on changing end_pos until hitting a wall (DDA)
             while dist < self._wall_render_distance:
                 # Tile Rendering
-                if rel_depth:
+                # the limits full check has to be in an if statement
+                # can't use break statement; entity rendering gets messed up
+                if rel_depth and not _limits_full(&limits, 0, height):
                     if render_back: # back of wall rendering
                         self._calculate_line(
                             rel_depth,
@@ -717,8 +719,6 @@ cdef class Camera:
                             # old variables because of the full check
                             _limits_add(&limits, old_y, old_render_end)
                             # stop raycasting if full screen
-                            if _limits_full(&limits, 0, height):
-                                break
 
                 searched_tiles.add(tile_key)
 

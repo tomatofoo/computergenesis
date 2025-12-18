@@ -787,8 +787,8 @@ cdef class Camera:
 
                         texture = pg.transform.scale(
                             texture,
-                            (entity._width * scale,
-                             entity._height * scale),
+                            (entity._render_width * scale,
+                             entity._render_height * scale),
                         )
 
                         for i in range(texture.width):

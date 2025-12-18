@@ -569,6 +569,9 @@ class Player(Entity):
         # ranges of slopes of walls relative to player
         tangent = math.tan(math.radians(foa) / 2)
         slope_ranges = []
+        amount = 0
+
+        midheight = self._elevation + self._height / 2
         vector = self.vector3
 
         # keep on changing end_pos until hitting a wall (DDA)
@@ -584,13 +587,11 @@ class Player(Entity):
                 end_pos[0] += disp_x
                 end_pos[1] += disp_x * slope
                 dist += len_x
-                side = 1
             else:
                 tile[1] += step_y
                 end_pos[0] += disp_y / slope if slope else math.inf
                 end_pos[1] += disp_y
                 dist += len_y
-                side = 0
 
             entities = self.manager._sets.get(last_tile)
             if entities:
@@ -640,21 +641,23 @@ class Player(Entity):
                 center = (tile[0] + 0.5, tile[1] + 0.5)
                 center_dist = self._pos.distance_to(center)
                 if center_dist:
+                    bottom = data['elevation']
+                    top = bottom + data['height']
                     slope_range = [
-                        (self._elevation - data['elevation']) / center_dist,
-                        ((self._elevation
-                          - data['elevation']
-                          - data['height'])
-                         / center_dist),
+                        (bottom - midheight) / center_dist,
+                        (top - midheight) / center_dist,
                     ]
                     bisect.insort_left(slope_ranges, slope_range)
-                    arr = [slope_ranges[0]]
+                    amount = 0
+                    arr = []
                     # https://stackoverflow.com/a/15273749
-                    for start, end in slope_ranges:
-                        if arr[-1][1] >= start:
+                    for start, end in slope_ranges[1:]:
+                        if arr and arr[-1][1] >= start:
                             arr[-1][1] = max(arr[-1][1], end)
                         else:
                             arr.append([start, end])
+                            amount += 1
+                    slope_ranges = arr
 
             last_tile = tile_key
             last_end_pos = end_pos.copy()

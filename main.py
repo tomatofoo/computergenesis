@@ -65,7 +65,7 @@ class Game(object):
             ),
             1: Entity(
                 height=0.6,
-                texture=pg.image.load('data/images/GrenadeZombie.png')
+                texture=pg.image.load('data/images/GrenadeZombie.png'),
             ),
             2: Entity(
                 height=0.6,

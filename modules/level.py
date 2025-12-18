@@ -4,6 +4,7 @@ import math
 from numbers import Real
 from typing import Self
 from typing import Union
+from typing import Optional
 
 import numpy as np
 import pygame as pg
@@ -199,7 +200,10 @@ class Entity(object):
                  width: Real=0.5,
                  height: Real=1,
                  health: Real=100,
-                 texture: pg.Surface=_FALLBACK_SURF) -> None:
+                 climb: Real=0.3,
+                 texture: pg.Surface=_FALLBACK_SURF,
+                 render_width: Optional[Real]=None,
+                 render_height: Optional[Real]=None) -> None:
 
         self.texture = texture
         self.yaw = 0
@@ -211,6 +215,12 @@ class Entity(object):
         self._pos = pg.Vector2(0, 0)
         self._width = width # width of rect
         self._height = height
+        self._render_width = render_width
+        self._render_height = render_height
+        if render_width == None:
+            self._render_width = width
+        if render_height == None:
+            self._render_height = height
         self._health = health
         self._manager = None
 
@@ -308,6 +318,14 @@ class Entity(object):
         self._height = value
 
     @property
+    def top(self: Self) -> Real:
+        return self._elevation + self._height
+
+    @top.setter
+    def top(self: Self, value: Real) -> None:
+        self._elevation = value - self._height
+
+    @property
     def health(self: Self) -> Real:
         return self._health
 
@@ -358,10 +376,23 @@ class Entity(object):
         tiles = []
         for offset in self._TILE_OFFSETS:
             offset_tile = tile + offset
-            level_string = f'{int(offset_tile.x)};{int(offset_tile.y)}'
+            tile_key = gen_tile_key(offset_tile)
             walls = self.manager._level._walls
-            if walls._tilemap.get(level_string) != None:
-                tiles.append(pg.Rect(offset_tile.x, offset_tile.y, 1, 1))
+            data = walls._tilemap.get(tile_key)
+            if data != None:
+                tiles.append((
+                    pg.Rect(offset_tile.x, offset_tile.y, 1, 1),
+                    data['elevation'],
+                    data['elevation'] + data['height'],
+                ))
+            entities = self.manager._sets.get(tile_key)
+            if entities:
+                for entity in entities:
+                    tiles.append((
+                        entity.rect(),
+                        entity._elevation,
+                        entity.top,
+                    ))
         return tiles
 
     def _update_manager_sets(self: Self, old_key: str, key: str) -> None:
@@ -373,34 +404,53 @@ class Entity(object):
                 self._manager._sets[key] = set()
             self._manager._sets[key].add(self)
 
+    def _die(self: Self) -> None:
+        pass
+
     def rect(self: Self) -> pg.Rect:
         rect = pg.FRect(0, 0, self._width, self._width)
         rect.center = self._pos
         return rect
     
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
-        self.elevation += self._elevation_velocity * rel_game_speed
         if self._yaw_velocity:
             self.yaw += self._yaw_velocity * rel_game_speed
-         
+
         self._pos.x += self._velocity2.x * rel_game_speed
         entity_rect = self.rect()
-        for rect in self._get_rects_around():
-            if entity_rect.colliderect(rect):
+        for rect, bottom, top in self._get_rects_around():
+            vertical = self._elevation < top and self.top > bottom
+            horizontal = entity_rect.colliderect(rect)
+            if vertical and horizontal:
                 if self._velocity2.x > 0:
                     entity_rect.right = rect.left
                 elif self._velocity2.x < 0:
                     entity_rect.left = rect.right
                 self._pos.x = entity_rect.centerx
+
         self._pos.y += self._velocity2.y * rel_game_speed
         entity_rect = self.rect()
-        for rect in self._get_rects_around():
-            if entity_rect.colliderect(rect):
+        for rect, bottom, top in self._get_rects_around():
+            vertical = self._elevation < top and self.top > bottom
+            horizontal = entity_rect.colliderect(rect)
+            if vertical and horizontal:
                 if self._velocity2.y > 0:
                     entity_rect.bottom = rect.top
                 elif self._velocity2.y < 0:
                     entity_rect.top = rect.bottom
                 self._pos.y = entity_rect.centery
+        
+        # 3D collisions
+        self.elevation += self._elevation_velocity * rel_game_speed
+        entity_rect = self.rect()
+        for rect, bottom, top in self._get_rects_around():
+            vertical = self._elevation < top and self.top > bottom
+            horizontal = entity_rect.colliderect(rect)
+            if vertical and horizontal:
+                if self._elevation_velocity > 0:
+                    self.top = bottom
+                elif self._elevation_velocity < 0:
+                    self.elevation = top
 
 
 class Player(Entity):
@@ -408,14 +458,12 @@ class Player(Entity):
                  width: Real=0.5,
                  height: Real=1,
                  melee_range: Real=0.2,
-                 shot_range: Real=10,
                  yaw_sensitivity: Real=0.125,
                  mouse_enabled: bool=1,
                  keyboard_look_enabled: bool=1) -> None:
 
         super().__init__(width)
         self._melee_range = melee_range
-        self._shot_range = shot_range
 
         self._forward_velocity = pg.Vector2(0, 0)
         self._right_velocity = pg.Vector2(0, 0)
@@ -490,7 +538,12 @@ class Player(Entity):
         self._velocity2 = self._forward_velocity + self._right_velocity
         super().update(rel_game_speed, level_timer)
 
-    def shoot(self: Self, damage: Real, precision: int=2):
+    def shoot(self: Self,
+              damage: Real,
+              shot_range: Real=20,
+              foa: Real=60, # field of attack
+              precision: int=2):
+
         ray = self._yaw.normalize()
 
         end_pos = self._pos.copy()
@@ -505,11 +558,13 @@ class Player(Entity):
         step_y = dir[1] * 2 - 1 
         dist = 0 # equals depth when ray is in perfet center
         tilemap = self._manager._level._walls._tilemap
-
         closest = (math.inf, None)
 
+        tangent = math.tan(math.radians(foa / 2))
+        slope_ranges = [[-tangent, tangent]]
+
         # keep on changing end_pos until hitting a wall (DDA)
-        while dist < self._shot_range:
+        while dist < shot_range:
             # displacements until hit tile
             disp_x = tile.x + dir[0] - end_pos.x
             disp_y = tile.y + dir[1] - end_pos.y
@@ -529,7 +584,7 @@ class Player(Entity):
                 dist += len_y
                 side = 0
 
-            entities = self._manager._sets.get(last_tile)
+            entities = self.manager._sets.get(last_tile)
             if entities:
                 for entity in entities:
                     if entity._health <= 0:
@@ -558,6 +613,8 @@ class Player(Entity):
         entity = closest[1]
         if entity != None:
             entity._health -= damage
+            if entity._health <= 0:
+                entity._die()
 
 
 class EntityManager(object):

@@ -724,8 +724,6 @@ cdef class Camera:
                     rel_depth += len_y
                     side = False
                 dist = rel_depth * mag
-            # the objects are added in closest-to-farthest
-            # reverse so that depth buffer works
 
         _limits_destroy(&limits)
         
@@ -792,6 +790,8 @@ cdef class Camera:
 
         for x in range(width):
             blits = render_buffer[x]
+            # the objects are added in closest-to-farthest
+            # reverse so that depth buffer works
             for i in range(len(blits) - 1, -1, -1):
                 obj = blits[i]
                 if obj._is_rect:

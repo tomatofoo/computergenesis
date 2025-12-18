@@ -102,6 +102,7 @@ cdef bool _limits_add(_Limits* limits, int start, int end):
     limits._arr[dex] = limit # insert
     limits._amount += 1
     
+    # https://stackoverflow.com/a/15273749
     # condense inplace
     # don't need to set value to zero after condensing
     # because we will only iterate until _amount
@@ -519,7 +520,7 @@ cdef class Camera:
 
             # entity stuff
             float projection_mult = self._yaw_magnitude * semiwidth
-            set empty_tiles = set() # empty tiles that could have entities
+            set searched_tiles = set() # empty tiles that could have entities
             # stores all walls and all that to be rendered
             # entities will be added after walls are computed
             list[width] render_buffer = []
@@ -578,57 +579,57 @@ cdef class Camera:
             # keep on changing end_pos until hitting a wall (DDA)
             while dist < self._wall_render_distance:
                 # Tile Rendering
-                if render_back and rel_depth: # back of wall rendering
-                    self._calculate_line(
-                        rel_depth,
-                        data['height'],
-                        data['elevation'],
-                        calculation,
-                    )
-                    line_height, render_line_height, offset = calculation
-
-                    y = horizon - line_height / 2 + offset
-                    
-                    if render_back == 1: # render back on top
-                        render_y = horizon - line_height / 2 + offset
-                        back_line_height = back_edge - render_y
-                        side_key = 'top'
-                    elif render_back == 2: # render back at bottom
-                        render_y = back_edge
-                        back_line_height = y + render_line_height - render_y
-                        side_key = 'bottom'
-
-                    render_back_line_height = back_line_height + 1
-                    # this + 1 helps with pixel glitches (found by testing)
-                    render_end = render_y + render_back_line_height
-                    if (render_end > 0
-                        and y < height
-                        and not _limits_full(&limits, y, render_end)):
-                        
-                        color = colors.get(tile_key)
-                        if not color:
-                            line = pg.Surface((1, 1))
-                            line.set_at((0, 0), data[side_key])
-                            self._darken_line(
-                                line, self._player._pos.distance_to(center),
-                            )
-                            color = line.get_at((0, 0))
-                            colors[tile_key] = color
-                        
-                        obj = _DepthBufferObject(
+                if rel_depth:
+                    if render_back: # back of wall rendering
+                        self._calculate_line(
                             rel_depth,
-                            (color, (x, render_y, 1, render_back_line_height)),
-                            is_rect=1,
+                            data['height'],
+                            data['elevation'],
+                            calculation,
                         )
-                        render_buffer[x].append(obj)
+                        line_height, render_line_height, offset = calculation
 
-                        _limits_add(&limits, render_y, render_end)
-                    render_back = 0
+                        y = horizon - line_height / 2 + offset
+                        
+                        if render_back == 1: # render back on top
+                            render_y = horizon - line_height / 2 + offset
+                            back_line_height = back_edge - render_y
+                            side_key = 'top'
+                        elif render_back == 2: # render back at bottom
+                            render_y = back_edge
+                            back_line_height = y + render_line_height - render_y
+                            side_key = 'bottom'
 
-                tile_key = gen_tile_key(tile)
-                data = tilemap.get(tile_key)
-                if data != None: # front of wall rendering
-                    if rel_depth:
+                        render_back_line_height = back_line_height + 1
+                        # this + 1 helps with pixel glitches (found by testing)
+                        render_end = render_y + render_back_line_height
+                        if (render_end > 0
+                            and y < height
+                            and not _limits_full(&limits, y, render_end)):
+                            
+                            color = colors.get(tile_key)
+                            if not color:
+                                line = pg.Surface((1, 1))
+                                line.set_at((0, 0), data[side_key])
+                                self._darken_line(
+                                    line, self._player._pos.distance_to(center),
+                                )
+                                color = line.get_at((0, 0))
+                                colors[tile_key] = color
+                            
+                            obj = _DepthBufferObject(
+                                rel_depth,
+                                (color, (x, render_y, 1, render_back_line_height)),
+                                is_rect=1,
+                            )
+                            render_buffer[x].append(obj)
+
+                            _limits_add(&limits, render_y, render_end)
+                        render_back = 0
+
+                    tile_key = gen_tile_key(tile)
+                    data = tilemap.get(tile_key)
+                    if data != None:
                         self._calculate_line(
                             rel_depth,
                             data['height'],
@@ -718,8 +719,8 @@ cdef class Camera:
                             # stop raycasting if full screen
                             if _limits_full(&limits, 0, height):
                                 break
-                else:
-                    empty_tiles.add(tile_key)
+
+                searched_tiles.add(tile_key)
 
                 # displacements until hit tile
                 disp_x = tile[0] + dir[0] - end_pos[0]
@@ -750,7 +751,7 @@ cdef class Camera:
             set entities
 
         # Entity Rendering
-        for tile_key in empty_tiles:
+        for tile_key in searched_tiles:
             entities = manager._sets.get(tile_key)
             if entities:
                 for entity in entities:

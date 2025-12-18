@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+import bisect
 from numbers import Real
 from typing import Self
 from typing import Union
@@ -404,7 +405,12 @@ class Entity(object):
                 self._manager._sets[key] = set()
             self._manager._sets[key].add(self)
 
-    def _die(self: Self) -> None:
+    def damage(self: Self, value: Real) -> None:
+        self._health -= value
+        if self._health <= 0:
+            self.die()
+
+    def die(self: Self) -> None:
         pass
 
     def rect(self: Self) -> pg.Rect:
@@ -560,8 +566,10 @@ class Player(Entity):
         tilemap = self._manager._level._walls._tilemap
         closest = (math.inf, None)
 
-        tangent = math.tan(math.radians(foa / 2))
-        slope_ranges = [[-tangent, tangent]]
+        # ranges of slopes of walls relative to player
+        tangent = math.tan(math.radians(foa) / 2)
+        slope_ranges = []
+        vector = self.vector3
 
         # keep on changing end_pos until hitting a wall (DDA)
         while dist < shot_range:
@@ -587,8 +595,27 @@ class Player(Entity):
             entities = self.manager._sets.get(last_tile)
             if entities:
                 for entity in entities:
-                    if entity._health <= 0:
+                    entity_dist = self._pos.distance_to(entity._pos)
+                    if entity._health <= 0 or not entity_dist:
                         continue
+                    entity_slope = (
+                        (self._elevation - entity._elevation) / entity_dist
+                    )
+                    hit_tile = 1
+                    amount = len(slope_ranges)
+                    for i in range(amount + 1):
+                        end = slope_ranges[i - 1][1] if i else -tangent
+                        if i < amount:
+                            start = slope_ranges[i][0]
+                        else:
+                            start = tangent
+
+                        if end <= entity_slope <= start:
+                            hit_tile = 0
+                            break
+                    if hit_tile:
+                        continue
+
                     mult = 10**precision
                     rect = entity.rect()
                     rect.update(
@@ -598,24 +625,39 @@ class Player(Entity):
                         rect.h * mult,
                     )
                     if rect.clipline(last_end_pos * mult, end_pos * mult):
-                        entity_dist = self.vector3.distance_to(entity.vector3)
+                        entity_dist = vector.distance_to(entity.vector3)
                         if entity_dist < closest[0]:
                             closest = (entity_dist, entity)
 
             tile_key = gen_tile_key(tile)
             data = tilemap.get(tile_key)
             if data != None:
-                break
+                center = (tile[0] + 0.5, tile[1] + 0.5)
+                center_dist = self._pos.distance_to(center)
+                if center_dist:
+                    slope_range = [
+                        (self._elevation - data['elevation']) / center_dist,
+                        ((self._elevation
+                          - data['elevation']
+                          - data['height'])
+                         / center_dist),
+                    ]
+                    bisect.insort_left(slope_ranges, slope_range)
+                    arr = [slope_ranges[0]]
+                    # https://stackoverflow.com/a/15273749
+                    for start, end in slope_ranges:
+                        if arr[-1][1] >= start:
+                            arr[-1][1] = max(arr[-1][1], end)
+                        else:
+                            arr.append([start, end])
 
             last_tile = tile_key
             last_end_pos = end_pos.copy()
         
         entity = closest[1]
         if entity != None:
-            entity._health -= damage
-            if entity._health <= 0:
-                entity._die()
-                entity._texture = _FALLBACK_SURF
+            entity.damage(damage)
+            entity._texture = _FALLBACK_SURF
 
 
 class EntityManager(object):

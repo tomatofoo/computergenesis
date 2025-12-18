@@ -141,7 +141,7 @@ class Game(object):
                 elif event.type == pg.MOUSEMOTION:
                     rel = pg.mouse.get_rel()
                     self._player.yaw += rel[0] * 0.2
-                    #self._camera.horizon -= rel[1] * 0.0025
+                    self._camera.horizon -= rel[1] * 0.0025
 
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     self._player.shoot(50)
@@ -183,6 +183,14 @@ class Game(object):
                 pos=(9, 11),
                 elevation=0,
                 height=math.sin(self._level_timer) + 1,
+                texture=0,
+                top=(64, 64, 64),
+                bottom=(64, 64, 64),
+            )
+            self._level.walls.set_tile(
+                pos=(6, 5),
+                elevation=1,
+                height=2,
                 texture=0,
                 top=(64, 64, 64),
                 bottom=(64, 64, 64),

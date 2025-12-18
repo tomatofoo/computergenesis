@@ -571,28 +571,8 @@ cdef class Camera:
         
             # keep on changing end_pos until hitting a wall (DDA)
             while dist < self._wall_render_distance:
-                # displacements until hit tile
-                disp_x = tile[0] + dir[0] - end_pos[0]
-                disp_y = tile[1] + dir[1] - end_pos[1]
-
-                len_x = fabs(disp_x / ray[0]) if ray[0] else 2147483647
-                len_y = fabs(disp_y / ray[1]) if ray[1] else 2147483647
-                if len_x < len_y:
-                    tile[0] += step_x
-                    end_pos[0] += disp_x
-                    end_pos[1] += disp_x * slope
-                    rel_depth += len_x
-                    side = True
-                else:
-                    tile[1] += step_y
-                    end_pos[0] += disp_y / slope if slope else 2147483647
-                    end_pos[1] += disp_y
-                    rel_depth += len_y
-                    side = False
-                dist = rel_depth * mag
-
                 # Tile Rendering
-                if render_back: # back of wall rendering
+                if render_back and rel_depth: # back of wall rendering
                     self._calculate_line(
                         rel_depth,
                         data['height'],
@@ -637,7 +617,6 @@ cdef class Camera:
                         render_buffer[x].append(obj)
 
                         _limits_add(&limits, render_y, render_end)
-
                     render_back = 0
 
                 tile_key = gen_tile_key(tile)
@@ -736,6 +715,26 @@ cdef class Camera:
                                 break
                 else:
                     empty_tiles.add(tile_key)
+
+                # displacements until hit tile
+                disp_x = tile[0] + dir[0] - end_pos[0]
+                disp_y = tile[1] + dir[1] - end_pos[1]
+
+                len_x = fabs(disp_x / ray[0]) if ray[0] else 2147483647
+                len_y = fabs(disp_y / ray[1]) if ray[1] else 2147483647
+                if len_x < len_y:
+                    tile[0] += step_x
+                    end_pos[0] += disp_x
+                    end_pos[1] += disp_x * slope
+                    rel_depth += len_x
+                    side = True
+                else:
+                    tile[1] += step_y
+                    end_pos[0] += disp_y / slope if slope else 2147483647
+                    end_pos[1] += disp_y
+                    rel_depth += len_y
+                    side = False
+                dist = rel_depth * mag
 
         _limits_destroy(&limits)
         

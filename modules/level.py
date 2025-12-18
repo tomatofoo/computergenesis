@@ -84,7 +84,7 @@ class Sky(object):
 
         self._surf = surf
         self._height = height
-        if height == None:
+        if height is None:
             self._height = surf.height
     
     def scroll(self: Self,
@@ -218,9 +218,9 @@ class Entity(object):
         self._height = height
         self._render_width = render_width
         self._render_height = render_height
-        if render_width == None:
+        if render_width is None:
             self._render_width = width
-        if render_height == None:
+        if render_height is None:
             self._render_height = height
         self._health = health
         self._manager = None
@@ -368,7 +368,7 @@ class Entity(object):
 
     @property
     def manager(self: Self) -> EntityManager:
-        if self._manager == None:
+        if self._manager is None:
             raise ValueError('Must assign manager to this entity')
         return self._manager
 
@@ -380,7 +380,7 @@ class Entity(object):
             tile_key = gen_tile_key(offset_tile)
             walls = self.manager._level._walls
             data = walls._tilemap.get(tile_key)
-            if data != None:
+            if data is not None:
                 tiles.append((
                     pg.Rect(offset_tile.x, offset_tile.y, 1, 1),
                     data['elevation'],
@@ -636,7 +636,7 @@ class Player(Entity):
 
             tile_key = gen_tile_key(tile)
             data = tilemap.get(tile_key)
-            if data != None:
+            if data is not None:
                 center = (tile[0] + 0.5, tile[1] + 0.5)
                 center_dist = self._pos.distance_to(center)
                 if center_dist:
@@ -662,7 +662,7 @@ class Player(Entity):
             last_end_pos = end_pos.copy()
         
         entity = closest[1]
-        if entity != None:
+        if entity is not None:
             entity.damage(damage)
             entity._texture = _FALLBACK_SURF
 
@@ -712,13 +712,13 @@ class EntityManager(object):
 
     @property
     def level(self: Self) -> Level:
-        if self._level == None:
+        if self._level is None:
             raise ValueError('Must assign level to manager')
         return self._level
 
     def _add_to_sets(self: Self, entity: Entity) -> None:
         key = gen_tile_key(entity._pos)
-        if self._sets.get(key) == None:
+        if self._sets.get(key) is None:
             self._sets[key] = set()
         self._sets[key].add(entity)
 

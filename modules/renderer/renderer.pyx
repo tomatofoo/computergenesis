@@ -631,7 +631,7 @@ cdef class Camera:
 
                     tile_key = gen_tile_key(tile)
                     data = tilemap.get(tile_key)
-                    if data != None:
+                    if data is not None:
                         self._calculate_line(
                             rel_depth,
                             data['height'],

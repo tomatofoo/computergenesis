@@ -558,6 +558,12 @@ class Player(Entity):
               foa: Real=60, # field of attack
               precision: int=2):
 
+        # Hitscan gunshot
+
+        # NOTE: this algorithm allows shooting through 
+        # vertical corners of walls
+        # e.g floor and wall together create a corner
+
         ray = tuple(self._yaw.normalize())
 
         end_pos = list(self._pos)
@@ -578,7 +584,6 @@ class Player(Entity):
         tangent = math.tan(math.radians(foa) / 2)
         slope_ranges = []
         amount = 0
-
         midheight = self.centery
         vector = self.vector3
 
@@ -610,13 +615,11 @@ class Player(Entity):
                     entity_slope = (entity.centery - midheight) / entity_dist
                     hit_tile = 1
                     for i in range(amount + 1):
-                        end = slope_ranges[i - 1][1] if i else -tangent
-                        if i < amount:
-                            start = slope_ranges[i][0]
-                        else:
-                            start = tangent
+                        end = slope_ranges[i - 1][1] if i else -math.inf
+                        start = slope_ranges[i][0] if i < amount else math.inf
 
-                        if end <= entity_slope <= start:
+                        if (-tangent <= entity_slope <= tangent
+                            and end <= entity_slope <= start):
                             hit_tile = 0
                             break
                     if hit_tile:

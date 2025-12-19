@@ -35,7 +35,7 @@ class Game(object):
         pg.init()
 
         self._settings = {
-            'vsync': 1,
+            'vsync': 0,
         }
         self._screen = pg.display.set_mode(
             self._SCREEN_SIZE,
@@ -153,7 +153,7 @@ class Game(object):
                 elif event.type == pg.MOUSEMOTION:
                     rel = pg.mouse.get_rel()
                     self._player.yaw += rel[0] * 0.2
-                    self._camera.horizon -= rel[1] * 0.0025
+                    #self._camera.horizon -= rel[1] * 0.0025
 
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     self._player.shoot(100)

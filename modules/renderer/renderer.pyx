@@ -527,9 +527,6 @@ cdef class Camera:
             # colors of each tile (top/bottom rendering)
             dict colors = {} 
         
-        # FIXME: when exactly on edge of tile, will render top of tile in place
-        # where there isn't a tile
-
         # the per-pixel alpha with (0, 0, 0, 0) doesn't seem to affect
         # fps at all
         self._walls_and_entities = pg.Surface((width, height), pg.SRCALPHA)
@@ -727,6 +724,9 @@ cdef class Camera:
                             # old variables because of the full check
                             _limits_add(&limits, old_y, old_render_end)
                 else:
+                    # needed because render_back might stay as 1 or 2 when the 
+                    # player is on the exact edge and there is no tile in the 
+                    # next cast; will error when trying to render back of tile
                     render_back = 0
 
 

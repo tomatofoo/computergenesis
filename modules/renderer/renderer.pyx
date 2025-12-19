@@ -526,6 +526,9 @@ cdef class Camera:
             list[width] render_buffer = []
             # colors of each tile (top/bottom rendering)
             dict colors = {} 
+        
+        # FIXME: when exactly on edge of tile, will render top of tile in place
+        # where there isn't a tile
 
         # the per-pixel alpha with (0, 0, 0, 0) doesn't seem to affect
         # fps at all
@@ -579,6 +582,7 @@ cdef class Camera:
             # keep on changing end_pos until hitting a wall (DDA)
             while dist < self._wall_render_distance:
                 # Tile Rendering
+                searched_tiles.add(tile_key)
                 # the limits full check has to be in an if statement
                 # can't use break statement; entity rendering gets messed up
                 if rel_depth and not _limits_full(&limits, 0, height):
@@ -719,8 +723,6 @@ cdef class Camera:
                             # old variables because of the full check
                             _limits_add(&limits, old_y, old_render_end)
                             # stop raycasting if full screen
-
-                searched_tiles.add(tile_key)
 
                 # displacements until hit tile
                 disp_x = tile[0] + dir[0] - end_pos[0]

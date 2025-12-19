@@ -7,6 +7,7 @@ import random
 from typing import Self
 
 import pygame as pg
+from pygame import mixer as mx
 
 from modules.utils import Pathfinder
 from modules.level import Level
@@ -125,6 +126,8 @@ class Game(object):
         fps = 0
         second = pg.event.custom_type()
         pg.time.set_timer(second, 1000)
+        
+        shotgun = mx.Sound('data/sounds/shotgun.mp3')
 
         while self._running:
             delta_time = time.time() - start_time
@@ -141,10 +144,13 @@ class Game(object):
                 elif event.type == pg.MOUSEMOTION:
                     rel = pg.mouse.get_rel()
                     self._player.yaw += rel[0] * 0.2
-                    #self._camera.horizon -= rel[1] * 0.0025
+                    self._camera.horizon -= rel[1] * 0.0025
 
                 elif event.type == pg.MOUSEBUTTONDOWN:
-                    self._player.shoot(50)
+                    self._player.shoot(100)
+                    shotgun.play()
+                    self._player.pos = (6.5, 7)
+                    self._player.velocity2 = (0, 0)
 
                 elif event.type == second:
                     fps = mean(frames)
@@ -187,15 +193,6 @@ class Game(object):
                 top=(64, 64, 64),
                 bottom=(64, 64, 64),
             )
-            self._level.walls.set_tile(
-                pos=(6, 5),
-                elevation=1,
-                height=2,
-                texture=0,
-                top=(64, 64, 64),
-                bottom=(64, 64, 64),
-            )
-
             self._camera.render(self._surface)
 
             # self._surface.blit(

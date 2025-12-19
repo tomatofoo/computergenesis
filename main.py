@@ -35,7 +35,7 @@ class Game(object):
         pg.init()
 
         self._settings = {
-            'vsync': 1,
+            'vsync': 0,
         }
         self._screen = pg.display.set_mode(
             self._SCREEN_SIZE,
@@ -55,7 +55,7 @@ class Game(object):
 
         #temp
         self._player = Player()
-        self._player.pos = (6.5, 6)
+        self._player.pos = (6.5, 7)
         self._player.yaw = 180
         self._player.elevation = 1
         self._player.height = 0.6
@@ -115,6 +115,15 @@ class Game(object):
         self._camera.horizon = 0.5
         self._level_timer = 0
 
+        self._level.walls.set_tile(
+            pos=(6, 5),
+            elevation=1,
+            height=2,
+            texture=0,
+            top=(64, 64, 64),
+            bottom=(64, 64, 64),
+        )
+
     def run(self: Self) -> None:
         self._running = 1
         start_time = time.time()
@@ -149,8 +158,6 @@ class Game(object):
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     self._player.shoot(100)
                     shotgun.play()
-                    self._player.pos = (6.5, 7)
-                    self._player.velocity2 = (0, 0)
 
                 elif event.type == second:
                     fps = mean(frames)

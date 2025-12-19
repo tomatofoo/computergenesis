@@ -420,7 +420,7 @@ class Camera(object):
                         if horizon < y:
                             render_back = 1
                             back_edge = int(y)
-                            if dists.get(tup) == None: # calc dist to center
+                            if dists.get(tup) is None: # calc dist to center
                                 dists[tup] = (tile + (0.5, 0.5)).distance_to(
                                     self._player._pos,
                                 )
@@ -430,7 +430,7 @@ class Camera(object):
                             render_back = 2
                             back_edge = int(render_end)
                             # ^ inting helps with pixel glitch
-                            if dists.get(tup) == None: # calc dist to center
+                            if dists.get(tup) is None: # calc dist to center
                                 dists[tup] = (tile + (0.5, 0.5)).distance_to(
                                     self._player._pos,
                                 )

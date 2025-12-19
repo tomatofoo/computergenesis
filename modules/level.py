@@ -327,6 +327,14 @@ class Entity(object):
         self._elevation = value - self._height
 
     @property
+    def centery(self: Self) -> Real:
+        return self._elevation + self._height / 2
+    
+    @centery.setter
+    def centery(self: Self, value: Real) -> None:
+        self._elevation = value - self._height / 2
+
+    @property
     def health(self: Self) -> Real:
         return self._health
 
@@ -571,7 +579,7 @@ class Player(Entity):
         slope_ranges = []
         amount = 0
 
-        midheight = self._elevation + self._height / 2
+        midheight = self.centery
         vector = self.vector3
 
         # keep on changing end_pos until hitting a wall (DDA)
@@ -599,9 +607,7 @@ class Player(Entity):
                     entity_dist = self._pos.distance_to(entity._pos)
                     if entity._health <= 0 or not entity_dist:
                         continue
-                    entity_slope = (
-                        (self._elevation - entity._elevation) / entity_dist
-                    )
+                    entity_slope = (entity.centery - midheight) / entity_dist
                     hit_tile = 1
                     for i in range(amount + 1):
                         end = slope_ranges[i - 1][1] if i else -tangent

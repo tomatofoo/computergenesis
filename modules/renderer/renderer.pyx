@@ -339,8 +339,8 @@ cdef class Camera:
             # Sky stuff
             float semiheight = height / 2
             float mult
+            float scroll = -<float>self._player._yaw_value * width / 100
 
-        sky_speed = width / 100
         x_pixels = np.vstack(np.linspace(0, width, num=width, endpoint=0))
 
         # Actual Render
@@ -349,7 +349,7 @@ cdef class Camera:
             rect = (0, horizon, width, height - horizon)
             if height < obj._height:
                 self._floor = obj.scroll(
-                    -self._player._yaw_value * sky_speed,
+                    scroll,
                     width,
                     obj._height,
                 ).subsurface(rect)
@@ -394,7 +394,7 @@ cdef class Camera:
             rect = (0, obj._height - horizon, width, horizon)
             if obj._height > horizon:
                 self._ceiling = obj.scroll(
-                    -self._player._yaw_value * sky_speed,
+                    scroll,
                     width,
                     obj._height,
                 ).subsurface(rect)
@@ -756,6 +756,8 @@ cdef class Camera:
             float[2] projection
             float[2] ratios
             float[3] rel_vector
+            float rel_angle # for directional sprites
+            float texture_angle
             set entities
         # Entity Rendering
         for tile_key in searched_tiles:
@@ -779,11 +781,21 @@ cdef class Camera:
                         )
 
                         rel_depth = rel_vector[2] / self._yaw_magnitude
-                        dex = int(projection[0])
                         scale = self._tile_size / rel_depth
                         
-                        texture = entity._texture
+                        # change texture based on entity
+                        rel_angle = (entity._pos - self._player._pos).angle
+                        texture_angle = entity._texture_angle
+                        dex = int(floorf(
+                            # 270 because 360 - 90
+                            # shiftted angle / 2 because of segments
+                            (270 - rel_angle + texture_angle / 2)
+                            % 360
+                            / texture_angle
+                        ))
+                        texture = entity._textures[dex]
 
+                        dex = int(projection[0])
                         # lighting
                         if not entity._glowing and self._darkness:
                             # mgaic numbers found by testing

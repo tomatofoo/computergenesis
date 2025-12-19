@@ -63,23 +63,32 @@ class Game(object):
         entities = {
             0: Entity(
                 height=0.6,
-                texture=pg.image.load('data/images/GrenadeZombie.png')
+                textures=[
+                    pg.image.load('data/images/vassago/1.png'),
+                    pg.image.load('data/images/vassago/2.png'),
+                    pg.image.load('data/images/vassago/3.png'),
+                    pg.image.load('data/images/vassago/4.png'),
+                    pg.image.load('data/images/vassago/5.png'),
+                    pg.image.load('data/images/vassago/6.png'),
+                    pg.image.load('data/images/vassago/7.png'),
+                    pg.image.load('data/images/vassago/8.png'),
+                ]
             ),
             1: Entity(
                 height=0.6,
-                texture=pg.image.load('data/images/GrenadeZombie.png'),
+                textures=[pg.image.load('data/images/GrenadeZombie.png')],
             ),
             2: Entity(
                 height=0.6,
-                texture=pg.image.load('data/images/GrenadeZombie.png')
+                textures=[pg.image.load('data/images/GrenadeZombie.png')],
             ),
             3: Entity(
                 height=0.6,
-                texture=pg.image.load('data/images/GrenadeZombie.png')
+                textures=[pg.image.load('data/images/GrenadeZombie.png')],
             ),
             4: Entity(
                 height=0.6,
-                texture=pg.image.load('data/images/GrenadeZombie.png')
+                textures=[pg.image.load('data/images/GrenadeZombie.png')],
             ),
         }
         entities[0].pos = (6.5, 6)

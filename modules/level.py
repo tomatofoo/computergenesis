@@ -202,16 +202,16 @@ class Entity(object):
                  height: Real=1,
                  health: Real=100,
                  climb: Real=0.3,
-                 texture: pg.Surface=_FALLBACK_SURF,
+                 textures: list[pg.Surface]=[_FALLBACK_SURF],
                  render_width: Optional[Real]=None,
                  render_height: Optional[Real]=None) -> None:
 
-        self.texture = texture
         self.yaw = 0
         self.velocity2 = (0, 0)
         self.elevation_velocity = 0
         self.yaw_velocity = 0
         self.elevation = 0
+        self.textures = textures
         self._glowing = 0
         self._pos = pg.Vector2(0, 0)
         self._width = width # width of rect
@@ -367,12 +367,15 @@ class Entity(object):
         self._yaw_velocity = value
 
     @property
-    def texture(self: Self) -> ColumnTexture:
-        return self._texture
+    def textures(self: Self) -> list[pg.Surface]:
+        # might be dangerous because won't change texture angle
+        # if user appends etc
+        return self._textures
 
-    @texture.setter
-    def texture(self: Self, value: ColumnTexture) -> None:
-        self._texture = value
+    @textures.setter
+    def textures(self: Self, value: list[pg.Surface]) -> None:
+        self._textures = value
+        self._texture_angle = 360 / len(value)
 
     @property
     def manager(self: Self) -> EntityManager:
@@ -476,7 +479,7 @@ class Player(Entity):
                  mouse_enabled: bool=1,
                  keyboard_look_enabled: bool=1) -> None:
 
-        super().__init__(width)
+        super().__init__(width, height)
         self._melee_range = melee_range
 
         self._forward_velocity = pg.Vector2(0, 0)
@@ -489,6 +492,13 @@ class Player(Entity):
             'bob_strength': 0,
             'bob_frequency': 0,
         }
+        
+        # delete variables we don't need from entity init
+        del self._textures
+        del self._texture_angle
+        del self._glowing
+        del self._render_width
+        del self._render_height
 
     @property
     def pos(self: Self) -> pg.Vector2:

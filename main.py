@@ -35,7 +35,7 @@ class Game(object):
         pg.init()
 
         self._settings = {
-            'vsync': 0,
+            'vsync': 1,
         }
         self._screen = pg.display.set_mode(
             self._SCREEN_SIZE,

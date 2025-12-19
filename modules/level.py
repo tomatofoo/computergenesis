@@ -327,11 +327,11 @@ class Entity(object):
         self._elevation = value - self._height
 
     @property
-    def centery(self: Self) -> Real:
+    def centere(self: Self) -> Real:
         return self._elevation + self._height / 2
     
-    @centery.setter
-    def centery(self: Self, value: Real) -> None:
+    @centere.setter
+    def centere(self: Self, value: Real) -> None:
         self._elevation = value - self._height / 2
 
     @property
@@ -584,7 +584,7 @@ class Player(Entity):
         tangent = math.tan(math.radians(foa) / 2)
         slope_ranges = []
         amount = 0
-        midheight = self.centery
+        midheight = self.centere
         vector = self.vector3
 
         # keep on changing end_pos until hitting a wall (DDA)
@@ -613,9 +613,9 @@ class Player(Entity):
                     if entity._health <= 0 or not entity_dist:
                         continue
                     
-                    # checks (somewhat inaccurately) if shooting at entity will
-                    # hit tile or if entity is outside of foa
-                    entity_slope = (entity.centery - midheight) / entity_dist
+                    # checks if entity is outside foa and checks (somewhat 
+                    # inaccurately) if shooting at entity will hit tile
+                    entity_slope = (entity.centere - midheight) / entity_dist
                     dont_check = 1
                     if -tangent <= entity_slope <= tangent:
                         for i in range(amount + 1):

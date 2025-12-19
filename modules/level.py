@@ -689,7 +689,7 @@ class Player(Entity):
         entity = closest[1]
         if entity is not None:
             entity.damage(damage)
-            entity._texture = _FALLBACK_SURF
+            entity.textures = [_FALLBACK_SURF]
 
 
 class EntityManager(object):

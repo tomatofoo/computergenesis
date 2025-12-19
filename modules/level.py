@@ -614,18 +614,20 @@ class Player(Entity):
                         continue
                     
                     # checks (somewhat inaccurately) if shooting at entity will
-                    # hit tile
+                    # hit tile or if entity is outside of foa
                     entity_slope = (entity.centery - midheight) / entity_dist
-                    hit_tile = 1
-                    for i in range(amount + 1):
-                        end = slope_ranges[i - 1][1] if i else -math.inf
-                        start = slope_ranges[i][0] if i < amount else math.inf
-
-                        if (-tangent <= entity_slope <= tangent
-                            and end <= entity_slope <= start):
-                            hit_tile = 0
-                            break
-                    if hit_tile:
+                    dont_check = 1
+                    if -tangent <= entity_slope <= tangent:
+                        for i in range(amount + 1):
+                            end = slope_ranges[i - 1][1] if i else -math.inf
+                            if i < amount:
+                                start = slope_ranges[i][0]
+                            else: 
+                                start = math.inf
+                            if end <= entity_slope <= start:
+                                dont_check = 0
+                                break
+                    if dont_check:
                         continue
 
                     mult = 10**precision
@@ -661,6 +663,7 @@ class Player(Entity):
                     bisect.insort_left(slope_ranges, slope_range)
                     amount = 0
                     arr = []
+                    # condense range of slopes
                     # https://stackoverflow.com/a/15273749
                     for start, end in slope_ranges:
                         if arr and arr[-1][1] >= start:

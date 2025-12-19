@@ -612,6 +612,9 @@ class Player(Entity):
                     entity_dist = self._pos.distance_to(entity._pos)
                     if entity._health <= 0 or not entity_dist:
                         continue
+                    
+                    # checks (somewhat inaccurately) if shooting at entity will
+                    # hit tile
                     entity_slope = (entity.centery - midheight) / entity_dist
                     hit_tile = 1
                     for i in range(amount + 1):

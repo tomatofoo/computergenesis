@@ -377,7 +377,7 @@ class Entity(object):
         self._textures = value
         self._texture_angle = 360 / len(value)
     
-    # layer of abstraction
+    # layer of abstraction for directional sprites
     @property
     def texture(self: Self) -> pg.Surface:
         dex = int(

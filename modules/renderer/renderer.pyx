@@ -782,7 +782,6 @@ cdef class Camera:
                         scale = self._tile_size / rel_depth
                         
                         texture = entity.texture
-
                         dex = int(projection[0])
                         # lighting
                         if not entity._glowing and self._darkness:

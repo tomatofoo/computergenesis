@@ -8617,7 +8617,7 @@ static int __pyx_pw_8renderer_6Camera_1__init__(PyObject *__pyx_v_self, PyObject
     if (values[5]) {
       __pyx_v_bob_frequency = __Pyx_PyFloat_AsFloat(values[5]); if (unlikely((__pyx_v_bob_frequency == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 179, __pyx_L3_error)
     } else {
-      __pyx_v_bob_frequency = ((float)10.0);
+      __pyx_v_bob_frequency = ((float)0.1667);
     }
     if (values[6]) {
       __pyx_v_darkness = __Pyx_PyFloat_AsFloat(values[6]); if (unlikely((__pyx_v_darkness == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 180, __pyx_L3_error)
@@ -18567,7 +18567,7 @@ __Pyx_RefNannySetupContext("PyInit_renderer", 0);
   (void)__Pyx_modinit_variable_import_code(__pyx_mstate);
   (void)__Pyx_modinit_function_import_code(__pyx_mstate);
   /*--- Execution code ---*/
-  __Pyx_TraceStartFunc("PyInit_renderer", __pyx_f[0], 1, 3, 0, 0, __PYX_ERR(0, 1, __pyx_L1_error));
+  __Pyx_TraceStartFunc("PyInit_renderer", __pyx_f[0], 1, 4, 0, 0, __PYX_ERR(0, 1, __pyx_L1_error));
 
   /* "renderer.pyx":17
  * from libc.string cimport memset
@@ -18874,7 +18874,7 @@ __Pyx_RefNannySetupContext("PyInit_renderer", 0);
   __Pyx_GOTREF(__pyx_t_4);
   if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_test, __pyx_t_4) < (0)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_TraceReturnValue(Py_None, 3, 0, __PYX_ERR(0, 1, __pyx_L1_error));
+  __Pyx_TraceReturnValue(Py_None, 4, 0, __PYX_ERR(0, 1, __pyx_L1_error));
   __Pyx_PyMonitoring_ExitScope(0);
 
   /*--- Wrapped vars code ---*/
@@ -18884,7 +18884,7 @@ __Pyx_RefNannySetupContext("PyInit_renderer", 0);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_TraceException(__pyx_lineno, 0, 0);
-  __Pyx_TraceExceptionUnwind(3, 0);
+  __Pyx_TraceExceptionUnwind(4, 0);
   if (__pyx_m) {
     if (__pyx_mstate->__pyx_d && stringtab_initialized) {
       __Pyx_AddTraceback("init renderer", __pyx_clineno, __pyx_lineno, __pyx_filename);

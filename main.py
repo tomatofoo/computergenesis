@@ -153,7 +153,7 @@ class Game(object):
 
             rel_game_speed = delta_time * self._GAME_SPEED
 
-            self._level_timer += delta_time
+            self._level_timer += rel_game_speed
 
             for event in pg.event.get():
                 if event.type == pg.QUIT:
@@ -195,7 +195,7 @@ class Game(object):
             # moving wall
             self._level.walls.set_tile(
                 pos=(8, 11),
-                elevation=math.sin(self._level_timer + math.pi) + 1,
+                elevation=math.sin(self._level_timer / 60 + math.pi) + 1,
                 height=1,
                 texture=0,
                 top=(64, 64, 64),
@@ -204,7 +204,7 @@ class Game(object):
             self._level.walls.set_tile(
                 pos=(9, 11),
                 elevation=0,
-                height=math.sin(self._level_timer) + 1,
+                height=math.sin(self._level_timer / 60) + 1,
                 texture=0,
                 top=(64, 64, 64),
                 bottom=(64, 64, 64),

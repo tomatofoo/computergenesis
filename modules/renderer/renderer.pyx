@@ -176,7 +176,7 @@ cdef class Camera:
                  float wall_render_distance,
                  player: Player,
                  float bob_strength=0.0375,
-                 float bob_frequency=10,
+                 float bob_frequency=0.1667,
                  float darkness=1,
                  float max_line_height=50,
                  float min_entity_depth=0.05) -> None:

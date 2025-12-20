@@ -380,7 +380,6 @@ class Entity(object):
     # layer of abstraction
     @property
     def texture(self: Self) -> pg.Surface:
-
         dex = int(
             # shifted by texture_angle / 2 because of segments
             (self._yaw_value

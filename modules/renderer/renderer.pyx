@@ -773,18 +773,17 @@ cdef class Camera:
                         )
                         # final projection
                         projection = (
-                            (-ratios[0]
-                             * self._yaw_magnitude
-                             * semiwidth
-                             + semiwidth),
-                            (-ratios[1]
-                             * self._yaw_magnitude
-                             * self._tile_size
-                             + horizon),
+                            -ratios[0]
+                            * self._yaw_magnitude
+                            * semiwidth
+                            + semiwidth,
+                            -ratios[1]
+                            * self._yaw_magnitude
+                            * self._tile_size
+                            + horizon,
                         )
 
                         rel_depth = rel_vector[2] / self._yaw_magnitude
-                        scale = self._tile_size / rel_depth
                         
                         texture = entity.texture
                         dex = int(projection[0])
@@ -798,8 +797,12 @@ cdef class Camera:
 
                         texture = pg.transform.scale(
                             texture,
-                            (entity._render_width * scale,
-                             entity._render_height * scale),
+                            (entity._render_width
+                             * semiwidth
+                             / rel_depth,
+                             entity._render_height
+                             * self._tile_size
+                             / rel_depth),
                         )
 
                         for i in range(texture.width):

@@ -192,8 +192,8 @@ class Level(object):
 class Entity(object):
 
     _TILE_OFFSETS = (
-        (-1, 1), (0, 1), (1, 1),
-        (-1, 0), (0, 0), (1, 0),
+        (-1,  1), (0,  1), (1,  1),
+        (-1,  0), (0,  0), (1,  0),
         (-1, -1), (0, -1), (1, -1),
     )
 
@@ -430,7 +430,17 @@ class Entity(object):
                 self._manager._sets[key] = set()
             self._manager._sets[key].add(self)
 
-    def damage(self: Self, value: Real) -> None:
+    def hitscan_damage(self: Self, value: Real) -> None:
+        self._health -= value
+        if self._health <= 0:
+            self.die()
+
+    def missile_damage(self: Self, value: Real) -> None:
+        self._health -= value
+        if self._health <= 0:
+            self.die()
+
+    def splash_damage(self: Self, value: Real) -> None:
         self._health -= value
         if self._health <= 0:
             self.die()
@@ -576,11 +586,11 @@ class Player(Entity):
         self._velocity2 = self._forward_velocity + self._right_velocity
         super().update(rel_game_speed, level_timer)
 
-    def shoot(self: Self,
-              damage: Real,
-              shot_range: Real=20,
-              foa: Real=60, # field of attack
-              precision: int=2):
+    def hitscan_shoot(self: Self,
+                      damage: Real,
+                      shot_range: Real=20,
+                      foa: Real=60, # field of attack
+                      precision: int=2):
 
         # Hitscan gunshot
 
@@ -681,28 +691,29 @@ class Player(Entity):
                     bottom = data['elevation']
                     top = bottom + data['height']
                     slope_range = [
-                        (bottom - midheight) / center_dist,
-                        (top - midheight) / center_dist,
+                        max((bottom - midheight) / center_dist, -tangent),
+                        min((top - midheight) / center_dist, tangent),
                     ]
-                    bisect.insort_left(slope_ranges, slope_range)
-                    amount = 0
-                    arr = []
-                    # condense range of slopes
-                    # https://stackoverflow.com/a/15273749
-                    for start, end in slope_ranges:
-                        if arr and arr[-1][1] >= start:
-                            arr[-1][1] = max(arr[-1][1], end)
-                        else:
-                            arr.append([start, end])
-                            amount += 1
-                    slope_ranges = arr
+                    if slope_range[0] < slope_range[1]:
+                        bisect.insort_left(slope_ranges, slope_range)
+                        amount = 0
+                        arr = []
+                        # condense range of slopes
+                        # https://stackoverflow.com/a/15273749
+                        for start, end in slope_ranges:
+                            if arr and arr[-1][1] >= start:
+                                arr[-1][1] = max(arr[-1][1], end)
+                            else:
+                                arr.append([start, end])
+                                amount += 1
+                        slope_ranges = arr
 
             last_tile = tile_key
             last_end_pos = end_pos.copy()
         
         entity = closest[1]
         if entity is not None:
-            entity.damage(damage)
+            entity.hitscan_damage(damage)
             entity.textures = [_FALLBACK_SURF]
 
 

@@ -165,7 +165,7 @@ class Game(object):
                     #self._camera.horizon -= rel[1] * 0.0025
 
                 elif event.type == pg.MOUSEBUTTONDOWN:
-                    self._player.shoot(100)
+                    self._player.hitscan_shoot(100)
                     shotgun.play()
 
                 elif event.type == second:

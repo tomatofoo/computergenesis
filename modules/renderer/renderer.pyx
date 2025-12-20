@@ -519,7 +519,6 @@ cdef class Camera:
             # len_x and len_y are not one here because they do python interaction
 
             # entity stuff
-            float projection_mult = self._yaw_magnitude * semiwidth
             set searched_tiles = set() # empty tiles that could have entities
             # stores all walls and all that to be rendered
             # entities will be added after walls are computed
@@ -774,8 +773,14 @@ cdef class Camera:
                         )
                         # final projection
                         projection = (
-                            -ratios[0] * projection_mult + semiwidth,
-                            -ratios[1] * projection_mult + horizon,
+                            (-ratios[0]
+                             * self._yaw_magnitude
+                             * semiwidth
+                             + semiwidth),
+                            (-ratios[1]
+                             * self._yaw_magnitude
+                             * self._tile_size
+                             + horizon),
                         )
 
                         rel_depth = rel_vector[2] / self._yaw_magnitude

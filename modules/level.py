@@ -376,6 +376,21 @@ class Entity(object):
     def textures(self: Self, value: list[pg.Surface]) -> None:
         self._textures = value
         self._texture_angle = 360 / len(value)
+    
+    # layer of abstraction
+    @property
+    def texture(self: Self) -> pg.Surface:
+
+        dex = int(
+            # shifted by texture_angle / 2 because of segments
+            (self._yaw_value
+             - (self._manager._player._pos - self._pos).angle
+             + self._texture_angle / 2
+             - 90)
+            % 360
+            // self._texture_angle
+        )
+        return self._textures[dex]
 
     @property
     def manager(self: Self) -> EntityManager:
@@ -389,7 +404,7 @@ class Entity(object):
         for offset in self._TILE_OFFSETS:
             offset_tile = tile + offset
             tile_key = gen_tile_key(offset_tile)
-            walls = self.manager._level._walls
+            walls = self._manager._level._walls
             data = walls._tilemap.get(tile_key)
             if data is not None:
                 tiles.append((
@@ -397,7 +412,7 @@ class Entity(object):
                     data['elevation'],
                     data['elevation'] + data['height'],
                 ))
-            entities = self.manager._sets.get(tile_key)
+            entities = self._manager._sets.get(tile_key)
             if entities:
                 for entity in entities:
                     tiles.append((
@@ -616,7 +631,7 @@ class Player(Entity):
                 end_pos[1] += disp_y
                 dist += len_y
 
-            entities = self.manager._sets.get(last_tile)
+            entities = self._manager._sets.get(last_tile)
             if entities:
                 for entity in entities:
                     entity_dist = self._pos.distance_to(entity._pos)

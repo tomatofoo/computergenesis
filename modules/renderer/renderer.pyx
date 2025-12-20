@@ -756,8 +756,6 @@ cdef class Camera:
             float[2] projection
             float[2] ratios
             float[3] rel_vector
-            float rel_angle # for directional sprites
-            float texture_angle
             set entities
         # Entity Rendering
         for tile_key in searched_tiles:
@@ -783,17 +781,7 @@ cdef class Camera:
                         rel_depth = rel_vector[2] / self._yaw_magnitude
                         scale = self._tile_size / rel_depth
                         
-                        # change texture based on entity
-                        rel_angle = (entity._pos - self._player._pos).angle
-                        texture_angle = entity._texture_angle
-                        dex = int(floorf(
-                            # 270 because 360 - 90
-                            # shiftted angle / 2 because of segments
-                            (270 - rel_angle + texture_angle / 2)
-                            % 360
-                            / texture_angle
-                        ))
-                        texture = entity._textures[dex]
+                        texture = entity.texture
 
                         dex = int(projection[0])
                         # lighting

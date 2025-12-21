@@ -410,7 +410,7 @@ class Entity(object):
                 if obj is None:
                     rect = pg.Rect(offset_tile.x, offset_tile.y, 1, 1)
                 else:
-                    rect = pg.Rect(
+                    rect = pg.FRect(
                         (offset_tile.x + obj[0], offset_tile.y + obj[1]),
                         (obj[2], obj[3]),
                     )

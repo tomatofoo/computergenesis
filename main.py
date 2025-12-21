@@ -59,6 +59,7 @@ class Game(object):
             'height': 1,
             'texture': 0,
             'semitile': 0.2,
+            'rect': (0, 0.2, 1, 0.05),
         }
 
         self._wall_textures = (
@@ -66,7 +67,7 @@ class Game(object):
         )
 
         #temp
-        self._player = Player()
+        self._player = Player(width=0.01)
         self._player.pos = (6.5, 7)
         self._player.yaw = 180
         self._player.elevation = 1

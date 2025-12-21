@@ -701,10 +701,7 @@ cdef class Camera:
                             else:
                                 disp_y = part - (not dir[1])
                             side = False
-                            if slope:
-                                disp_x = disp_y / slope
-                            else:
-                                disp_x = 2147483647
+                            disp_x = disp_y / slope if slope else 2147483647
                             semitile_rel_depth += disp_y / ray[1]
 
                         final_end_pos[0] += disp_x
@@ -758,10 +755,13 @@ cdef class Camera:
                         render_end = y + render_line_height
                         
                         line = texture[dex]
-                        line = pg.transform.scale(
-                            line.subsurface(0, top, 1, rect_height),
-                            (1, render_line_height)
-                        )
+                        try:
+                            line = pg.transform.scale(
+                                line.subsurface(0, top, 1, rect_height),
+                                (1, render_line_height)
+                            )
+                        except:
+                            print(final_end_pos, tile)
                         self._darken_line(line, dist)
                     
                         if obj is None: # if not semitile

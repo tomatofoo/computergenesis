@@ -35,7 +35,7 @@ class Game(object):
         pg.init()
 
         self._settings = {
-            'vsync': 0,
+            'vsync': 1,
         }
         self._screen = pg.display.set_mode(
             self._SCREEN_SIZE,
@@ -48,16 +48,17 @@ class Game(object):
         
         with open('data/map.json', 'r') as file:
             walls = json.loads(file.read())
+            
         walls['10;8'] = {
             'elevation': 0,
-            'height': 1,
+            'height': 2,
             'texture': 0,
             'semitile': 1.7, # int is side, float is part
             'rect': (0.7, 0, 0.01, 1),
         }
         walls['10;7'] = {
             'elevation': 0,
-            'height': 1,
+            'height': 1.2,
             'texture': 0,
             'semitile': 0.2,
             'rect': (0, 0.2, 1, 0.01),
@@ -76,7 +77,8 @@ class Game(object):
 
         entities = {
             0: Entity(
-                height=0.6,
+                width=0.504,
+                height=0.54,
                 textures=[
                     pg.image.load('data/images/vassago/1.png'),
                     pg.image.load('data/images/vassago/2.png'),

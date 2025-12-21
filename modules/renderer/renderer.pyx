@@ -276,7 +276,8 @@ cdef class Camera:
     @min_entity_depth.setter
     def min_entity_depth(self: Self, float value):
         self._min_entity_depth = value
-
+    
+    # array multiplication to render floor
     cdef cnp.ndarray[char, ndim=3] _generate_array(
         self: Self,
         int width,
@@ -566,6 +567,7 @@ cdef class Camera:
             # 0 to not render back of wall
             # 1 if rendering top of back of wall
             # 2 if rendering bottom of back of wall
+            # I know it's funky but it works
             if data is not None:
                 obj = data.get('semitile')
                 if obj is None:
@@ -581,21 +583,14 @@ cdef class Camera:
                     side = semitile < 1
                     # ^ needed when is directly underneath player
 
-            # ^ variable is needed because the back line might not be 
-            # the full height
-
             # keep on changing end_pos until hitting a wall (DDA)
             while dist < self._wall_render_distance:
                 # Tile Rendering
                 searched_tiles.add(tile_key)
                 # ^ some entities may not render if we use tile_key
 
-                # the limits full check has to be in an if statement
-                # can't use break statement inside rendering subroutine
-                # entity rendering gets messed up
-
                 # no nested if statement on purpose
-                if render_back and rel_depth: # back of wall rendering
+                if render_back and rel_depth: # top/bottom of wall rendering
                     self._calculate_line(
                         rel_depth,
                         data['height'],
@@ -741,7 +736,7 @@ cdef class Camera:
                             final_end_pos[side] % 1 * <int>texture.width,
                         ))
                         
-                        # only resize the part that is visible
+                        # only resize the part that is visible (optimization)
                         scale = render_line_height / <float>texture.height
                         top = int(floorf(fmax(-y / scale, 0)))
                         bottom = int(ceilf(
@@ -807,9 +802,9 @@ cdef class Camera:
                 else:
                     # needed because render_back might stay as 1 or 2 when the 
                     # player is on the exact edge and there is no tile in the 
-                    # next cast; will error when trying to render back of tile
+                    # next cast; will error when trying to render top/bottom of
+                    # tile
                     render_back = 0
-
 
                 # displacements until hit tile
                 disp_x = tile[0] + dir[0] - end_pos[0]
@@ -844,15 +839,17 @@ cdef class Camera:
             if entities:
                 for entity in entities:
                     obj = entity.vector3 - self._player._render_vector3
+                    # rotation
                     obj.rotate_y_ip(self._player._yaw_value)
                     rel_vector = [obj[0], obj[1], obj[2]]
 
-                    # rotation
                     if rel_vector[2] >= self._min_entity_depth:
+                        # taking ratio of x:z and y:z
                         ratios = (
                             rel_vector[0] / rel_vector[2],
                             rel_vector[1] / rel_vector[2],
                         )
+
                         # final projection
                         projection = (
                             -ratios[0]

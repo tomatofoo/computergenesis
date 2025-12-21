@@ -506,9 +506,13 @@ cdef class Camera:
             float factor
             float semiwidth = width / 2
             float mag
+            float semitile
+            float semitile_rel_depth
+            float part
             float[2] ray
             float[2] tile
             float[2] end_pos
+            float[2] final_end_pos
             bool side # false for x, true for y
             str tile_key
             str side_key
@@ -563,13 +567,19 @@ cdef class Camera:
             # 1 if rendering top of back of wall
             # 2 if rendering bottom of back of wall
             if data is not None:
-                if self._player._render_elevation < data['elevation']:
-                    render_back = 2
-                    back_edge = 0
-                elif (self._player._render_elevation
-                      > data['elevation'] + data['height']):
-                    render_back = 1
-                    back_edge = height
+                obj = data.get('semitile')
+                if obj is None:
+                    if self._player._render_elevation < data['elevation']:
+                        render_back = 2
+                        back_edge = 0
+                    elif (self._player._render_elevation
+                          > data['elevation'] + data['height']):
+                        render_back = 1
+                        back_edge = height
+                else:
+                    semitile = obj
+                    side = semitile < 1
+                    # ^ needed when is directly underneath player
 
             # ^ variable is needed because the back line might not be 
             # the full height
@@ -593,7 +603,6 @@ cdef class Camera:
                         calculation,
                     )
                     line_height, render_line_height, offset = calculation
-
                     y = horizon - line_height / 2 + offset
                     
                     if render_back == 1: # render back on top
@@ -635,63 +644,125 @@ cdef class Camera:
                 tile_key = gen_tile_key(tile)
                 data = tilemap.get(tile_key)
                 if data is not None:
-                    if rel_depth:
-                        self._calculate_line(
-                            rel_depth,
-                            data['height'],
-                            data['elevation'],
-                            calculation,
-                        )
-                        line_height, render_line_height, offset = calculation
-
-                        y = horizon - line_height / 2 + offset
-                        render_end = y + render_line_height
-
-                        center = (tile[0] + 0.5, tile[1] + 0.5)
-                        # render back of tile on to
-                        if horizon < y:
-                            render_back = 1
-                            back_edge = y
-                        # render back of tile on bottom
-                        elif horizon > render_end:
-                            render_back = 2
-                            back_edge = render_end
-                            # ^ inting helps with pixel glitch
-                            # faster than == None in cython
-                            
-                        # check if line is visible
-                        if (render_end > 0
-                            and y < height
-                            and not _limits_full(&limits, y, render_end)):
-                            # Transformation
-                            texture = textures[data['texture']]
-                            dex = int(floorf(
-                                end_pos[side] % 1 * <int>texture.width,
-                            ))
-                            
-                            # only resize the part that is visible
-                            scale = render_line_height / <float>texture.height
-                            top = int(floorf(fmax(-y / scale, 0)))
-                            bottom = int(ceilf(
-                                fmin(height - y, render_line_height) / scale,
-                            ))
-                            rect_height = bottom - top
-                            
-                            old_y = y
-                            old_render_end = render_end
-                            # adjust variables accordingly
-                            # for some reason needs angle brackets to use C
-                            y += <int>ceilf(top * scale)
-                            render_line_height = int(rect_height * scale)
-                            render_end = y + render_line_height
-                            
-                            line = texture[dex]
-                            line = pg.transform.scale(
-                                line.subsurface(0, top, 1, rect_height),
-                                (1, render_line_height)
+                    obj = data.get('semitile')
+                    # this weird if statement structure is so that rendering
+                    # semitiles works
+                    # if a semitile is directly underneath the player, the old
+                    # if statement structure wouldn't've worked because 
+                    # rel_depth is 0
+                    if obj is None:
+                        if rel_depth:
+                            self._calculate_line(
+                                rel_depth,
+                                data['height'],
+                                data['elevation'],
+                                calculation,
                             )
-                            self._darken_line(line, dist)
+                            line_height = calculation[0]
+                            render_line_height = calculation[1]
+                            offset = calculation[2]
+                            y = horizon - line_height / 2 + offset
+                            render_end = y + render_line_height
 
+                            center = (tile[0] + 0.5, tile[1] + 0.5)
+                            # render back of tile on to
+                            if horizon < y:
+                                render_back = 1
+                                back_edge = y
+                            # render back of tile on bottom
+                            elif horizon > render_end:
+                                render_back = 2
+                                back_edge = render_end
+                                # ^ inting helps with pixel glitch
+                                # faster than == None in cython
+                            final_end_pos = end_pos
+                        else:
+                            render_end = -1 # so it doesn't get rendered
+                    else: 
+                        render_back = 0
+                        semitile = obj
+                        final_end_pos = [end_pos[0], end_pos[1]]
+                        semitile_rel_depth = rel_depth
+                        # decimal part is how far the sheet is into tile
+                        part = semitile - floorf(semitile)
+
+                        # calculating displacements
+                        if semitile >= 1:
+                            if side:
+                                disp_x = part - (not dir[0])
+                            else:
+                                disp_x = tile[0] + part - end_pos[0]
+                            side = True
+                            disp_y = disp_x * slope
+                            semitile_rel_depth += disp_x / ray[0]
+                        else:
+                            if side:
+                                disp_y = tile[1] + part - end_pos[1]
+                            else:
+                                disp_y = part - (not dir[1])
+                            side = False
+                            if slope:
+                                disp_x = disp_y / slope
+                            else:
+                                disp_x = 2147483647
+                            semitile_rel_depth += disp_y / ray[1]
+
+                        final_end_pos[0] += disp_x
+                        final_end_pos[1] += disp_y
+
+                        # i know this looks weird
+                        if ([floorf(final_end_pos[0]),
+                             floorf(final_end_pos[1])] == tile):
+                            dist = semitile_rel_depth * mag
+                            self._calculate_line(
+                                semitile_rel_depth,
+                                data['height'],
+                                data['elevation'],
+                                calculation,
+                            )
+                            line_height = calculation[0]
+                            render_line_height = calculation[1]
+                            offset = calculation[2]
+                            y = horizon - line_height / 2 + offset
+                            render_end = y + render_line_height
+                        else:
+                            render_end = -1 # so it won't get rendered
+
+                    # final_end_pos is there because it could be a subtile
+                    # check if line is visible
+                    if (render_end > 0
+                        and y < height
+                        and not _limits_full(&limits, y, render_end)):
+                        # Transformation
+                        texture = textures[data['texture']]
+                        dex = int(floorf(
+                            final_end_pos[side] % 1 * <int>texture.width,
+                        ))
+                        
+                        # only resize the part that is visible
+                        scale = render_line_height / <float>texture.height
+                        top = int(floorf(fmax(-y / scale, 0)))
+                        bottom = int(ceilf(
+                            fmin(height - y, render_line_height) / scale,
+                        ))
+                        rect_height = bottom - top
+                        
+                        old_y = y
+                        old_render_end = render_end
+                        # adjust variables accordingly
+                        # for some reason needs angle brackets to use C
+                        y += <int>ceilf(top * scale)
+                        render_line_height = int(rect_height * scale)
+                        render_end = y + render_line_height
+                        
+                        line = texture[dex]
+                        line = pg.transform.scale(
+                            line.subsurface(0, top, 1, rect_height),
+                            (1, render_line_height)
+                        )
+                        self._darken_line(line, dist)
+                    
+                        if obj is None: # if not semitile
                             # Reverse Painter's Algorithm
                             amount = limits._amount
                             # not enumerated because + 1
@@ -722,6 +793,15 @@ cdef class Camera:
                                         break
                             # old variables because of the full check
                             _limits_add(&limits, old_y, old_render_end)
+
+                        else:
+                            # this check is done so that semitiles
+                            # can have transparency (e.g. cobwebs)
+                            obj = _DepthBufferObject(
+                                semitile_rel_depth,
+                                (line, (x, y)),
+                            )
+                            render_buffer[x].append(obj)
                 else:
                     # needed because render_back might stay as 1 or 2 when the 
                     # player is on the exact edge and there is no tile in the 

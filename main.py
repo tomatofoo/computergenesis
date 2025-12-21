@@ -48,6 +48,18 @@ class Game(object):
         
         with open('data/map.json', 'r') as file:
             walls = json.loads(file.read())
+        walls['10;8'] = {
+            'elevation': 0,
+            'height': 1,
+            'texture': 0,
+            'semitile': 1.7,
+        }
+        walls['10;7'] = {
+            'elevation': 0,
+            'height': 1,
+            'texture': 0,
+            'semitile': 0.2,
+        }
 
         self._wall_textures = (
             ColumnTexture(pg.image.load('data/images/redbrick.png').convert()),

@@ -707,13 +707,13 @@ cdef class Camera:
                         final_end_pos[0] += disp_x
                         final_end_pos[1] += disp_y
 
-                        # i know this looks weird
+                        # filter out lines that are erroneous
                         if (semitile_rel_depth
-                            and floorf(final_end_pos[0]) == tile[0]
-                            and floorf(final_end_pos[1]) == tile[1]
-                            # ensures that it is in the direction of ray
                             and (disp_x > 0) == dir[0]
-                            and (disp_y > 0) == dir[1]):
+                            and (disp_y > 0) == dir[1]
+                            # ^ ensures that it is in the direction of ray
+                            and floorf(final_end_pos[0]) == tile[0]
+                            and floorf(final_end_pos[1]) == tile[1]):
 
                             dist = semitile_rel_depth * mag
                             self._calculate_line(

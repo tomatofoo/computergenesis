@@ -5155,7 +5155,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
 <pre class='cython code score-0 '>          __pyx_t_27 = 1;
           (__pyx_v_final_end_pos[__pyx_t_27]) = ((__pyx_v_final_end_pos[__pyx_t_27]) + __pyx_v_disp_y);
 </pre><pre class="cython line score-0">&#xA0;<span class="">709</span>: </pre>
-<pre class="cython line score-0">&#xA0;<span class="">710</span>:                         # i know this looks weird</pre>
+<pre class="cython line score-0">&#xA0;<span class="">710</span>:                         # filter out lines that are erroneous</pre>
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">711</span>:                         if (semitile_rel_depth</pre>
 <pre class='cython code score-0 '>          __pyx_t_20 = (__pyx_v_semitile_rel_depth != 0);
           if (__pyx_t_20) {
@@ -5168,30 +5168,30 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
 /* … */
             goto __pyx_L25;
           }
-</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">712</span>:                             and floorf(final_end_pos[0]) == tile[0]</pre>
-<pre class='cython code score-0 '>          __pyx_t_20 = (floorf((__pyx_v_final_end_pos[0])) == (__pyx_v_tile[0]));
-          if (__pyx_t_20) {
-          } else {
-            __pyx_t_24 = __pyx_t_20;
-            goto __pyx_L26_bool_binop_done;
-          }
-</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">713</span>:                             and floorf(final_end_pos[1]) == tile[1]</pre>
-<pre class='cython code score-0 '>          __pyx_t_20 = (floorf((__pyx_v_final_end_pos[1])) == (__pyx_v_tile[1]));
-          if (__pyx_t_20) {
-          } else {
-            __pyx_t_24 = __pyx_t_20;
-            goto __pyx_L26_bool_binop_done;
-          }
-</pre><pre class="cython line score-0">&#xA0;<span class="">714</span>:                             # ensures that it is in the direction of ray</pre>
-<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">715</span>:                             and (disp_x &gt; 0) == dir[0]</pre>
+</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">712</span>:                             and (disp_x &gt; 0) == dir[0]</pre>
 <pre class='cython code score-0 '>          __pyx_t_20 = ((__pyx_v_disp_x &gt; 0.0) == (__pyx_v_dir[0]));
           if (__pyx_t_20) {
           } else {
             __pyx_t_24 = __pyx_t_20;
             goto __pyx_L26_bool_binop_done;
           }
-</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">716</span>:                             and (disp_y &gt; 0) == dir[1]):</pre>
+</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">713</span>:                             and (disp_y &gt; 0) == dir[1]</pre>
 <pre class='cython code score-0 '>          __pyx_t_20 = ((__pyx_v_disp_y &gt; 0.0) == (__pyx_v_dir[1]));
+          if (__pyx_t_20) {
+          } else {
+            __pyx_t_24 = __pyx_t_20;
+            goto __pyx_L26_bool_binop_done;
+          }
+</pre><pre class="cython line score-0">&#xA0;<span class="">714</span>:                             # ^ ensures that it is in the direction of ray</pre>
+<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">715</span>:                             and floorf(final_end_pos[0]) == tile[0]</pre>
+<pre class='cython code score-0 '>          __pyx_t_20 = (floorf((__pyx_v_final_end_pos[0])) == (__pyx_v_tile[0]));
+          if (__pyx_t_20) {
+          } else {
+            __pyx_t_24 = __pyx_t_20;
+            goto __pyx_L26_bool_binop_done;
+          }
+</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">716</span>:                             and floorf(final_end_pos[1]) == tile[1]):</pre>
+<pre class='cython code score-0 '>          __pyx_t_20 = (floorf((__pyx_v_final_end_pos[1])) == (__pyx_v_tile[1]));
           __pyx_t_24 = __pyx_t_20;
           __pyx_L26_bool_binop_done:;
 </pre><pre class="cython line score-0">&#xA0;<span class="">717</span>: </pre>

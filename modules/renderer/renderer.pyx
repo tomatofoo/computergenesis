@@ -710,7 +710,10 @@ cdef class Camera:
                         # i know this looks weird
                         if (semitile_rel_depth
                             and floorf(final_end_pos[0]) == tile[0]
-                            and floorf(final_end_pos[1]) == tile[1]):
+                            and floorf(final_end_pos[1]) == tile[1]
+                            # ensures that it is in the direction of ray
+                            and (disp_x > 0) == dir[0]
+                            and (disp_y > 0) == dir[1]):
 
                             dist = semitile_rel_depth * mag
                             self._calculate_line(
@@ -755,13 +758,10 @@ cdef class Camera:
                         render_end = y + render_line_height
                         
                         line = texture[dex]
-                        try:
-                            line = pg.transform.scale(
-                                line.subsurface(0, top, 1, rect_height),
-                                (1, render_line_height)
-                            )
-                        except:
-                            print(final_end_pos, tile)
+                        line = pg.transform.scale(
+                            line.subsurface(0, top, 1, rect_height),
+                            (1, render_line_height)
+                        )
                         self._darken_line(line, dist)
                     
                         if obj is None: # if not semitile

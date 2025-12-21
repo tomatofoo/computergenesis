@@ -646,10 +646,9 @@ cdef class Camera:
                 if data is not None:
                     obj = data.get('semitile')
                     # this weird if statement structure is so that rendering
-                    # semitiles works
-                    # if a semitile is directly underneath the player, the old
-                    # if statement structure wouldn't've worked because 
-                    # rel_depth is 0
+                    # semitiles works; if a semitile is directly underneath 
+                    # the player, the old if statement structure wouldn't've 
+                    # worked because rel_depth is 0
                     if obj is None:
                         if rel_depth:
                             self._calculate_line(
@@ -678,7 +677,8 @@ cdef class Camera:
                             final_end_pos = end_pos
                         else:
                             render_end = -1 # so it doesn't get rendered
-                    else: 
+
+                    else: # semitiles
                         render_back = 0
                         semitile = obj
                         final_end_pos = [end_pos[0], end_pos[1]]
@@ -711,8 +711,10 @@ cdef class Camera:
                         final_end_pos[1] += disp_y
 
                         # i know this looks weird
-                        if ([floorf(final_end_pos[0]),
-                             floorf(final_end_pos[1])] == tile):
+                        if (semitile_rel_depth
+                            and floorf(final_end_pos[0]) == tile[0]
+                            and floorf(final_end_pos[1]) == tile[1]):
+
                             dist = semitile_rel_depth * mag
                             self._calculate_line(
                                 semitile_rel_depth,

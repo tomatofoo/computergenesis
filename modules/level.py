@@ -406,8 +406,16 @@ class Entity(object):
             walls = self._manager._level._walls
             data = walls._tilemap.get(tile_key)
             if data is not None:
+                obj = data.get('rect')
+                if obj is None:
+                    rect = pg.Rect(offset_tile.x, offset_tile.y, 1, 1)
+                else:
+                    rect = pg.Rect(
+                        (offset_tile.x + obj[0], offset_tile.y + obj[1]),
+                        (obj[2], obj[3]),
+                    )
                 tiles.append((
-                    pg.Rect(offset_tile.x, offset_tile.y, 1, 1),
+                    rect,
                     data['elevation'],
                     data['elevation'] + data['height'],
                 ))

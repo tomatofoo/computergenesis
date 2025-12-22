@@ -740,7 +740,7 @@ cdef class Camera:
                         scale = render_line_height / <float>texture.height
                         top = int(floorf(fmax(-y / scale, 0)))
                         # might need an fmin here to make sure it isn't outside
-                        # the surf
+                        # the surf (hasn't happened yet but it maybe could idk)
                         bottom = int(ceilf(
                             fmin(height - y, render_line_height) / scale,
                         ))

@@ -506,10 +506,7 @@ class Player(Entity):
     def __init__(self: Self,
                  width: Real=0.5,
                  height: Real=1,
-                 melee_range: Real=0.2,
-                 yaw_sensitivity: Real=0.125,
-                 mouse_enabled: bool=1,
-                 keyboard_look_enabled: bool=1) -> None:
+                 melee_range: Real=0.2) -> None:
 
         super().__init__(width, height)
         self._melee_range = melee_range

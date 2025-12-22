@@ -829,6 +829,7 @@ cdef class Camera:
         _limits_destroy(&limits)
         
         cdef:
+            int[2] pos
             float[2] projection
             float[2] ratios
             float[3] rel_vector
@@ -889,7 +890,7 @@ cdef class Camera:
                                 int(dex - <int>texture.width / 2 + i),
                                 projection[1] - <int>texture.height,
                             )
-                            if 0 < pos[0] < width:
+                            if 0 <= pos[0] < width:
                                 obj = _DepthBufferObject(
                                     rel_depth,
                                     (texture,

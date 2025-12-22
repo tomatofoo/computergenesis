@@ -739,6 +739,8 @@ cdef class Camera:
                         # only resize the part that is visible (optimization)
                         scale = render_line_height / <float>texture.height
                         top = int(floorf(fmax(-y / scale, 0)))
+                        # might need an fmin here to make sure it isn't outside
+                        # the surf
                         bottom = int(ceilf(
                             fmin(height - y, render_line_height) / scale,
                         ))
@@ -875,12 +877,13 @@ cdef class Camera:
 
                         rel_depth = rel_vector[2] / self._yaw_magnitude
 
-                        dex = int(projection[0])
-
                         texture = entity.texture
                         texture_width = texture.width
                         texture_height = texture.height
+
                         # only resize the part that is visible (optimization)
+                        # this optimization is a little slower if entity is 
+                        # fully in frame but i think it is worth it
                         render_width = int(
                             <float>entity._render_width
                             * semiwidth
@@ -891,7 +894,7 @@ cdef class Camera:
                             * self._tile_size
                             / rel_depth
                         )
-                        render_x = dex - render_width / 2
+                        render_x = int(projection[0] - render_width / 2)
                         y = int(projection[1] - render_height)
                         
                         if (y < height

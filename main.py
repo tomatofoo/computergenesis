@@ -18,7 +18,7 @@ from modules.level import Sky
 from modules.level import Entity 
 from modules.level import Player
 from modules.level import EntityManager 
-from modules.renderer import Camera
+from modules.camera import Camera
 
 class Game(object):
 

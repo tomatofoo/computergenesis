@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Cython: renderer.pyx</title>
+    <title>Cython: camera.pyx</title>
     <style type="text/css">
     
 body.cython { font-family: courier; font-size: 12; }
@@ -294,7 +294,7 @@ body.cython { font-family: courier; font-size: 12; }
     <span style="background-color: #FFFF00">Yellow lines</span> hint at Python interaction.<br />
     Click on a line that starts with a "<code>+</code>" to see the C code that Cython generated for it.
 </p>
-<p>Raw output: <a href="renderer.c">renderer.c</a></p>
+<p>Raw output: <a href="camera.c">camera.c</a></p>
 <div class="cython"><pre class="cython line score-8" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0001</span>: # cython: language_level=3, profile=True, boundscheck=True, wraparound=False, initializedcheck=False, cdivision=True, cpow=True</pre>
 <pre class='cython code score-8 '>  __pyx_t_4 = <span class='pyx_c_api'>__Pyx_PyDict_NewPresized</span>(0);<span class='error_goto'> if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
@@ -444,7 +444,7 @@ body.cython { font-family: courier; font-size: 12; }
 <pre class="cython line score-0">&#xA0;<span class="">0031</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">0032</span>: # is getting called a lot so not using python implementation</pre>
 <pre class="cython line score-7" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0033</span>: cdef str gen_tile_key(obj: Point):</pre>
-<pre class='cython code score-7 '>static PyObject *__pyx_f_8renderer_gen_tile_key(PyObject *__pyx_v_obj) {
+<pre class='cython code score-7 '>static PyObject *__pyx_f_6camera_gen_tile_key(PyObject *__pyx_v_obj) {
   PyObject *__pyx_r = NULL;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[6]))
@@ -461,7 +461,7 @@ body.cython { font-family: courier; font-size: 12; }
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 33, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.gen_tile_key", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.gen_tile_key", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   <span class='refnanny'>__Pyx_XGIVEREF</span>(__pyx_r);
@@ -499,7 +499,7 @@ body.cython { font-family: courier; font-size: 12; }
 </pre><pre class="cython line score-0">&#xA0;<span class="">0036</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">0037</span>: </pre>
 <pre class="cython line score-4" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0038</span>: cdef float radians(float degrees):</pre>
-<pre class='cython code score-4 '>static float __pyx_f_8renderer_radians(float __pyx_v_degrees) {
+<pre class='cython code score-4 '>static float __pyx_f_6camera_radians(float __pyx_v_degrees) {
   float __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[7]))
@@ -513,7 +513,7 @@ body.cython { font-family: courier; font-size: 12; }
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 38, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.radians", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.radians", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
@@ -526,7 +526,7 @@ body.cython { font-family: courier; font-size: 12; }
 </pre><pre class="cython line score-0">&#xA0;<span class="">0040</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">0041</span>: </pre>
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0042</span>: cdef struct _Limit:</pre>
-<pre class='cython code score-0 '>struct __pyx_t_8renderer__Limit {
+<pre class='cython code score-0 '>struct __pyx_t_6camera__Limit {
   int _start;
   int _end;
 };
@@ -534,17 +534,17 @@ body.cython { font-family: courier; font-size: 12; }
 <pre class="cython line score-0">&#xA0;<span class="">0044</span>:     int _end</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0045</span>: </pre>
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0046</span>: cdef struct _Limits:</pre>
-<pre class='cython code score-0 '>struct __pyx_t_8renderer__Limits {
+<pre class='cython code score-0 '>struct __pyx_t_6camera__Limits {
   size_t _capacity;
   size_t _amount;
-  struct __pyx_t_8renderer__Limit *_arr;
+  struct __pyx_t_6camera__Limit *_arr;
 };
 </pre><pre class="cython line score-0">&#xA0;<span class="">0047</span>:     size_t _capacity</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0048</span>:     size_t _amount</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0049</span>:     _Limit* _arr</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0050</span>: </pre>
 <pre class="cython line score-4" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0051</span>: cdef int _limit_cmp(_Limit limit1, _Limit limit2):</pre>
-<pre class='cython code score-4 '>static int __pyx_f_8renderer__limit_cmp(struct __pyx_t_8renderer__Limit __pyx_v_limit1, struct __pyx_t_8renderer__Limit __pyx_v_limit2) {
+<pre class='cython code score-4 '>static int __pyx_f_6camera__limit_cmp(struct __pyx_t_6camera__Limit __pyx_v_limit1, struct __pyx_t_6camera__Limit __pyx_v_limit2) {
   int __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[8]))
@@ -558,7 +558,7 @@ body.cython { font-family: courier; font-size: 12; }
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 51, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer._limit_cmp", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera._limit_cmp", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
@@ -606,9 +606,9 @@ body.cython { font-family: courier; font-size: 12; }
   goto __pyx_L0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0060</span>: </pre>
 <pre class="cython line score-4" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0061</span>: cdef _Limits _limits_new(size_t capacity):</pre>
-<pre class='cython code score-4 '>static struct __pyx_t_8renderer__Limits __pyx_f_8renderer__limits_new(size_t __pyx_v_capacity) {
-  struct __pyx_t_8renderer__Limits __pyx_v_limits;
-  struct __pyx_t_8renderer__Limits __pyx_r;
+<pre class='cython code score-4 '>static struct __pyx_t_6camera__Limits __pyx_f_6camera__limits_new(size_t __pyx_v_capacity) {
+  struct __pyx_t_6camera__Limits __pyx_v_limits;
+  struct __pyx_t_6camera__Limits __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[9]))
   <span class='trace'>__Pyx_TraceStartFunc</span>("_limits_new", __pyx_f[0], 61, 0, 0, 0, <span class='error_goto'>__PYX_ERR(0, 61, __pyx_L1_error)</span>);
@@ -621,7 +621,7 @@ body.cython { font-family: courier; font-size: 12; }
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 61, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer._limits_new", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera._limits_new", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_pretend_to_initialize(&amp;__pyx_r);
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
@@ -633,7 +633,7 @@ body.cython { font-family: courier; font-size: 12; }
   __pyx_t_1._amount = 0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0064</span>:         0,</pre>
 <pre class="cython line score-5" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0065</span>:         &lt;_Limit *&gt;PyMem_Calloc(capacity, sizeof(_Limit)),</pre>
-<pre class='cython code score-5 '>  __pyx_t_1._arr = ((struct __pyx_t_8renderer__Limit *)<span class='py_c_api'>PyMem_Calloc</span>(__pyx_v_capacity, (sizeof(struct __pyx_t_8renderer__Limit))));
+<pre class='cython code score-5 '>  __pyx_t_1._arr = ((struct __pyx_t_6camera__Limit *)<span class='py_c_api'>PyMem_Calloc</span>(__pyx_v_capacity, (sizeof(struct __pyx_t_6camera__Limit))));
   __pyx_v_limits = __pyx_t_1;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0066</span>:     )</pre>
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0067</span>:     if not limits._arr:</pre>
@@ -650,7 +650,7 @@ body.cython { font-family: courier; font-size: 12; }
   goto __pyx_L0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0071</span>: </pre>
 <pre class="cython line score-4" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0072</span>: cdef void _limits_destroy(_Limits *limits):</pre>
-<pre class='cython code score-4 '>static void __pyx_f_8renderer__limits_destroy(struct __pyx_t_8renderer__Limits *__pyx_v_limits) {
+<pre class='cython code score-4 '>static void __pyx_f_6camera__limits_destroy(struct __pyx_t_6camera__Limits *__pyx_v_limits) {
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[10]))
   <span class='trace'>__Pyx_TraceStartFunc</span>("_limits_destroy", __pyx_f[0], 72, 0, 0, 0, <span class='error_goto'>__PYX_ERR(0, 72, __pyx_L1_error)</span>);
@@ -665,7 +665,7 @@ body.cython { font-family: courier; font-size: 12; }
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 72, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer._limits_destroy", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera._limits_destroy", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
 }
@@ -673,7 +673,7 @@ body.cython { font-family: courier; font-size: 12; }
 <pre class='cython code score-5 '>  <span class='py_c_api'>PyMem_Free</span>(__pyx_v_limits-&gt;_arr);
 </pre><pre class="cython line score-0">&#xA0;<span class="">0074</span>: </pre>
 <pre class="cython line score-4" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0075</span>: cdef void _limits_reset(_Limits *limits):</pre>
-<pre class='cython code score-4 '>static void __pyx_f_8renderer__limits_reset(struct __pyx_t_8renderer__Limits *__pyx_v_limits) {
+<pre class='cython code score-4 '>static void __pyx_f_6camera__limits_reset(struct __pyx_t_6camera__Limits *__pyx_v_limits) {
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[11]))
   <span class='trace'>__Pyx_TraceStartFunc</span>("_limits_reset", __pyx_f[0], 75, 0, 0, 0, <span class='error_goto'>__PYX_ERR(0, 75, __pyx_L1_error)</span>);
@@ -688,19 +688,19 @@ body.cython { font-family: courier; font-size: 12; }
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 75, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer._limits_reset", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera._limits_reset", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
 }
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0076</span>:     memset(limits._arr, 0, limits._capacity * sizeof(_Limit))</pre>
-<pre class='cython code score-0 '>  (void)(memset(__pyx_v_limits-&gt;_arr, 0, (__pyx_v_limits-&gt;_capacity * (sizeof(struct __pyx_t_8renderer__Limit)))));
+<pre class='cython code score-0 '>  (void)(memset(__pyx_v_limits-&gt;_arr, 0, (__pyx_v_limits-&gt;_capacity * (sizeof(struct __pyx_t_6camera__Limit)))));
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0077</span>:     limits._amount = 0</pre>
 <pre class='cython code score-0 '>  __pyx_v_limits-&gt;_amount = 0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0078</span>: </pre>
 <pre class="cython line score-4" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0079</span>: cdef bool _limits_add(_Limits* limits, int start, int end):</pre>
-<pre class='cython code score-4 '>static PyObject *__pyx_f_8renderer__limits_add(struct __pyx_t_8renderer__Limits *__pyx_v_limits, int __pyx_v_start, int __pyx_v_end) {
-  struct __pyx_t_8renderer__Limit __pyx_v_limit;
-  struct __pyx_t_8renderer__Limit __pyx_v_item;
+<pre class='cython code score-4 '>static PyObject *__pyx_f_6camera__limits_add(struct __pyx_t_6camera__Limits *__pyx_v_limits, int __pyx_v_start, int __pyx_v_end) {
+  struct __pyx_t_6camera__Limit __pyx_v_limit;
+  struct __pyx_t_6camera__Limit __pyx_v_item;
   size_t __pyx_v_dex;
   size_t __pyx_v_cur;
   size_t __pyx_v_i;
@@ -718,7 +718,7 @@ body.cython { font-family: courier; font-size: 12; }
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 79, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer._limits_add", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera._limits_add", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   <span class='refnanny'>__Pyx_XGIVEREF</span>(__pyx_r);
@@ -766,7 +766,7 @@ body.cython { font-family: courier; font-size: 12; }
       __pyx_t_1 = __pyx_t_6;
       goto __pyx_L7_bool_binop_done;
     }
-    __pyx_t_7 = __pyx_f_8renderer__limit_cmp(__pyx_v_limit, __pyx_v_item); if (unlikely(__pyx_t_7 == ((int)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 94, __pyx_L1_error)</span>
+    __pyx_t_7 = __pyx_f_6camera__limit_cmp(__pyx_v_limit, __pyx_v_item); if (unlikely(__pyx_t_7 == ((int)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 94, __pyx_L1_error)</span>
     __pyx_t_6 = (__pyx_t_7 &lt; 1);
     __pyx_t_1 = __pyx_t_6;
     __pyx_L7_bool_binop_done:;
@@ -845,8 +845,8 @@ body.cython { font-family: courier; font-size: 12; }
   goto __pyx_L0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0124</span>: </pre>
 <pre class="cython line score-4" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0125</span>: cdef bool _limits_full(_Limits *limits, int start, int end):</pre>
-<pre class='cython code score-4 '>static PyObject *__pyx_f_8renderer__limits_full(struct __pyx_t_8renderer__Limits *__pyx_v_limits, int __pyx_v_start, int __pyx_v_end) {
-  struct __pyx_t_8renderer__Limit __pyx_v_item;
+<pre class='cython code score-4 '>static PyObject *__pyx_f_6camera__limits_full(struct __pyx_t_6camera__Limits *__pyx_v_limits, int __pyx_v_start, int __pyx_v_end) {
+  struct __pyx_t_6camera__Limit __pyx_v_item;
   size_t __pyx_v_i;
   PyObject *__pyx_r = NULL;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
@@ -861,7 +861,7 @@ body.cython { font-family: courier; font-size: 12; }
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 125, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer._limits_full", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera._limits_full", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   <span class='refnanny'>__Pyx_XGIVEREF</span>(__pyx_r);
@@ -908,7 +908,7 @@ body.cython { font-family: courier; font-size: 12; }
 </pre><pre class="cython line score-0">&#xA0;<span class="">0134</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">0135</span>: </pre>
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0136</span>: cdef class _DepthBufferObject:</pre>
-<pre class='cython code score-0 '>struct __pyx_obj_8renderer__DepthBufferObject {
+<pre class='cython code score-0 '>struct __pyx_obj_6camera__DepthBufferObject {
   PyObject_HEAD
   float _depth;
   PyObject *_args;
@@ -917,21 +917,21 @@ body.cython { font-family: courier; font-size: 12; }
 
 </pre><pre class="cython line score-26" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0137</span>:     cdef public float _depth</pre>
 <pre class='cython code score-26 '>/* Python wrapper */
-static PyObject *__pyx_pw_8renderer_18_DepthBufferObject_6_depth_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_8renderer_18_DepthBufferObject_6_depth_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_6camera_18_DepthBufferObject_6_depth_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_6camera_18_DepthBufferObject_6_depth_1__get__(PyObject *__pyx_v_self) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   PyObject *__pyx_r = 0;
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("__get__ (wrapper)", 0);
   __pyx_kwvalues = <span class='pyx_c_api'>__Pyx_KwValues_VARARGS</span>(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_8renderer_18_DepthBufferObject_6_depth___get__(((struct __pyx_obj_8renderer__DepthBufferObject *)__pyx_v_self));
+  __pyx_r = __pyx_pf_6camera_18_DepthBufferObject_6_depth___get__(((struct __pyx_obj_6camera__DepthBufferObject *)__pyx_v_self));
 
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8renderer_18_DepthBufferObject_6_depth___get__(struct __pyx_obj_8renderer__DepthBufferObject *__pyx_v_self) {
+static PyObject *__pyx_pf_6camera_18_DepthBufferObject_6_depth___get__(struct __pyx_obj_6camera__DepthBufferObject *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[16]))
@@ -953,7 +953,7 @@ static PyObject *__pyx_pf_8renderer_18_DepthBufferObject_6_depth___get__(struct 
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 137, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer._DepthBufferObject._depth.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera._DepthBufferObject._depth.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   <span class='refnanny'>__Pyx_XGIVEREF</span>(__pyx_r);
@@ -963,21 +963,21 @@ static PyObject *__pyx_pf_8renderer_18_DepthBufferObject_6_depth___get__(struct 
 }
 
 /* Python wrapper */
-static int __pyx_pw_8renderer_18_DepthBufferObject_6_depth_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
-static int __pyx_pw_8renderer_18_DepthBufferObject_6_depth_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+static int __pyx_pw_6camera_18_DepthBufferObject_6_depth_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_6camera_18_DepthBufferObject_6_depth_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   int __pyx_r;
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("__set__ (wrapper)", 0);
   __pyx_kwvalues = <span class='pyx_c_api'>__Pyx_KwValues_VARARGS</span>(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_8renderer_18_DepthBufferObject_6_depth_2__set__(((struct __pyx_obj_8renderer__DepthBufferObject *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+  __pyx_r = __pyx_pf_6camera_18_DepthBufferObject_6_depth_2__set__(((struct __pyx_obj_6camera__DepthBufferObject *)__pyx_v_self), ((PyObject *)__pyx_v_value));
 
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 
-static int __pyx_pf_8renderer_18_DepthBufferObject_6_depth_2__set__(struct __pyx_obj_8renderer__DepthBufferObject *__pyx_v_self, PyObject *__pyx_v_value) {
+static int __pyx_pf_6camera_18_DepthBufferObject_6_depth_2__set__(struct __pyx_obj_6camera__DepthBufferObject *__pyx_v_self, PyObject *__pyx_v_value) {
   int __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[17]))
@@ -996,7 +996,7 @@ static int __pyx_pf_8renderer_18_DepthBufferObject_6_depth_2__set__(struct __pyx
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 137, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer._DepthBufferObject._depth.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera._DepthBufferObject._depth.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
@@ -1004,21 +1004,21 @@ static int __pyx_pf_8renderer_18_DepthBufferObject_6_depth_2__set__(struct __pyx
 }
 </pre><pre class="cython line score-32" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0138</span>:     cdef public tuple _args</pre>
 <pre class='cython code score-32 '>/* Python wrapper */
-static PyObject *__pyx_pw_8renderer_18_DepthBufferObject_5_args_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_8renderer_18_DepthBufferObject_5_args_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_6camera_18_DepthBufferObject_5_args_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_6camera_18_DepthBufferObject_5_args_1__get__(PyObject *__pyx_v_self) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   PyObject *__pyx_r = 0;
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("__get__ (wrapper)", 0);
   __pyx_kwvalues = <span class='pyx_c_api'>__Pyx_KwValues_VARARGS</span>(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_8renderer_18_DepthBufferObject_5_args___get__(((struct __pyx_obj_8renderer__DepthBufferObject *)__pyx_v_self));
+  __pyx_r = __pyx_pf_6camera_18_DepthBufferObject_5_args___get__(((struct __pyx_obj_6camera__DepthBufferObject *)__pyx_v_self));
 
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8renderer_18_DepthBufferObject_5_args___get__(struct __pyx_obj_8renderer__DepthBufferObject *__pyx_v_self) {
+static PyObject *__pyx_pf_6camera_18_DepthBufferObject_5_args___get__(struct __pyx_obj_6camera__DepthBufferObject *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[18]))
@@ -1037,7 +1037,7 @@ static PyObject *__pyx_pf_8renderer_18_DepthBufferObject_5_args___get__(struct _
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 138, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer._DepthBufferObject._args.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera._DepthBufferObject._args.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   <span class='refnanny'>__Pyx_XGIVEREF</span>(__pyx_r);
@@ -1047,21 +1047,21 @@ static PyObject *__pyx_pf_8renderer_18_DepthBufferObject_5_args___get__(struct _
 }
 
 /* Python wrapper */
-static int __pyx_pw_8renderer_18_DepthBufferObject_5_args_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
-static int __pyx_pw_8renderer_18_DepthBufferObject_5_args_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+static int __pyx_pw_6camera_18_DepthBufferObject_5_args_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_6camera_18_DepthBufferObject_5_args_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   int __pyx_r;
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("__set__ (wrapper)", 0);
   __pyx_kwvalues = <span class='pyx_c_api'>__Pyx_KwValues_VARARGS</span>(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_8renderer_18_DepthBufferObject_5_args_2__set__(((struct __pyx_obj_8renderer__DepthBufferObject *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+  __pyx_r = __pyx_pf_6camera_18_DepthBufferObject_5_args_2__set__(((struct __pyx_obj_6camera__DepthBufferObject *)__pyx_v_self), ((PyObject *)__pyx_v_value));
 
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 
-static int __pyx_pf_8renderer_18_DepthBufferObject_5_args_2__set__(struct __pyx_obj_8renderer__DepthBufferObject *__pyx_v_self, PyObject *__pyx_v_value) {
+static int __pyx_pf_6camera_18_DepthBufferObject_5_args_2__set__(struct __pyx_obj_6camera__DepthBufferObject *__pyx_v_self, PyObject *__pyx_v_value) {
   int __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[19]))
@@ -1087,7 +1087,7 @@ static int __pyx_pf_8renderer_18_DepthBufferObject_5_args_2__set__(struct __pyx_
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 138, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer._DepthBufferObject._args.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera._DepthBufferObject._args.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
@@ -1096,21 +1096,21 @@ static int __pyx_pf_8renderer_18_DepthBufferObject_5_args_2__set__(struct __pyx_
 }
 
 /* Python wrapper */
-static int __pyx_pw_8renderer_18_DepthBufferObject_5_args_5__del__(PyObject *__pyx_v_self); /*proto*/
-static int __pyx_pw_8renderer_18_DepthBufferObject_5_args_5__del__(PyObject *__pyx_v_self) {
+static int __pyx_pw_6camera_18_DepthBufferObject_5_args_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_6camera_18_DepthBufferObject_5_args_5__del__(PyObject *__pyx_v_self) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   int __pyx_r;
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("__del__ (wrapper)", 0);
   __pyx_kwvalues = <span class='pyx_c_api'>__Pyx_KwValues_VARARGS</span>(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_8renderer_18_DepthBufferObject_5_args_4__del__(((struct __pyx_obj_8renderer__DepthBufferObject *)__pyx_v_self));
+  __pyx_r = __pyx_pf_6camera_18_DepthBufferObject_5_args_4__del__(((struct __pyx_obj_6camera__DepthBufferObject *)__pyx_v_self));
 
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 
-static int __pyx_pf_8renderer_18_DepthBufferObject_5_args_4__del__(struct __pyx_obj_8renderer__DepthBufferObject *__pyx_v_self) {
+static int __pyx_pf_6camera_18_DepthBufferObject_5_args_4__del__(struct __pyx_obj_6camera__DepthBufferObject *__pyx_v_self) {
   int __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[20]))
@@ -1132,7 +1132,7 @@ static int __pyx_pf_8renderer_18_DepthBufferObject_5_args_4__del__(struct __pyx_
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 138, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer._DepthBufferObject._args.__del__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera._DepthBufferObject._args.__del__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
@@ -1141,21 +1141,21 @@ static int __pyx_pf_8renderer_18_DepthBufferObject_5_args_4__del__(struct __pyx_
 }
 </pre><pre class="cython line score-32" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0139</span>:     cdef public bool _is_rect</pre>
 <pre class='cython code score-32 '>/* Python wrapper */
-static PyObject *__pyx_pw_8renderer_18_DepthBufferObject_8_is_rect_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_8renderer_18_DepthBufferObject_8_is_rect_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_6camera_18_DepthBufferObject_8_is_rect_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_6camera_18_DepthBufferObject_8_is_rect_1__get__(PyObject *__pyx_v_self) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   PyObject *__pyx_r = 0;
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("__get__ (wrapper)", 0);
   __pyx_kwvalues = <span class='pyx_c_api'>__Pyx_KwValues_VARARGS</span>(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_8renderer_18_DepthBufferObject_8_is_rect___get__(((struct __pyx_obj_8renderer__DepthBufferObject *)__pyx_v_self));
+  __pyx_r = __pyx_pf_6camera_18_DepthBufferObject_8_is_rect___get__(((struct __pyx_obj_6camera__DepthBufferObject *)__pyx_v_self));
 
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8renderer_18_DepthBufferObject_8_is_rect___get__(struct __pyx_obj_8renderer__DepthBufferObject *__pyx_v_self) {
+static PyObject *__pyx_pf_6camera_18_DepthBufferObject_8_is_rect___get__(struct __pyx_obj_6camera__DepthBufferObject *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[21]))
@@ -1174,7 +1174,7 @@ static PyObject *__pyx_pf_8renderer_18_DepthBufferObject_8_is_rect___get__(struc
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 139, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer._DepthBufferObject._is_rect.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera._DepthBufferObject._is_rect.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   <span class='refnanny'>__Pyx_XGIVEREF</span>(__pyx_r);
@@ -1184,21 +1184,21 @@ static PyObject *__pyx_pf_8renderer_18_DepthBufferObject_8_is_rect___get__(struc
 }
 
 /* Python wrapper */
-static int __pyx_pw_8renderer_18_DepthBufferObject_8_is_rect_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
-static int __pyx_pw_8renderer_18_DepthBufferObject_8_is_rect_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+static int __pyx_pw_6camera_18_DepthBufferObject_8_is_rect_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_6camera_18_DepthBufferObject_8_is_rect_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   int __pyx_r;
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("__set__ (wrapper)", 0);
   __pyx_kwvalues = <span class='pyx_c_api'>__Pyx_KwValues_VARARGS</span>(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_8renderer_18_DepthBufferObject_8_is_rect_2__set__(((struct __pyx_obj_8renderer__DepthBufferObject *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+  __pyx_r = __pyx_pf_6camera_18_DepthBufferObject_8_is_rect_2__set__(((struct __pyx_obj_6camera__DepthBufferObject *)__pyx_v_self), ((PyObject *)__pyx_v_value));
 
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 
-static int __pyx_pf_8renderer_18_DepthBufferObject_8_is_rect_2__set__(struct __pyx_obj_8renderer__DepthBufferObject *__pyx_v_self, PyObject *__pyx_v_value) {
+static int __pyx_pf_6camera_18_DepthBufferObject_8_is_rect_2__set__(struct __pyx_obj_6camera__DepthBufferObject *__pyx_v_self, PyObject *__pyx_v_value) {
   int __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[22]))
@@ -1224,7 +1224,7 @@ static int __pyx_pf_8renderer_18_DepthBufferObject_8_is_rect_2__set__(struct __p
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 139, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer._DepthBufferObject._is_rect.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera._DepthBufferObject._is_rect.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
@@ -1233,21 +1233,21 @@ static int __pyx_pf_8renderer_18_DepthBufferObject_8_is_rect_2__set__(struct __p
 }
 
 /* Python wrapper */
-static int __pyx_pw_8renderer_18_DepthBufferObject_8_is_rect_5__del__(PyObject *__pyx_v_self); /*proto*/
-static int __pyx_pw_8renderer_18_DepthBufferObject_8_is_rect_5__del__(PyObject *__pyx_v_self) {
+static int __pyx_pw_6camera_18_DepthBufferObject_8_is_rect_5__del__(PyObject *__pyx_v_self); /*proto*/
+static int __pyx_pw_6camera_18_DepthBufferObject_8_is_rect_5__del__(PyObject *__pyx_v_self) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   int __pyx_r;
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("__del__ (wrapper)", 0);
   __pyx_kwvalues = <span class='pyx_c_api'>__Pyx_KwValues_VARARGS</span>(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_8renderer_18_DepthBufferObject_8_is_rect_4__del__(((struct __pyx_obj_8renderer__DepthBufferObject *)__pyx_v_self));
+  __pyx_r = __pyx_pf_6camera_18_DepthBufferObject_8_is_rect_4__del__(((struct __pyx_obj_6camera__DepthBufferObject *)__pyx_v_self));
 
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 
-static int __pyx_pf_8renderer_18_DepthBufferObject_8_is_rect_4__del__(struct __pyx_obj_8renderer__DepthBufferObject *__pyx_v_self) {
+static int __pyx_pf_6camera_18_DepthBufferObject_8_is_rect_4__del__(struct __pyx_obj_6camera__DepthBufferObject *__pyx_v_self) {
   int __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[23]))
@@ -1269,7 +1269,7 @@ static int __pyx_pf_8renderer_18_DepthBufferObject_8_is_rect_4__del__(struct __p
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 139, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer._DepthBufferObject._is_rect.__del__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera._DepthBufferObject._is_rect.__del__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
@@ -1279,8 +1279,8 @@ static int __pyx_pf_8renderer_18_DepthBufferObject_8_is_rect_4__del__(struct __p
 </pre><pre class="cython line score-0">&#xA0;<span class="">0140</span>: </pre>
 <pre class="cython line score-45" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0141</span>:     def __init__(self: Self,</pre>
 <pre class='cython code score-45 '>/* Python wrapper */
-static int __pyx_pw_8renderer_18_DepthBufferObject_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static int __pyx_pw_8renderer_18_DepthBufferObject_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static int __pyx_pw_6camera_18_DepthBufferObject_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_6camera_18_DepthBufferObject_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   float __pyx_v_depth;
   PyObject *__pyx_v_args = 0;
   int __pyx_v_is_rect;
@@ -1360,7 +1360,7 @@ static int __pyx_pw_8renderer_18_DepthBufferObject_1__init__(PyObject *__pyx_v_s
   return __pyx_r;
 }
 
-static int __pyx_pf_8renderer_18_DepthBufferObject___init__(struct __pyx_obj_8renderer__DepthBufferObject *__pyx_v_self, float __pyx_v_depth, PyObject *__pyx_v_args, int __pyx_v_is_rect) {
+static int __pyx_pf_6camera_18_DepthBufferObject___init__(struct __pyx_obj_6camera__DepthBufferObject *__pyx_v_self, float __pyx_v_depth, PyObject *__pyx_v_args, int __pyx_v_is_rect) {
   int __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[14]))
@@ -1378,7 +1378,7 @@ static int __pyx_pf_8renderer_18_DepthBufferObject___init__(struct __pyx_obj_8re
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 141, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer._DepthBufferObject.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera._DepthBufferObject.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
@@ -1400,12 +1400,12 @@ static int __pyx_pf_8renderer_18_DepthBufferObject___init__(struct __pyx_obj_8re
   for (Py_ssize_t __pyx_temp=0; __pyx_temp &lt; (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
     Py_XDECREF(values[__pyx_temp]);
   }
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer._DepthBufferObject.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera._DepthBufferObject.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return -1;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!<span class='pyx_c_api'>__Pyx_ArgTypeTest</span>(((PyObject *)__pyx_v_args), (&amp;PyTuple_Type), 0, "args", 2))) <span class='error_goto'>__PYX_ERR(0, 143, __pyx_L1_error)</span>
-  __pyx_r = __pyx_pf_8renderer_18_DepthBufferObject___init__(((struct __pyx_obj_8renderer__DepthBufferObject *)__pyx_v_self), __pyx_v_depth, __pyx_v_args, __pyx_v_is_rect);
+  __pyx_r = __pyx_pf_6camera_18_DepthBufferObject___init__(((struct __pyx_obj_6camera__DepthBufferObject *)__pyx_v_self), __pyx_v_depth, __pyx_v_args, __pyx_v_is_rect);
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0145</span>:         self._depth = depth</pre>
 <pre class='cython code score-0 '>  __pyx_v_self-&gt;_depth = __pyx_v_depth;
 </pre><pre class="cython line score-2" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0146</span>:         self._args = args # blit args</pre>
@@ -1426,21 +1426,21 @@ static int __pyx_pf_8renderer_18_DepthBufferObject___init__(struct __pyx_obj_8re
 </pre><pre class="cython line score-0">&#xA0;<span class="">0148</span>: </pre>
 <pre class="cython line score-9" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0149</span>:     def __lt__(self: Self, obj: Self) -&gt; bool:</pre>
 <pre class='cython code score-9 '>/* Python wrapper */
-static PyObject *__pyx_pw_8renderer_18_DepthBufferObject_3__lt__(PyObject *__pyx_v_self, PyObject *__pyx_v_obj); /*proto*/
-static PyObject *__pyx_pw_8renderer_18_DepthBufferObject_3__lt__(PyObject *__pyx_v_self, PyObject *__pyx_v_obj) {
+static PyObject *__pyx_pw_6camera_18_DepthBufferObject_3__lt__(PyObject *__pyx_v_self, PyObject *__pyx_v_obj); /*proto*/
+static PyObject *__pyx_pw_6camera_18_DepthBufferObject_3__lt__(PyObject *__pyx_v_self, PyObject *__pyx_v_obj) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   PyObject *__pyx_r = 0;
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("__lt__ (wrapper)", 0);
   __pyx_kwvalues = <span class='pyx_c_api'>__Pyx_KwValues_VARARGS</span>(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_8renderer_18_DepthBufferObject_2__lt__(((struct __pyx_obj_8renderer__DepthBufferObject *)__pyx_v_self), ((PyObject *)__pyx_v_obj));
+  __pyx_r = __pyx_pf_6camera_18_DepthBufferObject_2__lt__(((struct __pyx_obj_6camera__DepthBufferObject *)__pyx_v_self), ((PyObject *)__pyx_v_obj));
 
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8renderer_18_DepthBufferObject_2__lt__(struct __pyx_obj_8renderer__DepthBufferObject *__pyx_v_self, PyObject *__pyx_v_obj) {
+static PyObject *__pyx_pf_6camera_18_DepthBufferObject_2__lt__(struct __pyx_obj_6camera__DepthBufferObject *__pyx_v_self, PyObject *__pyx_v_obj) {
   PyObject *__pyx_r = NULL;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[15]))
@@ -1457,7 +1457,7 @@ static PyObject *__pyx_pf_8renderer_18_DepthBufferObject_2__lt__(struct __pyx_ob
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 149, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer._DepthBufferObject.__lt__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera._DepthBufferObject.__lt__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   <span class='refnanny'>__Pyx_XGIVEREF</span>(__pyx_r);
@@ -1482,9 +1482,9 @@ static PyObject *__pyx_pf_8renderer_18_DepthBufferObject_2__lt__(struct __pyx_ob
 </pre><pre class="cython line score-0">&#xA0;<span class="">0152</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">0153</span>: </pre>
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0154</span>: cdef class Camera:</pre>
-<pre class='cython code score-0 '>struct __pyx_obj_8renderer_Camera {
+<pre class='cython code score-0 '>struct __pyx_obj_6camera_Camera {
   PyObject_HEAD
-  struct __pyx_vtabstruct_8renderer_Camera *__pyx_vtab;
+  struct __pyx_vtabstruct_6camera_Camera *__pyx_vtab;
   float _fov;
   float _yaw_magnitude;
   float _horizon;
@@ -1502,14 +1502,14 @@ static PyObject *__pyx_pf_8renderer_18_DepthBufferObject_2__lt__(struct __pyx_ob
   PyObject *_walls_and_entities;
 };
 /* … */
-struct __pyx_vtabstruct_8renderer_Camera {
-  PyArrayObject *(*_generate_array)(struct __pyx_obj_8renderer_Camera *, int, float, PyObject *, PyObject *, PyObject *, PyArrayObject *, PyObject *, PyObject *);
-  void (*_render_floor_and_ceiling)(struct __pyx_obj_8renderer_Camera *, int, int, int);
-  void (*_calculate_line)(struct __pyx_obj_8renderer_Camera *, float, float, float, int *);
-  void (*_darken_line)(struct __pyx_obj_8renderer_Camera *, PyObject *, float);
-  void (*_render_walls_and_entities)(struct __pyx_obj_8renderer_Camera *, int, int, int);
+struct __pyx_vtabstruct_6camera_Camera {
+  PyArrayObject *(*_generate_array)(struct __pyx_obj_6camera_Camera *, int, float, PyObject *, PyObject *, PyObject *, PyArrayObject *, PyObject *, PyObject *);
+  void (*_render_floor_and_ceiling)(struct __pyx_obj_6camera_Camera *, int, int, int);
+  void (*_calculate_line)(struct __pyx_obj_6camera_Camera *, float, float, float, int *);
+  void (*_darken_line)(struct __pyx_obj_6camera_Camera *, PyObject *, float);
+  void (*_render_walls_and_entities)(struct __pyx_obj_6camera_Camera *, int, int, int);
 };
-static struct __pyx_vtabstruct_8renderer_Camera *__pyx_vtabptr_8renderer_Camera;
+static struct __pyx_vtabstruct_6camera_Camera *__pyx_vtabptr_6camera_Camera;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0155</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">0156</span>:     cdef:</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0157</span>:         float _fov</pre>
@@ -1530,8 +1530,8 @@ static struct __pyx_vtabstruct_8renderer_Camera *__pyx_vtabptr_8renderer_Camera;
 <pre class="cython line score-0">&#xA0;<span class="">0172</span>: </pre>
 <pre class="cython line score-115" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0173</span>:     def __init__(self: Self,</pre>
 <pre class='cython code score-115 '>/* Python wrapper */
-static int __pyx_pw_8renderer_6Camera_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static int __pyx_pw_8renderer_6Camera_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static int __pyx_pw_6camera_6Camera_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static int __pyx_pw_6camera_6Camera_1__init__(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   float __pyx_v_fov;
   float __pyx_v_tile_size;
   float __pyx_v_wall_render_distance;
@@ -1677,11 +1677,11 @@ static int __pyx_pw_8renderer_6Camera_1__init__(PyObject *__pyx_v_self, PyObject
   for (Py_ssize_t __pyx_temp=0; __pyx_temp &lt; (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
     Py_XDECREF(values[__pyx_temp]);
   }
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8renderer_6Camera___init__(((struct __pyx_obj_8renderer_Camera *)__pyx_v_self), __pyx_v_fov, __pyx_v_tile_size, __pyx_v_wall_render_distance, __pyx_v_player, __pyx_v_bob_strength, __pyx_v_bob_frequency, __pyx_v_darkness, __pyx_v_max_line_height, __pyx_v_min_entity_depth);
+  __pyx_r = __pyx_pf_6camera_6Camera___init__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self), __pyx_v_fov, __pyx_v_tile_size, __pyx_v_wall_render_distance, __pyx_v_player, __pyx_v_bob_strength, __pyx_v_bob_frequency, __pyx_v_darkness, __pyx_v_max_line_height, __pyx_v_min_entity_depth);
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -1694,7 +1694,7 @@ static int __pyx_pw_8renderer_6Camera_1__init__(PyObject *__pyx_v_self, PyObject
   return __pyx_r;
 }
 
-static int __pyx_pf_8renderer_6Camera___init__(struct __pyx_obj_8renderer_Camera *__pyx_v_self, float __pyx_v_fov, float __pyx_v_tile_size, float __pyx_v_wall_render_distance, PyObject *__pyx_v_player, float __pyx_v_bob_strength, float __pyx_v_bob_frequency, float __pyx_v_darkness, float __pyx_v_max_line_height, float __pyx_v_min_entity_depth) {
+static int __pyx_pf_6camera_6Camera___init__(struct __pyx_obj_6camera_Camera *__pyx_v_self, float __pyx_v_fov, float __pyx_v_tile_size, float __pyx_v_wall_render_distance, PyObject *__pyx_v_player, float __pyx_v_bob_strength, float __pyx_v_bob_frequency, float __pyx_v_darkness, float __pyx_v_max_line_height, float __pyx_v_min_entity_depth) {
   int __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[26]))
@@ -1712,7 +1712,7 @@ static int __pyx_pf_8renderer_6Camera___init__(struct __pyx_obj_8renderer_Camera
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 173, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
@@ -1730,7 +1730,7 @@ static int __pyx_pf_8renderer_6Camera___init__(struct __pyx_obj_8renderer_Camera
 <pre class="cython line score-0">&#xA0;<span class="">0182</span>:                  float min_entity_depth=0.05) -&gt; None:</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0183</span>: </pre>
 <pre class="cython line score-5" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0184</span>:         self._yaw_magnitude = 1 / tan(radians(fov) / 2)</pre>
-<pre class='cython code score-5 '>  __pyx_t_1 = __pyx_f_8renderer_radians(__pyx_v_fov); if (unlikely(__pyx_t_1 == ((float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 184, __pyx_L1_error)</span>
+<pre class='cython code score-5 '>  __pyx_t_1 = __pyx_f_6camera_radians(__pyx_v_fov); if (unlikely(__pyx_t_1 == ((float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 184, __pyx_L1_error)</span>
   __pyx_v_self-&gt;_yaw_magnitude = (1.0 / tan((__pyx_t_1 / 2.0)));
 </pre><pre class="cython line score-0">&#xA0;<span class="">0185</span>:         # already sets yaw V</pre>
 <pre class="cython line score-8" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0186</span>:         self.fov = fmin(fabs(fov), 180) # _fov is in degrees</pre>
@@ -1770,21 +1770,21 @@ static int __pyx_pf_8renderer_6Camera___init__(struct __pyx_obj_8renderer_Camera
 </pre><pre class="cython line score-0">&#xA0;<span class="">0197</span>: </pre>
 <pre class="cython line score-7" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0198</span>:     @property</pre>
 <pre class='cython code score-7 '>/* Python wrapper */
-static PyObject *__pyx_pw_8renderer_6Camera_12bob_strength_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_8renderer_6Camera_12bob_strength_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_6camera_6Camera_12bob_strength_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_6camera_6Camera_12bob_strength_1__get__(PyObject *__pyx_v_self) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   PyObject *__pyx_r = 0;
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("__get__ (wrapper)", 0);
   __pyx_kwvalues = <span class='pyx_c_api'>__Pyx_KwValues_VARARGS</span>(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_8renderer_6Camera_12bob_strength___get__(((struct __pyx_obj_8renderer_Camera *)__pyx_v_self));
+  __pyx_r = __pyx_pf_6camera_6Camera_12bob_strength___get__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self));
 
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8renderer_6Camera_12bob_strength___get__(struct __pyx_obj_8renderer_Camera *__pyx_v_self) {
+static PyObject *__pyx_pf_6camera_6Camera_12bob_strength___get__(struct __pyx_obj_6camera_Camera *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[27]))
@@ -1799,7 +1799,7 @@ static PyObject *__pyx_pf_8renderer_6Camera_12bob_strength___get__(struct __pyx_
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 198, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.bob_strength.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.bob_strength.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   <span class='refnanny'>__Pyx_XGIVEREF</span>(__pyx_r);
@@ -1819,8 +1819,8 @@ static PyObject *__pyx_pf_8renderer_6Camera_12bob_strength___get__(struct __pyx_
 </pre><pre class="cython line score-0">&#xA0;<span class="">0201</span>: </pre>
 <pre class="cython line score-17" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0202</span>:     @bob_strength.setter</pre>
 <pre class='cython code score-17 '>/* Python wrapper */
-static int __pyx_pw_8renderer_6Camera_12bob_strength_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value); /*proto*/
-static int __pyx_pw_8renderer_6Camera_12bob_strength_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value) {
+static int __pyx_pw_6camera_6Camera_12bob_strength_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value); /*proto*/
+static int __pyx_pw_6camera_6Camera_12bob_strength_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value) {
   float __pyx_v_value;
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   int __pyx_r;
@@ -1832,11 +1832,11 @@ static int __pyx_pw_8renderer_6Camera_12bob_strength_3__set__(PyObject *__pyx_v_
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.bob_strength.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.bob_strength.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8renderer_6Camera_12bob_strength_2__set__(((struct __pyx_obj_8renderer_Camera *)__pyx_v_self), ((float)__pyx_v_value));
+  __pyx_r = __pyx_pf_6camera_6Camera_12bob_strength_2__set__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self), ((float)__pyx_v_value));
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -1846,7 +1846,7 @@ static int __pyx_pw_8renderer_6Camera_12bob_strength_3__set__(PyObject *__pyx_v_
   return __pyx_r;
 }
 
-static int __pyx_pf_8renderer_6Camera_12bob_strength_2__set__(struct __pyx_obj_8renderer_Camera *__pyx_v_self, float __pyx_v_value) {
+static int __pyx_pf_6camera_6Camera_12bob_strength_2__set__(struct __pyx_obj_6camera_Camera *__pyx_v_self, float __pyx_v_value) {
   int __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[28]))
@@ -1865,7 +1865,7 @@ static int __pyx_pf_8renderer_6Camera_12bob_strength_2__set__(struct __pyx_obj_8
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 202, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.bob_strength.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.bob_strength.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
@@ -1888,21 +1888,21 @@ static int __pyx_pf_8renderer_6Camera_12bob_strength_2__set__(struct __pyx_obj_8
 </pre><pre class="cython line score-0">&#xA0;<span class="">0207</span>: </pre>
 <pre class="cython line score-7" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0208</span>:     @property</pre>
 <pre class='cython code score-7 '>/* Python wrapper */
-static PyObject *__pyx_pw_8renderer_6Camera_13bob_frequency_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_8renderer_6Camera_13bob_frequency_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_6camera_6Camera_13bob_frequency_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_6camera_6Camera_13bob_frequency_1__get__(PyObject *__pyx_v_self) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   PyObject *__pyx_r = 0;
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("__get__ (wrapper)", 0);
   __pyx_kwvalues = <span class='pyx_c_api'>__Pyx_KwValues_VARARGS</span>(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_8renderer_6Camera_13bob_frequency___get__(((struct __pyx_obj_8renderer_Camera *)__pyx_v_self));
+  __pyx_r = __pyx_pf_6camera_6Camera_13bob_frequency___get__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self));
 
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8renderer_6Camera_13bob_frequency___get__(struct __pyx_obj_8renderer_Camera *__pyx_v_self) {
+static PyObject *__pyx_pf_6camera_6Camera_13bob_frequency___get__(struct __pyx_obj_6camera_Camera *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[29]))
@@ -1917,7 +1917,7 @@ static PyObject *__pyx_pf_8renderer_6Camera_13bob_frequency___get__(struct __pyx
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 208, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.bob_frequency.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.bob_frequency.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   <span class='refnanny'>__Pyx_XGIVEREF</span>(__pyx_r);
@@ -1937,8 +1937,8 @@ static PyObject *__pyx_pf_8renderer_6Camera_13bob_frequency___get__(struct __pyx
 </pre><pre class="cython line score-0">&#xA0;<span class="">0211</span>: </pre>
 <pre class="cython line score-17" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0212</span>:     @bob_frequency.setter</pre>
 <pre class='cython code score-17 '>/* Python wrapper */
-static int __pyx_pw_8renderer_6Camera_13bob_frequency_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value); /*proto*/
-static int __pyx_pw_8renderer_6Camera_13bob_frequency_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value) {
+static int __pyx_pw_6camera_6Camera_13bob_frequency_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value); /*proto*/
+static int __pyx_pw_6camera_6Camera_13bob_frequency_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value) {
   float __pyx_v_value;
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   int __pyx_r;
@@ -1950,11 +1950,11 @@ static int __pyx_pw_8renderer_6Camera_13bob_frequency_3__set__(PyObject *__pyx_v
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.bob_frequency.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.bob_frequency.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8renderer_6Camera_13bob_frequency_2__set__(((struct __pyx_obj_8renderer_Camera *)__pyx_v_self), ((float)__pyx_v_value));
+  __pyx_r = __pyx_pf_6camera_6Camera_13bob_frequency_2__set__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self), ((float)__pyx_v_value));
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -1964,7 +1964,7 @@ static int __pyx_pw_8renderer_6Camera_13bob_frequency_3__set__(PyObject *__pyx_v
   return __pyx_r;
 }
 
-static int __pyx_pf_8renderer_6Camera_13bob_frequency_2__set__(struct __pyx_obj_8renderer_Camera *__pyx_v_self, float __pyx_v_value) {
+static int __pyx_pf_6camera_6Camera_13bob_frequency_2__set__(struct __pyx_obj_6camera_Camera *__pyx_v_self, float __pyx_v_value) {
   int __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[30]))
@@ -1983,7 +1983,7 @@ static int __pyx_pf_8renderer_6Camera_13bob_frequency_2__set__(struct __pyx_obj_
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 212, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.bob_frequency.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.bob_frequency.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
@@ -2004,21 +2004,21 @@ static int __pyx_pf_8renderer_6Camera_13bob_frequency_2__set__(struct __pyx_obj_
 </pre><pre class="cython line score-0">&#xA0;<span class="">0216</span>: </pre>
 <pre class="cython line score-6" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0217</span>:     @property</pre>
 <pre class='cython code score-6 '>/* Python wrapper */
-static PyObject *__pyx_pw_8renderer_6Camera_6player_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_8renderer_6Camera_6player_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_6camera_6Camera_6player_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_6camera_6Camera_6player_1__get__(PyObject *__pyx_v_self) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   PyObject *__pyx_r = 0;
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("__get__ (wrapper)", 0);
   __pyx_kwvalues = <span class='pyx_c_api'>__Pyx_KwValues_VARARGS</span>(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_8renderer_6Camera_6player___get__(((struct __pyx_obj_8renderer_Camera *)__pyx_v_self));
+  __pyx_r = __pyx_pf_6camera_6Camera_6player___get__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self));
 
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8renderer_6Camera_6player___get__(struct __pyx_obj_8renderer_Camera *__pyx_v_self) {
+static PyObject *__pyx_pf_6camera_6Camera_6player___get__(struct __pyx_obj_6camera_Camera *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[31]))
@@ -2032,7 +2032,7 @@ static PyObject *__pyx_pf_8renderer_6Camera_6player___get__(struct __pyx_obj_8re
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 217, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.player.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.player.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   <span class='refnanny'>__Pyx_XGIVEREF</span>(__pyx_r);
@@ -2050,21 +2050,21 @@ static PyObject *__pyx_pf_8renderer_6Camera_6player___get__(struct __pyx_obj_8re
 </pre><pre class="cython line score-0">&#xA0;<span class="">0220</span>: </pre>
 <pre class="cython line score-8" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0221</span>:     @player.setter</pre>
 <pre class='cython code score-8 '>/* Python wrapper */
-static int __pyx_pw_8renderer_6Camera_6player_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
-static int __pyx_pw_8renderer_6Camera_6player_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+static int __pyx_pw_6camera_6Camera_6player_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
+static int __pyx_pw_6camera_6Camera_6player_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   int __pyx_r;
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("__set__ (wrapper)", 0);
   __pyx_kwvalues = <span class='pyx_c_api'>__Pyx_KwValues_VARARGS</span>(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_8renderer_6Camera_6player_2__set__(((struct __pyx_obj_8renderer_Camera *)__pyx_v_self), ((PyObject *)__pyx_v_value));
+  __pyx_r = __pyx_pf_6camera_6Camera_6player_2__set__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self), ((PyObject *)__pyx_v_value));
 
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 
-static int __pyx_pf_8renderer_6Camera_6player_2__set__(struct __pyx_obj_8renderer_Camera *__pyx_v_self, PyObject *__pyx_v_value) {
+static int __pyx_pf_6camera_6Camera_6player_2__set__(struct __pyx_obj_6camera_Camera *__pyx_v_self, PyObject *__pyx_v_value) {
   int __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[32]))
@@ -2083,7 +2083,7 @@ static int __pyx_pf_8renderer_6Camera_6player_2__set__(struct __pyx_obj_8rendere
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 221, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.player.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.player.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
@@ -2126,21 +2126,21 @@ static int __pyx_pf_8renderer_6Camera_6player_2__set__(struct __pyx_obj_8rendere
 </pre><pre class="cython line score-0">&#xA0;<span class="">0228</span>: </pre>
 <pre class="cython line score-7" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0229</span>:     @property</pre>
 <pre class='cython code score-7 '>/* Python wrapper */
-static PyObject *__pyx_pw_8renderer_6Camera_3fov_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_8renderer_6Camera_3fov_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_6camera_6Camera_3fov_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_6camera_6Camera_3fov_1__get__(PyObject *__pyx_v_self) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   PyObject *__pyx_r = 0;
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("__get__ (wrapper)", 0);
   __pyx_kwvalues = <span class='pyx_c_api'>__Pyx_KwValues_VARARGS</span>(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_8renderer_6Camera_3fov___get__(((struct __pyx_obj_8renderer_Camera *)__pyx_v_self));
+  __pyx_r = __pyx_pf_6camera_6Camera_3fov___get__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self));
 
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8renderer_6Camera_3fov___get__(struct __pyx_obj_8renderer_Camera *__pyx_v_self) {
+static PyObject *__pyx_pf_6camera_6Camera_3fov___get__(struct __pyx_obj_6camera_Camera *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[33]))
@@ -2155,7 +2155,7 @@ static PyObject *__pyx_pf_8renderer_6Camera_3fov___get__(struct __pyx_obj_8rende
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 229, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.fov.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.fov.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   <span class='refnanny'>__Pyx_XGIVEREF</span>(__pyx_r);
@@ -2175,8 +2175,8 @@ static PyObject *__pyx_pf_8renderer_6Camera_3fov___get__(struct __pyx_obj_8rende
 </pre><pre class="cython line score-0">&#xA0;<span class="">0232</span>: </pre>
 <pre class="cython line score-15" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0233</span>:     @fov.setter</pre>
 <pre class='cython code score-15 '>/* Python wrapper */
-static int __pyx_pw_8renderer_6Camera_3fov_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value); /*proto*/
-static int __pyx_pw_8renderer_6Camera_3fov_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value) {
+static int __pyx_pw_6camera_6Camera_3fov_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value); /*proto*/
+static int __pyx_pw_6camera_6Camera_3fov_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value) {
   float __pyx_v_value;
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   int __pyx_r;
@@ -2188,11 +2188,11 @@ static int __pyx_pw_8renderer_6Camera_3fov_3__set__(PyObject *__pyx_v_self, PyOb
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.fov.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.fov.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8renderer_6Camera_3fov_2__set__(((struct __pyx_obj_8renderer_Camera *)__pyx_v_self), ((float)__pyx_v_value));
+  __pyx_r = __pyx_pf_6camera_6Camera_3fov_2__set__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self), ((float)__pyx_v_value));
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -2202,7 +2202,7 @@ static int __pyx_pw_8renderer_6Camera_3fov_3__set__(PyObject *__pyx_v_self, PyOb
   return __pyx_r;
 }
 
-static int __pyx_pf_8renderer_6Camera_3fov_2__set__(struct __pyx_obj_8renderer_Camera *__pyx_v_self, float __pyx_v_value) {
+static int __pyx_pf_6camera_6Camera_3fov_2__set__(struct __pyx_obj_6camera_Camera *__pyx_v_self, float __pyx_v_value) {
   float __pyx_v_semiradians;
   int __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
@@ -2220,7 +2220,7 @@ static int __pyx_pf_8renderer_6Camera_3fov_2__set__(struct __pyx_obj_8renderer_C
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 233, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.fov.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.fov.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
@@ -2228,7 +2228,7 @@ static int __pyx_pf_8renderer_6Camera_3fov_2__set__(struct __pyx_obj_8renderer_C
 }
 </pre><pre class="cython line score-0">&#xA0;<span class="">0234</span>:     def fov(self: Self, float value):</pre>
 <pre class="cython line score-5" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0235</span>:         cdef float semiradians = radians(value / 2)</pre>
-<pre class='cython code score-5 '>  __pyx_t_1 = __pyx_f_8renderer_radians((__pyx_v_value / 2.0)); if (unlikely(__pyx_t_1 == ((float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 235, __pyx_L1_error)</span>
+<pre class='cython code score-5 '>  __pyx_t_1 = __pyx_f_6camera_radians((__pyx_v_value / 2.0)); if (unlikely(__pyx_t_1 == ((float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 235, __pyx_L1_error)</span>
   __pyx_v_semiradians = __pyx_t_1;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0236</span>: </pre>
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0237</span>:         self._fov = value</pre>
@@ -2238,21 +2238,21 @@ static int __pyx_pf_8renderer_6Camera_3fov_2__set__(struct __pyx_obj_8renderer_C
 </pre><pre class="cython line score-0">&#xA0;<span class="">0239</span>: </pre>
 <pre class="cython line score-7" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0240</span>:     @property</pre>
 <pre class='cython code score-7 '>/* Python wrapper */
-static PyObject *__pyx_pw_8renderer_6Camera_7horizon_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_8renderer_6Camera_7horizon_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_6camera_6Camera_7horizon_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_6camera_6Camera_7horizon_1__get__(PyObject *__pyx_v_self) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   PyObject *__pyx_r = 0;
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("__get__ (wrapper)", 0);
   __pyx_kwvalues = <span class='pyx_c_api'>__Pyx_KwValues_VARARGS</span>(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_8renderer_6Camera_7horizon___get__(((struct __pyx_obj_8renderer_Camera *)__pyx_v_self));
+  __pyx_r = __pyx_pf_6camera_6Camera_7horizon___get__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self));
 
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8renderer_6Camera_7horizon___get__(struct __pyx_obj_8renderer_Camera *__pyx_v_self) {
+static PyObject *__pyx_pf_6camera_6Camera_7horizon___get__(struct __pyx_obj_6camera_Camera *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[35]))
@@ -2267,7 +2267,7 @@ static PyObject *__pyx_pf_8renderer_6Camera_7horizon___get__(struct __pyx_obj_8r
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 240, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.horizon.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.horizon.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   <span class='refnanny'>__Pyx_XGIVEREF</span>(__pyx_r);
@@ -2287,8 +2287,8 @@ static PyObject *__pyx_pf_8renderer_6Camera_7horizon___get__(struct __pyx_obj_8r
 </pre><pre class="cython line score-0">&#xA0;<span class="">0243</span>: </pre>
 <pre class="cython line score-15" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0244</span>:     @horizon.setter</pre>
 <pre class='cython code score-15 '>/* Python wrapper */
-static int __pyx_pw_8renderer_6Camera_7horizon_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value); /*proto*/
-static int __pyx_pw_8renderer_6Camera_7horizon_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value) {
+static int __pyx_pw_6camera_6Camera_7horizon_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value); /*proto*/
+static int __pyx_pw_6camera_6Camera_7horizon_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value) {
   float __pyx_v_value;
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   int __pyx_r;
@@ -2300,11 +2300,11 @@ static int __pyx_pw_8renderer_6Camera_7horizon_3__set__(PyObject *__pyx_v_self, 
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.horizon.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.horizon.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8renderer_6Camera_7horizon_2__set__(((struct __pyx_obj_8renderer_Camera *)__pyx_v_self), ((float)__pyx_v_value));
+  __pyx_r = __pyx_pf_6camera_6Camera_7horizon_2__set__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self), ((float)__pyx_v_value));
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -2314,7 +2314,7 @@ static int __pyx_pw_8renderer_6Camera_7horizon_3__set__(PyObject *__pyx_v_self, 
   return __pyx_r;
 }
 
-static int __pyx_pf_8renderer_6Camera_7horizon_2__set__(struct __pyx_obj_8renderer_Camera *__pyx_v_self, float __pyx_v_value) {
+static int __pyx_pf_6camera_6Camera_7horizon_2__set__(struct __pyx_obj_6camera_Camera *__pyx_v_self, float __pyx_v_value) {
   int __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[36]))
@@ -2331,7 +2331,7 @@ static int __pyx_pf_8renderer_6Camera_7horizon_2__set__(struct __pyx_obj_8render
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 244, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.horizon.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.horizon.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
@@ -2343,21 +2343,21 @@ static int __pyx_pf_8renderer_6Camera_7horizon_2__set__(struct __pyx_obj_8render
 </pre><pre class="cython line score-0">&#xA0;<span class="">0247</span>: </pre>
 <pre class="cython line score-7" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0248</span>:     @property</pre>
 <pre class='cython code score-7 '>/* Python wrapper */
-static PyObject *__pyx_pw_8renderer_6Camera_9tile_size_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_8renderer_6Camera_9tile_size_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_6camera_6Camera_9tile_size_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_6camera_6Camera_9tile_size_1__get__(PyObject *__pyx_v_self) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   PyObject *__pyx_r = 0;
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("__get__ (wrapper)", 0);
   __pyx_kwvalues = <span class='pyx_c_api'>__Pyx_KwValues_VARARGS</span>(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_8renderer_6Camera_9tile_size___get__(((struct __pyx_obj_8renderer_Camera *)__pyx_v_self));
+  __pyx_r = __pyx_pf_6camera_6Camera_9tile_size___get__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self));
 
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8renderer_6Camera_9tile_size___get__(struct __pyx_obj_8renderer_Camera *__pyx_v_self) {
+static PyObject *__pyx_pf_6camera_6Camera_9tile_size___get__(struct __pyx_obj_6camera_Camera *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[37]))
@@ -2372,7 +2372,7 @@ static PyObject *__pyx_pf_8renderer_6Camera_9tile_size___get__(struct __pyx_obj_
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 248, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.tile_size.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.tile_size.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   <span class='refnanny'>__Pyx_XGIVEREF</span>(__pyx_r);
@@ -2392,8 +2392,8 @@ static PyObject *__pyx_pf_8renderer_6Camera_9tile_size___get__(struct __pyx_obj_
 </pre><pre class="cython line score-0">&#xA0;<span class="">0251</span>: </pre>
 <pre class="cython line score-15" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0252</span>:     @tile_size.setter</pre>
 <pre class='cython code score-15 '>/* Python wrapper */
-static int __pyx_pw_8renderer_6Camera_9tile_size_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value); /*proto*/
-static int __pyx_pw_8renderer_6Camera_9tile_size_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value) {
+static int __pyx_pw_6camera_6Camera_9tile_size_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value); /*proto*/
+static int __pyx_pw_6camera_6Camera_9tile_size_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value) {
   float __pyx_v_value;
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   int __pyx_r;
@@ -2405,11 +2405,11 @@ static int __pyx_pw_8renderer_6Camera_9tile_size_3__set__(PyObject *__pyx_v_self
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.tile_size.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.tile_size.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8renderer_6Camera_9tile_size_2__set__(((struct __pyx_obj_8renderer_Camera *)__pyx_v_self), ((float)__pyx_v_value));
+  __pyx_r = __pyx_pf_6camera_6Camera_9tile_size_2__set__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self), ((float)__pyx_v_value));
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -2419,7 +2419,7 @@ static int __pyx_pw_8renderer_6Camera_9tile_size_3__set__(PyObject *__pyx_v_self
   return __pyx_r;
 }
 
-static int __pyx_pf_8renderer_6Camera_9tile_size_2__set__(struct __pyx_obj_8renderer_Camera *__pyx_v_self, float __pyx_v_value) {
+static int __pyx_pf_6camera_6Camera_9tile_size_2__set__(struct __pyx_obj_6camera_Camera *__pyx_v_self, float __pyx_v_value) {
   int __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[38]))
@@ -2436,7 +2436,7 @@ static int __pyx_pf_8renderer_6Camera_9tile_size_2__set__(struct __pyx_obj_8rend
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 252, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.tile_size.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.tile_size.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
@@ -2448,21 +2448,21 @@ static int __pyx_pf_8renderer_6Camera_9tile_size_2__set__(struct __pyx_obj_8rend
 </pre><pre class="cython line score-0">&#xA0;<span class="">0255</span>: </pre>
 <pre class="cython line score-7" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0256</span>:     @property</pre>
 <pre class='cython code score-7 '>/* Python wrapper */
-static PyObject *__pyx_pw_8renderer_6Camera_20wall_render_distance_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_8renderer_6Camera_20wall_render_distance_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_6camera_6Camera_20wall_render_distance_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_6camera_6Camera_20wall_render_distance_1__get__(PyObject *__pyx_v_self) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   PyObject *__pyx_r = 0;
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("__get__ (wrapper)", 0);
   __pyx_kwvalues = <span class='pyx_c_api'>__Pyx_KwValues_VARARGS</span>(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_8renderer_6Camera_20wall_render_distance___get__(((struct __pyx_obj_8renderer_Camera *)__pyx_v_self));
+  __pyx_r = __pyx_pf_6camera_6Camera_20wall_render_distance___get__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self));
 
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8renderer_6Camera_20wall_render_distance___get__(struct __pyx_obj_8renderer_Camera *__pyx_v_self) {
+static PyObject *__pyx_pf_6camera_6Camera_20wall_render_distance___get__(struct __pyx_obj_6camera_Camera *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[39]))
@@ -2477,7 +2477,7 @@ static PyObject *__pyx_pf_8renderer_6Camera_20wall_render_distance___get__(struc
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 256, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.wall_render_distance.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.wall_render_distance.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   <span class='refnanny'>__Pyx_XGIVEREF</span>(__pyx_r);
@@ -2497,8 +2497,8 @@ static PyObject *__pyx_pf_8renderer_6Camera_20wall_render_distance___get__(struc
 </pre><pre class="cython line score-0">&#xA0;<span class="">0259</span>: </pre>
 <pre class="cython line score-15" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0260</span>:     @wall_render_distance.setter</pre>
 <pre class='cython code score-15 '>/* Python wrapper */
-static int __pyx_pw_8renderer_6Camera_20wall_render_distance_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value); /*proto*/
-static int __pyx_pw_8renderer_6Camera_20wall_render_distance_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value) {
+static int __pyx_pw_6camera_6Camera_20wall_render_distance_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value); /*proto*/
+static int __pyx_pw_6camera_6Camera_20wall_render_distance_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value) {
   float __pyx_v_value;
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   int __pyx_r;
@@ -2510,11 +2510,11 @@ static int __pyx_pw_8renderer_6Camera_20wall_render_distance_3__set__(PyObject *
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.wall_render_distance.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.wall_render_distance.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8renderer_6Camera_20wall_render_distance_2__set__(((struct __pyx_obj_8renderer_Camera *)__pyx_v_self), ((float)__pyx_v_value));
+  __pyx_r = __pyx_pf_6camera_6Camera_20wall_render_distance_2__set__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self), ((float)__pyx_v_value));
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -2524,7 +2524,7 @@ static int __pyx_pw_8renderer_6Camera_20wall_render_distance_3__set__(PyObject *
   return __pyx_r;
 }
 
-static int __pyx_pf_8renderer_6Camera_20wall_render_distance_2__set__(struct __pyx_obj_8renderer_Camera *__pyx_v_self, float __pyx_v_value) {
+static int __pyx_pf_6camera_6Camera_20wall_render_distance_2__set__(struct __pyx_obj_6camera_Camera *__pyx_v_self, float __pyx_v_value) {
   int __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[40]))
@@ -2541,7 +2541,7 @@ static int __pyx_pf_8renderer_6Camera_20wall_render_distance_2__set__(struct __p
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 260, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.wall_render_distance.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.wall_render_distance.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
@@ -2553,21 +2553,21 @@ static int __pyx_pf_8renderer_6Camera_20wall_render_distance_2__set__(struct __p
 </pre><pre class="cython line score-0">&#xA0;<span class="">0263</span>: </pre>
 <pre class="cython line score-7" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0264</span>:     @property</pre>
 <pre class='cython code score-7 '>/* Python wrapper */
-static PyObject *__pyx_pw_8renderer_6Camera_15max_line_height_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_8renderer_6Camera_15max_line_height_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_6camera_6Camera_15max_line_height_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_6camera_6Camera_15max_line_height_1__get__(PyObject *__pyx_v_self) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   PyObject *__pyx_r = 0;
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("__get__ (wrapper)", 0);
   __pyx_kwvalues = <span class='pyx_c_api'>__Pyx_KwValues_VARARGS</span>(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_8renderer_6Camera_15max_line_height___get__(((struct __pyx_obj_8renderer_Camera *)__pyx_v_self));
+  __pyx_r = __pyx_pf_6camera_6Camera_15max_line_height___get__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self));
 
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8renderer_6Camera_15max_line_height___get__(struct __pyx_obj_8renderer_Camera *__pyx_v_self) {
+static PyObject *__pyx_pf_6camera_6Camera_15max_line_height___get__(struct __pyx_obj_6camera_Camera *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[41]))
@@ -2582,7 +2582,7 @@ static PyObject *__pyx_pf_8renderer_6Camera_15max_line_height___get__(struct __p
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 264, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.max_line_height.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.max_line_height.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   <span class='refnanny'>__Pyx_XGIVEREF</span>(__pyx_r);
@@ -2602,8 +2602,8 @@ static PyObject *__pyx_pf_8renderer_6Camera_15max_line_height___get__(struct __p
 </pre><pre class="cython line score-0">&#xA0;<span class="">0267</span>: </pre>
 <pre class="cython line score-15" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0268</span>:     @max_line_height.setter</pre>
 <pre class='cython code score-15 '>/* Python wrapper */
-static int __pyx_pw_8renderer_6Camera_15max_line_height_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value); /*proto*/
-static int __pyx_pw_8renderer_6Camera_15max_line_height_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value) {
+static int __pyx_pw_6camera_6Camera_15max_line_height_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value); /*proto*/
+static int __pyx_pw_6camera_6Camera_15max_line_height_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value) {
   float __pyx_v_value;
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   int __pyx_r;
@@ -2615,11 +2615,11 @@ static int __pyx_pw_8renderer_6Camera_15max_line_height_3__set__(PyObject *__pyx
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.max_line_height.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.max_line_height.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8renderer_6Camera_15max_line_height_2__set__(((struct __pyx_obj_8renderer_Camera *)__pyx_v_self), ((float)__pyx_v_value));
+  __pyx_r = __pyx_pf_6camera_6Camera_15max_line_height_2__set__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self), ((float)__pyx_v_value));
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -2629,7 +2629,7 @@ static int __pyx_pw_8renderer_6Camera_15max_line_height_3__set__(PyObject *__pyx
   return __pyx_r;
 }
 
-static int __pyx_pf_8renderer_6Camera_15max_line_height_2__set__(struct __pyx_obj_8renderer_Camera *__pyx_v_self, float __pyx_v_value) {
+static int __pyx_pf_6camera_6Camera_15max_line_height_2__set__(struct __pyx_obj_6camera_Camera *__pyx_v_self, float __pyx_v_value) {
   int __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[42]))
@@ -2646,7 +2646,7 @@ static int __pyx_pf_8renderer_6Camera_15max_line_height_2__set__(struct __pyx_ob
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 268, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.max_line_height.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.max_line_height.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
@@ -2658,21 +2658,21 @@ static int __pyx_pf_8renderer_6Camera_15max_line_height_2__set__(struct __pyx_ob
 </pre><pre class="cython line score-0">&#xA0;<span class="">0271</span>: </pre>
 <pre class="cython line score-7" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0272</span>:     @property</pre>
 <pre class='cython code score-7 '>/* Python wrapper */
-static PyObject *__pyx_pw_8renderer_6Camera_16min_entity_depth_1__get__(PyObject *__pyx_v_self); /*proto*/
-static PyObject *__pyx_pw_8renderer_6Camera_16min_entity_depth_1__get__(PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_6camera_6Camera_16min_entity_depth_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_6camera_6Camera_16min_entity_depth_1__get__(PyObject *__pyx_v_self) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   PyObject *__pyx_r = 0;
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("__get__ (wrapper)", 0);
   __pyx_kwvalues = <span class='pyx_c_api'>__Pyx_KwValues_VARARGS</span>(__pyx_args, __pyx_nargs);
-  __pyx_r = __pyx_pf_8renderer_6Camera_16min_entity_depth___get__(((struct __pyx_obj_8renderer_Camera *)__pyx_v_self));
+  __pyx_r = __pyx_pf_6camera_6Camera_16min_entity_depth___get__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self));
 
   /* function exit code */
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8renderer_6Camera_16min_entity_depth___get__(struct __pyx_obj_8renderer_Camera *__pyx_v_self) {
+static PyObject *__pyx_pf_6camera_6Camera_16min_entity_depth___get__(struct __pyx_obj_6camera_Camera *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[43]))
@@ -2687,7 +2687,7 @@ static PyObject *__pyx_pf_8renderer_6Camera_16min_entity_depth___get__(struct __
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 272, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.min_entity_depth.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.min_entity_depth.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   <span class='refnanny'>__Pyx_XGIVEREF</span>(__pyx_r);
@@ -2707,8 +2707,8 @@ static PyObject *__pyx_pf_8renderer_6Camera_16min_entity_depth___get__(struct __
 </pre><pre class="cython line score-0">&#xA0;<span class="">0275</span>: </pre>
 <pre class="cython line score-15" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0276</span>:     @min_entity_depth.setter</pre>
 <pre class='cython code score-15 '>/* Python wrapper */
-static int __pyx_pw_8renderer_6Camera_16min_entity_depth_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value); /*proto*/
-static int __pyx_pw_8renderer_6Camera_16min_entity_depth_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value) {
+static int __pyx_pw_6camera_6Camera_16min_entity_depth_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value); /*proto*/
+static int __pyx_pw_6camera_6Camera_16min_entity_depth_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value) {
   float __pyx_v_value;
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   int __pyx_r;
@@ -2720,11 +2720,11 @@ static int __pyx_pw_8renderer_6Camera_16min_entity_depth_3__set__(PyObject *__py
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.min_entity_depth.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.min_entity_depth.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(((struct __pyx_obj_8renderer_Camera *)__pyx_v_self), ((float)__pyx_v_value));
+  __pyx_r = __pyx_pf_6camera_6Camera_16min_entity_depth_2__set__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self), ((float)__pyx_v_value));
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -2734,7 +2734,7 @@ static int __pyx_pw_8renderer_6Camera_16min_entity_depth_3__set__(PyObject *__py
   return __pyx_r;
 }
 
-static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_obj_8renderer_Camera *__pyx_v_self, float __pyx_v_value) {
+static int __pyx_pf_6camera_6Camera_16min_entity_depth_2__set__(struct __pyx_obj_6camera_Camera *__pyx_v_self, float __pyx_v_value) {
   int __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[44]))
@@ -2751,7 +2751,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 276, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.min_entity_depth.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.min_entity_depth.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
@@ -2763,7 +2763,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
 </pre><pre class="cython line score-0">&#xA0;<span class="">0279</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">0280</span>:     # array multiplication to render floor</pre>
 <pre class="cython line score-40" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0281</span>:     cdef cnp.ndarray[char, ndim=3] _generate_array(</pre>
-<pre class='cython code score-40 '>static PyArrayObject *__pyx_f_8renderer_6Camera__generate_array(struct __pyx_obj_8renderer_Camera *__pyx_v_self, int __pyx_v_width, float __pyx_v_mult, PyObject *__pyx_v_left_ray, PyObject *__pyx_v_right_ray, PyObject *__pyx_v_scale, PyArrayObject *__pyx_v_texture, PyObject *__pyx_v_x_pixels, PyObject *__pyx_v_offsets) {
+<pre class='cython code score-40 '>static PyArrayObject *__pyx_f_6camera_6Camera__generate_array(struct __pyx_obj_6camera_Camera *__pyx_v_self, int __pyx_v_width, float __pyx_v_mult, PyObject *__pyx_v_left_ray, PyObject *__pyx_v_right_ray, PyObject *__pyx_v_scale, PyArrayObject *__pyx_v_texture, PyObject *__pyx_v_x_pixels, PyObject *__pyx_v_offsets) {
   PyArrayObject *__pyx_v_texture_xs = 0;
   PyArrayObject *__pyx_v_texture_ys = 0;
   PyObject *__pyx_v_start_points_x = NULL;
@@ -2826,7 +2826,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 281, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera._generate_array", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera._generate_array", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   goto __pyx_L2;
   __pyx_L0:;
@@ -3157,7 +3157,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
 </pre><pre class="cython line score-0">&#xA0;<span class="">0322</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">0323</span>: </pre>
 <pre class="cython line score-29" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0324</span>:     cdef void _render_floor_and_ceiling(self: Self,</pre>
-<pre class='cython code score-29 '>static void __pyx_f_8renderer_6Camera__render_floor_and_ceiling(struct __pyx_obj_8renderer_Camera *__pyx_v_self, int __pyx_v_width, int __pyx_v_height, int __pyx_v_horizon) {
+<pre class='cython code score-29 '>static void __pyx_f_6camera_6Camera__render_floor_and_ceiling(struct __pyx_obj_6camera_Camera *__pyx_v_self, int __pyx_v_width, int __pyx_v_height, int __pyx_v_horizon) {
   PyObject *__pyx_v_left_ray = 0;
   PyObject *__pyx_v_right_ray = 0;
   PyObject *__pyx_v_obj = 0;
@@ -3205,7 +3205,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 324, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera._render_floor_and_ceiling", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera._render_floor_and_ceiling", __pyx_clineno, __pyx_lineno, __pyx_filename);
   goto __pyx_L2;
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_SafeReleaseBuffer</span>(&amp;__pyx_pybuffernd_array.rcbuffer-&gt;pybuffer);
@@ -3495,7 +3495,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
       <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_5); __pyx_t_5 = 0;
       __pyx_v_mult = (__pyx_v_self-&gt;_tile_size * ((float)__pyx_t_3));
 </pre><pre class="cython line score-20" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0370</span>:                 array = self._generate_array(</pre>
-<pre class='cython code score-20 '>      __pyx_t_8 = ((PyObject *)((struct __pyx_vtabstruct_8renderer_Camera *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_generate_array(__pyx_v_self, __pyx_v_width, __pyx_v_mult, __pyx_v_left_ray, __pyx_v_right_ray, ((PyObject*)__pyx_t_5), ((PyArrayObject *)__pyx_t_9), __pyx_v_x_pixels, __pyx_v_offsets));<span class='error_goto'> if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 370, __pyx_L1_error)</span>
+<pre class='cython code score-20 '>      __pyx_t_8 = ((PyObject *)((struct __pyx_vtabstruct_6camera_Camera *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_generate_array(__pyx_v_self, __pyx_v_width, __pyx_v_mult, __pyx_v_left_ray, __pyx_v_right_ray, ((PyObject*)__pyx_t_5), ((PyArrayObject *)__pyx_t_9), __pyx_v_x_pixels, __pyx_v_offsets));<span class='error_goto'> if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 370, __pyx_L1_error)</span>
       <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_8);
       <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_5); __pyx_t_5 = 0;
       <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_9); __pyx_t_9 = 0;
@@ -3845,7 +3845,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
       __pyx_v_mult = (__pyx_v_self-&gt;_tile_size * (1.0 - ((float)__pyx_t_3)));
 </pre><pre class="cython line score-0">&#xA0;<span class="">0414</span>:                 )</pre>
 <pre class="cython line score-21" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0415</span>:                 array = self._generate_array(</pre>
-<pre class='cython code score-21 '>      __pyx_t_1 = ((PyObject *)((struct __pyx_vtabstruct_8renderer_Camera *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_generate_array(__pyx_v_self, __pyx_v_width, __pyx_v_mult, __pyx_v_left_ray, __pyx_v_right_ray, ((PyObject*)__pyx_t_9), ((PyArrayObject *)__pyx_t_2), __pyx_v_x_pixels, __pyx_v_offsets));<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 415, __pyx_L1_error)</span>
+<pre class='cython code score-21 '>      __pyx_t_1 = ((PyObject *)((struct __pyx_vtabstruct_6camera_Camera *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_generate_array(__pyx_v_self, __pyx_v_width, __pyx_v_mult, __pyx_v_left_ray, __pyx_v_right_ray, ((PyObject*)__pyx_t_9), ((PyArrayObject *)__pyx_t_2), __pyx_v_x_pixels, __pyx_v_offsets));<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 415, __pyx_L1_error)</span>
       <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
       <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_9); __pyx_t_9 = 0;
       <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
@@ -4025,7 +4025,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
       __pyx_t_1 = 0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0436</span>: </pre>
 <pre class="cython line score-5" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0437</span>:     cdef void _calculate_line(self: Self,</pre>
-<pre class='cython code score-5 '>static void __pyx_f_8renderer_6Camera__calculate_line(struct __pyx_obj_8renderer_Camera *__pyx_v_self, float __pyx_v_rel_depth, float __pyx_v_height, float __pyx_v_elevation, int *__pyx_v_calculation) {
+<pre class='cython code score-5 '>static void __pyx_f_6camera_6Camera__calculate_line(struct __pyx_obj_6camera_Camera *__pyx_v_self, float __pyx_v_rel_depth, float __pyx_v_height, float __pyx_v_elevation, int *__pyx_v_calculation) {
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[47]))
   <span class='trace'>__Pyx_TraceStartFunc</span>("_calculate_line", __pyx_f[0], 437, 0, 0, 0, <span class='error_goto'>__PYX_ERR(0, 437, __pyx_L1_error)</span>);
@@ -4041,7 +4041,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 437, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera._calculate_line", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera._calculate_line", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
@@ -4077,7 +4077,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
 <pre class="cython line score-0">&#xA0;<span class="">0459</span>:         )</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0460</span>: </pre>
 <pre class="cython line score-8" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0461</span>:     cdef void _darken_line(self: Self, line: pg.Surface, float dist):</pre>
-<pre class='cython code score-8 '>static void __pyx_f_8renderer_6Camera__darken_line(struct __pyx_obj_8renderer_Camera *__pyx_v_self, PyObject *__pyx_v_line, float __pyx_v_dist) {
+<pre class='cython code score-8 '>static void __pyx_f_6camera_6Camera__darken_line(struct __pyx_obj_6camera_Camera *__pyx_v_self, PyObject *__pyx_v_line, float __pyx_v_dist) {
   float __pyx_v_factor;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[48]))
@@ -4097,7 +4097,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 461, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera._darken_line", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera._darken_line", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
@@ -4135,7 +4135,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
     <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0468</span>: </pre>
 <pre class="cython line score-32" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0469</span>:     cdef void _render_walls_and_entities(self: Self,</pre>
-<pre class='cython code score-32 '>static void __pyx_f_8renderer_6Camera__render_walls_and_entities(struct __pyx_obj_8renderer_Camera *__pyx_v_self, int __pyx_v_width, int __pyx_v_height, int __pyx_v_horizon) {
+<pre class='cython code score-32 '>static void __pyx_f_6camera_6Camera__render_walls_and_entities(struct __pyx_obj_6camera_Camera *__pyx_v_self, int __pyx_v_width, int __pyx_v_height, int __pyx_v_horizon) {
   PyObject *__pyx_v_texture = 0;
   PyObject *__pyx_v_manager = 0;
   int __pyx_v_i;
@@ -4186,7 +4186,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
   PyObject *__pyx_v_data = 0;
   PyObject *__pyx_v_tilemap = 0;
   PyObject *__pyx_v_center = 0;
-  struct __pyx_t_8renderer__Limits __pyx_v_limits;
+  struct __pyx_t_6camera__Limits __pyx_v_limits;
   PyObject *__pyx_v_searched_tiles = 0;
   PyObject *__pyx_v_render_buffer = 0;
   PyObject *__pyx_v_colors = 0;
@@ -4236,7 +4236,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 469, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera._render_walls_and_entities", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera._render_walls_and_entities", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_L0:;
   <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_v_texture);
   <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_v_manager);
@@ -4332,7 +4332,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
   __pyx_t_1 = 0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0523</span>:             tuple center</pre>
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0524</span>:             _Limits limits = _limits_new(height / 2)</pre>
-<pre class='cython code score-0 '>  __pyx_t_3 = __pyx_f_8renderer__limits_new((((long)__pyx_v_height) / 2));<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 524, __pyx_L1_error)</span>
+<pre class='cython code score-0 '>  __pyx_t_3 = __pyx_f_6camera__limits_new((((long)__pyx_v_height) / 2));<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 524, __pyx_L1_error)</span>
   __pyx_v_limits = __pyx_t_3;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0525</span>:             # len_x and len_y are not one here because they do python interaction</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0526</span>: </pre>
@@ -4531,7 +4531,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
 </pre><pre class="cython line score-2" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0557</span>:             tile_key = gen_tile_key(tile)</pre>
 <pre class='cython code score-2 '>    __pyx_t_1 = __Pyx_carray_to_py_float(__pyx_v_tile, 2);<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 557, __pyx_L1_error)</span>
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
-    __pyx_t_4 = __pyx_f_8renderer_gen_tile_key(__pyx_t_1);<span class='error_goto'> if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 557, __pyx_L1_error)</span>
+    __pyx_t_4 = __pyx_f_6camera_gen_tile_key(__pyx_t_1);<span class='error_goto'> if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 557, __pyx_L1_error)</span>
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
     <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
     <span class='pyx_macro_api'>__Pyx_XDECREF_SET</span>(__pyx_v_tile_key, ((PyObject*)__pyx_t_4));
@@ -4563,7 +4563,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
 <pre class='cython code score-0 '>    __pyx_v_dist = 0.0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0565</span>: </pre>
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0566</span>:             _limits_reset(&amp;limits)</pre>
-<pre class='cython code score-0 '>    __pyx_f_8renderer__limits_reset((&amp;__pyx_v_limits));<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 566, __pyx_L1_error)</span>
+<pre class='cython code score-0 '>    __pyx_f_6camera__limits_reset((&amp;__pyx_v_limits));<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 566, __pyx_L1_error)</span>
 </pre><pre class="cython line score-0">&#xA0;<span class="">0567</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">0568</span>:             # render_back:</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0569</span>:             # 0 to not render back of wall</pre>
@@ -4686,7 +4686,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
 /* … */
       }
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0596</span>:                     self._calculate_line(</pre>
-<pre class='cython code score-0 '>        ((struct __pyx_vtabstruct_8renderer_Camera *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_calculate_line(__pyx_v_self, __pyx_v_rel_depth, __pyx_t_14, __pyx_t_15, __pyx_v_calculation);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 596, __pyx_L1_error)</span>
+<pre class='cython code score-0 '>        ((struct __pyx_vtabstruct_6camera_Camera *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_calculate_line(__pyx_v_self, __pyx_v_rel_depth, __pyx_t_14, __pyx_t_15, __pyx_v_calculation);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 596, __pyx_L1_error)</span>
 </pre><pre class="cython line score-0">&#xA0;<span class="">0597</span>:                         rel_depth,</pre>
 <pre class="cython line score-15" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0598</span>:                         data['height'],</pre>
 <pre class='cython code score-15 '>        if (unlikely(__pyx_v_data == Py_None)) {
@@ -4768,7 +4768,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
           goto __pyx_L14_bool_binop_done;
         }
 </pre><pre class="cython line score-3" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0619</span>:                         and not _limits_full(&amp;limits, y, render_end)):</pre>
-<pre class='cython code score-3 '>        __pyx_t_4 = __pyx_f_8renderer__limits_full((&amp;__pyx_v_limits), __pyx_v_y, __pyx_v_render_end);<span class='error_goto'> if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 619, __pyx_L1_error)</span>
+<pre class='cython code score-3 '>        __pyx_t_4 = __pyx_f_6camera__limits_full((&amp;__pyx_v_limits), __pyx_v_y, __pyx_v_render_end);<span class='error_goto'> if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 619, __pyx_L1_error)</span>
         <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
         __pyx_t_17 = <span class='pyx_c_api'>__Pyx_PyObject_IsTrue</span>(__pyx_t_4); if (unlikely((__pyx_t_17 &lt; 0))) <span class='error_goto'>__PYX_ERR(0, 619, __pyx_L1_error)</span>
         <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_4); __pyx_t_4 = 0;
@@ -4845,7 +4845,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_mstate_global-&gt;__pyx_tuple[3]);
   <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_mstate_global-&gt;__pyx_tuple[3]);
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0625</span>:                             self._darken_line(</pre>
-<pre class='cython code score-0 '>            ((struct __pyx_vtabstruct_8renderer_Camera *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_darken_line(__pyx_v_self, __pyx_v_line, __pyx_t_15);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 625, __pyx_L1_error)</span>
+<pre class='cython code score-0 '>            ((struct __pyx_vtabstruct_6camera_Camera *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_darken_line(__pyx_v_self, __pyx_v_line, __pyx_t_15);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 625, __pyx_L1_error)</span>
 </pre><pre class="cython line score-15" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0626</span>:                                 line, self._player._pos.distance_to(center),</pre>
 <pre class='cython code score-15 '>            __pyx_t_1 = <span class='pyx_c_api'>__Pyx_PyObject_GetAttrStr</span>(__pyx_v_self-&gt;_player, __pyx_mstate_global-&gt;__pyx_n_u_pos);<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 626, __pyx_L1_error)</span>
             <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
@@ -4919,7 +4919,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
             __pyx_t_25 = <span class='pyx_c_api'>__Pyx_MakeVectorcallBuilderKwds</span>(1);<span class='error_goto'> if (unlikely(!__pyx_t_25)) __PYX_ERR(0, 631, __pyx_L1_error)</span>
             <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_25);
             if (<span class='pyx_c_api'>__Pyx_VectorcallBuilder_AddArg</span>(__pyx_mstate_global-&gt;__pyx_n_u_is_rect, __pyx_mstate_global-&gt;__pyx_int_1, __pyx_t_25, __pyx_callargs+3, 0) &lt; (0)) <span class='error_goto'>__PYX_ERR(0, 631, __pyx_L1_error)</span>
-            __pyx_t_4 = <span class='pyx_c_api'>__Pyx_Object_Vectorcall_CallFromBuilder</span>((PyObject*)__pyx_mstate_global-&gt;__pyx_ptype_8renderer__DepthBufferObject, __pyx_callargs+__pyx_t_8, (3-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_25);
+            __pyx_t_4 = <span class='pyx_c_api'>__Pyx_Object_Vectorcall_CallFromBuilder</span>((PyObject*)__pyx_mstate_global-&gt;__pyx_ptype_6camera__DepthBufferObject, __pyx_callargs+__pyx_t_8, (3-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_25);
             <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
             <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_7); __pyx_t_7 = 0;
             <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_6); __pyx_t_6 = 0;
@@ -4938,7 +4938,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
           <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_4); __pyx_t_4 = 0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0637</span>: </pre>
 <pre class="cython line score-1" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0638</span>:                         _limits_add(&amp;limits, render_y, render_end)</pre>
-<pre class='cython code score-1 '>          __pyx_t_4 = __pyx_f_8renderer__limits_add((&amp;__pyx_v_limits), __pyx_v_render_y, __pyx_v_render_end);<span class='error_goto'> if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 638, __pyx_L1_error)</span>
+<pre class='cython code score-1 '>          __pyx_t_4 = __pyx_f_6camera__limits_add((&amp;__pyx_v_limits), __pyx_v_render_y, __pyx_v_render_end);<span class='error_goto'> if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 638, __pyx_L1_error)</span>
           <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
           <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_4); __pyx_t_4 = 0;
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0639</span>:                     render_back = 0</pre>
@@ -4947,7 +4947,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
 <pre class="cython line score-2" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0641</span>:                 tile_key = gen_tile_key(tile)</pre>
 <pre class='cython code score-2 '>      __pyx_t_4 = __Pyx_carray_to_py_float(__pyx_v_tile, 2);<span class='error_goto'> if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 641, __pyx_L1_error)</span>
       <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
-      __pyx_t_25 = __pyx_f_8renderer_gen_tile_key(__pyx_t_4);<span class='error_goto'> if (unlikely(!__pyx_t_25)) __PYX_ERR(0, 641, __pyx_L1_error)</span>
+      __pyx_t_25 = __pyx_f_6camera_gen_tile_key(__pyx_t_4);<span class='error_goto'> if (unlikely(!__pyx_t_25)) __PYX_ERR(0, 641, __pyx_L1_error)</span>
       <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_25);
       <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_4); __pyx_t_4 = 0;
       <span class='pyx_macro_api'>__Pyx_DECREF_SET</span>(__pyx_v_tile_key, ((PyObject*)__pyx_t_25));
@@ -4994,7 +4994,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
             goto __pyx_L20;
           }
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0651</span>:                             self._calculate_line(</pre>
-<pre class='cython code score-0 '>            ((struct __pyx_vtabstruct_8renderer_Camera *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_calculate_line(__pyx_v_self, __pyx_v_rel_depth, __pyx_t_15, __pyx_t_14, __pyx_v_calculation);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 651, __pyx_L1_error)</span>
+<pre class='cython code score-0 '>            ((struct __pyx_vtabstruct_6camera_Camera *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_calculate_line(__pyx_v_self, __pyx_v_rel_depth, __pyx_t_15, __pyx_t_14, __pyx_v_calculation);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 651, __pyx_L1_error)</span>
 </pre><pre class="cython line score-0">&#xA0;<span class="">0652</span>:                                 rel_depth,</pre>
 <pre class="cython line score-15" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0653</span>:                                 data['height'],</pre>
 <pre class='cython code score-15 '>            if (unlikely(__pyx_v_data == Py_None)) {
@@ -5204,7 +5204,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0715</span>:                             dist = semitile_rel_depth * mag</pre>
 <pre class='cython code score-0 '>            __pyx_v_dist = (__pyx_v_semitile_rel_depth * __pyx_v_mag);
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0716</span>:                             self._calculate_line(</pre>
-<pre class='cython code score-0 '>            ((struct __pyx_vtabstruct_8renderer_Camera *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_calculate_line(__pyx_v_self, __pyx_v_semitile_rel_depth, __pyx_t_14, __pyx_t_15, __pyx_v_calculation);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 716, __pyx_L1_error)</span>
+<pre class='cython code score-0 '>            ((struct __pyx_vtabstruct_6camera_Camera *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_calculate_line(__pyx_v_self, __pyx_v_semitile_rel_depth, __pyx_t_14, __pyx_t_15, __pyx_v_calculation);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 716, __pyx_L1_error)</span>
 </pre><pre class="cython line score-0">&#xA0;<span class="">0717</span>:                                 semitile_rel_depth,</pre>
 <pre class="cython line score-15" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0718</span>:                                 data['height'],</pre>
 <pre class='cython code score-15 '>            if (unlikely(__pyx_v_data == Py_None)) {
@@ -5266,7 +5266,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
           goto __pyx_L32_bool_binop_done;
         }
 </pre><pre class="cython line score-3" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0734</span>:                         and not _limits_full(&amp;limits, y, render_end)):</pre>
-<pre class='cython code score-3 '>        __pyx_t_6 = __pyx_f_8renderer__limits_full((&amp;__pyx_v_limits), __pyx_v_y, __pyx_v_render_end);<span class='error_goto'> if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 734, __pyx_L1_error)</span>
+<pre class='cython code score-3 '>        __pyx_t_6 = __pyx_f_6camera__limits_full((&amp;__pyx_v_limits), __pyx_v_y, __pyx_v_render_end);<span class='error_goto'> if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 734, __pyx_L1_error)</span>
         <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_6);
         __pyx_t_20 = <span class='pyx_c_api'>__Pyx_PyObject_IsTrue</span>(__pyx_t_6); if (unlikely((__pyx_t_20 &lt; 0))) <span class='error_goto'>__PYX_ERR(0, 734, __pyx_L1_error)</span>
         <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_6); __pyx_t_6 = 0;
@@ -5384,7 +5384,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
           __pyx_t_4 = 0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0762</span>:                         )</pre>
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0763</span>:                         self._darken_line(line, dist)</pre>
-<pre class='cython code score-0 '>          ((struct __pyx_vtabstruct_8renderer_Camera *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_darken_line(__pyx_v_self, __pyx_v_line, __pyx_v_dist);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 763, __pyx_L1_error)</span>
+<pre class='cython code score-0 '>          ((struct __pyx_vtabstruct_6camera_Camera *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_darken_line(__pyx_v_self, __pyx_v_line, __pyx_v_dist);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 763, __pyx_L1_error)</span>
 </pre><pre class="cython line score-0">&#xA0;<span class="">0764</span>: </pre>
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0765</span>:                         if obj is None: # if not semitile</pre>
 <pre class='cython code score-0 '>          __pyx_t_24 = (__pyx_v_obj == Py_None);
@@ -5511,7 +5511,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
                 __pyx_t_8 = 1;
                 {
                   PyObject *__pyx_callargs[3] = {__pyx_t_7, __pyx_t_4, __pyx_t_6};
-                  __pyx_t_2 = <span class='pyx_c_api'>__Pyx_PyObject_FastCall</span>((PyObject*)__pyx_mstate_global-&gt;__pyx_ptype_8renderer__DepthBufferObject, __pyx_callargs+__pyx_t_8, (3-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+                  __pyx_t_2 = <span class='pyx_c_api'>__Pyx_PyObject_FastCall</span>((PyObject*)__pyx_mstate_global-&gt;__pyx_ptype_6camera__DepthBufferObject, __pyx_callargs+__pyx_t_8, (3-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
                   <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_7); __pyx_t_7 = 0;
                   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_4); __pyx_t_4 = 0;
                   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_6); __pyx_t_6 = 0;
@@ -5536,7 +5536,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
 <pre class='cython code score-0 '>                  goto __pyx_L37_break;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0794</span>:                             # old variables because of the full check</pre>
 <pre class="cython line score-1" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0795</span>:                             _limits_add(&amp;limits, old_y, old_render_end)</pre>
-<pre class='cython code score-1 '>            __pyx_t_2 = __pyx_f_8renderer__limits_add((&amp;__pyx_v_limits), __pyx_v_old_y, __pyx_v_old_render_end);<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 795, __pyx_L1_error)</span>
+<pre class='cython code score-1 '>            __pyx_t_2 = __pyx_f_6camera__limits_add((&amp;__pyx_v_limits), __pyx_v_old_y, __pyx_v_old_render_end);<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 795, __pyx_L1_error)</span>
             <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_2);
             <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0796</span>: </pre>
@@ -5573,7 +5573,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
             __pyx_t_8 = 1;
             {
               PyObject *__pyx_callargs[3] = {__pyx_t_6, __pyx_t_4, __pyx_t_5};
-              __pyx_t_2 = <span class='pyx_c_api'>__Pyx_PyObject_FastCall</span>((PyObject*)__pyx_mstate_global-&gt;__pyx_ptype_8renderer__DepthBufferObject, __pyx_callargs+__pyx_t_8, (3-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+              __pyx_t_2 = <span class='pyx_c_api'>__Pyx_PyObject_FastCall</span>((PyObject*)__pyx_mstate_global-&gt;__pyx_ptype_6camera__DepthBufferObject, __pyx_callargs+__pyx_t_8, (3-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
               <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_6); __pyx_t_6 = 0;
               <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_4); __pyx_t_4 = 0;
               <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_5); __pyx_t_5 = 0;
@@ -5673,7 +5673,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
   }
 </pre><pre class="cython line score-0">&#xA0;<span class="">0831</span>: </pre>
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0832</span>:         _limits_destroy(&amp;limits)</pre>
-<pre class='cython code score-0 '>  __pyx_f_8renderer__limits_destroy((&amp;__pyx_v_limits));<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 832, __pyx_L1_error)</span>
+<pre class='cython code score-0 '>  __pyx_f_6camera__limits_destroy((&amp;__pyx_v_limits));<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 832, __pyx_L1_error)</span>
 </pre><pre class="cython line score-0">&#xA0;<span class="">0833</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">0834</span>:         cdef:</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0835</span>:             float[2] projection</pre>
@@ -6097,7 +6097,7 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
                 __pyx_t_8 = 1;
                 {
                   PyObject *__pyx_callargs[3] = {__pyx_t_37, __pyx_t_6, __pyx_t_1};
-                  __pyx_t_25 = <span class='pyx_c_api'>__Pyx_PyObject_FastCall</span>((PyObject*)__pyx_mstate_global-&gt;__pyx_ptype_8renderer__DepthBufferObject, __pyx_callargs+__pyx_t_8, (3-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+                  __pyx_t_25 = <span class='pyx_c_api'>__Pyx_PyObject_FastCall</span>((PyObject*)__pyx_mstate_global-&gt;__pyx_ptype_6camera__DepthBufferObject, __pyx_callargs+__pyx_t_8, (3-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
                   <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_37); __pyx_t_37 = 0;
                   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_6); __pyx_t_6 = 0;
                   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
@@ -6241,15 +6241,15 @@ static int __pyx_pf_8renderer_6Camera_16min_entity_depth_2__set__(struct __pyx_o
 </pre><pre class="cython line score-0">&#xA0;<span class="">0968</span>: </pre>
 <pre class="cython line score-68" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0969</span>:     def render(self: Self, surf: pg.Surface) -&gt; None:</pre>
 <pre class='cython code score-68 '>/* Python wrapper */
-static PyObject *__pyx_pw_8renderer_6Camera_3render(PyObject *__pyx_v_self, 
+static PyObject *__pyx_pw_6camera_6Camera_3render(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_8renderer_6Camera_3render = {"render", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_8renderer_6Camera_3render, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8renderer_6Camera_3render(PyObject *__pyx_v_self, 
+static PyMethodDef __pyx_mdef_6camera_6Camera_3render = {"render", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_6camera_6Camera_3render, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_6camera_6Camera_3render(PyObject *__pyx_v_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -6308,11 +6308,11 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   for (Py_ssize_t __pyx_temp=0; __pyx_temp &lt; (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
     Py_XDECREF(values[__pyx_temp]);
   }
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.render", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.render", __pyx_clineno, __pyx_lineno, __pyx_filename);
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8renderer_6Camera_2render(((struct __pyx_obj_8renderer_Camera *)__pyx_v_self), __pyx_v_surf);
+  __pyx_r = __pyx_pf_6camera_6Camera_2render(((struct __pyx_obj_6camera_Camera *)__pyx_v_self), __pyx_v_surf);
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -6325,7 +6325,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8renderer_6Camera_2render(struct __pyx_obj_8renderer_Camera *__pyx_v_self, PyObject *__pyx_v_surf) {
+static PyObject *__pyx_pf_6camera_6Camera_2render(struct __pyx_obj_6camera_Camera *__pyx_v_self, PyObject *__pyx_v_surf) {
   int __pyx_v_width;
   int __pyx_v_height;
   int __pyx_v_horizon;
@@ -6356,7 +6356,7 @@ static PyObject *__pyx_pf_8renderer_6Camera_2render(struct __pyx_obj_8renderer_C
   #else
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 969, __pyx_L1_error)</span>);
   #endif
-  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("renderer.Camera.render", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.render", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_v_floor_and_ceiling);
@@ -6372,14 +6372,14 @@ static PyObject *__pyx_pf_8renderer_6Camera_2render(struct __pyx_obj_8renderer_C
   if (<span class='py_c_api'>PyDict_SetItem</span>(__pyx_t_2, __pyx_mstate_global-&gt;__pyx_n_u_self, __pyx_mstate_global-&gt;__pyx_n_u_Self) &lt; (0)) <span class='error_goto'>__PYX_ERR(0, 969, __pyx_L1_error)</span>
   if (<span class='py_c_api'>PyDict_SetItem</span>(__pyx_t_2, __pyx_mstate_global-&gt;__pyx_n_u_surf, __pyx_mstate_global-&gt;__pyx_kp_u_pg_Surface) &lt; (0)) <span class='error_goto'>__PYX_ERR(0, 969, __pyx_L1_error)</span>
   if (<span class='py_c_api'>PyDict_SetItem</span>(__pyx_t_2, __pyx_mstate_global-&gt;__pyx_n_u_return, __pyx_mstate_global-&gt;__pyx_n_u_None) &lt; (0)) <span class='error_goto'>__PYX_ERR(0, 969, __pyx_L1_error)</span>
-  __pyx_t_4 = <span class='pyx_c_api'>__Pyx_CyFunction_New</span>(&amp;__pyx_mdef_8renderer_6Camera_3render, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global-&gt;__pyx_n_u_Camera_render, NULL, __pyx_mstate_global-&gt;__pyx_n_u_renderer, __pyx_mstate_global-&gt;__pyx_d, ((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[50]));<span class='error_goto'> if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 969, __pyx_L1_error)</span>
+  __pyx_t_4 = <span class='pyx_c_api'>__Pyx_CyFunction_New</span>(&amp;__pyx_mdef_6camera_6Camera_3render, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global-&gt;__pyx_n_u_Camera_render, NULL, __pyx_mstate_global-&gt;__pyx_n_u_camera, __pyx_mstate_global-&gt;__pyx_d, ((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[50]));<span class='error_goto'> if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 969, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
   #if CYTHON_COMPILING_IN_CPYTHON &amp;&amp; PY_VERSION_HEX &gt;= 0x030E0000
   <span class='py_c_api'>PyUnstable_Object_EnableDeferredRefcount</span>(__pyx_t_4);
   #endif
   <span class='pyx_c_api'>__Pyx_CyFunction_SetAnnotationsDict</span>(__pyx_t_4, __pyx_t_2);
   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
-  if (<span class='pyx_c_api'>__Pyx_SetItemOnTypeDict</span>(__pyx_mstate_global-&gt;__pyx_ptype_8renderer_Camera, __pyx_mstate_global-&gt;__pyx_n_u_render, __pyx_t_4) &lt; (0)) <span class='error_goto'>__PYX_ERR(0, 969, __pyx_L1_error)</span>
+  if (<span class='pyx_c_api'>__Pyx_SetItemOnTypeDict</span>(__pyx_mstate_global-&gt;__pyx_ptype_6camera_Camera, __pyx_mstate_global-&gt;__pyx_n_u_render, __pyx_t_4) &lt; (0)) <span class='error_goto'>__PYX_ERR(0, 969, __pyx_L1_error)</span>
   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_4); __pyx_t_4 = 0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0970</span>:         cdef:</pre>
 <pre class="cython line score-10" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0971</span>:             int width = surf.width</pre>
@@ -6447,7 +6447,7 @@ static PyObject *__pyx_pf_8renderer_6Camera_2render(struct __pyx_obj_8renderer_C
 </pre><pre class="cython line score-5" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0981</span>:             target=self._render_floor_and_ceiling,</pre>
 <pre class='cython code score-5 '>  <span class='pyx_macro_api'>__Pyx_INCREF</span>((PyObject *)__pyx_v_self);
   __pyx_t_6 = __pyx_v_self;
-  __pyx_t_7 = __Pyx_CFunc_59995a__8renderer_6Camera_void__lParenCamera__comma_in__etc_to_py_4self_5width_6height_7horizon(((struct __pyx_vtabstruct_8renderer_Camera *)__pyx_t_6-&gt;__pyx_vtab)-&gt;_render_floor_and_ceiling);<span class='error_goto'> if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 981, __pyx_L1_error)</span>
+  __pyx_t_7 = __Pyx_CFunc_2711fe__6camera_6Camera_void__lParenCamera__comma_int___etc_to_py_4self_5width_6height_7horizon(((struct __pyx_vtabstruct_6camera_Camera *)__pyx_t_6-&gt;__pyx_vtab)-&gt;_render_floor_and_ceiling);<span class='error_goto'> if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 981, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_7);
   __pyx_t_8 = ((PyObject *)__pyx_t_6);
   <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_8);
@@ -6511,7 +6511,7 @@ static PyObject *__pyx_pf_8renderer_6Camera_2render(struct __pyx_obj_8renderer_C
 </pre><pre class="cython line score-5" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0985</span>:             target=self._render_walls_and_entities,</pre>
 <pre class='cython code score-5 '>  <span class='pyx_macro_api'>__Pyx_INCREF</span>((PyObject *)__pyx_v_self);
   __pyx_t_6 = __pyx_v_self;
-  __pyx_t_11 = __Pyx_CFunc_59995a__8renderer_6Camera_void__lParenCamera__comma_in__etc_to_py_4self_5width_6height_7horizon(((struct __pyx_vtabstruct_8renderer_Camera *)__pyx_t_6-&gt;__pyx_vtab)-&gt;_render_walls_and_entities);<span class='error_goto'> if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 985, __pyx_L1_error)</span>
+  __pyx_t_11 = __Pyx_CFunc_2711fe__6camera_6Camera_void__lParenCamera__comma_int___etc_to_py_4self_5width_6height_7horizon(((struct __pyx_vtabstruct_6camera_Camera *)__pyx_t_6-&gt;__pyx_vtab)-&gt;_render_walls_and_entities);<span class='error_goto'> if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 985, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_11);
   __pyx_t_9 = ((PyObject *)__pyx_t_6);
   <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_9);

@@ -8,8 +8,8 @@ import numpy as np
 
 ext_modules = [
     Extension(
-        name='renderer',
-        sources=['renderer.pyx'],
+        name='camera',
+        sources=['camera.pyx'],
         include_dirs=[np.get_include()],
     )
 ]

@@ -63,7 +63,7 @@ class Camera(object):
                  wall_render_distance: Real,
                  player: Player,
                  bob_strength: Real=0.0375,
-                 bob_frequency: Real=10,
+                 bob_frequency: Real=0.1667,
                  darkness: Real=1,
                  max_line_height: Real=10,
                  min_entity_depth: Real=0.05) -> None:
@@ -526,7 +526,7 @@ class Camera(object):
                         dex = int(projection.x)
                         scale = self._tile_size / rel_depth
                         
-                        texture = entity._texture
+                        texture = entity.texture
 
                         # lighting
                         if not entity._glowing and self._darkness:

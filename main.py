@@ -9,11 +9,11 @@ from typing import Self
 import pygame as pg
 from pygame import mixer as mx
 
-from modules.level import Level
 from modules.level import ColumnTexture
 from modules.level import Walls
 from modules.level import Floor
 from modules.level import Sky 
+from modules.level import Level
 from modules.entities import Entity 
 from modules.entities import Player
 from modules.entities import EntityManager 

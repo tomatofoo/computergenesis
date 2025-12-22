@@ -23,7 +23,7 @@ class Entity(object):
                  width: Real=0.5,
                  height: Real=1,
                  health: Real=100,
-                 climb: Real=0.3,
+                 climb: Real=0.3, # min distance from top to be able to climb
                  textures: list[pg.Surface]=[FALLBACK_SURF],
                  render_width: Optional[Real]=None,
                  render_height: Optional[Real]=None) -> None:
@@ -328,10 +328,9 @@ class Player(Entity):
     def __init__(self: Self,
                  width: Real=0.5,
                  height: Real=1,
-                 melee_range: Real=0.2) -> None:
+                 climb: Real=0.3) -> None:
 
-        super().__init__(width, height)
-        self._melee_range = melee_range
+        super().__init__(width=width, width=height, climb=climb)
 
         self._forward_velocity = pg.Vector2(0, 0)
         self._right_velocity = pg.Vector2(0, 0)
@@ -411,7 +410,7 @@ class Player(Entity):
             )
 
         self._velocity2 = self._forward_velocity + self._right_velocity
-        super().update(rel_game_speed, level_timer)
+        super().update(rel_game_speed=rel_game_speed, level_timer=level_timer)
 
     def hitscan_shoot(self: Self,
                       damage: Real,
@@ -617,4 +616,8 @@ class EntityManager(object):
             entity.update(rel_game_speed, level_timer)
             key = gen_tile_key(entity._pos)
             entity._update_manager_sets(old_key, key)
+
+
+
+# CUSTOM
 

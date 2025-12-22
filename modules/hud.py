@@ -35,3 +35,6 @@ class HUD(object):
             surf.blit(element.surf, element.pos)
 
 
+
+# CUSTOM
+

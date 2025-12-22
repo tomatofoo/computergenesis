@@ -370,3 +370,7 @@ def generate_composite(tilemap: dict[str, int],
             surf.blit(textures[texture], render_coords)
         return surf, scale
 
+
+
+# CUSTOM
+

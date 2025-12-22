@@ -179,3 +179,4 @@ class Level(object):
     def remove_walls(self: Self, dex: int) -> None:
         return self._walls.pop(dex)
 
+

@@ -669,8 +669,6 @@ cdef class Camera:
                             elif horizon > render_end:
                                 render_back = 2
                                 back_edge = render_end
-                                # ^ inting helps with pixel glitch
-                                # faster than == None in cython
                             final_end_pos = end_pos
                         else:
                             render_end = -1 # so it doesn't get rendered

@@ -442,6 +442,7 @@ class Player(Entity):
         closest = (math.inf, None)
 
         # ranges of slopes of walls relative to player
+        # this determines if a shot will hit a wall
         tangent = math.tan(math.radians(foa) / 2)
         slope_ranges = []
         amount = 0

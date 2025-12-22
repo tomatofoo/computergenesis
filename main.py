@@ -19,6 +19,7 @@ from modules.entities import Player
 from modules.entities import EntityManager 
 from modules.camera import Camera
 
+
 class Game(object):
 
     _SCREEN_SIZE = (960, 720)

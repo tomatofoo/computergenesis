@@ -8,3 +8,4 @@ class Weapon(object):
     def __init__(self: Self) -> None:
         pass
 
+

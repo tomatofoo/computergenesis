@@ -6,28 +6,32 @@ from pygame.typing import Point
 
 
 class HUDElement(object):
-    def __init__(self: Self, surf: pg.Surface) -> None:
+    def __init__(self: Self, surf: pg.Surface, pos: Point) -> None:
         self._surf = surf
+        self._pos = pos
 
     @property
-    def surf(self: Self) -> None:
+    def surf(self: Self) -> pg.Surface:
         return self._surf
+
+    @property
+    def pos(self: Self) -> Point:
+        return self._pos
 
     def update(self: Self, rel_game_speed: Real) -> None:
         pass
 
 
 class HUD(object):
-    def __init__(self: Self,
-                 elements: dict[object, list[Point, HUDElement]]]) -> None:
+    def __init__(self: Self, elements: dict[object, HUDElement]) -> None:
         self._elements = elements
 
     def update(self: Self, rel_game_speed: Real) -> None:
-        for _, element in self._elements.values():
+        for element in self._elements.values():
             element.update(rel_game_speed)
 
     def render(self: Self, surf: pg.Surface) -> None:
-        for pos, element in self._elements.values():
-            surf.blit(element.surf, pos)
+        for element in self._elements.values():
+            surf.blit(element.surf, element.pos)
 
 

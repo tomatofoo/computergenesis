@@ -496,6 +496,7 @@ cdef class Camera:
             int top
             int bottom
             int rect_height
+            int texture_height
             float scale
             float dist
             float rel_depth
@@ -542,8 +543,9 @@ cdef class Camera:
         # Wall Casting
         for x in range(width):
             render_buffer.append([])
-
-            factor = 2 * x / float(width) - 1
+            
+            # float() will use double while <float> is float
+            factor = 2 * x / <float>width - 1
             obj = self._yaw + self._player._semiplane * factor
             ray = (obj[0], obj[1])
             mag = sqrt(ray[0] * ray[0] + ray[1] * ray[1])
@@ -732,18 +734,17 @@ cdef class Camera:
                         and not _limits_full(&limits, y, render_end)):
                         # Transformation
                         texture = textures[data['texture']]
+                        texture_height = texture.height
                         dex = int(floorf(
                             final_end_pos[side] % 1 * <int>texture.width,
                         ))
                         
                         # only resize the part that is visible (optimization)
-                        scale = render_line_height / <float>texture.height
+                        scale = render_line_height / <float>texture_height
                         top = int(floorf(fmax(-y / scale, 0)))
-                        # might need an fmin here to make sure it isn't outside
-                        # the surf (hasn't happened yet but it maybe could idk)
-                        bottom = int(ceilf(
-                            fmin(height - y, render_line_height) / scale,
-                        ))
+                        bottom = int(ceilf(fmin(
+                            (height - y) / scale, texture_height,
+                        )))
                         rect_height = bottom - top
                         
                         old_y = y
@@ -844,7 +845,8 @@ cdef class Camera:
             int render_width
             int render_height
             int texture_width
-            int texture_height
+            # top, bottom, rect_height, and texture_height were already
+            # declared above
             set entities
         # Entity Rendering
         for tile_key in searched_tiles:
@@ -903,11 +905,11 @@ cdef class Camera:
                             and render_x + render_width > 0):
                             
                             # y-axis calculations
-                            scale_y = render_height / float(texture_height)
+                            scale_y = render_height / <float>texture_height
                             top = int(floorf(fmax(-y / scale_y, 0)))
-                            bottom = int(fmin(ceilf(
-                                fmin(height - y, render_height) / scale_y,
-                            ), texture_height))
+                            bottom = int(ceilf(
+                                fmin((height - y) / scale_y, texture_height),
+                            ))
                             rect_height = bottom - top
                             # adjust variables accordingly
                             # for some reason needs angle brackets to use C
@@ -915,11 +917,11 @@ cdef class Camera:
                             render_height = int(rect_height * scale_y)
                             
                             # x-axis calculations
-                            scale_x = render_width / float(texture_width)
+                            scale_x = render_width / <float>texture_width
                             left = int(floorf(fmax(-render_x / scale_x, 0)))
-                            right = int(fmin(ceilf(
-                                fmin(width - render_x, render_width) / scale_x,
-                            ), texture_width))
+                            right = int(ceilf(fmin(
+                                (width - render_x) / scale_x, texture_width
+                            )))
                             rect_width = right - left
                             # adjust variables accordingly
                             # for some reason needs angle brackets to use C

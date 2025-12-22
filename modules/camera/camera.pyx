@@ -589,7 +589,6 @@ cdef class Camera:
             while dist < self._wall_render_distance:
                 # Tile Rendering
                 searched_tiles.add(tile_key)
-                # ^ some entities may not render if we use tile_key
 
                 # no nested if statement on purpose
                 if render_back and rel_depth: # top/bottom of wall rendering

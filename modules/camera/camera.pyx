@@ -26,7 +26,7 @@ from pygame.typing import Point
 
 from modules.level import Floor
 from modules.level import Sky
-from modules.level import Player
+from modules.entities import Player
 
 
 # is getting called a lot so not using python implementation

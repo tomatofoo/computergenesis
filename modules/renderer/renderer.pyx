@@ -829,10 +829,20 @@ cdef class Camera:
         _limits_destroy(&limits)
         
         cdef:
-            int[2] pos
             float[2] projection
             float[2] ratios
             float[3] rel_vector
+            int[2] pos
+            float scale_x
+            float scale_y
+            int left
+            int right
+            int rect_width
+            int render_x
+            int render_width
+            int render_height
+            int texture_width
+            int texture_height
             set entities
         # Entity Rendering
         for tile_key in searched_tiles:
@@ -864,40 +874,81 @@ cdef class Camera:
                         )
 
                         rel_depth = rel_vector[2] / self._yaw_magnitude
-                        
-                        texture = entity.texture
+
                         dex = int(projection[0])
-                        # lighting
-                        if not entity._glowing and self._darkness:
-                            # mgaic numbers found by testing
-                            factor = -rel_vector[2]**0.9 * self._darkness / 7
-                            texture = pg.transform.hsl(
-                                texture, 0, 0, fmax(factor, -1),
-                            )
 
-                        texture = pg.transform.scale(
-                            texture,
-                            (entity._render_width
-                             * semiwidth
-                             / rel_depth,
-                             entity._render_height
-                             * self._tile_size
-                             / rel_depth),
+                        texture = entity.texture
+                        texture_width = texture.width
+                        texture_height = texture.height
+                        # only resize the part that is visible (optimization)
+                        render_width = int(
+                            <float>entity._render_width
+                            * semiwidth
+                            / rel_depth
                         )
+                        render_height = int(
+                            <float>entity._render_height
+                            * self._tile_size
+                            / rel_depth
+                        )
+                        render_x = dex - render_width / 2
+                        y = int(projection[1] - render_height)
+                        
+                        if (y < height
+                            and y + render_height > 0
+                            and render_x < width
+                            and render_x + render_width > 0):
+                            
+                            # y-axis calculations
+                            scale_y = render_height / float(texture_height)
+                            top = int(floorf(fmax(-y / scale_y, 0)))
+                            bottom = int(fmin(ceilf(
+                                fmin(height - y, render_height) / scale_y,
+                            ), texture_height))
+                            rect_height = bottom - top
+                            # adjust variables accordingly
+                            # for some reason needs angle brackets to use C
+                            y += <int>ceilf(top * scale_y)
+                            render_height = int(rect_height * scale_y)
+                            
+                            # x-axis calculations
+                            scale_x = render_width / float(texture_width)
+                            left = int(floorf(fmax(-render_x / scale_x, 0)))
+                            right = int(fmin(ceilf(
+                                fmin(width - render_x, render_width) / scale_x,
+                            ), texture_width))
+                            rect_width = right - left
+                            # adjust variables accordingly
+                            # for some reason needs angle brackets to use C
+                            render_x += <int>ceilf(left * scale_x)
+                            render_width = int(rect_width * scale_x)
 
-                        for i in range(texture.width):
-                            pos = (
-                                int(dex - <int>texture.width / 2 + i),
-                                projection[1] - <int>texture.height,
+                            # getting subsurface
+                            texture = texture.subsurface(
+                                left, top, rect_width, rect_height,
                             )
-                            if 0 <= pos[0] < width:
-                                obj = _DepthBufferObject(
-                                    rel_depth,
-                                    (texture,
-                                     pos,
-                                     (i, 0, 1, texture.height)),
+                            # lighting
+                            if not entity._glowing and self._darkness:
+                                # mgaic numbers found by testing
+                                factor = -rel_vector[2]**0.9 * self._darkness / 7
+                                texture = pg.transform.hsl(
+                                    texture, 0, 0, fmax(factor, -1),
                                 )
-                                bisect.insort_left(render_buffer[pos[0]], obj)
+                            # scaling
+                            texture = pg.transform.scale(
+                                texture,
+                                (render_width, render_height),
+                            )
+                            for i in range(render_width):
+                                pos = (render_x + i, y)
+                                if 0 <= pos[0] < width:
+                                    obj = _DepthBufferObject(
+                                        rel_depth,
+                                        (texture,
+                                         pos,
+                                         (i, 0, 1, render_height)),
+                                    )
+                                    bisect.insort_left(render_buffer[pos[0]], obj)
 
         for x in range(width):
             blits = render_buffer[x]

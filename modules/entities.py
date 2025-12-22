@@ -330,7 +330,7 @@ class Player(Entity):
                  height: Real=1,
                  climb: Real=0.3) -> None:
 
-        super().__init__(width=width, width=height, climb=climb)
+        super().__init__(width=width, height=height, climb=climb)
 
         self._forward_velocity = pg.Vector2(0, 0)
         self._right_velocity = pg.Vector2(0, 0)

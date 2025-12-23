@@ -724,7 +724,7 @@ cdef class Camera:
 
                         # filter out lines that are erroneous
                         if (semitile_rel_depth > 0
-                            # ^ have to use > 0
+                            # ^ have to use > 0 because could be negative
                             and floorf(final_end_pos[0]) == tile[0]
                             and floorf(final_end_pos[1]) == tile[1]):
 

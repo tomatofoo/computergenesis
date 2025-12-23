@@ -596,6 +596,7 @@ cdef class Camera:
                         back_edge = height
                 else:
                     semitile = obj
+                    # semitile = obj is needed here
                     side = semitile < 1
                     # ^ needed when is directly underneath player
 

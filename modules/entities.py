@@ -338,9 +338,9 @@ class Entity(object):
         
         # 3D collisions
         self.elevation += self._elevation_velocity * rel_game_speed
+        self._elevation_velocity -= self._gravity * rel_game_speed
         if self._elevation <= 0:
             self._elevation_velocity = 0
-        self._elevation_velocity -= self._gravity * rel_game_speed
         entity_rect = self.rect()
         for rect, bottom, top in self._get_rects_around():
             vertical = self._elevation < top and self.top > bottom
@@ -481,10 +481,8 @@ class Player(Entity):
         if up is not None:
             self._elevation_velocity = up
         self.elevation += self._elevation_velocity * rel_game_speed
-        below = 0 # if below collision
         if self._elevation <= 0:
             self._elevation_velocity = 0
-            below = 1
         entity_rect = self.rect()
         for rect, bottom, top in self._get_rects_around():
             vertical = self._elevation < top and self.top > bottom
@@ -496,7 +494,6 @@ class Player(Entity):
                 elif self._elevation_velocity < 0:
                     self.elevation = top
                     self._elevation_velocity = 0
-                    below = 1
         
         # climbing animation / headbob
         elevation = self._elevation + self._camera_offset
@@ -509,7 +506,8 @@ class Player(Entity):
             self._render_elevation += difference * mult
         else:
             self._render_elevation = elevation
-            if below and elevation_update:
+            # yes it will headbob while falling but I'm okay with that
+            if elevation_update:
                 self._render_elevation += (
                     math.sin(level_timer * self._settings['bob_frequency'])
                     * self._settings['bob_strength']

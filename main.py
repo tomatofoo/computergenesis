@@ -69,8 +69,8 @@ class Game(object):
                 'elevation': 0,
                 'height': 0.19 + 0.19 * i,
                 'texture': 0,
-                'top': (255, 0, 0),
-                'bottom': (255, 0, 0),
+                'top': (64, 64, 64),
+                'bottom': (64, 64, 64),
             }
 
         self._wall_textures = (

@@ -595,9 +595,7 @@ cdef class Camera:
                         render_back = 1
                         back_edge = height
                 else:
-                    semitile = obj
-                    # semitile = obj is needed here
-                    side = semitile < 1
+                    side = obj < 1
                     # ^ needed when is directly underneath player
 
             # keep on changing end_pos until hitting a wall (DDA)
@@ -688,6 +686,8 @@ cdef class Camera:
                             render_end = -1 # so it doesn't get rendered
 
                     else: # semitiles
+                        # slow when directly next to wall because 
+                        # these don't use rpa
                         render_back = 0
                         semitile = obj
                         final_end_pos = [end_pos[0], end_pos[1]]

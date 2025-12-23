@@ -63,6 +63,15 @@ class Game(object):
             'semitile': 0.2,
             'rect': (0, 0.2, 1, 0.01),
         }
+        
+        for i in range(10):
+            walls[f'{10 + i};6'] = {
+                'elevation': 0,
+                'height': 0.19 + 0.19 * i,
+                'texture': 0,
+                'top': (255, 0, 0),
+                'bottom': (255, 0, 0),
+            }
 
         self._wall_textures = (
             ColumnTexture(pg.image.load('data/images/redbrick.png').convert()),
@@ -194,6 +203,7 @@ class Game(object):
                 (keys[pg.K_d] - keys[pg.K_a]) * 0.05,
                 (keys[pg.K_RIGHT] - keys[pg.K_LEFT]) * 2.5,
                 (keys[pg.K_DOWN] - keys[pg.K_UP]),
+                (keys[pg.K_SPACE] - keys[pg.K_LSHIFT]) * 0.05,
             )
 
             self._player.update(
@@ -202,7 +212,7 @@ class Game(object):
                 movement[0],
                 movement[1],
                 movement[2],
-                (keys[pg.K_SPACE] - keys[pg.K_LSHIFT]) * 0.05
+                movement[4] if movement[4] else None,
             )
             self._camera.horizon -= movement[3] * 0.025 * rel_game_speed
             

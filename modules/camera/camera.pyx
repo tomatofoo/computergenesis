@@ -511,6 +511,7 @@ cdef class Camera:
             int bottom
             int rect_height
             int texture_height
+            int side
             float scale
             float dist
             float rel_depth
@@ -529,7 +530,6 @@ cdef class Camera:
             float[2] tile
             float[2] end_pos
             float[2] final_end_pos
-            bool side # false for x, true for y
             str tile_key
             str side_key
             dict data
@@ -700,17 +700,23 @@ cdef class Camera:
                                 disp_x = part - (not dir[0])
                             else:
                                 disp_x = tile[0] + part - end_pos[0]
-                            side = True
+                            side = 1
                             disp_y = disp_x * slope
-                            semitile_rel_depth += disp_x / ray[0]
+                            if ray[0]:
+                                semitile_rel_depth += disp_x / ray[0]
+                            else:
+                                semitile_rel_depth = 2147483647
                         else:
                             if side:
                                 disp_y = tile[1] + part - end_pos[1]
                             else:
                                 disp_y = part - (not dir[1])
-                            side = False
+                            side = 0
                             disp_x = disp_y / slope if slope else 2147483647
-                            semitile_rel_depth += disp_y / ray[1]
+                            if ray[1]:
+                                semitile_rel_depth += disp_y / ray[1]
+                            else:
+                                semitile_rel_depth = 2147483647
 
                         final_end_pos[0] += disp_x
                         final_end_pos[1] += disp_y
@@ -831,13 +837,13 @@ cdef class Camera:
                     end_pos[0] += disp_x
                     end_pos[1] += disp_x * slope
                     rel_depth += len_x
-                    side = True
+                    side = 1
                 else:
                     tile[1] += step_y
                     end_pos[0] += disp_y / slope if slope else 2147483647
                     end_pos[1] += disp_y
                     rel_depth += len_y
-                    side = False
+                    side = 0
                 dist = rel_depth * mag
 
         _limits_destroy(&limits)

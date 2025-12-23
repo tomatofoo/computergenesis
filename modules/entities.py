@@ -503,7 +503,6 @@ class Player(Entity):
             self._render_elevation += difference * mult
             if difference < 0.001:
                 self._climbing = 0
-                self._render_elevation = elevation
         else:
             self._render_elevation = elevation
             # yes it will headbob while falling but I'm okay with that

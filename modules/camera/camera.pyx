@@ -640,6 +640,8 @@ cdef class Camera:
                             color = line.get_at((0, 0))
                             colors[tile_key] = color
                         
+                        # not sure if making the rect only the part onscreen 
+                        # will improve performance that much
                         obj = _DepthBufferObject(
                             rel_depth,
                             (color, (x, render_y, 1, render_back_line_height)),

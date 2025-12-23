@@ -86,8 +86,7 @@ class Game(object):
 
         entities = {
             0: Entity(
-                width=0.504,
-                height=0.54,
+                height=0.6,
                 textures=[
                     pg.image.load('data/images/vassago/1.png'),
                     pg.image.load('data/images/vassago/2.png'),
@@ -247,18 +246,27 @@ class Game(object):
             # temp draw minimap
             for tile in self._level.walls._tilemap:
                 split = tile.split(';')
-                rect = pg.Rect(int(split[0]) * 3, int(split[1]) * 3, 3, 3)
+                rect = pg.Rect(int(split[0]) * 4, int(split[1]) * 4, 4, 4)
                 pg.draw.rect(self._surface, (255, 255, 255), rect)
 
             player_rect = self._player.rect()
             player_rect.update(
-                player_rect.left * 3,
-                player_rect.top * 3,
-                player_rect.width * 3,
-                player_rect.height * 3, 
+                player_rect.left * 4,
+                player_rect.top * 4,
+                player_rect.width * 4,
+                player_rect.height * 4, 
             )
-
             pg.draw.rect(self._surface, (0, 255, 0), player_rect)
+
+            for entity in self._entities.entities.values():
+                entity_rect = entity.rect()
+                entity_rect.update(
+                    entity_rect.left * 4,
+                    entity_rect.top * 4,
+                    entity_rect.width * 4,
+                    entity_rect.height * 4, 
+                )
+                pg.draw.rect(self._surface, (255, 0, 0), entity_rect)
 
             frames.append(1 / delta_time if delta_time else math.inf)
             pg.display.set_caption(str(int(fps)))

@@ -499,11 +499,11 @@ class Player(Entity):
         elevation = self._elevation + self._camera_offset
         if self._climbing:
             difference = elevation - self._render_elevation
-            if difference < 0.001:
-                self._climbing = 0
-            # this number is smooth (0.1)
             mult = (1 - (1 - self._settings['climb_speed'])**rel_game_speed)
             self._render_elevation += difference * mult
+            if difference < 0.001:
+                self._climbing = 0
+                self._render_elevation = elevation
         else:
             self._render_elevation = elevation
             # yes it will headbob while falling but I'm okay with that

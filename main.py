@@ -58,10 +58,10 @@ class Game(object):
         }
         walls['10;7'] = {
             'elevation': 0,
-            'height': 1.2,
+            'height': 1,
             'texture': 0,
-            'semitile': 0.2,
-            'rect': (0, 0.2, 1, 0.01),
+            'semitile': 0.0,
+            'rect': (0, 0, 1, 0.01),
         }
         
         for i in range(10):

@@ -14,6 +14,7 @@ from modules.utils import FALLBACK_SURF
 class ColumnTexture(object):
     def __init__(self: Self, surf: pg.Surface=FALLBACK_SURF) -> None:
         self._surf = surf
+        self._alpha = surf.get_alpha()
 
     def __getitem__(self: Self, dex: int) -> pg.Surface:
         return self._surf.subsurface((dex, 0, 1, self._surf.height))

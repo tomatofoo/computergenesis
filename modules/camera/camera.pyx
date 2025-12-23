@@ -723,10 +723,8 @@ cdef class Camera:
                         final_end_pos[1] += disp_y
 
                         # filter out lines that are erroneous
-                        if (semitile_rel_depth
-                            and (disp_x > 0) == dir[0]
-                            and (disp_y > 0) == dir[1]
-                            # ^ ensures that it is in the direction of ray
+                        if (semitile_rel_depth > 0
+                            # ^ have to use > 0
                             and floorf(final_end_pos[0]) == tile[0]
                             and floorf(final_end_pos[1]) == tile[1]):
 
@@ -779,8 +777,10 @@ cdef class Camera:
                             (1, render_line_height)
                         )
                         self._darken_line(line, dist)
-                    
-                        if obj is None: # if not semitile
+
+                        # if not semitile or if semitile and no alpha
+                        # walls expected to have no transparency
+                        if obj is None or texture._alpha is None:
                             # Reverse Painter's Algorithm
                             amount = limits._amount
                             # not enumerated because + 1
@@ -812,9 +812,7 @@ cdef class Camera:
                             # old variables because of the full check
                             _limits_add(&limits, old_y, old_render_end)
 
-                        else:
-                            # this check is done so that semitiles
-                            # can have transparency (e.g. cobwebs)
+                        else: # transparent semitiles
                             obj = _DepthBufferObject(
                                 semitile_rel_depth,
                                 (line, (x, y)),

@@ -53,14 +53,14 @@ class Game(object):
             'elevation': 0,
             'height': 2,
             'texture': 0,
-            'semitile': 0.7, # int is side, float is part
+            'semitile': 1.7, # int is side, float is part
             'rect': (0.7, 0, 0.01, 1),
         }
         walls['10;7'] = {
             'elevation': 0,
             'height': 1.2,
             'texture': 0,
-            'semitile': 1.2,
+            'semitile': 0.2,
             'rect': (0, 0.2, 1, 0.01),
         }
         

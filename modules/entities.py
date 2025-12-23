@@ -379,6 +379,7 @@ class Player(Entity):
         self._settings = {
             'bob_strength': 0,
             'bob_frequency': 0,
+            'climb_speed': 0,
         }
         
         # delete variables we don't need from entity init
@@ -503,8 +504,9 @@ class Player(Entity):
             difference = elevation - self._render_elevation
             if difference < 0.001:
                 self._climbing = 0
-            # this number is good (0.15)
-            self._render_elevation += difference * (1 - 0.85**rel_game_speed)
+            # this number is smooth (0.1)
+            mult = (1 - (1 - self._settings['climb_speed'])**rel_game_speed)
+            self._render_elevation += difference * mult
         else:
             self._render_elevation = elevation
             if below and elevation_update:

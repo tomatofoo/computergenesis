@@ -161,6 +161,7 @@ cdef class Camera:
         float _wall_render_distance
         float _bob_strength
         float _bob_frequency
+        float _climb_speed
         float _darkness
         float _max_line_height
         float _min_entity_depth
@@ -177,6 +178,7 @@ cdef class Camera:
                  player: Player,
                  float bob_strength=0.0375,
                  float bob_frequency=0.1667,
+                 float climb_speed=0.15,
                  float darkness=1,
                  float max_line_height=50,
                  float min_entity_depth=0.05) -> None:
@@ -194,6 +196,7 @@ cdef class Camera:
 
         self.bob_strength = bob_strength
         self.bob_frequency = bob_frequency
+        self.climb_speed = climb_speed
 
     @property
     def bob_strength(self: Self):
@@ -215,16 +218,27 @@ cdef class Camera:
         self._player._settings['bob_frequency'] = value
 
     @property
+    def climb_speed(self: Self) -> Real:
+        return self._climb_speed
+
+    @climb_speed.setter
+    def climb_speed(self: Self, float value):
+        self._climb_speed = value
+        self._player._settings['climb_speed'] = value
+
+    @property
     def player(self: Self) -> Player:
         return self._player
 
     @player.setter
-    def player(self: Self, value: Player):
+    def player(self: Self, value: Player) -> None:
         self._player._settings['bob_frequency'] = 0
         self._player._settings['bob_strength'] = 0
+        self._player._settings['climb_speed'] = 0
         self._player = value
         value._settings['bob_frequency'] = self._bob_frequency
         value._settings['bob_strength'] = self._bob_strength
+        value._settings['climb_speed'] = self._climb_speed
 
     @property
     def fov(self: Self):

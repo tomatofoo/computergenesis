@@ -114,12 +114,11 @@ class Game(object):
         entities[3].pos = (6.5, 3)
         entities[4].pos = (6.5, 2)
         
-        """
         entities[0].glowing = 1
         entities[1].glowing = 1
         entities[2].glowing = 1
         entities[3].glowing = 1
-        entities[4].glowing = 1"""
+        entities[4].glowing = 1
 
         self._entities = EntityManager(self._player, entities)
 

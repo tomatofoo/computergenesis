@@ -528,7 +528,6 @@ cdef class Camera:
             float semitile_width
             float final_rel_depth
             float part
-            float[2] semitile_pos
             float[2] ray
             float[2] tile
             float[2] end_pos
@@ -701,12 +700,10 @@ cdef class Camera:
                         # data about semitile
                         axis = obj['axis']
                         semitile_width = obj['width']
-                        semitile_pos = obj['pos']
-                        semitile_offset = semitile_pos[axis]
-                        part = semitile_pos[not axis]
 
                         # calculating displacements
                         if axis: # y-axis
+                            part, semitile_offset = obj['pos']
                             if side:
                                 disp_x = part - (not dir[0])
                             else:
@@ -717,6 +714,7 @@ cdef class Camera:
                             else:
                                 final_rel_depth = 2147483647
                         else: # x-axis
+                            semitile_offset, part = obj['pos']
                             if side:
                                 disp_y = tile[1] + part - end_pos[1]
                             else:

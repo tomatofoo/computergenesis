@@ -5,6 +5,7 @@ from typing import Optional
 
 import pygame as pg
 from pygame.typing import Point
+from pygame.typing import RectLike
 from pygame.typing import ColorLike
 
 from modules.entities import EntityManager
@@ -104,6 +105,8 @@ class Walls(object):
                  elevation: Real,
                  height: Real,
                  texture: int,
+                 semitile: Optional[dict]=None,
+                 rect: Optional[list]=None,
                  top: ColorLike=(0, 0, 0),
                  bottom: ColorLike=(0, 0, 0)):
 
@@ -111,8 +114,10 @@ class Walls(object):
             'elevation': elevation,
             'height': height,
             'texture': texture,
+            'semitile': semitile,
             'top': top,
             'bottom': bottom,
+            'rect': rect,
         }
 
     def remove_tile(self: Self, pos: Point):

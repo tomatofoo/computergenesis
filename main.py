@@ -49,13 +49,6 @@ class Game(object):
         with open('data/map.json', 'r') as file:
             walls = json.loads(file.read())
             
-        walls['10;8'] = {
-            'elevation': 0,
-            'height': 2,
-            'texture': 0,
-            'semitile': {'axis': 1, 'pos': (0.7, 0), 'width': 1},
-            'rect': (0.7, 0, 0.0001, 1),
-        }
         walls['10;7'] = {
             'elevation': 0,
             'height': 1,
@@ -234,39 +227,33 @@ class Game(object):
                 top=(64, 64, 64),
                 bottom=(64, 64, 64),
             )
-            self._camera.render(self._surface)
 
-            # self._surface.blit(
-            #     gun,
-            #     (self._SURF_SIZE[0] - gun.width,
-            #      self._SURF_SIZE[1] - gun.height),
-            # )
-            pg.draw.rect(self._surface, (255, 255, 255), (159, 119, 2, 2))
-
-            # temp draw minimap
-            for tile in self._level.walls._tilemap:
-                split = tile.split(';')
-                rect = pg.Rect(int(split[0]) * 4, int(split[1]) * 4, 4, 4)
-                pg.draw.rect(self._surface, (255, 255, 255), rect)
-
-            player_rect = self._player.rect()
-            player_rect.update(
-                player_rect.left * 4,
-                player_rect.top * 4,
-                player_rect.width * 4,
-                player_rect.height * 4, 
+            top = self._level_timer / 60 % 2 - 1
+            bottom = top + 1
+            top = max(top, 0)
+            height = bottom - top
+            rect = (0.2, top, 0.0001, height)
+            self._level.walls.set_tile(
+                pos=(10, 8),
+                elevation=0,
+                height=2,
+                texture=0,
+                semitile={
+                    'axis': 1,
+                    'pos': (0.2, self._level_timer / 60 % 2 - 1),
+                    'width': 1,
+                },
+                rect=rect,
             )
-            pg.draw.rect(self._surface, (0, 255, 0), player_rect)
-
-            for entity in self._entities.entities.values():
-                entity_rect = entity.rect()
-                entity_rect.update(
-                    entity_rect.left * 4,
-                    entity_rect.top * 4,
-                    entity_rect.width * 4,
-                    entity_rect.height * 4, 
-                )
-                pg.draw.rect(self._surface, (255, 0, 0), entity_rect)
+            self._camera.render(self._surface)
+            
+            crosshair = (
+                self._surface.width / 2 - 1,
+                self._surface.height / 2 - 1,
+                2,
+                2,
+            )
+            pg.draw.rect(self._surface, (255, 255, 255), crosshair)
 
             frames.append(1 / delta_time if delta_time else math.inf)
             pg.display.set_caption(str(int(fps)))

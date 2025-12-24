@@ -966,7 +966,7 @@ cdef class Camera:
                             texture = texture.subsurface(
                                 left, top, rect_width, rect_height,
                             )
-                           
+                            
                             # scaling and lighting
                             # order depends on if scale is greater or less
                             # (optimization)
@@ -999,7 +999,7 @@ cdef class Camera:
                                     texture,
                                     (render_width, render_height),
                                 )
-                           
+
                             # add to depth buffer
                             for i in range(render_width):
                                 pos = (render_x + i, y)

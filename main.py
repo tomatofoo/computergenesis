@@ -209,7 +209,7 @@ class Game(object):
             
             self._entities.update(rel_game_speed, self._level_timer)
 
-            # moving wall
+            # moving walls
             self._level.walls.set_tile(
                 pos=(8, 11),
                 elevation=math.sin(self._level_timer / 60 + math.pi) + 1,
@@ -218,12 +218,6 @@ class Game(object):
                 pos=(9, 11),
                 height=math.sin(self._level_timer / 60) + 1,
             )
-
-            top = self._level_timer / 60 % 2 - 1
-            bottom = top + 1
-            top = max(top, 0)
-            height = bottom - top
-            rect = (0.2, top, 0.0001, height)
             self._level.walls.set_tile(
                 pos=(10, 8),
                 elevation=0,
@@ -234,10 +228,10 @@ class Game(object):
                     'pos': (0.2, self._level_timer / 60 % 2 - 1),
                     'width': 1,
                 },
-                rect=rect,
+                rect=(0.2, 0, 0.0001, 1),
             )
+
             self._camera.render(self._surface)
-            
             crosshair = (
                 self._surface.width / 2 - 1,
                 self._surface.height / 2 - 1,
@@ -245,6 +239,7 @@ class Game(object):
                 2,
             )
             pg.draw.rect(self._surface, (255, 255, 255), crosshair)
+
 
             frames.append(1 / delta_time if delta_time else math.inf)
             pg.display.set_caption(str(int(fps)))

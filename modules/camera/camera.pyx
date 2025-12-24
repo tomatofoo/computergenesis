@@ -524,7 +524,7 @@ cdef class Camera:
             float semiwidth = width / 2
             float mag
             float semitile
-            float semitile_rel_depth
+            float final_rel_depth
             float part
             float[2] ray
             float[2] tile
@@ -684,6 +684,7 @@ cdef class Camera:
                                 render_back = 2
                                 back_edge = render_end
                             final_end_pos = end_pos
+                            final_rel_depth = rel_depth
                         else:
                             render_end = -1 # so it doesn't get rendered
 
@@ -693,7 +694,7 @@ cdef class Camera:
                         render_back = 0
                         semitile = obj
                         final_end_pos = [end_pos[0], end_pos[1]]
-                        semitile_rel_depth = rel_depth
+                        final_rel_depth = rel_depth
                         # decimal part is how far the sheet is into tile
                         part = semitile - floorf(semitile)
 
@@ -706,9 +707,9 @@ cdef class Camera:
                             side = 1
                             disp_y = disp_x * slope
                             if ray[0]:
-                                semitile_rel_depth += disp_x / ray[0]
+                                final_rel_depth += disp_x / ray[0]
                             else:
-                                semitile_rel_depth = 2147483647
+                                final_rel_depth = 2147483647
                         else:
                             if side:
                                 disp_y = tile[1] + part - end_pos[1]
@@ -717,15 +718,15 @@ cdef class Camera:
                             side = 0
                             disp_x = disp_y / slope if slope else 2147483647
                             if ray[1]:
-                                semitile_rel_depth += disp_y / ray[1]
+                                final_rel_depth += disp_y / ray[1]
                             else:
-                                semitile_rel_depth = 2147483647
+                                final_rel_depth = 2147483647
 
                         final_end_pos[0] += disp_x
                         final_end_pos[1] += disp_y
 
                         # filter out lines that are erroneous
-                        if (semitile_rel_depth > 0
+                        if (final_rel_depth > 0
                             # ^ have to use > 0 because could be negative
                             # ^ might need semitile_rel_depth and 
                             # semitile_rel_depth >= rel_depth but in my testing 
@@ -733,9 +734,9 @@ cdef class Camera:
                             and floorf(final_end_pos[0]) == tile[0]
                             and floorf(final_end_pos[1]) == tile[1]):
 
-                            dist = semitile_rel_depth * mag
+                            dist = final_rel_depth * mag
                             self._calculate_line(
-                                semitile_rel_depth,
+                                final_rel_depth,
                                 data['height'],
                                 data['elevation'],
                                 calculation,
@@ -808,7 +809,7 @@ cdef class Camera:
                                     )
                                     
                                     obj = _DepthBufferObject(
-                                        rel_depth, (line, (x, render_y), rect),
+                                        final_rel_depth, (line, (x, render_y), rect),
                                     )
                                     render_buffer[x].append(obj)
                                     # rect bottom
@@ -819,7 +820,7 @@ cdef class Camera:
 
                         else: # transparent semitiles
                             obj = _DepthBufferObject(
-                                semitile_rel_depth,
+                                final_rel_depth,
                                 (line, (x, y)),
                             )
                             render_buffer[x].append(obj)

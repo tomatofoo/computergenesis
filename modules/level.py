@@ -10,6 +10,7 @@ from pygame.typing import ColorLike
 
 from modules.entities import EntityManager
 from modules.utils import FALLBACK_SURF
+from modules.utils import gen_tile_key
 
 
 class ColumnTexture(object):
@@ -102,15 +103,42 @@ class Walls(object):
 
     def set_tile(self: Self,
                  pos: Point,
-                 elevation: Real,
-                 height: Real,
-                 texture: int,
+                 elevation: Optional[Real]=None,
+                 height: Optional[Real]=None,
+                 texture: Optional[int]=None,
                  semitile: Optional[dict]=None,
                  rect: Optional[list]=None,
-                 top: ColorLike=(0, 0, 0),
-                 bottom: ColorLike=(0, 0, 0)):
-
-        self._tilemap[f'{pos[0]};{pos[1]}'] = {
+                 top: Optional[ColorLike]=None,
+                 bottom: Optional[ColorLike]=None):
+        
+        # Default Values
+        tile_key = gen_tile_key(pos)
+        tile = self._tilemap.get(tile_key)
+        if tile is None:
+            if elevation is None:
+                elevation = 0
+            if height is None:
+                height = 1
+            if texture is None:
+                texture = 0
+        else:
+            if elevation is None:
+                elevation = tile['elevation']
+            if height is None:
+                height = tile['height']
+            if texture is None:
+                texture = tile['texture']
+            if top is None:
+                top = tile.get('top')
+            if bottom is None:
+                bottom = tile.get('bottom')
+        if top is None:
+            top = (0, 0, 0)
+        if bottom is None:
+            bottom = (0, 0, 0)
+        
+        # Set
+        self._tilemap[tile_key] = {
             'elevation': elevation,
             'height': height,
             'texture': texture,

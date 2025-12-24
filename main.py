@@ -145,7 +145,6 @@ class Game(object):
             pos=(6, 5),
             elevation=1,
             height=2,
-            texture=0,
             top=(64, 64, 64),
             bottom=(64, 64, 64),
         )
@@ -214,18 +213,10 @@ class Game(object):
             self._level.walls.set_tile(
                 pos=(8, 11),
                 elevation=math.sin(self._level_timer / 60 + math.pi) + 1,
-                height=1,
-                texture=0,
-                top=(64, 64, 64),
-                bottom=(64, 64, 64),
             )
             self._level.walls.set_tile(
                 pos=(9, 11),
-                elevation=0,
                 height=math.sin(self._level_timer / 60) + 1,
-                texture=0,
-                top=(64, 64, 64),
-                bottom=(64, 64, 64),
             )
 
             top = self._level_timer / 60 % 2 - 1

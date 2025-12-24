@@ -504,6 +504,7 @@ cdef class Camera:
             int render_end
             int start
             int end
+            int axis
             int[2] dir
             int[3] calculation
             int offset
@@ -527,6 +528,7 @@ cdef class Camera:
             float semitile_width
             float final_rel_depth
             float part
+            float[2] semitile_pos
             float[2] ray
             float[2] tile
             float[2] end_pos
@@ -704,7 +706,7 @@ cdef class Camera:
                         part = semitile_pos[not axis]
 
                         # calculating displacements
-                        if axis:
+                        if axis: # y-axis
                             if side:
                                 disp_x = part - (not dir[0])
                             else:
@@ -714,7 +716,7 @@ cdef class Camera:
                                 final_rel_depth += disp_x / ray[0]
                             else:
                                 final_rel_depth = 2147483647
-                        else:
+                        else: # x-axis
                             if side:
                                 disp_y = tile[1] + part - end_pos[1]
                             else:

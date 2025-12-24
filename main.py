@@ -53,7 +53,7 @@ class Game(object):
             'elevation': 0,
             'height': 2,
             'texture': 0,
-            'semitile': {'axis': 1, 'pos': (0.7, -0.1), 'width': 1},
+            'semitile': {'axis': 1, 'pos': (0.7, 0), 'width': 1},
             'rect': (0.7, 0, 0.0001, 1),
         }
         walls['10;7'] = {

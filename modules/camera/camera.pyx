@@ -295,13 +295,12 @@ cdef class Camera:
     cdef cnp.ndarray[char, ndim=3] _generate_array(
         self: Self,
         int width,
-        float mult,
         left_ray: pg.Vector2,
         right_ray: pg.Vector2,
         scale: tuple,
         cnp.ndarray[char, ndim=3] texture,
         x_pixels: np.ndarray,
-        offsets: np.ndarray,
+        mult: np.ndarray,
     ):
         
         cdef: 
@@ -312,11 +311,11 @@ cdef class Camera:
         # basically, some of the vertical camera plane is below the ground
         # intersection between ground and ray is behind the plane
         # (not in front); we use this multiplier
-        start_points_x = mult / offsets * left_ray[0]
-        start_points_y = mult / offsets * left_ray[1]
+        start_points_x = mult * left_ray[0]
+        start_points_y = mult * left_ray[1]
 
-        end_points_x = mult / offsets * right_ray[0]
-        end_points_y = mult / offsets * right_ray[1]
+        end_points_x = mult * right_ray[0]
+        end_points_y = mult * right_ray[1]
 
         step_x = (end_points_x - start_points_x) / width
         step_y = (end_points_y - start_points_y) / width
@@ -383,13 +382,12 @@ cdef class Camera:
                 mult = self._tile_size * <float>self._player._render_elevation
                 array = self._generate_array(
                     width=width,
-                    mult=mult,
                     left_ray=left_ray,
                     right_ray=right_ray,
                     scale=obj._scale,
                     texture=obj._array,
                     x_pixels=x_pixels,
-                    offsets=offsets,
+                    mult=mult / offsets,
                 )
                 
                 #lighting
@@ -428,13 +426,12 @@ cdef class Camera:
                 )
                 array = self._generate_array(
                     width=width,
-                    mult=mult,
                     left_ray=left_ray,
                     right_ray=right_ray,
                     scale=obj._scale,
                     texture=obj._array,
                     x_pixels=x_pixels,
-                    offsets=offsets,
+                    mult=mult / offsets,
                 )
                 
                 # lighting

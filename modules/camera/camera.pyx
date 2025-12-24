@@ -957,7 +957,9 @@ cdef class Camera:
                             # lighting
                             if not entity._glowing and self._darkness:
                                 # mgaic numbers found by testing
-                                factor = -rel_vector[2]**0.9 * self._darkness / 7
+                                factor = (
+                                    -rel_vector[2]**0.9 * self._darkness / 7
+                                )
                                 texture = pg.transform.hsl(
                                     texture, 0, 0, fmax(factor, -1),
                                 )
@@ -975,7 +977,9 @@ cdef class Camera:
                                          pos,
                                          (i, 0, 1, render_height)),
                                     )
-                                    bisect.insort_left(render_buffer[pos[0]], obj)
+                                    bisect.insort_left(
+                                        render_buffer[pos[0]], obj,
+                                    )
 
         for x in range(width):
             blits = render_buffer[x]

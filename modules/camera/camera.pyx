@@ -523,7 +523,8 @@ cdef class Camera:
             float factor
             float semiwidth = width / 2
             float mag
-            float semitile
+            float semitile_offset
+            float semitile_width
             float final_rel_depth
             float part
             float[2] ray
@@ -595,7 +596,7 @@ cdef class Camera:
                         render_back = 1
                         back_edge = height
                 else:
-                    side = obj < 1
+                    side = not obj['axis']
                     # ^ needed when is directly underneath player
 
             # keep on changing end_pos until hitting a wall (DDA)
@@ -683,8 +684,8 @@ cdef class Camera:
                             elif horizon > render_end:
                                 render_back = 2
                                 back_edge = render_end
-                            final_end_pos = end_pos
                             final_rel_depth = rel_depth
+                            part = end_pos[side] % 1
                         else:
                             render_end = -1 # so it doesn't get rendered
 
@@ -692,19 +693,22 @@ cdef class Camera:
                         # slow when directly next to wall because 
                         # these don't use rpa
                         render_back = 0
-                        semitile = obj
                         final_end_pos = [end_pos[0], end_pos[1]]
                         final_rel_depth = rel_depth
-                        # decimal part is how far the sheet is into tile
-                        part = semitile - floorf(semitile)
+                        
+                        # data about semitile
+                        axis = obj['axis']
+                        semitile_width = obj['width']
+                        semitile_pos = obj['pos']
+                        semitile_offset = semitile_pos[axis]
+                        part = semitile_pos[not axis]
 
                         # calculating displacements
-                        if semitile >= 1:
+                        if axis:
                             if side:
                                 disp_x = part - (not dir[0])
                             else:
                                 disp_x = tile[0] + part - end_pos[0]
-                            side = 1
                             disp_y = disp_x * slope
                             if ray[0]:
                                 final_rel_depth += disp_x / ray[0]
@@ -715,15 +719,15 @@ cdef class Camera:
                                 disp_y = tile[1] + part - end_pos[1]
                             else:
                                 disp_y = part - (not dir[1])
-                            side = 0
                             disp_x = disp_y / slope if slope else 2147483647
                             if ray[1]:
                                 final_rel_depth += disp_y / ray[1]
                             else:
                                 final_rel_depth = 2147483647
-
+                        
                         final_end_pos[0] += disp_x
                         final_end_pos[1] += disp_y
+                        part = final_end_pos[axis] - tile[axis]
 
                         # filter out lines that are erroneous
                         if (final_rel_depth > 0
@@ -732,8 +736,12 @@ cdef class Camera:
                             # semitile_rel_depth >= rel_depth but in my testing 
                             # nothing has gone wrong with > 0
                             and floorf(final_end_pos[0]) == tile[0]
-                            and floorf(final_end_pos[1]) == tile[1]):
-
+                            and floorf(final_end_pos[1]) == tile[1]
+                            and part >= semitile_offset
+                            and part < semitile_offset + semitile_width):
+                            
+                            # final part
+                            part = (part - semitile_offset) / semitile_width
                             dist = final_rel_depth * mag
                             self._calculate_line(
                                 final_rel_depth,
@@ -757,9 +765,7 @@ cdef class Camera:
                         # Transformation
                         texture = textures[data['texture']]
                         texture_height = texture.height
-                        dex = int(floorf(
-                            final_end_pos[side] % 1 * <int>texture.width,
-                        ))
+                        dex = int(floorf(part * <int>texture.width))
                         
                         # only resize the part that is visible (optimization)
                         scale = render_line_height / <float>texture_height

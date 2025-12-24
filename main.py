@@ -53,14 +53,14 @@ class Game(object):
             'elevation': 0,
             'height': 2,
             'texture': 0,
-            'semitile': 1.7, # int is side, float is part
+            'semitile': {'axis': 1, 'pos': (0.7, -0.1), 'width': 1},
             'rect': (0.7, 0, 0.0001, 1),
         }
         walls['10;7'] = {
             'elevation': 0,
             'height': 1,
             'texture': 0,
-            'semitile': 0.0,
+            'semitile': {'axis': 0, 'pos': (0, 0), 'width': 1},
             'rect': (0, -0.0001, 1, 0.0001),
         }
         

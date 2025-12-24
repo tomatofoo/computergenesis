@@ -76,9 +76,9 @@ cdef void _limits_reset(_Limits *limits):
     memset(limits._arr, 0, limits._capacity * sizeof(_Limit))
     limits._amount = 0
 
-cdef int _limits_add(_Limits* limits, int start, int end): # bool
+cdef bool _limits_add(_Limits* limits, int start, int end): # bool
     if limits._amount >= limits._capacity:
-        return 0
+        return False
 
     cdef:
         _Limit limit = _Limit(start, end)
@@ -120,17 +120,17 @@ cdef int _limits_add(_Limits* limits, int start, int end): # bool
 
     limits._amount = cur + 1
 
-    return 1
+    return True
 
-cdef int _limits_full(_Limits *limits, int start, int end): # bool
+cdef bool _limits_full(_Limits *limits, int start, int end): # bool
     cdef:
         _Limit item
         size_t i
     for i in range(limits._amount):
         item = limits._arr[i]
         if item._start <= start and item._end >= end:
-            return 1
-    return 0
+            return True
+    return False
 
 
 cdef class _DepthBufferObject:
@@ -968,13 +968,16 @@ cdef class Camera:
                             )
                            
                             # scaling and lighting
+                            # order depends on if scale is greater or less
+                            # (optimization)
                             # I know this might be long but it works so yes
-                            if not entity._glowing and self._darkness:
+                            if not entity._glowing and self._darkness: # light
                                 factor = (
                                     -rel_vector[2]**0.9 * self._darkness / 7
                                 )
                                 if (render_width * render_height
                                     <= rect_width * rect_height):
+
                                     texture = pg.transform.scale(
                                         texture,
                                         (render_width, render_height),
@@ -996,7 +999,7 @@ cdef class Camera:
                                     texture,
                                     (render_width, render_height),
                                 )
-                            
+                           
                             # add to depth buffer
                             for i in range(render_width):
                                 pos = (render_x + i, y)

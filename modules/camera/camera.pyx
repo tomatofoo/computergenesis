@@ -76,9 +76,9 @@ cdef void _limits_reset(_Limits *limits):
     memset(limits._arr, 0, limits._capacity * sizeof(_Limit))
     limits._amount = 0
 
-cdef bool _limits_add(_Limits* limits, int start, int end):
+cdef int _limits_add(_Limits* limits, int start, int end): # bool
     if limits._amount >= limits._capacity:
-        return False
+        return 0
 
     cdef:
         _Limit limit = _Limit(start, end)
@@ -120,23 +120,23 @@ cdef bool _limits_add(_Limits* limits, int start, int end):
 
     limits._amount = cur + 1
 
-    return True
+    return 1
 
-cdef bool _limits_full(_Limits *limits, int start, int end):
+cdef int _limits_full(_Limits *limits, int start, int end): # bool
     cdef:
         _Limit item
         size_t i
     for i in range(limits._amount):
         item = limits._arr[i]
         if item._start <= start and item._end >= end:
-            return True
-    return False
+            return 1
+    return 0
 
 
 cdef class _DepthBufferObject:
     cdef public float _depth
     cdef public tuple _args
-    cdef public bool _is_rect
+    cdef public int _is_rect
 
     def __init__(self: Self,
                  float depth,
@@ -966,20 +966,38 @@ cdef class Camera:
                             texture = texture.subsurface(
                                 left, top, rect_width, rect_height,
                             )
-                            # lighting
+                           
+                            # scaling and lighting
+                            # I know this might be long but it works so yes
                             if not entity._glowing and self._darkness:
-                                # mgaic numbers found by testing
                                 factor = (
                                     -rel_vector[2]**0.9 * self._darkness / 7
                                 )
-                                texture = pg.transform.hsl(
-                                    texture, 0, 0, fmax(factor, -1),
+                                if (render_width * render_height
+                                    <= rect_width * rect_height):
+                                    texture = pg.transform.scale(
+                                        texture,
+                                        (render_width, render_height),
+                                    )
+                                    pg.transform.hsl(
+                                        texture,
+                                        0, 0, fmax(factor, -1),
+                                        texture,
+                                    )
+                                else:
+                                    texture = pg.transform.scale(
+                                        pg.transform.hsl(
+                                            texture, 0, 0, fmax(factor, -1),
+                                        ),
+                                        (render_width, render_height),
+                                    )
+                            else: # no lighting
+                                texture = pg.transform.scale(
+                                    texture,
+                                    (render_width, render_height),
                                 )
-                            # scaling
-                            texture = pg.transform.scale(
-                                texture,
-                                (render_width, render_height),
-                            )
+                            
+                            # add to depth buffer
                             for i in range(render_width):
                                 pos = (render_x + i, y)
                                 if 0 <= pos[0] < width:

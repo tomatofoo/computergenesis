@@ -23,7 +23,7 @@ from modules.camera import Camera
 class Game(object):
 
     _SCREEN_SIZE = (960, 720)
-    _SURF_RATIO = (1, 1)
+    _SURF_RATIO = (3, 3)
     _SURF_SIZE = (
         int(_SCREEN_SIZE[0] / _SURF_RATIO[0]),
         int(_SCREEN_SIZE[1] / _SURF_RATIO[1]),

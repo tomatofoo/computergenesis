@@ -151,6 +151,7 @@ cdef class _DepthBufferObject:
         return self._depth < obj._depth
 
 
+# A shit ton of changes might need to be made for multi tilemap support
 cdef class Camera:
     
     cdef:

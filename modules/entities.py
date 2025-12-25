@@ -710,7 +710,7 @@ class EntityManager(object):
             self._sets[key] = set()
         self._sets[key].add(entity)
 
-    def add_entity(self: Self, entity: Entity, id: object) -> None:
+    def add_entity(self: Self, id: object, entity: Entity) -> None:
         self._entities[id] = entity
         self._add_to_sets(entity)
 

@@ -1,0 +1,29 @@
+from typing import Self
+
+from modules.weapons import Weapon
+
+
+class Collectible(object):
+    def __init__(self: Self, textures: list[pg.Surface]) -> None:
+        self._textures = textures
+
+
+class Inventory(object):
+    def __init__(self: Self,
+                 weapons: set[Weapon]=set(),
+                 collectibles: set[Collectible]=set()) -> None:
+        self._weapons = weapons
+        self._collectibles = collectibles
+
+    def add_weapon(self: Self, weapon: Weapon) -> None:
+        self._weapons.add(weapon)
+
+    def remove_weapon(self: Self, weapon: Weapon) -> None:
+        self._weapons.remove(weapon)
+
+    def add_collectible(self: Self, collectible: Collectible) -> None:
+        self._collectibles.add(collectible)
+
+    def remove_collectible(self: Self, collectible: Collectible) -> None:
+        self._collectibles.remove(collectible)
+

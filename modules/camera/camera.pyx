@@ -355,6 +355,7 @@ cdef class Camera:
             cnp.ndarray[char, ndim=3] array
 
             # Sky stuff
+            int sky_height
             float semiheight = height / 2
             float mult
             float scroll = -<float>self._player._yaw_value * width / 100
@@ -364,12 +365,14 @@ cdef class Camera:
         # Actual Render
         obj = level._floor
         if isinstance(obj, Sky):
+            # scale the same factor as width
+            sky_height = obj._height * width / obj._width
             rect = (0, horizon, width, height - horizon)
-            if height < obj._height:
+            if height < sky_height:
                 self._floor = obj.scroll(
                     scroll,
                     width,
-                    obj._height,
+                    sky_height,
                 ).subsurface(rect)
         elif obj:
             # Floor Casting
@@ -409,12 +412,14 @@ cdef class Camera:
         obj = level._ceiling
         # Ceiling Casting
         if isinstance(obj, Sky):
-            rect = (0, obj._height - horizon, width, horizon)
-            if obj._height > horizon:
+            # scale the same factor as width
+            sky_height = obj._height * width / obj._width
+            rect = (0, sky_height - horizon, width, horizon)
+            if sky_height > horizon:
                 self._ceiling = obj.scroll(
                     scroll,
                     width,
-                    obj._height,
+                    sky_height,
                 ).subsurface(rect)
         elif obj:
             if horizon > 0:

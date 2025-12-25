@@ -76,14 +76,11 @@ class Floor(object):
 
 
 class Sky(object):
-    def __init__(self: Self,
-                 surf: pg.Surface=FALLBACK_SURF,
-                 height: Optional[int]=None) -> None:
+    def __init__(self: Self, surf: pg.Surface=FALLBACK_SURF) -> None:
 
         self._surf = surf
-        self._height = height
-        if height is None:
-            self._height = surf.height
+        self._width = surf.width
+        self._height = surf.height
     
     def scroll(self: Self,
                offset: Real,

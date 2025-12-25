@@ -18,6 +18,9 @@ from modules.entities import Entity
 from modules.entities import Player
 from modules.entities import EntityManager 
 from modules.camera import Camera
+from modules.hud import HUDElement
+from modules.hud import HUDWeapon
+from modules.hud import HUD
 
 
 class Game(object):
@@ -49,29 +52,11 @@ class Game(object):
         with open('data/map.json', 'r') as file:
             walls = json.loads(file.read())
             
-        walls['10;7'] = {
-            'elevation': 0,
-            'height': 1,
-            'texture': 0,
-            'semitile': {'axis': 0, 'pos': (0, 0), 'width': 1},
-            'rect': (0, -0.0001, 1, 0.0001),
-        }
-        
-        for i in range(10):
-            walls[f'{10 + i};6'] = {
-                'elevation': 0,
-                'height': 0.19 + 0.19 * i,
-                'texture': 0,
-                'top': (64, 64, 64),
-                'bottom': (64, 64, 64),
-            }
-        
         self._wall_textures = (
             ColumnTexture(pg.image.load('data/images/redbrick.png').convert()),
         )
 
         #temp
-
         entities = {
             0: Entity(
                 height=0.6,
@@ -129,8 +114,6 @@ class Game(object):
             walls=Walls(walls, self._wall_textures),
             entities=self._entities,
         )
-        
-        #temp
         pg.mouse.set_relative_mode(1)
 
         self._camera = Camera(
@@ -141,13 +124,43 @@ class Game(object):
         )
         self._camera.horizon = 0.5
         self._level_timer = 0
+        
+        # HUD
+        textures = [
+            pg.image.load('data/images/shotgun/1.png'),
+            pg.image.load('data/images/shotgun/2.png'),
+            pg.image.load('data/images/shotgun/3.png'),
+            pg.image.load('data/images/shotgun/4.png'),
+        ]
+        for surf in textures:
+            surf.set_colorkey((255, 0, 255))
+        gun = HUDWeapon(
+            default=[textures[0]],
+            attack=textures[1:],
+            pos=(100, 80),
+        )
+        self._hud = HUD([gun])
 
+    def move_tiles(self: Self) -> None:
         self._level.walls.set_tile(
-            pos=(6, 5),
-            elevation=1,
+            pos=(8, 11),
+            elevation=math.sin(self._level_timer / 60 + math.pi) + 1,
+        )
+        self._level.walls.set_tile(
+            pos=(9, 11),
+            height=math.sin(self._level_timer / 60) + 1,
+        )
+        self._level.walls.set_tile(
+            pos=(10, 8),
+            elevation=0,
             height=2,
-            top=(64, 64, 64),
-            bottom=(64, 64, 64),
+            texture=0,
+            semitile={
+                'axis': 1,
+                'pos': (0.2, self._level_timer / 60 % 2 - 1),
+                'width': 1,
+            },
+            rect=(0.2, 0, 0.0001, 1),
         )
 
     def run(self: Self) -> None:
@@ -175,20 +188,20 @@ class Game(object):
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     self._running = 0
-                # temp
                 elif event.type == pg.MOUSEMOTION:
                     rel = pg.mouse.get_rel()
                     self._player.yaw += rel[0] * 0.2
                     #self._camera.horizon -= rel[1] * 0.0025
-
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     self._player.hitscan_shoot(100)
                     shotgun.play()
-
                 elif event.type == second:
                     fps = mean(frames)
+                    pg.display.set_caption(str(int(fps)))
                     frames = []
-
+            
+            # Update
+            self.move_tiles()
             keys = pg.key.get_pressed()
             movement = (
                 (keys[pg.K_w] - keys[pg.K_s]) * 0.05,
@@ -197,7 +210,6 @@ class Game(object):
                 (keys[pg.K_DOWN] - keys[pg.K_UP]),
                 (keys[pg.K_SPACE] - keys[pg.K_LSHIFT]) * 0.05,
             )
-
             self._player.update(
                 rel_game_speed,
                 self._level_timer,
@@ -206,44 +218,15 @@ class Game(object):
                 movement[2],
                 movement[4] if movement[4] else None,
             )
-            self._camera.horizon -= movement[3] * 0.025 * rel_game_speed
-            
             self._entities.update(rel_game_speed, self._level_timer)
-
-            # moving walls
-            self._level.walls.set_tile(
-                pos=(8, 11),
-                elevation=math.sin(self._level_timer / 60 + math.pi) + 1,
-            )
-            self._level.walls.set_tile(
-                pos=(9, 11),
-                height=math.sin(self._level_timer / 60) + 1,
-            )
-            self._level.walls.set_tile(
-                pos=(10, 8),
-                elevation=0,
-                height=2,
-                texture=0,
-                semitile={
-                    'axis': 1,
-                    'pos': (0.2, self._level_timer / 60 % 2 - 1),
-                    'width': 1,
-                },
-                rect=(0.2, 0, 0.0001, 1),
-            )
-
-            self._camera.render(self._surface)
-            crosshair = (
-                self._surface.width / 2 - 1,
-                self._surface.height / 2 - 1,
-                2,
-                2,
-            )
-            pg.draw.rect(self._surface, (255, 255, 255), crosshair)
-
-
             frames.append(1 / delta_time if delta_time else math.inf)
-            pg.display.set_caption(str(int(fps)))
+
+            self._camera.horizon -= movement[3] * 0.025 * rel_game_speed
+            self._hud.update(rel_game_speed, self._level_timer)
+            
+            # Render
+            self._camera.render(self._surface)
+            self._hud.render(self._surface)
 
             resized_surf = pg.transform.scale(self._surface, self._SCREEN_SIZE)
             self._screen.blit(resized_surf, (0, 0))

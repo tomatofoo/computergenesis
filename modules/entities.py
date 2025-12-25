@@ -7,6 +7,7 @@ from typing import Optional
 import pygame as pg
 from pygame.typing import Point
 
+from modules.weapons import Weapon
 from modules.utils import FALLBACK_SURF
 from modules.utils import gen_tile_key
 
@@ -362,7 +363,8 @@ class Player(Entity):
                  width: Real=0.5,
                  height: Real=1,
                  climb: Real=0.2,
-                 gravity: Real=0.004) -> None:
+                 gravity: Real=0.004,
+                 weapon: Weapon=None) -> None:
 
         super().__init__(
             width=width,
@@ -370,6 +372,7 @@ class Player(Entity):
             climb=climb,
             gravity=gravity,
         )
+        self._weapon = weapon
 
         self._climbing = 0
 

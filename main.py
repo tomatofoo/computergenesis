@@ -18,8 +18,9 @@ from modules.entities import Entity
 from modules.entities import Player
 from modules.entities import EntityManager 
 from modules.camera import Camera
+from modules.inventory import Collectible
+from modules.inventory import Inventory
 from modules.hud import HUDElement
-from modules.hud import HUDWeapon
 from modules.hud import HUD
 
 
@@ -134,12 +135,6 @@ class Game(object):
         ]
         for surf in textures:
             surf.set_colorkey((255, 0, 255))
-        gun = HUDWeapon(
-            default=[textures[0]],
-            attack=textures[1:],
-            pos=(100, 80),
-        )
-        self._hud = HUD([gun])
 
     def move_tiles(self: Self) -> None:
         self._level.walls.set_tile(
@@ -222,11 +217,9 @@ class Game(object):
             frames.append(1 / delta_time if delta_time else math.inf)
 
             self._camera.horizon -= movement[3] * 0.025 * rel_game_speed
-            self._hud.update(rel_game_speed, self._level_timer)
             
             # Render
             self._camera.render(self._surface)
-            self._hud.render(self._surface)
 
             resized_surf = pg.transform.scale(self._surface, self._SCREEN_SIZE)
             self._screen.blit(resized_surf, (0, 0))

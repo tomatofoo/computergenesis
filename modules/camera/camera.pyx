@@ -1,4 +1,4 @@
-# cython: language_level=3, profile=True, boundscheck=True, wraparound=False, initializedcheck=False, cdivision=True, cpow=True
+# cython: language_level=3, profile=True, boundscheck=False, wraparound=False, initializedcheck=False, cdivision=True, cpow=True
 
 cimport cython
 from cpython.mem cimport PyMem_Calloc
@@ -347,6 +347,7 @@ cdef class Camera:
             object left_ray = self._yaw - self._player._semiplane
             object right_ray = self._yaw + self._player._semiplane
             object obj
+            object level = self._player._manager._level
             int difference
             int amount_of_offsets
         
@@ -361,7 +362,7 @@ cdef class Camera:
         x_pixels = np.vstack(np.linspace(0, width, num=width, endpoint=0))
 
         # Actual Render
-        obj = self._player._manager._level._floor
+        obj = level._floor
         if isinstance(obj, Sky):
             rect = (0, horizon, width, height - horizon)
             if height < obj._height:
@@ -405,7 +406,7 @@ cdef class Camera:
 
                 self._floor = pg.surfarray.make_surface(array)
 
-        obj = self._player._manager._level._ceiling
+        obj = level._ceiling
         # Ceiling Casting
         if isinstance(obj, Sky):
             rect = (0, obj._height - horizon, width, horizon)
@@ -426,7 +427,8 @@ cdef class Camera:
 
                 mult = (
                     self._tile_size
-                    * (1 - <float>self._player._render_elevation)
+                    * (<float>level._ceiling_elevation
+                       - <float>self._player._render_elevation)
                 )
                 array = self._generate_array(
                     width=width,
@@ -798,7 +800,7 @@ cdef class Camera:
 
                         # if not semitile or if semitile and no alpha
                         # walls expected to have no transparency
-                        if obj is None or texture._alpha is None:
+                        if obj is None or not texture._transparency:
                             # Reverse Painter's Algorithm
                             amount = limits._amount
                             # not enumerated because + 1
@@ -971,7 +973,8 @@ cdef class Camera:
                             # order depends on if scale is greater or less
                             # (optimization)
                             # I know this might be long but it works so yes
-                            if not entity._glowing and self._darkness: # light
+                            # lighting
+                            if not entity._glowing and self._darkness:
                                 factor = (
                                     -rel_vector[2]**0.9 * self._darkness / 7
                                 )

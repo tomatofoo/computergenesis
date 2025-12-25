@@ -1,3 +1,4 @@
+import math
 from numbers import Real
 from typing import Self
 from typing import Union
@@ -16,7 +17,10 @@ from modules.utils import gen_tile_key
 class ColumnTexture(object):
     def __init__(self: Self, surf: pg.Surface=FALLBACK_SURF) -> None:
         self._surf = surf
-        self._alpha = surf.get_alpha()
+        self._transparency = (
+            surf.get_colorkey() is not None
+            or surf.get_alpha() is not None
+        )
 
     def __getitem__(self: Self, dex: int) -> pg.Surface:
         return self._surf.subsurface((dex, 0, 1, self._surf.height))
@@ -165,10 +169,14 @@ class Level(object):
                  floor: Optional[Union[Floor, Sky]],
                  ceiling: Optional[Union[Floor, Sky]],
                  walls: Walls,
-                 entities: EntityManager) -> None:
+                 entities: EntityManager,
+                 ceiling_elevation: Real=1) -> None:
 
         self._floor = floor
         self._ceiling = ceiling
+        self._ceiling_elevation = ceiling_elevation
+        if not isinstance(ceiling, Floor):
+            self._ceiling_elevation = math.inf
         self._walls = walls
         self._entities = entities
         entities._level = self

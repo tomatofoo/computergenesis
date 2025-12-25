@@ -31,9 +31,9 @@ class Entity(object):
 
         self.yaw = 0
         self.velocity2 = (0, 0)
+        self.elevation = 0
         self.elevation_velocity = 0
         self.yaw_velocity = 0
-        self.elevation = 0
         self.textures = textures
         self._glowing = 0
         self._pos = pg.Vector2(0, 0)
@@ -341,6 +341,9 @@ class Entity(object):
         self._elevation_velocity -= self._gravity * rel_game_speed
         if self._elevation <= 0:
             self._elevation_velocity = 0
+        if self.top >= self._manager._level._ceiling_elevation:
+            self.top = self._manager._level._ceiling_elevation
+            self._elevation_velocity = 0
         entity_rect = self.rect()
         for rect, bottom, top in self._get_rects_around():
             vertical = self._elevation < top and self.top > bottom
@@ -483,6 +486,9 @@ class Player(Entity):
         self.elevation += self._elevation_velocity * rel_game_speed
         if self._elevation <= 0:
             self._elevation_velocity = 0
+        if self.top >= self._manager._level._ceiling_elevation:
+            self.top = self._manager._level._ceiling_elevation
+            self._elevation_velocity = 0
         entity_rect = self.rect()
         for rect, bottom, top in self._get_rects_around():
             vertical = self._elevation < top and self.top > bottom
@@ -612,7 +618,8 @@ class Player(Entity):
 
             tile_key = gen_tile_key(tile)
             data = tilemap.get(tile_key)
-            if data is not None:
+            # allows shooting through semitiles
+            if data is not None and data.get('semitile') is None:
                 center = (tile[0] + 0.5, tile[1] + 0.5)
                 center_dist = self._pos.distance_to(center)
                 if center_dist:

@@ -65,17 +65,12 @@ class Game(object):
                 'top': (64, 64, 64),
                 'bottom': (64, 64, 64),
             }
-
+        
         self._wall_textures = (
             ColumnTexture(pg.image.load('data/images/redbrick.png').convert()),
         )
 
         #temp
-        self._player = Player()
-        self._player.pos = (6.5, 7)
-        self._player.yaw = 180
-        self._player.elevation = 1
-        self._player.height = 0.6
 
         entities = {
             0: Entity(
@@ -113,14 +108,20 @@ class Game(object):
         entities[2].pos = (6.5, 4)
         entities[3].pos = (6.5, 3)
         entities[4].pos = (6.5, 2)
-        
+
         entities[0].glowing = 1
         entities[1].glowing = 1
         entities[2].glowing = 1
         entities[3].glowing = 1
         entities[4].glowing = 1
 
+        self._player = Player()
         self._entities = EntityManager(self._player, entities)
+
+        self._player.pos = (6.5, 7)
+        self._player.yaw = 180
+        self._player.elevation = 1
+        self._player.height = 0.6
 
         self._level = Level(
             floor=Floor(pg.image.load('data/images/wood.png').convert()),

@@ -258,8 +258,12 @@ cdef class Camera:
         self._weapon_pos = value
         cdef float[2] old = self._player._settings['weapon_pos']
         self._player._render_weapon_pos = (
-            value[0] + self._player._render_weapon_pos[0] - old[0],
-            value[1] + self._player._render_weapon_pos[1] - old[1],
+            <float>value[0]
+            + <float>self._player._render_weapon_pos[0]
+            - old[0],
+            <float>value[1]
+            + <float>self._player._render_weapon_pos[1]
+            - old[1],
         )
         self._player._settings['weapon_pos'] = value
 

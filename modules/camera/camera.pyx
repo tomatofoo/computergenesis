@@ -176,6 +176,7 @@ cdef class Camera:
         object _walls_and_entities
         object _weapon
         object _weapon_pos # uv coords, python obj on purpose
+        bool _multithreaded
 
     def __init__(self: Self,
                  float fov,
@@ -190,7 +191,8 @@ cdef class Camera:
                  float climb_speed=0.15,
                  float darkness=1,
                  float max_line_height=50,
-                 float min_entity_depth=0.05) -> None:
+                 float min_entity_depth=0.05,
+                 bool multithreaded=False) -> None:
         
         self._yaw_magnitude = 1 / tan(radians(fov) / 2)
         # already sets yaw V
@@ -203,6 +205,7 @@ cdef class Camera:
         self._max_line_height = max_line_height
         self._min_entity_depth = min_entity_depth
         self._darkness = darkness
+        self._multithreaded = multithreaded
 
         self.headbob_strength = headbob_strength
         self.headbob_frequency = headbob_frequency
@@ -352,6 +355,14 @@ cdef class Camera:
     @min_entity_depth.setter
     def min_entity_depth(self: Self, float value):
         self._min_entity_depth = value
+
+    @property
+    def multithreaded(self: Self) -> bool:
+        return self._multithreaded
+
+    @multithreaded.setter
+    def multithreaded(self: Self, bool value) -> None:
+        self._multithreaded = value
     
     # array multiplication to render floor
     cdef cnp.ndarray[char, ndim=3] _generate_array(
@@ -1079,7 +1090,7 @@ cdef class Camera:
                                     bisect.insort_left(
                                         render_buffer[pos[0]], obj,
                                     )
-
+        
         for x in range(width):
             blits = render_buffer[x]
             # the objects are added in closest-to-farthest
@@ -1122,21 +1133,25 @@ cdef class Camera:
         self._walls_and_entities.fill((0, 0, 0, 0))
         self._weapon = None
         
-        # Threads
-        floor_and_ceiling = Thread(
-            target=self._render_floor_and_ceiling,
-            args=(width, height, horizon),
-        )
-        walls_and_entities = Thread(
-            target=self._render_walls_and_entities,
-            args=(width, height, horizon),
-        )
-        
-        floor_and_ceiling.start()
-        walls_and_entities.start()
-        floor_and_ceiling.join()
-        walls_and_entities.join()
-        
+        # Rendering
+        if self._multithreaded:
+            floor_and_ceiling = Thread(
+                target=self._render_floor_and_ceiling,
+                args=(width, height, horizon),
+            )
+            walls_and_entities = Thread(
+                target=self._render_walls_and_entities,
+                args=(width, height, horizon),
+            )
+            
+            floor_and_ceiling.start()
+            walls_and_entities.start()
+            floor_and_ceiling.join()
+            walls_and_entities.join()
+        else:
+            self._render_floor_and_ceiling(width, height, horizon)
+            self._render_walls_and_entities(width, height, horizon)
+
         # Blits
         if self._floor is not None:
             surf.blit(self._floor, (0, horizon))

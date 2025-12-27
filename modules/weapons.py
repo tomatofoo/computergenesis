@@ -1,7 +1,14 @@
+from __future__ import annotations
+
 from numbers import Real
 from typing import Self
 
 import pygame as pg
+
+# Avoid circular import
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from modules.entities import Missile
 
 
 # This is a very weird file but it creates an abstraction layer
@@ -13,9 +20,9 @@ class Weapon(object):
                  ground_textures: list[pg.Surface],
                  hold_textures: list[pg.Surface],
                  attack_textures: list[pg.Surface],
-                 ground_animation_time: Real=0,
-                 hold_animation_time: Real=0,
-                 attack_animation_time: Real=0) -> None:
+                 ground_animation_time: Real=1,
+                 hold_animation_time: Real=1,
+                 attack_animation_time: Real=1) -> None:
         self._range = attack_range
         self._damage = damage
         
@@ -47,9 +54,9 @@ class AmmoWeapon(Weapon):
                  ground_textures: list[pg.Surface],
                  hold_textures: list[pg.Surface],
                  attack_textures: list[pg.Surface],
-                 ground_animation_time=0,
-                 hold_animation_time=0,
-                 attack_animation_time=0) -> None:
+                 ground_animation_time=1,
+                 hold_animation_time=1,
+                 attack_animation_time=1) -> None:
 
         super().__init__(
             damage=damage,
@@ -88,9 +95,9 @@ class MeleeWeapon(Weapon):
                  ground_textures: list[pg.Surface],
                  hold_textures: list[pg.Surface],
                  attack_textures: list[pg.Surface],
-                 ground_animation_time=0,
-                 hold_animation_time=0,
-                 attack_animation_time=0) -> None:
+                 ground_animation_time=1,
+                 hold_animation_time=1,
+                 attack_animation_time=1) -> None:
         super().__init__(
             damage=damage,
             attack_range=attack_range,
@@ -111,9 +118,9 @@ class HitscanWeapon(AmmoWeapon):
                  ground_textures: list[pg.Surface],
                  hold_textures: list[pg.Surface],
                  attack_textures: list[pg.Surface],
-                 ground_animation_time=0,
-                 hold_animation_time=0,
-                 attack_animation_time=0) -> None:
+                 ground_animation_time=1,
+                 hold_animation_time=1,
+                 attack_animation_time=1) -> None:
 
         super().__init__(
             damage=damage,
@@ -133,12 +140,13 @@ class MissileWeapon(AmmoWeapon):
                  damage: Real,
                  attack_range: Real,
                  capacity: int,
+                 missile: Missile,
                  ground_textures: list[pg.Surface],
                  hold_textures: list[pg.Surface],
                  attack_textures: list[pg.Surface],
-                 ground_animation_time=0,
-                 hold_animation_time=0,
-                 attack_animation_time=0) -> None:
+                 ground_animation_time=1,
+                 hold_animation_time=1,
+                 attack_animation_time=1) -> None:
 
         super().__init__(
             damage=damage,

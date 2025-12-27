@@ -8,6 +8,9 @@ import pygame as pg
 from pygame.typing import Point
 
 from modules.weapons import Weapon
+from modules.weapons import MeleeWeapon
+from modules.weapons import HitscanWeapon
+from modules.weapons import MissileWeapon
 from modules.utils import FALLBACK_SURF
 from modules.utils import gen_tile_key
 
@@ -20,7 +23,8 @@ class Entity(object):
         (-1, -1), (0, -1), (1, -1),
     )
 
-    def __init__(self: Self, 
+    def __init__(self: Self,
+                 pos: Point=(0, 0),
                  width: Real=0.5,
                  height: Real=1,
                  health: Real=100,
@@ -37,7 +41,7 @@ class Entity(object):
         self.yaw_velocity = 0
         self.textures = textures
         self._glowing = 0
-        self._pos = pg.Vector2(0, 0)
+        self._pos = pg.Vector2(pos)
         self._width = width # width of rect
         self._height = height
         self._render_width = render_width
@@ -360,19 +364,21 @@ class Entity(object):
 
 class Player(Entity):
     def __init__(self: Self,
+                 pos: Point=(0, 0),
                  width: Real=0.5,
                  height: Real=1,
                  climb: Real=0.2,
                  gravity: Real=0.004,
-                 weapon: Weapon=None) -> None:
+                 foa: Real=60, # Field of Attack
+                 weapon: Optional[Weapon]=None) -> None:
 
         super().__init__(
+            pos=pos,
             width=width,
             height=height,
             climb=climb,
             gravity=gravity,
         )
-        self._weapon = weapon
 
         self._climbing = 0
 
@@ -383,10 +389,20 @@ class Player(Entity):
         self._render_elevation = self._elevation + self._camera_offset
         
         self._settings = {
-            'bob_strength': 0,
-            'bob_frequency': 0,
+            'headbob_strength': 0,
+            'headbob_frequency': 0,
+            'weaponbob_strength': 0,
+            'weaponbob_frequency': 0,
+            'weapon_pos': (0, 0),
             'climb_speed': 0,
         }
+        # Weapon Stuff
+        self._foa = foa
+        self._weapon = weapon
+        self._weapon_surf = pg.Surface((0, 0))
+        self._weapon_attacking = 0
+        self._weapon_attack_time = 0
+        self._render_weapon_pos = list(self._settings['weapon_pos'])
         
         # delete variables we don't need from entity init
         del self._textures
@@ -417,6 +433,14 @@ class Player(Entity):
         self._forward_velocity = self._velocity2.project(self._yaw)
         self._right_velocity = self._velocity2.project(self._semiplane)
 
+    @property
+    def weapon(self: Self) -> Optional[Weapon]:
+        return self._weapon
+    
+    @weapon.setter
+    def weapon(self: Self, value: Optional[Weapon]) -> None:
+        self._weapon = value
+
     def update(self: Self,
                rel_game_speed: Real,
                level_timer: Real,
@@ -433,14 +457,14 @@ class Player(Entity):
         self._yaw_velocity = yaw
 
         vel_mult = 0.90625**rel_game_speed # number used in Doom
-        elevation_update = 0
+        bob_update = 0
         if self._forward_velocity.magnitude() >= 0.001:
-            elevation_update = 1
+            bob_update = 1
             self._forward_velocity *= vel_mult
         else:
             self._forward_velocity.update(0, 0)
         if self._right_velocity.magnitude() >= 0.001:
-            elevation_update = 1
+            bob_update = 1
             self._right_velocity *= vel_mult
         else:
             self._right_velocity.update(0, 0)
@@ -505,6 +529,7 @@ class Player(Entity):
                     self._elevation_velocity = 0
         
         # climbing animation / headbob
+        mag = self._velocity2.magnitude()
         elevation = self._elevation + self._camera_offset
         if self._climbing:
             difference = elevation - self._render_elevation
@@ -515,18 +540,88 @@ class Player(Entity):
         else:
             self._render_elevation = elevation
             # yes it will headbob while falling but I'm okay with that
-            if elevation_update:
+            if bob_update:
                 self._render_elevation += (
-                    math.sin(level_timer * self._settings['bob_frequency'])
-                    * self._settings['bob_strength']
-                    * min(self._velocity2.magnitude() * 20, 2)
+                    math.sin(level_timer * self._settings['headbob_frequency'])
+                    * self._settings['headbob_strength']
+                    * min(mag * 20, 2)
                 )
+        # Weapon update
+        if self._weapon is not None:
+            if bob_update:
+                self._render_weapon_pos = [
+                    self._settings['weapon_pos'][0] + (
+                        math.sin(
+                            level_timer * self._settings['weaponbob_frequency']
+                        )
+                        * self._settings['weaponbob_strength']
+                        * min(mag * 20, 2)
+                    ),
+                    self._settings['weapon_pos'][1] + abs(
+                        math.cos(
+                            level_timer * self._settings['weaponbob_frequency']
+                        )
+                        * self._settings['weaponbob_strength']
+                        * min(mag * 20, 2) / 2
+                    ),
+                ]
+            if self._weapon_attacking:
+                animation_time = self._weapon._animation_times['attack']
+                self._weapon_attack_time += rel_game_speed
+                dex = math.floor(
+                    self._weapon_attack_time
+                    / animation_time
+                    * len(self._weapon._textures['attack'])
+                )
+                if self._weapon_attack_time < animation_time:
+                    self._weapon_surf = self._weapon._textures['attack'][dex]
+                else:
+                    self._weapon_attacking = 0
+                    self._weapon_attack_time = 0
+            else:
+                length = len(self._weapon._textures['hold'])
+                dex = math.floor(
+                    level_timer
+                    / self._weapon._animation_times['hold']
+                    * length
+                )
+                dex %= length
+                self._weapon_surf = self._weapon._textures['hold'][dex]
+
+    def attack(self: Self) -> None:
+        if self._weapon is not None:
+            self._weapon_attacking = 1
+            if isinstance(self._weapon, MeleeWeapon):
+                self.melee_attack(
+                    damage=self._weapon._damage,
+                    attack_range=self._wepaon._range,
+                    foa=self._foa,
+                )
+            elif isinstance(self._weapon, HitscanWeapon):
+                self.hitscan_attack(
+                    damage=self._weapon._damage,
+                    attack_range=self._weapon._range,
+                    foa=self._foa,
+                )
+            elif isinstance(self._weapon, MissileWeapon):
+                self.missile_attack(
+                    damage=self._weapon._damage,
+                    attack_range=self._wepaon._range,
+                    foa=self._foa,
+                )
+
+    def melee_attack(self: Self,
+                     damage: Real,
+                     attack_range: Real,
+                     foa: Real,
+                     precision: int=2) -> None:
+        pass
         
-    def hitscan_shoot(self: Self,
-                      damage: Real,
-                      shot_range: Real=20,
-                      foa: Real=60, # field of attack
-                      precision: int=2):
+    def hitscan_attack(self: Self,
+                       damage: Real,
+                       attack_range: Real,
+                       foa: Real,
+                       precision: int=2) -> None:
 
         # Hitscan gunshot
 
@@ -559,7 +654,7 @@ class Player(Entity):
         vector = self.vector3
 
         # keep on changing end_pos until hitting a wall (DDA)
-        while dist < shot_range and dist < closest[0]:
+        while dist < attack_range and dist < closest[0]:
             # displacements until hit tile
             disp_x = tile[0] + dir[0] - end_pos[0]
             disp_y = tile[1] + dir[1] - end_pos[1]
@@ -654,17 +749,24 @@ class Player(Entity):
             entity.hitscan_damage(damage)
             entity.textures = [FALLBACK_SURF]
 
+    def missile_attack(self: Self,
+                       damage: Real,
+                       attack_range: Real,
+                       foa: Real,
+                       precision: int=2) -> None:
+        pass
+
 
 class EntityManager(object):
     
     def __init__(self: Self, 
                  player: Player, 
-                 entities: dict[object, Entity]) -> None:
+                 entities: set[Entity]) -> None:
         self._player = player
         player._manager = self
         self._entities = entities
         self._sets = {}
-        for entity in entities.values():
+        for entity in entities:
             self._add_to_sets(entity)
             entity._manager = self
         self._level = None
@@ -672,21 +774,18 @@ class EntityManager(object):
         # _sets is a dictionary where each key is a tile position and the value
         # is the set of all entities in that position
 
-    def __getitem__(self: Self, key: object) -> Entity:
-        return self._entities[key]
-    
     @property
-    def entities(self: Self) -> dict:
+    def entities(self: Self) -> set:
         return self._entities
 
     @entities.setter
-    def entities(self: Self, value: dict) -> None:
-        for entity in self._entities.values():
+    def entities(self: Self, value: set) -> None:
+        for entity in self._entities:
             entity._manager = None
 
         self._entities = value
         self._sets = {}
-        for entity in value.values():
+        for entity in value:
             self._add_to_sets(entity)
             entity._manager = self
 
@@ -710,25 +809,41 @@ class EntityManager(object):
             self._sets[key] = set()
         self._sets[key].add(entity)
 
-    def add_entity(self: Self, id: object, entity: Entity) -> None:
-        self._entities[id] = entity
+    def add_entity(self: Self, entity: Entity) -> None:
+        self._entities.add(entity)
         self._add_to_sets(entity)
 
-    def remove_entity(self: Self, id: object) -> None:
-        entity = self._entities[id]
+    def remove_entity(self: Self, entity: Entity) -> None:
         key = gen_tile_key(entity._pos)
         self._sets[key].remove(entity) # remove from set
         entity._manager = None
-        return self._entities.pop(id)
+        self._entities.remove(entity)
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
-        for entity in self._entities.values():
+        for entity in self._entities:
             old_key = gen_tile_key(entity._pos)
             entity.update(rel_game_speed, level_timer)
             key = gen_tile_key(entity._pos)
             entity._update_manager_sets(old_key, key)
 
 
+class Missile(Entity):
+    def __init__(self: Self,
+                 width: Real=1,
+                 height: Real=0.5,
+                 textures: list[pg.Surface]=[FALLBACK_SURF],
+                 render_width: Optional[Real]=None,
+                 render_height: Optional[Real]=None) -> None:
+        super().__init__(
+            width=width,
+            height=height,
+            health=-1,
+            climb=0,
+            gravity=0,
+            textures=textures,
+            render_width=render_width,
+            render_height=render_height,
+        )
 
 # CUSTOM
 

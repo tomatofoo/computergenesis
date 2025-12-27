@@ -160,8 +160,11 @@ cdef class Camera:
         float _horizon
         float _tile_size
         float _wall_render_distance
-        float _bob_strength
-        float _bob_frequency
+        float _headbob_strength
+        float _headbob_frequency
+        float _weaponbob_strength
+        float _weaponbob_frequency
+        float _weapon_scale
         float _climb_speed
         float _darkness
         float _max_line_height
@@ -171,14 +174,19 @@ cdef class Camera:
         object _floor
         object _ceiling
         object _walls_and_entities
+        object _weapon
+        object _weapon_pos # uv coords, python obj on purpose
 
     def __init__(self: Self,
                  float fov,
                  float tile_size,
                  float wall_render_distance,
                  player: Player,
-                 float bob_strength=0.0375,
-                 float bob_frequency=0.1667,
+                 float headbob_strength=0.0375,
+                 float headbob_frequency=0.1667,
+                 float weaponbob_strength=0.05,
+                 float weaponbob_frequency=0.08335,
+                 weapon_pos: Point=(0.5, 0.35),
                  float climb_speed=0.15,
                  float darkness=1,
                  float max_line_height=50,
@@ -191,32 +199,77 @@ cdef class Camera:
         self._player = player
         self._tile_size = tile_size
         self._wall_render_distance = wall_render_distance
+        self._weapon_scale = 1
         self._max_line_height = max_line_height
         self._min_entity_depth = min_entity_depth
         self._darkness = darkness
 
-        self.bob_strength = bob_strength
-        self.bob_frequency = bob_frequency
+        self.headbob_strength = headbob_strength
+        self.headbob_frequency = headbob_frequency
+        self.weaponbob_strength = weaponbob_strength
+        self.weaponbob_frequency = weaponbob_frequency
+        self.weapon_pos = weapon_pos
         self.climb_speed = climb_speed
 
     @property
-    def bob_strength(self: Self):
-        return self._bob_stength
+    def headbob_strength(self: Self):
+        return self._headbob_stength
 
-    @bob_strength.setter
-    def bob_strength(self: Self, float value):
+    @headbob_strength.setter
+    def headbob_strength(self: Self, float value):
         value = fmax(fmin(value, 0.5), -0.5)
-        self._bob_strength = value
-        self._player._settings['bob_strength'] = value
+        self._headbob_strength = value
+        self._player._settings['headbob_strength'] = value
 
     @property
-    def bob_frequency(self: Self):
-        return self._bob_frequency
+    def headbob_frequency(self: Self):
+        return self._headbob_frequency
 
-    @bob_frequency.setter
-    def bob_frequency(self: Self, float value):
-        self._bob_frequency = value
-        self._player._settings['bob_frequency'] = value
+    @headbob_frequency.setter
+    def headbob_frequency(self: Self, float value):
+        self._headbob_frequency = value
+        self._player._settings['headbob_frequency'] = value
+
+    @property
+    def weaponbob_strength(self: Self):
+        return self._weaponbob_stength
+
+    @weaponbob_strength.setter
+    def weaponbob_strength(self: Self, float value):
+        value = fmax(fmin(value, 0.5), -0.5)
+        self._weaponbob_strength = value
+        self._player._settings['weaponbob_strength'] = value
+
+    @property
+    def weaponbob_frequency(self: Self):
+        return self._weaponbob_frequency
+
+    @weaponbob_frequency.setter
+    def weaponbob_frequency(self: Self, float value):
+        self._weaponbob_frequency = value
+        self._player._settings['weaponbob_frequency'] = value
+
+    @property
+    def weapon_pos(self: Self) -> Point:
+        return self._weapon_pos
+
+    @weapon_pos.setter
+    def weapon_pos(self: Self, value: Point) -> None:
+        self._weapon_pos = value
+        cdef float[2] old = self._player._settings['weapon_pos']
+        self._player._render_weapon_pos = (
+            value[0] + self._player._render_weapon_pos[0] - old[0],
+            value[1] + self._player._render_weapon_pos[1] - old[1],
+        )
+        self._player._settings['weapon_pos'] = value
+
+    @property
+    def weapon_scale(self: Self):
+        return self._weapon_scale
+
+    @weapon_scale.setter
+    def weapon_scale(self: Self, value: float):
+        self._weapon_scale = value
 
     @property
     def climb_speed(self: Self) -> Real:
@@ -233,12 +286,16 @@ cdef class Camera:
 
     @player.setter
     def player(self: Self, value: Player) -> None:
-        self._player._settings['bob_frequency'] = 0
-        self._player._settings['bob_strength'] = 0
+        self._player._settings['headbob_frequency'] = 0
+        self._player._settings['headbob_strength'] = 0
+        self._player._settings['weaponbob_frequency'] = 0
+        self._player._settings['weaponbob_strength'] = 0
         self._player._settings['climb_speed'] = 0
         self._player = value
-        value._settings['bob_frequency'] = self._bob_frequency
-        value._settings['bob_strength'] = self._bob_strength
+        value._settings['headbob_frequency'] = self._headbob_frequency
+        value._settings['headbob_strength'] = self._headbob_strength
+        value._settings['weaponbob_frequency'] = self._weaponbob_frequency
+        value._settings['weaponbob_strength'] = self._weaponbob_stength
         value._settings['climb_speed'] = self._climb_speed
 
     @property
@@ -558,10 +615,6 @@ cdef class Camera:
             # colors of each tile (top/bottom rendering)
             dict colors = {} 
         
-        # the per-pixel alpha with (0, 0, 0, 0) doesn't seem to affect
-        # fps at all
-        self._walls_and_entities = pg.Surface((width, height), pg.SRCALPHA)
-        self._walls_and_entities.fill((0, 0, 0, 0))
         
         # level manager stuff
         textures = manager._level._walls._textures
@@ -1034,17 +1087,33 @@ cdef class Camera:
                 else:
                     self._walls_and_entities.blit(*obj._args)
 
+    def _render_weapon(self: Self, int width, int height, surf: pg.Surface):
+        cdef:
+            object weapon_surf = self._player._weapon_surf
+            float[2] pos = (
+                <float>self._player._render_weapon_pos[0] * width
+                - <int>weapon_surf.width / 2,
+                <float>self._player._render_weapon_pos[1] * height,
+            )
+        surf.blit(weapon_surf, pos)
+
     def render(self: Self, surf: pg.Surface) -> None:
         cdef:
             int width = surf.width
             int height = surf.height
             int horizon = int(self._horizon * height)
 
+        self._yaw = self._player._yaw * self._yaw_magnitude
         surf.fill((0, 0, 0))
         self._ceiling = None
         self._floor = None
-        self._yaw = self._player._yaw * self._yaw_magnitude
- 
+        # the per-pixel alpha with (0, 0, 0, 0) doesn't seem to affect
+        # fps at all
+        self._walls_and_entities = pg.Surface((width, height), pg.SRCALPHA)
+        self._walls_and_entities.fill((0, 0, 0, 0))
+        self._weapon = None
+        
+        # Threads
         floor_and_ceiling = Thread(
             target=self._render_floor_and_ceiling,
             args=(width, height, horizon),
@@ -1053,16 +1122,17 @@ cdef class Camera:
             target=self._render_walls_and_entities,
             args=(width, height, horizon),
         )
-
+        
         floor_and_ceiling.start()
         walls_and_entities.start()
         floor_and_ceiling.join()
         walls_and_entities.join()
         
-        if self._floor:
+        # Blits
+        if self._floor is not None:
             surf.blit(self._floor, (0, horizon))
-        if self._ceiling:
+        if self._ceiling is not None:
             surf.blit(self._ceiling, (0, 0))
-
         surf.blit(self._walls_and_entities, (0, 0))
+        self._render_weapon(width, height, surf)
 

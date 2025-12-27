@@ -14,14 +14,15 @@ from modules.level import Walls
 from modules.level import Floor
 from modules.level import Sky 
 from modules.level import Level
+from modules.camera import Camera
+from modules.hud import HUDElement
+from modules.hud import HUD
 from modules.entities import Entity 
 from modules.entities import Player
 from modules.entities import EntityManager 
-from modules.camera import Camera
 from modules.inventory import Collectible
 from modules.inventory import Inventory
-from modules.hud import HUDElement
-from modules.hud import HUD
+from modules.weapons import HitscanWeapon
 
 
 class Game(object):
@@ -59,7 +60,8 @@ class Game(object):
 
         #temp
         entities = {
-            0: Entity(
+            Entity(
+                pos=(6.5, 6),
                 height=0.6,
                 textures=[
                     pg.image.load('data/images/vassago/1.png'),
@@ -72,34 +74,29 @@ class Game(object):
                     pg.image.load('data/images/vassago/8.png'),
                 ]
             ),
-            1: Entity(
+            Entity(
+                pos=(6.5, 5),
                 height=0.6,
                 textures=[pg.image.load('data/images/GrenadeZombie.png')],
             ),
-            2: Entity(
+            Entity(
+                pos=(6.5, 4),
                 height=0.6,
                 textures=[pg.image.load('data/images/GrenadeZombie.png')],
             ),
-            3: Entity(
+            Entity(
+                pos=(6.5, 3),
                 height=0.6,
                 textures=[pg.image.load('data/images/GrenadeZombie.png')],
             ),
-            4: Entity(
+            Entity(
+                pos=(6.5, 2),
                 height=0.6,
                 textures=[pg.image.load('data/images/GrenadeZombie.png')],
             ),
         }
-        entities[0].pos = (6.5, 6)
-        entities[1].pos = (6.5, 5)
-        entities[2].pos = (6.5, 4)
-        entities[3].pos = (6.5, 3)
-        entities[4].pos = (6.5, 2)
-
-        entities[0].glowing = 1
-        entities[1].glowing = 1
-        entities[2].glowing = 1
-        entities[3].glowing = 1
-        entities[4].glowing = 1
+        for dex, entity in enumerate(entities):
+            entity.glowing = 1
 
         self._player = Player()
         self._entities = EntityManager(self._player, entities)
@@ -126,7 +123,6 @@ class Game(object):
         self._camera.horizon = 0.5
         self._level_timer = 0
         
-        # HUD
         textures = [
             pg.image.load('data/images/shotgun/1.png'),
             pg.image.load('data/images/shotgun/2.png'),
@@ -135,6 +131,24 @@ class Game(object):
         ]
         for surf in textures:
             surf.set_colorkey((255, 0, 255))
+        shotgun = HitscanWeapon(
+            damage=50,
+            attack_range=20,
+            capacity=25,
+            ground_textures=None,
+            hold_textures=[textures[0]],
+            attack_textures=[
+                textures[1],
+                textures[2],
+                textures[3],
+                textures[2],
+                textures[1],
+            ],
+            ground_animation_time=1,
+            hold_animation_time=30,
+            attack_animation_time=50,
+        )
+        self._player.weapon = shotgun
 
     def move_tiles(self: Self) -> None:
         self._level.walls.set_tile(
@@ -188,7 +202,7 @@ class Game(object):
                     self._player.yaw += rel[0] * 0.2
                     #self._camera.horizon -= rel[1] * 0.0025
                 elif event.type == pg.MOUSEBUTTONDOWN:
-                    self._player.hitscan_shoot(100)
+                    self._player.attack()
                     shotgun.play()
                 elif event.type == second:
                     fps = mean(frames)

@@ -134,6 +134,7 @@ class Game(object):
         shotgun = HitscanWeapon(
             damage=50,
             attack_range=20,
+            cooldown=60,
             capacity=25,
             ground_textures=None,
             hold_textures=[textures[0]],

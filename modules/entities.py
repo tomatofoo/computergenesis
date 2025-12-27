@@ -402,6 +402,7 @@ class Player(Entity):
         self._weapon_surf = pg.Surface((0, 0))
         self._weapon_attacking = 0
         self._weapon_attack_time = 0
+        self._weapon_cooldown_time = 0 # time since last shot
         self._render_weapon_pos = list(self._settings['weapon_pos'])
         
         # delete variables we don't need from entity init
@@ -548,6 +549,7 @@ class Player(Entity):
                 )
         # Weapon update
         if self._weapon is not None:
+            self._weapon_cooldown_time += rel_game_speed
             if bob_update:
                 self._render_weapon_pos = [
                     self._settings['weapon_pos'][0] + (
@@ -589,8 +591,10 @@ class Player(Entity):
                 self._weapon_surf = self._weapon._textures['hold'][dex]
 
     def attack(self: Self) -> None:
-        if self._weapon is not None:
+        if (self._weapon is not None
+            and self._weapon_cooldown_time > self._weapon._cooldown):
             self._weapon_attacking = 1
+            self._weapon_cooldown_time = 0
             if isinstance(self._weapon, MeleeWeapon):
                 self.melee_attack(
                     damage=self._weapon._damage,

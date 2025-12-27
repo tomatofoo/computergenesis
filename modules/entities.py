@@ -595,8 +595,7 @@ class Player(Entity):
                     level_timer
                     / self._weapon._animation_times['hold']
                     * length
-                )
-                dex %= length
+                ) % length
                 self._weapon_surf = self._weapon._textures['hold'][dex]
 
     def attack(self: Self) -> int:
@@ -606,11 +605,11 @@ class Player(Entity):
         # 1: can attack and did hit
 
         if self._weapon is None:
-            return -1
+            return 0
         elif self._weapon_cooldown_time > 0:
-            return -1
+            return 0
         elif isinstance(self._weapon, AmmoWeapon) and self._weapon._ammo <= 0:
-            return -1
+            return 0
         else:
             self._weapon_attacking = 1
             self._weapon_cooldown_time = self._weapon._cooldown
@@ -621,23 +620,23 @@ class Player(Entity):
                     foa=self._foa,
                 ):
                     self._weapon._durability -= 1
-                    return 1
+                    return 2
                 else:
-                    return 0
+                    return 1
             elif isinstance(self._weapon, HitscanWeapon):
                 self._weapon._ammo -= 1
                 return self.hitscan_attack(
                     damage=self._weapon._damage,
                     attack_range=self._weapon._range,
                     foa=self._foa,
-                )
+                ) + 1
             elif isinstance(self._weapon, MissileWeapon):
                 self._weapon._ammo -= 1
                 return self.missile_attack(
                     damage=self._weapon._damage,
                     attack_range=self._wepaon._range,
                     foa=self._foa,
-                )
+                ) + 1
 
     def melee_attack(self: Self,
                      damage: Real,

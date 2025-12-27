@@ -204,7 +204,7 @@ class Game(object):
                     self._player.yaw += rel[0] * 0.2
                     #self._camera.horizon -= rel[1] * 0.0025
                 elif event.type == pg.MOUSEBUTTONDOWN:
-                    if self._player.attack() > -1:
+                    if self._player.attack():
                         shotgun.play()
                 elif event.type == second:
                     fps = mean(frames)

@@ -3736,7 +3736,7 @@ typedef struct {
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_values;
   PyObject *__pyx_tuple[7];
   PyObject *__pyx_codeobj_tab[68];
-  PyObject *__pyx_string_tab[313];
+  PyObject *__pyx_string_tab[315];
   PyObject *__pyx_number_tab[6];
 /* #### Code section: module_state_contents ### */
 /* CommonTypesMetaclass.module_state_decls */
@@ -4022,80 +4022,82 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_n_u_weapon_scale __pyx_string_tab[236]
 #define __pyx_n_u_weapon_surf __pyx_string_tab[237]
 #define __pyx_n_u_weapon_surf_2 __pyx_string_tab[238]
-#define __pyx_n_u_weaponbob_frequency __pyx_string_tab[239]
-#define __pyx_n_u_weaponbob_frequency_2 __pyx_string_tab[240]
-#define __pyx_n_u_weaponbob_stength __pyx_string_tab[241]
-#define __pyx_n_u_weaponbob_strength __pyx_string_tab[242]
-#define __pyx_n_u_weaponbob_strength_2 __pyx_string_tab[243]
-#define __pyx_n_u_width __pyx_string_tab[244]
-#define __pyx_n_u_width_2 __pyx_string_tab[245]
-#define __pyx_n_u_wrap __pyx_string_tab[246]
-#define __pyx_n_u_x __pyx_string_tab[247]
-#define __pyx_n_u_x_pixels __pyx_string_tab[248]
-#define __pyx_n_u_y __pyx_string_tab[249]
-#define __pyx_n_u_yaw __pyx_string_tab[250]
-#define __pyx_n_u_yaw_magnitude __pyx_string_tab[251]
-#define __pyx_n_u_yaw_value __pyx_string_tab[252]
-#define __pyx_kp_b_iso88591_0_q __pyx_string_tab[253]
-#define __pyx_kp_b_iso88591_1 __pyx_string_tab[254]
-#define __pyx_kp_b_iso88591_1A_U_1_1_as_Q_1 __pyx_string_tab[255]
-#define __pyx_kp_b_iso88591_1_2Qe6_Qe1E_q_1A __pyx_string_tab[256]
-#define __pyx_kp_b_iso88591_1_U_1_1_Qc_A_1 __pyx_string_tab[257]
-#define __pyx_kp_b_iso88591_1_vXS_a_6_r_q_A_6_F_1_1_1E_xr_A __pyx_string_tab[258]
-#define __pyx_kp_b_iso88591_6_6_Ba_Q __pyx_string_tab[259]
-#define __pyx_kp_b_iso88591_82V2Q __pyx_string_tab[260]
-#define __pyx_kp_b_iso88591_A __pyx_string_tab[261]
-#define __pyx_kp_b_iso88591_AV1 __pyx_string_tab[262]
-#define __pyx_kp_b_iso88591_A_1E_AT_Bj_Bd_1E_AS_1E_A_D_32Q __pyx_string_tab[263]
-#define __pyx_kp_b_iso88591_A_1_t1 __pyx_string_tab[264]
-#define __pyx_kp_b_iso88591_A_2 __pyx_string_tab[265]
-#define __pyx_kp_b_iso88591_A_3 __pyx_string_tab[266]
-#define __pyx_kp_b_iso88591_A_5_HAQ_HAQ_y_1A_y_1A_r_1_1_r_1 __pyx_string_tab[267]
-#define __pyx_kp_b_iso88591_A_AT_q_1_HJa_7q __pyx_string_tab[268]
-#define __pyx_kp_b_iso88591_A_AT_q_HJa_5Q __pyx_string_tab[269]
-#define __pyx_kp_b_iso88591_A_A_HJa_0 __pyx_string_tab[270]
-#define __pyx_kp_b_iso88591_A_A_HJa_8 __pyx_string_tab[271]
-#define __pyx_kp_b_iso88591_A_HJa_6a __pyx_string_tab[272]
-#define __pyx_kp_b_iso88591_A_L_AT_Q __pyx_string_tab[273]
-#define __pyx_kp_b_iso88591_A_N __pyx_string_tab[274]
-#define __pyx_kp_b_iso88591_A_Q __pyx_string_tab[275]
-#define __pyx_kp_b_iso88591_A_Q_2 __pyx_string_tab[276]
-#define __pyx_kp_b_iso88591_A_Q_HJa_6a_HJa_5Q_HJa_8_HJa_7q_H __pyx_string_tab[277]
-#define __pyx_kp_b_iso88591_A_Q_Qd_Ba_HD_b_A_E_3c_L_Ja_2XRw __pyx_string_tab[278]
-#define __pyx_kp_b_iso88591_A_a_t1 __pyx_string_tab[279]
-#define __pyx_kp_b_iso88591_A_j_O1_D_1_HA_5_gT_4AQ_c_5_gT_4A __pyx_string_tab[280]
-#define __pyx_kp_b_iso88591_A_r_HA_b_Qa __pyx_string_tab[281]
-#define __pyx_kp_b_iso88591_A_t1 __pyx_string_tab[282]
-#define __pyx_kp_b_iso88591_A_t1_10 __pyx_string_tab[283]
-#define __pyx_kp_b_iso88591_A_t1_11 __pyx_string_tab[284]
-#define __pyx_kp_b_iso88591_A_t1_2 __pyx_string_tab[285]
-#define __pyx_kp_b_iso88591_A_t1_3 __pyx_string_tab[286]
-#define __pyx_kp_b_iso88591_A_t1_4 __pyx_string_tab[287]
-#define __pyx_kp_b_iso88591_A_t1_5 __pyx_string_tab[288]
-#define __pyx_kp_b_iso88591_A_t1_6 __pyx_string_tab[289]
-#define __pyx_kp_b_iso88591_A_t1_7 __pyx_string_tab[290]
-#define __pyx_kp_b_iso88591_A_t1_8 __pyx_string_tab[291]
-#define __pyx_kp_b_iso88591_A_t1_9 __pyx_string_tab[292]
-#define __pyx_kp_b_iso88591_A_xq __pyx_string_tab[293]
-#define __pyx_kp_b_iso88591_H_Kq_L8H_STTXXddqq_B_B_N_N_X_X __pyx_string_tab[294]
-#define __pyx_kp_b_iso88591_Q_4q_Qd_D_k_1_j_AV3c_Qit1 __pyx_string_tab[295]
-#define __pyx_kp_b_iso88591_T_D_t_t9DPWW_ppt_u_I_I_M_M_X_X __pyx_string_tab[296]
-#define __pyx_kp_b_iso88591_T_Yd_G1F_a_vWE_Q_q_q_34q_QR_34q __pyx_string_tab[297]
-#define __pyx_kp_b_iso88591_U_6_vU_1_4xs_D_c_1_1 __pyx_string_tab[298]
-#define __pyx_kp_b_iso88591_WX_Cq_q_r_A_Cxy_r_A_Qe1_r_A_q_c __pyx_string_tab[299]
-#define __pyx_kp_b_iso88591_XQ_t8_6as_A_1_t8_6as_A_E_q __pyx_string_tab[300]
-#define __pyx_kp_b_iso88591_a __pyx_string_tab[301]
-#define __pyx_kp_b_iso88591_a_AT_Z_4_ggrrsst_QnM __pyx_string_tab[302]
-#define __pyx_kp_b_iso88591_a_d_ha_t6_4xq_4xy_wb_1G4x_2V2Q __pyx_string_tab[303]
-#define __pyx_kp_b_iso88591_avQ __pyx_string_tab[304]
-#define __pyx_kp_b_iso88591_az_t6_1 __pyx_string_tab[305]
-#define __pyx_kp_b_iso88591_q_0_kQR_6_7_1 __pyx_string_tab[306]
-#define __pyx_kp_b_iso88591_q_0_kQR_XQa_7_4A5J_XY_1 __pyx_string_tab[307]
-#define __pyx_kp_b_iso88591_q_E_1_b_QgQe2Q_G4q_AV1_L_Kq_N_Q __pyx_string_tab[308]
-#define __pyx_kp_b_iso88591_q_T_aB_fBa_7_A_7_E_aq_Rr_2WF_A __pyx_string_tab[309]
-#define __pyx_kp_b_iso88591_q_z_Ja_IQ_L __pyx_string_tab[310]
-#define __pyx_kp_b_iso88591_t82S __pyx_string_tab[311]
-#define __pyx_kp_b_iso88591_vYc_q_q_QgQ_Q_Q_U_6_A_vU_1_2S_i __pyx_string_tab[312]
+#define __pyx_n_u_weapon_surf_height __pyx_string_tab[239]
+#define __pyx_n_u_weapon_surf_width __pyx_string_tab[240]
+#define __pyx_n_u_weaponbob_frequency __pyx_string_tab[241]
+#define __pyx_n_u_weaponbob_frequency_2 __pyx_string_tab[242]
+#define __pyx_n_u_weaponbob_stength __pyx_string_tab[243]
+#define __pyx_n_u_weaponbob_strength __pyx_string_tab[244]
+#define __pyx_n_u_weaponbob_strength_2 __pyx_string_tab[245]
+#define __pyx_n_u_width __pyx_string_tab[246]
+#define __pyx_n_u_width_2 __pyx_string_tab[247]
+#define __pyx_n_u_wrap __pyx_string_tab[248]
+#define __pyx_n_u_x __pyx_string_tab[249]
+#define __pyx_n_u_x_pixels __pyx_string_tab[250]
+#define __pyx_n_u_y __pyx_string_tab[251]
+#define __pyx_n_u_yaw __pyx_string_tab[252]
+#define __pyx_n_u_yaw_magnitude __pyx_string_tab[253]
+#define __pyx_n_u_yaw_value __pyx_string_tab[254]
+#define __pyx_kp_b_iso88591_0_q __pyx_string_tab[255]
+#define __pyx_kp_b_iso88591_1 __pyx_string_tab[256]
+#define __pyx_kp_b_iso88591_1A_U_1_1_as_Q_1 __pyx_string_tab[257]
+#define __pyx_kp_b_iso88591_1_2Qe6_Qe1E_q_1A __pyx_string_tab[258]
+#define __pyx_kp_b_iso88591_1_U_1_1_Qc_A_1 __pyx_string_tab[259]
+#define __pyx_kp_b_iso88591_1_vXS_a_6_r_q_A_6_F_1_1_1E_xr_A __pyx_string_tab[260]
+#define __pyx_kp_b_iso88591_6_6_Ba_Q __pyx_string_tab[261]
+#define __pyx_kp_b_iso88591_82V2Q __pyx_string_tab[262]
+#define __pyx_kp_b_iso88591_A __pyx_string_tab[263]
+#define __pyx_kp_b_iso88591_AV1 __pyx_string_tab[264]
+#define __pyx_kp_b_iso88591_A_1E_AT_Bj_Bd_1E_AS_1E_A_D_32Q __pyx_string_tab[265]
+#define __pyx_kp_b_iso88591_A_1_t1 __pyx_string_tab[266]
+#define __pyx_kp_b_iso88591_A_2 __pyx_string_tab[267]
+#define __pyx_kp_b_iso88591_A_3 __pyx_string_tab[268]
+#define __pyx_kp_b_iso88591_A_5_HAQ_HAQ_y_1A_y_1A_r_1_1_r_1 __pyx_string_tab[269]
+#define __pyx_kp_b_iso88591_A_AT_q_1_HJa_7q __pyx_string_tab[270]
+#define __pyx_kp_b_iso88591_A_AT_q_HJa_5Q __pyx_string_tab[271]
+#define __pyx_kp_b_iso88591_A_A_HJa_0 __pyx_string_tab[272]
+#define __pyx_kp_b_iso88591_A_A_HJa_8 __pyx_string_tab[273]
+#define __pyx_kp_b_iso88591_A_HJa_6a __pyx_string_tab[274]
+#define __pyx_kp_b_iso88591_A_L_AT_Q __pyx_string_tab[275]
+#define __pyx_kp_b_iso88591_A_N __pyx_string_tab[276]
+#define __pyx_kp_b_iso88591_A_Q __pyx_string_tab[277]
+#define __pyx_kp_b_iso88591_A_Q_2 __pyx_string_tab[278]
+#define __pyx_kp_b_iso88591_A_Q_HJa_6a_HJa_5Q_HJa_8_HJa_7q_H __pyx_string_tab[279]
+#define __pyx_kp_b_iso88591_A_Q_Qd_Ba_HD_b_A_E_3c_L_Ja_2XRw __pyx_string_tab[280]
+#define __pyx_kp_b_iso88591_A_a_t1 __pyx_string_tab[281]
+#define __pyx_kp_b_iso88591_A_j_O1_D_1_HA_5_gT_4AQ_c_5_gT_4A __pyx_string_tab[282]
+#define __pyx_kp_b_iso88591_A_r_HA_b_Qa __pyx_string_tab[283]
+#define __pyx_kp_b_iso88591_A_t1 __pyx_string_tab[284]
+#define __pyx_kp_b_iso88591_A_t1_10 __pyx_string_tab[285]
+#define __pyx_kp_b_iso88591_A_t1_11 __pyx_string_tab[286]
+#define __pyx_kp_b_iso88591_A_t1_2 __pyx_string_tab[287]
+#define __pyx_kp_b_iso88591_A_t1_3 __pyx_string_tab[288]
+#define __pyx_kp_b_iso88591_A_t1_4 __pyx_string_tab[289]
+#define __pyx_kp_b_iso88591_A_t1_5 __pyx_string_tab[290]
+#define __pyx_kp_b_iso88591_A_t1_6 __pyx_string_tab[291]
+#define __pyx_kp_b_iso88591_A_t1_7 __pyx_string_tab[292]
+#define __pyx_kp_b_iso88591_A_t1_8 __pyx_string_tab[293]
+#define __pyx_kp_b_iso88591_A_t1_9 __pyx_string_tab[294]
+#define __pyx_kp_b_iso88591_A_xq __pyx_string_tab[295]
+#define __pyx_kp_b_iso88591_H_Kq_L8H_STTXXddqq_B_B_N_N_X_X __pyx_string_tab[296]
+#define __pyx_kp_b_iso88591_Q_4q_Qd_D_k_1_j_AV3c_Qit1 __pyx_string_tab[297]
+#define __pyx_kp_b_iso88591_T_D_t_t9DPWW_ppt_u_I_I_M_M_X_X __pyx_string_tab[298]
+#define __pyx_kp_b_iso88591_T_Yd_G1F_a_vWE_Q_q_q_34q_QR_34q __pyx_string_tab[299]
+#define __pyx_kp_b_iso88591_U_6_vU_1_4xs_D_c_1_1 __pyx_string_tab[300]
+#define __pyx_kp_b_iso88591_WX_Cq_q_r_A_Cxy_r_A_Qe1_r_A_q_c __pyx_string_tab[301]
+#define __pyx_kp_b_iso88591_XQ_Kwb_A_a_t8_6as_A_1_t8_6as_A __pyx_string_tab[302]
+#define __pyx_kp_b_iso88591_a __pyx_string_tab[303]
+#define __pyx_kp_b_iso88591_a_AT_Z_4_ggrrsst_QnM __pyx_string_tab[304]
+#define __pyx_kp_b_iso88591_a_d_ha_t6_4xq_4xy_wb_1G4x_2V2Q __pyx_string_tab[305]
+#define __pyx_kp_b_iso88591_avQ __pyx_string_tab[306]
+#define __pyx_kp_b_iso88591_az_t6_1 __pyx_string_tab[307]
+#define __pyx_kp_b_iso88591_q_0_kQR_6_7_1 __pyx_string_tab[308]
+#define __pyx_kp_b_iso88591_q_0_kQR_XQa_7_4A5J_XY_1 __pyx_string_tab[309]
+#define __pyx_kp_b_iso88591_q_E_1_b_QgQe2Q_G4q_AV1_L_Kq_N_Q __pyx_string_tab[310]
+#define __pyx_kp_b_iso88591_q_T_aB_fBa_7_A_7_E_aq_Rr_2WF_A __pyx_string_tab[311]
+#define __pyx_kp_b_iso88591_q_z_Ja_IQ_L __pyx_string_tab[312]
+#define __pyx_kp_b_iso88591_t82S __pyx_string_tab[313]
+#define __pyx_kp_b_iso88591_vYc_q_q_QgQ_Q_Q_U_6_A_vU_1_2S_i __pyx_string_tab[314]
 #define __pyx_float_0_5 __pyx_number_tab[0]
 #define __pyx_float_0_35 __pyx_number_tab[1]
 #define __pyx_int_0 __pyx_number_tab[2]
@@ -4140,7 +4142,7 @@ static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_scope_struct____Pyx_CFunc_2711fe__6camera_6Camera_void__lParenCamera__comma_int___etc_to_py_4self_5width_6height_7horizon);
   for (int i=0; i<7; ++i) { Py_CLEAR(clear_module_state->__pyx_tuple[i]); }
   for (int i=0; i<68; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<313; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<315; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
   for (int i=0; i<6; ++i) { Py_CLEAR(clear_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_clear_contents ### */
 /* CommonTypesMetaclass.module_state_clear */
@@ -4188,7 +4190,7 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
   Py_VISIT(traverse_module_state->__pyx_scope_struct____Pyx_CFunc_2711fe__6camera_6Camera_void__lParenCamera__comma_int___etc_to_py_4self_5width_6height_7horizon);
   for (int i=0; i<7; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_tuple[i]); }
   for (int i=0; i<68; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<313; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<315; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
   for (int i=0; i<6; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_traverse_contents ### */
 /* CommonTypesMetaclass.module_state_traverse */
@@ -18427,19 +18429,24 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
 
 static PyObject *__pyx_pf_6camera_6Camera_2_render_weapon(struct __pyx_obj_6camera_Camera *__pyx_v_self, int __pyx_v_width, int __pyx_v_height, PyObject *__pyx_v_surf) {
   PyObject *__pyx_v_weapon_surf = 0;
+  int __pyx_v_weapon_surf_width;
+  int __pyx_v_weapon_surf_height;
   float __pyx_v_pos[2];
   PyObject *__pyx_r = NULL;
   __Pyx_TraceDeclarationsFunc
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  float *__pyx_t_2;
+  PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
-  float __pyx_t_4;
-  int __pyx_t_5;
+  int __pyx_t_4;
+  float *__pyx_t_5;
   float __pyx_t_6;
   float __pyx_t_7;
-  PyObject *__pyx_t_8 = NULL;
-  size_t __pyx_t_9;
+  float __pyx_t_8;
+  PyObject *__pyx_t_9 = NULL;
+  PyObject *__pyx_t_10 = NULL;
+  PyObject *__pyx_t_11 = NULL;
+  size_t __pyx_t_12;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -18451,8 +18458,8 @@ static PyObject *__pyx_pf_6camera_6Camera_2_render_weapon(struct __pyx_obj_6came
  *     def _render_weapon(self: Self, int width, int height, surf: pg.Surface):
  *         cdef:
  *             object weapon_surf = self._player._weapon_surf             # <<<<<<<<<<<<<<
- *             float[2] pos = (
- *                 <float>self._player._render_weapon_pos[0] * width
+ *             int weapon_surf_width = weapon_surf.width * self._weapon_scale
+ *             int weapon_surf_height = weapon_surf.height * self._weapon_scale
 */
   __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->_player, __pyx_mstate_global->__pyx_n_u_weapon_surf); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1096, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -18462,76 +18469,157 @@ static PyObject *__pyx_pf_6camera_6Camera_2_render_weapon(struct __pyx_obj_6came
   /* "camera.pyx":1097
  *         cdef:
  *             object weapon_surf = self._player._weapon_surf
- *             float[2] pos = (             # <<<<<<<<<<<<<<
- *                 <float>self._player._render_weapon_pos[0] * width
- *                 - <int>weapon_surf.width / 2,
+ *             int weapon_surf_width = weapon_surf.width * self._weapon_scale             # <<<<<<<<<<<<<<
+ *             int weapon_surf_height = weapon_surf.height * self._weapon_scale
+ *             float[2] pos = (
 */
-  __pyx_t_2 = __pyx_v_pos;
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_weapon_surf, __pyx_mstate_global->__pyx_n_u_width); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1097, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_self->_weapon_scale); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1097, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1097, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_4 = __Pyx_PyLong_As_int(__pyx_t_3); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 1097, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_v_weapon_surf_width = __pyx_t_4;
 
   /* "camera.pyx":1098
  *             object weapon_surf = self._player._weapon_surf
+ *             int weapon_surf_width = weapon_surf.width * self._weapon_scale
+ *             int weapon_surf_height = weapon_surf.height * self._weapon_scale             # <<<<<<<<<<<<<<
  *             float[2] pos = (
- *                 <float>self._player._render_weapon_pos[0] * width             # <<<<<<<<<<<<<<
- *                 - <int>weapon_surf.width / 2,
- *                 <float>self._player._render_weapon_pos[1] * height,
+ *                 <float>self._player._render_weapon_pos[0] * width
 */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->_player, __pyx_mstate_global->__pyx_n_u_render_weapon_pos); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1098, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_OwnStrongReference); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1098, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_weapon_surf, __pyx_mstate_global->__pyx_n_u_height); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1098, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_4 = __Pyx_PyFloat_AsFloat(__pyx_t_3); if (unlikely((__pyx_t_4 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 1098, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_self->_weapon_scale); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1098, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = PyNumber_Multiply(__pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1098, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_4 = __Pyx_PyLong_As_int(__pyx_t_1); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 1098, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_weapon_surf_height = __pyx_t_4;
 
   /* "camera.pyx":1099
- *             float[2] pos = (
+ *             int weapon_surf_width = weapon_surf.width * self._weapon_scale
+ *             int weapon_surf_height = weapon_surf.height * self._weapon_scale
+ *             float[2] pos = (             # <<<<<<<<<<<<<<
  *                 <float>self._player._render_weapon_pos[0] * width
- *                 - <int>weapon_surf.width / 2,             # <<<<<<<<<<<<<<
- *                 <float>self._player._render_weapon_pos[1] * height,
- *             )
+ *                 - <int>weapon_surf_width / 2,
 */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_weapon_surf, __pyx_mstate_global->__pyx_n_u_width); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1099, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_5 = __Pyx_PyLong_As_int(__pyx_t_3); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 1099, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_6 = ((((float)__pyx_t_4) * __pyx_v_width) - (((long)((int)__pyx_t_5)) / 2));
+  __pyx_t_5 = __pyx_v_pos;
 
   /* "camera.pyx":1100
- *                 <float>self._player._render_weapon_pos[0] * width
- *                 - <int>weapon_surf.width / 2,
- *                 <float>self._player._render_weapon_pos[1] * height,             # <<<<<<<<<<<<<<
- *             )
- *         surf.blit(weapon_surf, pos)
+ *             int weapon_surf_height = weapon_surf.height * self._weapon_scale
+ *             float[2] pos = (
+ *                 <float>self._player._render_weapon_pos[0] * width             # <<<<<<<<<<<<<<
+ *                 - <int>weapon_surf_width / 2,
+ *                 <float>self._player._render_weapon_pos[1] * height,
 */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->_player, __pyx_mstate_global->__pyx_n_u_render_weapon_pos); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1100, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_3, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_OwnStrongReference); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1100, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->_player, __pyx_mstate_global->__pyx_n_u_render_weapon_pos); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1100, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_4 = __Pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_4 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 1100, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_OwnStrongReference); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1100, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_7 = (((float)__pyx_t_4) * __pyx_v_height);
-  (__pyx_t_2[0]) = __pyx_t_6;
-  (__pyx_t_2[1]) = __pyx_t_7;
+  __pyx_t_6 = __Pyx_PyFloat_AsFloat(__pyx_t_2); if (unlikely((__pyx_t_6 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 1100, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "camera.pyx":1102
+  /* "camera.pyx":1101
+ *             float[2] pos = (
+ *                 <float>self._player._render_weapon_pos[0] * width
+ *                 - <int>weapon_surf_width / 2,             # <<<<<<<<<<<<<<
  *                 <float>self._player._render_weapon_pos[1] * height,
  *             )
+*/
+  __pyx_t_7 = ((((float)__pyx_t_6) * __pyx_v_width) - (((long)((int)__pyx_v_weapon_surf_width)) / 2));
+
+  /* "camera.pyx":1102
+ *                 <float>self._player._render_weapon_pos[0] * width
+ *                 - <int>weapon_surf_width / 2,
+ *                 <float>self._player._render_weapon_pos[1] * height,             # <<<<<<<<<<<<<<
+ *             )
+ *         weapon_surf = pg.transform.scale(
+*/
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->_player, __pyx_mstate_global->__pyx_n_u_render_weapon_pos); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1102, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_OwnStrongReference); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1102, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_6 = __Pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_6 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 1102, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_8 = (((float)__pyx_t_6) * __pyx_v_height);
+  (__pyx_t_5[0]) = __pyx_t_7;
+  (__pyx_t_5[1]) = __pyx_t_8;
+
+  /* "camera.pyx":1104
+ *                 <float>self._player._render_weapon_pos[1] * height,
+ *             )
+ *         weapon_surf = pg.transform.scale(             # <<<<<<<<<<<<<<
+ *             weapon_surf, (weapon_surf_width, weapon_surf_height),
+ *         )
+*/
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_pg); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1104, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_mstate_global->__pyx_n_u_transform); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1104, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_2 = __pyx_t_9;
+  __Pyx_INCREF(__pyx_t_2);
+
+  /* "camera.pyx":1105
+ *             )
+ *         weapon_surf = pg.transform.scale(
+ *             weapon_surf, (weapon_surf_width, weapon_surf_height),             # <<<<<<<<<<<<<<
+ *         )
+ *         surf.blit(weapon_surf, pos)
+*/
+  __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_weapon_surf_width); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1105, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_10 = __Pyx_PyLong_From_int(__pyx_v_weapon_surf_height); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1105, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_10);
+  __pyx_t_11 = PyTuple_New(2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1105, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+  __Pyx_GIVEREF(__pyx_t_3);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_3) != (0)) __PYX_ERR(0, 1105, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_10);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 1, __pyx_t_10) != (0)) __PYX_ERR(0, 1105, __pyx_L1_error);
+  __pyx_t_3 = 0;
+  __pyx_t_10 = 0;
+  __pyx_t_12 = 0;
+  {
+    PyObject *__pyx_callargs[3] = {__pyx_t_2, __pyx_v_weapon_surf, __pyx_t_11};
+    __pyx_t_1 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_scale_2, __pyx_callargs+__pyx_t_12, (3-__pyx_t_12) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1104, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+  }
+  __Pyx_DECREF_SET(__pyx_v_weapon_surf, __pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* "camera.pyx":1107
+ *             weapon_surf, (weapon_surf_width, weapon_surf_height),
+ *         )
  *         surf.blit(weapon_surf, pos)             # <<<<<<<<<<<<<<
  * 
  *     def render(self: Self, surf: pg.Surface) -> None:
 */
-  __pyx_t_3 = __pyx_v_surf;
-  __Pyx_INCREF(__pyx_t_3);
-  __pyx_t_8 = __Pyx_carray_to_py_float(__pyx_v_pos, 2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1102, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_9 = 0;
+  __pyx_t_9 = __pyx_v_surf;
+  __Pyx_INCREF(__pyx_t_9);
+  __pyx_t_11 = __Pyx_carray_to_py_float(__pyx_v_pos, 2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1107, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+  __pyx_t_12 = 0;
   {
-    PyObject *__pyx_callargs[3] = {__pyx_t_3, __pyx_v_weapon_surf, __pyx_t_8};
-    __pyx_t_1 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_blit, __pyx_callargs+__pyx_t_9, (3-__pyx_t_9) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1102, __pyx_L1_error)
+    PyObject *__pyx_callargs[3] = {__pyx_t_9, __pyx_v_weapon_surf, __pyx_t_11};
+    __pyx_t_1 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_blit, __pyx_callargs+__pyx_t_12, (3-__pyx_t_12) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
+    __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1107, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -18550,8 +18638,11 @@ static PyObject *__pyx_pf_6camera_6Camera_2_render_weapon(struct __pyx_obj_6came
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_8);
+  __Pyx_XDECREF(__pyx_t_9);
+  __Pyx_XDECREF(__pyx_t_10);
+  __Pyx_XDECREF(__pyx_t_11);
   __Pyx_TraceException(__pyx_lineno, 0, 0);
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
@@ -18568,7 +18659,7 @@ static PyObject *__pyx_pf_6camera_6Camera_2_render_weapon(struct __pyx_obj_6came
   return __pyx_r;
 }
 
-/* "camera.pyx":1104
+/* "camera.pyx":1109
  *         surf.blit(weapon_surf, pos)
  * 
  *     def render(self: Self, surf: pg.Surface) -> None:             # <<<<<<<<<<<<<<
@@ -18615,32 +18706,32 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_surf,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 1104, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 1109, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 1104, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 1109, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "render", 0) < (0)) __PYX_ERR(0, 1104, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "render", 0) < (0)) __PYX_ERR(0, 1109, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("render", 1, 1, 1, i); __PYX_ERR(0, 1104, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("render", 1, 1, 1, i); __PYX_ERR(0, 1109, __pyx_L3_error) }
       }
     } else if (unlikely(__pyx_nargs != 1)) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 1104, __pyx_L3_error)
+      if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 1109, __pyx_L3_error)
     }
     __pyx_v_surf = values[0];
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("render", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 1104, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("render", 1, 1, 1, __pyx_nargs); __PYX_ERR(0, 1109, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -18687,35 +18778,35 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
   int __pyx_clineno = 0;
   __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[61]))
   __Pyx_RefNannySetupContext("render", 0);
-  __Pyx_TraceStartFunc("render", __pyx_f[0], 1104, 0, 0, 0, __PYX_ERR(0, 1104, __pyx_L1_error));
+  __Pyx_TraceStartFunc("render", __pyx_f[0], 1109, 0, 0, 0, __PYX_ERR(0, 1109, __pyx_L1_error));
 
-  /* "camera.pyx":1106
+  /* "camera.pyx":1111
  *     def render(self: Self, surf: pg.Surface) -> None:
  *         cdef:
  *             int width = surf.width             # <<<<<<<<<<<<<<
  *             int height = surf.height
  *             int horizon = int(self._horizon * height)
 */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_surf, __pyx_mstate_global->__pyx_n_u_width); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1106, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_surf, __pyx_mstate_global->__pyx_n_u_width); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1111, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyLong_As_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 1106, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyLong_As_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 1111, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_width = __pyx_t_2;
 
-  /* "camera.pyx":1107
+  /* "camera.pyx":1112
  *         cdef:
  *             int width = surf.width
  *             int height = surf.height             # <<<<<<<<<<<<<<
  *             int horizon = int(self._horizon * height)
  * 
 */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_surf, __pyx_mstate_global->__pyx_n_u_height); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1107, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_surf, __pyx_mstate_global->__pyx_n_u_height); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1112, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyLong_As_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 1107, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyLong_As_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 1112, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_height = __pyx_t_2;
 
-  /* "camera.pyx":1108
+  /* "camera.pyx":1113
  *             int width = surf.width
  *             int height = surf.height
  *             int horizon = int(self._horizon * height)             # <<<<<<<<<<<<<<
@@ -18724,18 +18815,18 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
 */
   __pyx_v_horizon = ((int)(__pyx_v_self->_horizon * __pyx_v_height));
 
-  /* "camera.pyx":1110
+  /* "camera.pyx":1115
  *             int horizon = int(self._horizon * height)
  * 
  *         self._yaw = self._player._yaw * self._yaw_magnitude             # <<<<<<<<<<<<<<
  *         surf.fill((0, 0, 0))
  *         self._ceiling = None
 */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->_player, __pyx_mstate_global->__pyx_n_u_yaw); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1110, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_self->_player, __pyx_mstate_global->__pyx_n_u_yaw); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1115, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_self->_yaw_magnitude); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1110, __pyx_L1_error)
+  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_self->_yaw_magnitude); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1115, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1110, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1115, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -18745,7 +18836,7 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
   __pyx_v_self->_yaw = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "camera.pyx":1111
+  /* "camera.pyx":1116
  * 
  *         self._yaw = self._player._yaw * self._yaw_magnitude
  *         surf.fill((0, 0, 0))             # <<<<<<<<<<<<<<
@@ -18759,12 +18850,12 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
     PyObject *__pyx_callargs[2] = {__pyx_t_3, __pyx_mstate_global->__pyx_tuple[4]};
     __pyx_t_4 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_fill, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1111, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1116, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "camera.pyx":1112
+  /* "camera.pyx":1117
  *         self._yaw = self._player._yaw * self._yaw_magnitude
  *         surf.fill((0, 0, 0))
  *         self._ceiling = None             # <<<<<<<<<<<<<<
@@ -18777,7 +18868,7 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
   __Pyx_DECREF(__pyx_v_self->_ceiling);
   __pyx_v_self->_ceiling = Py_None;
 
-  /* "camera.pyx":1113
+  /* "camera.pyx":1118
  *         surf.fill((0, 0, 0))
  *         self._ceiling = None
  *         self._floor = None             # <<<<<<<<<<<<<<
@@ -18790,7 +18881,7 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
   __Pyx_DECREF(__pyx_v_self->_floor);
   __pyx_v_self->_floor = Py_None;
 
-  /* "camera.pyx":1116
+  /* "camera.pyx":1121
  *         # the per-pixel alpha with (0, 0, 0, 0) doesn't seem to affect
  *         # fps at all
  *         self._walls_and_entities = pg.Surface((width, height), pg.SRCALPHA)             # <<<<<<<<<<<<<<
@@ -18798,26 +18889,26 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
  *         self._weapon = None
 */
   __pyx_t_3 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_pg); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1116, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_pg); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1121, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_Surface); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1116, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_Surface); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1121, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyLong_From_int(__pyx_v_width); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1116, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyLong_From_int(__pyx_v_width); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1121, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_7 = __Pyx_PyLong_From_int(__pyx_v_height); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1116, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyLong_From_int(__pyx_v_height); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1121, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_8 = PyTuple_New(2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1116, __pyx_L1_error)
+  __pyx_t_8 = PyTuple_New(2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1121, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
   __Pyx_GIVEREF(__pyx_t_1);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_1) != (0)) __PYX_ERR(0, 1116, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_1) != (0)) __PYX_ERR(0, 1121, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_7);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 1, __pyx_t_7) != (0)) __PYX_ERR(0, 1116, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 1, __pyx_t_7) != (0)) __PYX_ERR(0, 1121, __pyx_L1_error);
   __pyx_t_1 = 0;
   __pyx_t_7 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_pg); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1116, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_pg); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1121, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_SRCALPHA); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1116, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_SRCALPHA); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1121, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __pyx_t_5 = 1;
@@ -18839,7 +18930,7 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1116, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1121, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
   }
   __Pyx_GIVEREF(__pyx_t_4);
@@ -18848,7 +18939,7 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
   __pyx_v_self->_walls_and_entities = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "camera.pyx":1117
+  /* "camera.pyx":1122
  *         # fps at all
  *         self._walls_and_entities = pg.Surface((width, height), pg.SRCALPHA)
  *         self._walls_and_entities.fill((0, 0, 0, 0))             # <<<<<<<<<<<<<<
@@ -18862,12 +18953,12 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
     PyObject *__pyx_callargs[2] = {__pyx_t_6, __pyx_mstate_global->__pyx_tuple[5]};
     __pyx_t_4 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_fill, __pyx_callargs+__pyx_t_5, (2-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1117, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1122, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "camera.pyx":1118
+  /* "camera.pyx":1123
  *         self._walls_and_entities = pg.Surface((width, height), pg.SRCALPHA)
  *         self._walls_and_entities.fill((0, 0, 0, 0))
  *         self._weapon = None             # <<<<<<<<<<<<<<
@@ -18880,7 +18971,7 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
   __Pyx_DECREF(__pyx_v_self->_weapon);
   __pyx_v_self->_weapon = Py_None;
 
-  /* "camera.pyx":1121
+  /* "camera.pyx":1126
  * 
  *         # Threads
  *         floor_and_ceiling = Thread(             # <<<<<<<<<<<<<<
@@ -18888,10 +18979,10 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
  *             args=(width, height, horizon),
 */
   __pyx_t_6 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_Thread); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1121, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_mstate_global->__pyx_n_u_Thread); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1126, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
 
-  /* "camera.pyx":1122
+  /* "camera.pyx":1127
  *         # Threads
  *         floor_and_ceiling = Thread(
  *             target=self._render_floor_and_ceiling,             # <<<<<<<<<<<<<<
@@ -18900,37 +18991,37 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
 */
   __Pyx_INCREF((PyObject *)__pyx_v_self);
   __pyx_t_9 = __pyx_v_self;
-  __pyx_t_8 = __Pyx_CFunc_2711fe__6camera_6Camera_void__lParenCamera__comma_int___etc_to_py_4self_5width_6height_7horizon(((struct __pyx_vtabstruct_6camera_Camera *)__pyx_t_9->__pyx_vtab)->_render_floor_and_ceiling); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1122, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_CFunc_2711fe__6camera_6Camera_void__lParenCamera__comma_int___etc_to_py_4self_5width_6height_7horizon(((struct __pyx_vtabstruct_6camera_Camera *)__pyx_t_9->__pyx_vtab)->_render_floor_and_ceiling); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1127, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
   __pyx_t_3 = ((PyObject *)__pyx_t_9);
   __Pyx_INCREF(__pyx_t_3);
-  __pyx_t_7 = __Pyx_PyMethod_New2Arg(__pyx_t_8, __pyx_t_3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1122, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyMethod_New2Arg(__pyx_t_8, __pyx_t_3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1127, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF((PyObject *)__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "camera.pyx":1123
+  /* "camera.pyx":1128
  *         floor_and_ceiling = Thread(
  *             target=self._render_floor_and_ceiling,
  *             args=(width, height, horizon),             # <<<<<<<<<<<<<<
  *         )
  *         walls_and_entities = Thread(
 */
-  __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_width); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1123, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_width); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1128, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_8 = __Pyx_PyLong_From_int(__pyx_v_height); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1123, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyLong_From_int(__pyx_v_height); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1128, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_10 = __Pyx_PyLong_From_int(__pyx_v_horizon); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1123, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyLong_From_int(__pyx_v_horizon); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1128, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_11 = PyTuple_New(3); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1123, __pyx_L1_error)
+  __pyx_t_11 = PyTuple_New(3); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1128, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_GIVEREF(__pyx_t_3);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_3) != (0)) __PYX_ERR(0, 1123, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_3) != (0)) __PYX_ERR(0, 1128, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_8);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 1, __pyx_t_8) != (0)) __PYX_ERR(0, 1123, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 1, __pyx_t_8) != (0)) __PYX_ERR(0, 1128, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_10);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 2, __pyx_t_10) != (0)) __PYX_ERR(0, 1123, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 2, __pyx_t_10) != (0)) __PYX_ERR(0, 1128, __pyx_L1_error);
   __pyx_t_3 = 0;
   __pyx_t_8 = 0;
   __pyx_t_10 = 0;
@@ -18948,23 +19039,23 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 2 : 0)] = {__pyx_t_6, NULL};
-    __pyx_t_10 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1121, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1126, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_target, __pyx_t_7, __pyx_t_10, __pyx_callargs+1, 0) < (0)) __PYX_ERR(0, 1121, __pyx_L1_error)
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_args, __pyx_t_11, __pyx_t_10, __pyx_callargs+1, 1) < (0)) __PYX_ERR(0, 1121, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_target, __pyx_t_7, __pyx_t_10, __pyx_callargs+1, 0) < (0)) __PYX_ERR(0, 1126, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_args, __pyx_t_11, __pyx_t_10, __pyx_callargs+1, 1) < (0)) __PYX_ERR(0, 1126, __pyx_L1_error)
     __pyx_t_4 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_t_1, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_10);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1121, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1126, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
   }
   __pyx_v_floor_and_ceiling = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "camera.pyx":1125
+  /* "camera.pyx":1130
  *             args=(width, height, horizon),
  *         )
  *         walls_and_entities = Thread(             # <<<<<<<<<<<<<<
@@ -18972,10 +19063,10 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
  *             args=(width, height, horizon),
 */
   __pyx_t_1 = NULL;
-  __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_mstate_global->__pyx_n_u_Thread); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1125, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_mstate_global->__pyx_n_u_Thread); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1130, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
 
-  /* "camera.pyx":1126
+  /* "camera.pyx":1131
  *         )
  *         walls_and_entities = Thread(
  *             target=self._render_walls_and_entities,             # <<<<<<<<<<<<<<
@@ -18984,37 +19075,37 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
 */
   __Pyx_INCREF((PyObject *)__pyx_v_self);
   __pyx_t_9 = __pyx_v_self;
-  __pyx_t_11 = __Pyx_CFunc_2711fe__6camera_6Camera_void__lParenCamera__comma_int___etc_to_py_4self_5width_6height_7horizon(((struct __pyx_vtabstruct_6camera_Camera *)__pyx_t_9->__pyx_vtab)->_render_walls_and_entities); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1126, __pyx_L1_error)
+  __pyx_t_11 = __Pyx_CFunc_2711fe__6camera_6Camera_void__lParenCamera__comma_int___etc_to_py_4self_5width_6height_7horizon(((struct __pyx_vtabstruct_6camera_Camera *)__pyx_t_9->__pyx_vtab)->_render_walls_and_entities); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1131, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __pyx_t_7 = ((PyObject *)__pyx_t_9);
   __Pyx_INCREF(__pyx_t_7);
-  __pyx_t_6 = __Pyx_PyMethod_New2Arg(__pyx_t_11, __pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1126, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyMethod_New2Arg(__pyx_t_11, __pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1131, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __Pyx_DECREF((PyObject *)__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "camera.pyx":1127
+  /* "camera.pyx":1132
  *         walls_and_entities = Thread(
  *             target=self._render_walls_and_entities,
  *             args=(width, height, horizon),             # <<<<<<<<<<<<<<
  *         )
  * 
 */
-  __pyx_t_7 = __Pyx_PyLong_From_int(__pyx_v_width); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1127, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyLong_From_int(__pyx_v_width); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_11 = __Pyx_PyLong_From_int(__pyx_v_height); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1127, __pyx_L1_error)
+  __pyx_t_11 = __Pyx_PyLong_From_int(__pyx_v_height); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_8 = __Pyx_PyLong_From_int(__pyx_v_horizon); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1127, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyLong_From_int(__pyx_v_horizon); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1127, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_7);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_7) != (0)) __PYX_ERR(0, 1127, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_7) != (0)) __PYX_ERR(0, 1132, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_11);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_11) != (0)) __PYX_ERR(0, 1127, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_11) != (0)) __PYX_ERR(0, 1132, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_8);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_t_8) != (0)) __PYX_ERR(0, 1127, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_t_8) != (0)) __PYX_ERR(0, 1132, __pyx_L1_error);
   __pyx_t_7 = 0;
   __pyx_t_11 = 0;
   __pyx_t_8 = 0;
@@ -19032,23 +19123,23 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
   #endif
   {
     PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 2 : 0)] = {__pyx_t_1, NULL};
-    __pyx_t_8 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1125, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_MakeVectorcallBuilderKwds(2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1130, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_target, __pyx_t_6, __pyx_t_8, __pyx_callargs+1, 0) < (0)) __PYX_ERR(0, 1125, __pyx_L1_error)
-    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_args, __pyx_t_3, __pyx_t_8, __pyx_callargs+1, 1) < (0)) __PYX_ERR(0, 1125, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_target, __pyx_t_6, __pyx_t_8, __pyx_callargs+1, 0) < (0)) __PYX_ERR(0, 1130, __pyx_L1_error)
+    if (__Pyx_VectorcallBuilder_AddArg(__pyx_mstate_global->__pyx_n_u_args, __pyx_t_3, __pyx_t_8, __pyx_callargs+1, 1) < (0)) __PYX_ERR(0, 1130, __pyx_L1_error)
     __pyx_t_4 = __Pyx_Object_Vectorcall_CallFromBuilder((PyObject*)__pyx_t_10, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_8);
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1125, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1130, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
   }
   __pyx_v_walls_and_entities = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "camera.pyx":1130
+  /* "camera.pyx":1135
  *         )
  * 
  *         floor_and_ceiling.start()             # <<<<<<<<<<<<<<
@@ -19062,12 +19153,12 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
     PyObject *__pyx_callargs[2] = {__pyx_t_10, NULL};
     __pyx_t_4 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_start_2, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1130, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1135, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "camera.pyx":1131
+  /* "camera.pyx":1136
  * 
  *         floor_and_ceiling.start()
  *         walls_and_entities.start()             # <<<<<<<<<<<<<<
@@ -19081,12 +19172,12 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
     PyObject *__pyx_callargs[2] = {__pyx_t_10, NULL};
     __pyx_t_4 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_start_2, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1131, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1136, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "camera.pyx":1132
+  /* "camera.pyx":1137
  *         floor_and_ceiling.start()
  *         walls_and_entities.start()
  *         floor_and_ceiling.join()             # <<<<<<<<<<<<<<
@@ -19100,12 +19191,12 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
     PyObject *__pyx_callargs[2] = {__pyx_t_10, NULL};
     __pyx_t_4 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_join, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1132, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1137, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "camera.pyx":1133
+  /* "camera.pyx":1138
  *         walls_and_entities.start()
  *         floor_and_ceiling.join()
  *         walls_and_entities.join()             # <<<<<<<<<<<<<<
@@ -19119,12 +19210,12 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
     PyObject *__pyx_callargs[2] = {__pyx_t_10, NULL};
     __pyx_t_4 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_join, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1133, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1138, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "camera.pyx":1136
+  /* "camera.pyx":1141
  * 
  *         # Blits
  *         if self._floor is not None:             # <<<<<<<<<<<<<<
@@ -19134,7 +19225,7 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
   __pyx_t_12 = (__pyx_v_self->_floor != Py_None);
   if (__pyx_t_12) {
 
-    /* "camera.pyx":1137
+    /* "camera.pyx":1142
  *         # Blits
  *         if self._floor is not None:
  *             surf.blit(self._floor, (0, horizon))             # <<<<<<<<<<<<<<
@@ -19143,15 +19234,15 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
 */
     __pyx_t_10 = __pyx_v_surf;
     __Pyx_INCREF(__pyx_t_10);
-    __pyx_t_8 = __Pyx_PyLong_From_int(__pyx_v_horizon); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1137, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyLong_From_int(__pyx_v_horizon); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1142, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1137, __pyx_L1_error)
+    __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1142, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_INCREF(__pyx_mstate_global->__pyx_int_0);
     __Pyx_GIVEREF(__pyx_mstate_global->__pyx_int_0);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_mstate_global->__pyx_int_0) != (0)) __PYX_ERR(0, 1137, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_mstate_global->__pyx_int_0) != (0)) __PYX_ERR(0, 1142, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_8);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_8) != (0)) __PYX_ERR(0, 1137, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_8) != (0)) __PYX_ERR(0, 1142, __pyx_L1_error);
     __pyx_t_8 = 0;
     __pyx_t_5 = 0;
     {
@@ -19159,12 +19250,12 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
       __pyx_t_4 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_blit, __pyx_callargs+__pyx_t_5, (3-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1137, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1142, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
     }
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "camera.pyx":1136
+    /* "camera.pyx":1141
  * 
  *         # Blits
  *         if self._floor is not None:             # <<<<<<<<<<<<<<
@@ -19173,7 +19264,7 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
 */
   }
 
-  /* "camera.pyx":1138
+  /* "camera.pyx":1143
  *         if self._floor is not None:
  *             surf.blit(self._floor, (0, horizon))
  *         if self._ceiling is not None:             # <<<<<<<<<<<<<<
@@ -19183,7 +19274,7 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
   __pyx_t_12 = (__pyx_v_self->_ceiling != Py_None);
   if (__pyx_t_12) {
 
-    /* "camera.pyx":1139
+    /* "camera.pyx":1144
  *             surf.blit(self._floor, (0, horizon))
  *         if self._ceiling is not None:
  *             surf.blit(self._ceiling, (0, 0))             # <<<<<<<<<<<<<<
@@ -19197,12 +19288,12 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
       PyObject *__pyx_callargs[3] = {__pyx_t_3, __pyx_v_self->_ceiling, __pyx_mstate_global->__pyx_tuple[3]};
       __pyx_t_4 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_blit, __pyx_callargs+__pyx_t_5, (3-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1139, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1144, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
     }
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "camera.pyx":1138
+    /* "camera.pyx":1143
  *         if self._floor is not None:
  *             surf.blit(self._floor, (0, horizon))
  *         if self._ceiling is not None:             # <<<<<<<<<<<<<<
@@ -19211,7 +19302,7 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
 */
   }
 
-  /* "camera.pyx":1140
+  /* "camera.pyx":1145
  *         if self._ceiling is not None:
  *             surf.blit(self._ceiling, (0, 0))
  *         surf.blit(self._walls_and_entities, (0, 0))             # <<<<<<<<<<<<<<
@@ -19225,12 +19316,12 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
     PyObject *__pyx_callargs[3] = {__pyx_t_3, __pyx_v_self->_walls_and_entities, __pyx_mstate_global->__pyx_tuple[3]};
     __pyx_t_4 = __Pyx_PyObject_FastCallMethod((PyObject*)__pyx_mstate_global->__pyx_n_u_blit, __pyx_callargs+__pyx_t_5, (3-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1140, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1145, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "camera.pyx":1141
+  /* "camera.pyx":1146
  *             surf.blit(self._ceiling, (0, 0))
  *         surf.blit(self._walls_and_entities, (0, 0))
  *         self._render_weapon(width, height, surf)             # <<<<<<<<<<<<<<
@@ -19238,9 +19329,9 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
 */
   __pyx_t_3 = ((PyObject *)__pyx_v_self);
   __Pyx_INCREF(__pyx_t_3);
-  __pyx_t_10 = __Pyx_PyLong_From_int(__pyx_v_width); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1141, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyLong_From_int(__pyx_v_width); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1146, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_8 = __Pyx_PyLong_From_int(__pyx_v_height); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1141, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyLong_From_int(__pyx_v_height); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1146, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
   __pyx_t_5 = 0;
   {
@@ -19249,12 +19340,12 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1141, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1146, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "camera.pyx":1104
+  /* "camera.pyx":1109
  *         surf.blit(weapon_surf, pos)
  * 
  *     def render(self: Self, surf: pg.Surface) -> None:             # <<<<<<<<<<<<<<
@@ -19264,7 +19355,7 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
 
   /* function exit code */
   __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  __Pyx_TraceReturnValue(__pyx_r, 0, 0, __PYX_ERR(0, 1104, __pyx_L1_error));
+  __Pyx_TraceReturnValue(__pyx_r, 0, 0, __PYX_ERR(0, 1109, __pyx_L1_error));
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
@@ -19280,7 +19371,7 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 1104, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 1109, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("camera.Camera.render", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
@@ -21897,7 +21988,7 @@ __Pyx_RefNannySetupContext("PyInit_camera", 0);
   (void)__Pyx_modinit_variable_import_code(__pyx_mstate);
   (void)__Pyx_modinit_function_import_code(__pyx_mstate);
   /*--- Execution code ---*/
-  __Pyx_TraceStartFunc("PyInit_camera", __pyx_f[0], 1, 4, 0, 0, __PYX_ERR(0, 1, __pyx_L1_error));
+  __Pyx_TraceStartFunc("PyInit_camera", __pyx_f[0], 1, 0, 0, 0, __PYX_ERR(0, 1, __pyx_L1_error));
 
   /* "camera.pyx":17
  * from libc.string cimport memset
@@ -22139,26 +22230,26 @@ __Pyx_RefNannySetupContext("PyInit_camera", 0);
   if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_6camera_Camera, __pyx_mstate_global->__pyx_n_u_render_weapon, __pyx_t_4) < (0)) __PYX_ERR(0, 1094, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "camera.pyx":1104
+  /* "camera.pyx":1109
  *         surf.blit(weapon_surf, pos)
  * 
  *     def render(self: Self, surf: pg.Surface) -> None:             # <<<<<<<<<<<<<<
  *         cdef:
  *             int width = surf.width
 */
-  __pyx_t_4 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1104, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1109, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_self, __pyx_mstate_global->__pyx_n_u_Self) < (0)) __PYX_ERR(0, 1104, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_surf, __pyx_mstate_global->__pyx_kp_u_pg_Surface) < (0)) __PYX_ERR(0, 1104, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_return, __pyx_mstate_global->__pyx_n_u_None) < (0)) __PYX_ERR(0, 1104, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_6camera_6Camera_5render, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_Camera_render, NULL, __pyx_mstate_global->__pyx_n_u_camera, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[61])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1104, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_self, __pyx_mstate_global->__pyx_n_u_Self) < (0)) __PYX_ERR(0, 1109, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_surf, __pyx_mstate_global->__pyx_kp_u_pg_Surface) < (0)) __PYX_ERR(0, 1109, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_mstate_global->__pyx_n_u_return, __pyx_mstate_global->__pyx_n_u_None) < (0)) __PYX_ERR(0, 1109, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_6camera_6Camera_5render, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_Camera_render, NULL, __pyx_mstate_global->__pyx_n_u_camera, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[61])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1109, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_2);
   #endif
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_2, __pyx_t_4);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_6camera_Camera, __pyx_mstate_global->__pyx_n_u_render, __pyx_t_2) < (0)) __PYX_ERR(0, 1104, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_6camera_Camera, __pyx_mstate_global->__pyx_n_u_render, __pyx_t_2) < (0)) __PYX_ERR(0, 1109, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "(tree fragment)":1
@@ -22225,7 +22316,7 @@ __Pyx_RefNannySetupContext("PyInit_camera", 0);
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_test, __pyx_t_2) < (0)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_TraceReturnValue(Py_None, 4, 0, __PYX_ERR(0, 1, __pyx_L1_error));
+  __Pyx_TraceReturnValue(Py_None, 0, 0, __PYX_ERR(0, 1, __pyx_L1_error));
   __Pyx_PyMonitoring_ExitScope(0);
 
   /*--- Wrapped vars code ---*/
@@ -22235,7 +22326,7 @@ __Pyx_RefNannySetupContext("PyInit_camera", 0);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_TraceException(__pyx_lineno, 0, 0);
-  __Pyx_TraceExceptionUnwind(4, 0);
+  __Pyx_TraceExceptionUnwind(0, 0);
   if (__pyx_m) {
     if (__pyx_mstate->__pyx_d && stringtab_initialized) {
       __Pyx_AddTraceback("init camera", __pyx_clineno, __pyx_lineno, __pyx_filename);
@@ -22333,25 +22424,25 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
   __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[3]);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[3]);
 
-  /* "camera.pyx":1111
+  /* "camera.pyx":1116
  * 
  *         self._yaw = self._player._yaw * self._yaw_magnitude
  *         surf.fill((0, 0, 0))             # <<<<<<<<<<<<<<
  *         self._ceiling = None
  *         self._floor = None
 */
-  __pyx_mstate_global->__pyx_tuple[4] = PyTuple_Pack(3, __pyx_mstate_global->__pyx_int_0, __pyx_mstate_global->__pyx_int_0, __pyx_mstate_global->__pyx_int_0); if (unlikely(!__pyx_mstate_global->__pyx_tuple[4])) __PYX_ERR(0, 1111, __pyx_L1_error)
+  __pyx_mstate_global->__pyx_tuple[4] = PyTuple_Pack(3, __pyx_mstate_global->__pyx_int_0, __pyx_mstate_global->__pyx_int_0, __pyx_mstate_global->__pyx_int_0); if (unlikely(!__pyx_mstate_global->__pyx_tuple[4])) __PYX_ERR(0, 1116, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[4]);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[4]);
 
-  /* "camera.pyx":1117
+  /* "camera.pyx":1122
  *         # fps at all
  *         self._walls_and_entities = pg.Surface((width, height), pg.SRCALPHA)
  *         self._walls_and_entities.fill((0, 0, 0, 0))             # <<<<<<<<<<<<<<
  *         self._weapon = None
  * 
 */
-  __pyx_mstate_global->__pyx_tuple[5] = PyTuple_Pack(4, __pyx_mstate_global->__pyx_int_0, __pyx_mstate_global->__pyx_int_0, __pyx_mstate_global->__pyx_int_0, __pyx_mstate_global->__pyx_int_0); if (unlikely(!__pyx_mstate_global->__pyx_tuple[5])) __PYX_ERR(0, 1117, __pyx_L1_error)
+  __pyx_mstate_global->__pyx_tuple[5] = PyTuple_Pack(4, __pyx_mstate_global->__pyx_int_0, __pyx_mstate_global->__pyx_int_0, __pyx_mstate_global->__pyx_int_0, __pyx_mstate_global->__pyx_int_0); if (unlikely(!__pyx_mstate_global->__pyx_tuple[5])) __PYX_ERR(0, 1122, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[5]);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[5]);
 
@@ -22388,39 +22479,39 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
 static int __Pyx_InitConstants(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
   {
-    const struct { const unsigned int length: 12; } index[] = {{1},{179},{1},{1},{8},{10},{7},{6},{2},{9},{39},{34},{10},{22},{205},{14},{6},{24},{26},{21},{13},{18},{36},{38},{5},{4},{6},{5},{121},{107},{20},{26},{24},{22},{27},{25},{8},{4},{3},{7},{6},{7},{6},{4},{5},{4},{6},{6},{18},{4},{6},{4},{6},{15},{11},{6},{9},{8},{8},{18},{11},{17},{11},{12},{18},{12},{8},{9},{7},{7},{5},{6},{8},{5},{4},{11},{4},{9},{4},{3},{8},{9},{1},{4},{5},{6},{17},{3},{4},{8},{12},{15},{3},{7},{6},{12},{8},{17},{18},{16},{16},{17},{6},{7},{7},{8},{3},{8},{11},{3},{13},{7},{8},{5},{4},{8},{6},{6},{6},{6},{10},{6},{11},{15},{12},{11},{13},{4},{8},{6},{8},{12},{8},{15},{16},{16},{17},{7},{10},{16},{13},{4},{8},{7},{2},{3},{5},{1},{3},{7},{3},{2},{6},{7},{3},{4},{3},{6},{13},{14},{12},{11},{10},{21},{32},{33},{44},{14},{12},{7},{4},{10},{17},{13},{9},{6},{17},{25},{14},{15},{26},{14},{18},{13},{6},{9},{11},{6},{5},{6},{4},{10},{11},{8},{7},{6},{12},{10},{5},{12},{19},{9},{6},{5},{5},{10},{4},{9},{6},{8},{7},{9},{9},{9},{10},{8},{3},{9},{13},{6},{5},{6},{12},{1},{5},{6},{7},{6},{20},{21},{6},{19},{18},{7},{10},{11},{13},{12},{11},{19},{20},{18},{18},{19},{5},{6},{4},{1},{8},{1},{4},{14},{10},{11},{12},{58},{38},{58},{76},{28},{18},{2},{11},{121},{14},{13},{13},{254},{44},{44},{27},{27},{27},{24},{12},{15},{13},{156},{290},{14},{118},{41},{12},{12},{12},{12},{12},{12},{14},{12},{12},{12},{12},{15},{689},{62},{320},{100},{59},{115},{80},{2},{52},{633},{11},{41},{55},{58},{190},{3225},{36},{22},{288}};
-    #if (CYTHON_COMPRESS_STRINGS) == 3 && __PYX_LIMITED_VERSION_HEX >= 0x030e0000 /* compression: zstd (5682 bytes) */
-const char* const cstring = "(\265/\375`\273)E\261\000\312\315T,G\340\n\353\0010\314\363<\317\363\234\342\024\317\363q-\\\013\327\302\265\230\315\323P\314#j\225\323\033\211\002\n}\270\221c0\324\341\275\334\313\010\351\177h\356\363C\315\n\316z\320T\007X\356n\336{\\\234}\003K\213\001\210\002\262\002\320\002-\220\031\324\356^\252\203\202v\333;w=\227\036\253w\245\216]q\254\273[\335\235\326\225[\010m\367\357\346\272\254[j\334>\365VQ\335nWv\267\345neY\225\355\271'\232\302\256A\351o\227\255\252\321S\263\251\356\361\334\240\235\002\231\350N\355\265@\346\376\331\225\345,\007\334\255\2732\267;\323\025\207[/\334\326u\247\323jY\316\332\235\366\316U\327\323\241@\025\325\225?\255cwN\253m\271\201TT\353\312\335\272\273\335\254o\253i\332\303\001\327}\226\355Ng\226%\n\351\242\351N\313\013mY\266\250\213\333i\331\272h\231\266?%\373\343\346\332\022h\252\273\307\333\267\365\366\343[S\r\334@hY\226A+\256LS\024\207\333\273\322\247\331s\233\252N\367Y\226\355\336ln\237[U7P\td\352\033\353\226\352\271\367\256-o:T\267w\256,g\270\240\235n\240\213\232z\247\3154\355\231\256\273\336\\4\275\265\350\255E\177\032u{\353lEM\025\330\352V\227l\271\333iW\355\255:]\236z\263?:@ \233\215\266\000\347\206\026\223c\333\351\256\347\252\250\253u+\213+M\334\316q\177\373A)\263\323\254o\206\300\\\323\227\231\272\n\241\354\372\323R\272?9t\377\260\224?\356\211\372VJ\225\022\270+W\2674\335]\226Z\247\3238iY\236\350\032\024\303R\262\224\345\306\221d\013Ji\252=\232\230\362\007\304)KWEW\034\034\232\033\004v\343p=\230\037w\267e\330}\252\233m\313\322,\267\331;7[\226\263\030\004\333d{k\233S_|\032\270\356Ju\335\351\335n\324E]u\227e\233\246\332\267\201:\335\255)NdW1E\267\251\256\017\3046\307\352r\206Kw\273M\215c{\266Yn\367\343j]\317e\327\235\016MQ\215\023\201\232euO7\333\354j\2263\340N\327S\317\0265s\352\336\351M\267\350\371\003\356f:m\356\362<u\202\331l\267\251\246\331A(\213\236\242,\247\242\245\272\242\256vWU\3252\321\335\255\250\356V\357\304\325\025\317\275U\261\267\002E\234\2158k\367\016\350\212*\352\246h\357&\342V\261\335m\253S\363\326k\305\3265\367""\205\315\212\247\252E\025\027\225\000838\242\312n\327DY\267\025\201\351v5\273oh\272O\261EEu\375q\2011\242\253\177\\q\273\353\003\003\001>\337\3114O<<'\233\355\224\223s:\325\204CC\341\272\206@@\341\205\013aY\206\014B\006\246\014\031LBB& \320\244\252\246\236\036\323\315\215i\301\002S\215\251\246DDTr\335\322\317O\351<K\246Y\352\351)=xP\202)\301\220288\034a \212\211x1\357\214\317\236\270G'\326\261\305\022F\013\\\342\033^o`\264\300!\346=\274\"AV\020\"5\3036t\357\230Y\237%y\214>\246\274\200\331\254}\332W\031\343W\216\305I|\205\366\307\037\341S]\206\303.t\221\014\322\273\364\032Nr\010\001.\342\330\313by\263\237`p!\211\230^\302\317\267\366\2364\367\275\277\240JP\305C4\267 u\021\256\221\322 {\204\231\325_\\\366\2668l\036\304\267=\247\237XE,\214~\237\317\361=\035e\245_\006,n\276)o\313\207\376\326Q}.\351\247\206\213g\250\344\227j&}\217N\341\265\010c\222\360\017p}r\374\247\237\221\337\365\002^1\357\235\020\\\275\rj\336\244\177X\364\220\030\010\347 \371\221\215\221?\310xy\227\227\365\220\337`\\\350\3172\366\217Q\204]z\014\344\203\306a\033\265\277\302\373-\036\261\346\014\336\005A\025O\246\363\322\336\360c\354D\257~}\263EJ\206\220#\370\\\207\261\365,Tr\215\007\2759\357\205L\026\265\212dp\t\366\360l\217\351=\225\267\"5\377\326'\307\230\345\001\336Vj\226i\236\364$\300\027#5\3135O\363\0132xFj\036y\211\257\\\034\265XrEk\246\000 \273*\000L\260\372(z\220\272\250\212U)\331\243\203|\335 \200\016\242!\3236\320\372G/\365\033?y\317\340\004\311[\\(\010`%\327>\312O\021\343\024\227y]\266\215\261\237\243/\371\013\034\206\253^\n\225\314\352:\2346\343\202p\2408\212I\037\241\323z\354\255q\024\036\341Ey]\306\267\345\020\327^\023\355a\374Fg\341&\2161\006#h\037C\277\350,\377\315\004g\225<v\032^Q\261r\251d\036\277\340\354{\361\262\004%R\262\346(n{{\202A\033\036*h\275\242\233\034\021\264O~\323\347\371\013?\323\311\276y\215\203p\026gyw\260\026D\231I\276\341\020\223A\211P\256u\220\336r\315;R\362\310\342$/\353%\275\024)\231|\307w'x\n\246B\231\366\222\257D\020\342\344\220:\"m \203\252\223\003\352\350\024""\316\244\r\274\177\361I\177@(\2236\354\263\227\323:`\233\356\037\272+\177\277\254~-d\\\203\204\326CV\277D\362>\030-\034\266r\3208\3228\022\314\221\326\341\035+\007\325Q\030\317,\356\200\254\3319rD\036\221\261\374L\217q\310'&\262I\211\\B\"\223\214\204\022z\342\231\021\203\225X\373\220\212\270h\3663<oy\211B\031\250\310\000,\361\007\210q8\317/K\320ey!\256[\0205\035\234\030\341\222\2339\304\220}/F\213\305\331\3677\372\226n\3527<\336fh\"5\223\002\370\210~\263\320\277\366s^BGq\315\032\216\371x\024\226\306Kf\371Wg\271\207\313\305\342\200\361\270\007L\326\350\340\22052\374\t,^\200\341\331\376\362bq\016W\255\333h\014\315#\306\004\214e\341\222M\027\305\355\337\274\257?\304\214\277\r\262\311\340\273\000\200\"\024\366\325\370\n \317\341\251@)\212\000\243\300D\376\327UH\376\326}\\\\9\264\216H\037\330\177\\\205o\374\237Wa\351.\367\370?>&\322O\356\261r\2308\322~\346\266q\313\306l.\316\371\304DF*F\023>\314\353@h\013\261\005\207X\277<\036`&}k\350\ry[\360\007\334~\220\330\205\2735W\037\213\024p\304\034a\034\001!C\244(^\326\212\242\342e\203\000H\035H\013V\004\331\227\027\2149\205r\017\217,\263\276\351Q^\246\207\255\304\310w\336\240q\316\251\3052\243!\370\001\346}\225\2372\372\263Kx\351\271V\224\203\r\374\032Oz\267\313\000\304<\022\177\245f\3368\363\362h\232\227|k\202\252PF\355\240ttP88(\033\033\024j\346\264\256' \240\223\216\316\t\007\347tR\020\022\021\205\252j\301BH\201BHC\023\2060\246\013\027L8\234I\202\004\323\316\216\251A\203\266-\255k\211\002\005\007\016J%\033\222\273\213w>\261\017O\314\203\023\313\030\021(r\341\227\357z\000\033\257Np\002v?\352\315\236r\001\250\307d\370\307\314\253yX\037\303\230\005;\360j(O\354&\326uBU'Ls\242V\233\230\231\231P0\241`\245A\303\312uW\253t\265\262\260Z\371\254V\023V+\010\252\337O\225\246\252\\N\205\303\251||T\252\030\t\237O\202e%x<\t\034NbgG\302\306FBFFB\"&\342\367\213@\321\210\n\025\"zz\"xx\"nn\"\"h\020\275\036\304n\007\261\256\020\347\t\341\300\001\004\r\202\226\"\"J\r\r\245v\273\024\017O\252A\203\024\rMj&5\363 $\364\220\246\017\026,<\370\370<L""\230\360\000\001\302\203\314\203\014\352\367C\271.\252mQ\077\077(\233\rUS\203\212\211A\241`N\001dP\"\234u^\023\362u-\340\341\010?]j\"o+E\277'\017//\030\022\201\237B&\360\2407\302\212\206\326r\364E\275\266 \n\315\242\347:\314W\202\313\353\372\324^\033\017\r\371\2051\353\2372\343O\346\227\220\330\265B\362\035\236^\226\203\327\305\203C\340\332_\031\221c\246\222\230l\003v\331\310\361SBp&\343\3142\202\260\375\225\023\271\304\227\010\200\t\374\026\0218b6\344`&\215ZF@\245\t]E\344p\240x\361\233\224\033\362\332d\207DC6\312\247\030 \234C\006\301t\252\317;)\355n\321?d\260\r\020\205E\363\270\217\234\332e\007\310\007\021\235\307ct\021L\021\006\020\241\327\314\362,#\"-\203\036\242\273\006\203\320\333\\'\210?I?EBt\021\315\223\351\270\233\221#\326L\n\301\r>\201\331E\366|\031O\006\205\334\366\226\006\253\203X\324\230\374\310\370\021\203\220`\214\377\3622\330\214\"\213\315dl\346\0315(\252(0\362R\022\233\204@\010 !GBb2)\266\021\024\233G\036\215?\211\345\030a\024A\300\260\376\214\307\265\314!\2609\346[\030\351\2138\230\177\314\357\371\030\t\026\257\341\233sz\010\354\277B\372\016\357\310u\221\026\263\303\354\364\361%\217-=\362X\210\230\274\003Ce\244\177dX\244\200\3040\014\374b\022\267\374\014\373[dq\316I\0056\221\237\250\353\221\203C\206F~\r}t\236\307\217\"\316\244\"\036\034\323\362SD\236\261\210\265b\222`\333wYx\022\021F\203I\270\206\327GNH\244'\342\036m\227\221\210\031\262\214\221\305\223\343,\312\"\333\1773\210\316?\245\210\300\346Z\313\223\300J%\237b}\322\367\351!\260\215O\302d\023_\002\233G\221D\276,\034\"b\\\203?\360\025\037\311\3636(f\327\004Z\237I\237w\353/\220\037\301!s\300:b\217\014\377\322a\025\237\365\0171\330L+\"\213\210~\310\037\021\021W2\017]\204\301d\236Gu\3615\263`S%\221\321\023\314\342\231k\246\025}\024\301\010\210sl=$\343\347\374\002\336\344\225\323\202)\270t\220\224\377q\363')\rK\370+c<\276^1\371\202:y\007\305\314V\220\256\371\337<G'i\374\360\016\215.\362\222k0\r\016yK\301k\336^\220\202\005C\342\266\224\226\307\304:\006\210g\235N\255=j\034\311\357\342G\337\366\013""\233\211\363x\260\206-\340\327\327\361\256\225\356r\241\232Al\025\344m\324\274\024\356\246\220\340\333?\361#\2707F\363\037\236\246\363\264x\205v\250\203u\243\254\234V\246hd\024$IR\350sQ\030D&\217J\005$j\371\001\003uu1\014#b\020!\"B\"\"\022DA\222\202\024j,\007qE}7\246/\224V\220}fx>\023\256\014\356MV\342\241\222n\232\220\261\365x\202\030\003\260\2002\250\340\274\353nH3\201\201\271 \327\315F:\3728\317i! \r\205\256\352g\350\375\274\364\316\234\221\025\004\213\332\211\267\322!A\021\322m\331^\204\006\321\304\224\321K\320\300U\352\3139\330\364/\314 \220E>\027\227\347{J\202igO\225c<\340H\213J\3343\374\334z;\264*\311\002\241\023\266\257\377\253\302\007*\227\207\0318\251y\320\022\356\237!\001t\311\250L\025zX\262n\322\300\227\201?Q\332\025\355\233\251t8\263]\246lg\204\307\230\034R\263\222\324\314\224U|t\351\377\036\363\212F\217\342\234i{\234\224\221\035Y\006\276\033j\007xe\244I\030@\252\300\257\t\320\305\254Az\231C\340\002.\313%{\370`j6\266Ke\214\242\316\330)\236P\0369\331\312\201\200\304\036.\005\377C\267\352k\370\322r9\037\225\364\241l\n\021\244\3473\250\303\203Z\365\013\276\204A\212\345\031\320\317E\206\010\351V\311\273\314\241\252G\271\266<5\213Dv\007\350\000wj\374\333y4\035R\206\036\r\331\203\233\360\004{uL\204\202\313\350\216\0359Z\200\327yo\216\347D\007\225\342\325\215\247\2353\034\325P8\010L>~|O\232\021\020\362vz\021\325}Ut\027\024\034\335\216U\243:\230{\270z\207\350c\257\206\313\325\230jr\3006\250\306\320\271\277\355e\330_B\357\320\2318\323v\006\261\350x'\323\255\346\301\007\371\327\302\n\245?\216\021\307e,i\331\017\334\300\221j!qX\326Z\274\r\320;\316J\275,N\323\024(\026\257\016\225\026\233\315\361\n\033\343^\346\010\347&$\361N\212\251\325\326\320\246\353\236Q$e\243\242\024cq4\223f/\022\224<\355\323\354\241m\312-\351\212e\"y\316\034\247\311\223\250\226d+\275p2T\2230\033\225~9\302\264\316\205:\376\010\0018\257V\365\252\227\264\020\312\261\030\006\003\352D\360w\370\030\0174\230&M\207h\351\254\337\035\275\227\201?\255\031R\250HC\002xP\366]\341\016\2418\311&\245`\031\350""\2640\007\314\312*\373\315BO+\357\020l\3146\275\021\254\007\202x\\I\320L\336:\247(X\037j\351\363\275\242\036\266xs1\2765\312\2569 G\002\254\242j\211\347\3655\276\313\201\206\344Hg \211_\300\302\014\020\376\237\177\204\365\332\231d\214\243\263~\255\256\223\265\312\222m\227\312/2\211\310)\242z\205-m\232t\260\312\355\000\205\365\243|d\337\200!\271\213\235\177\005\234\250\002R\"F\255\235\372&\345!Y\307l\212\261\252\267\343o!\344\324\240\206\036\206\226OK\315\021;\270>\234\\\312\2706\n\211\024\357\316\366hbI\262\240\017#t,o\335\357\256:]\341\001\337\332\257\322\003(\340F\t\307\341k\020\003\243l\356\027;\232\224\033:8p<\013\007;\370\r\2032\301B\331yX\037\026\323\007Y<K\274\216\r*P`\230\356\262+\365\250\371p\222\304\320F\307\343w\037\316\302\371-\343\tF\013FV\\\221(f K\200G\251Dh\261\320\200\256\367\250\t\374\217T\203#\214J\230G\345a\276\320c(\030\3422\255\003\351\366\t\335\205\322x\240\203#\345\271\020/a)g&\327\365\321@0s\361\374\346\353?\321\\\371\375\000X\211{\326,\224\277\303s6\2267\255\233\264\220;\276\222k\007T\24574\242\277\255\000=D\325\205\033C\330\3353\261zKC\344EbkL\325\252\247\026^E\311\2134C\227?4\371L\364;2\320\214\036\222\2345nA\345mS\035\016a\302\007\003%\364\000+w\332\336O\346?\324\211\216\274\337\025\211\206\032\274R\004\352\367\327I\313]\334\366<\240\326&\260\213\247v\375\007Qr\345\267`\016\347\354Z>D\323\370Za^\033\313\004\031v\356\271\273\365\202\240\000\352\2614\253&^-h\217\272\246\341\367\354\330\016%\373\346W\212\340k8\260\1775\360\245<\247\226\2571\313\220\366&Rv\230\233L]\224qUh\204\024\201\315x\232\\{\346>\3507\264w\312\312\273rW]_\202*\2573\365e\350}\035\346\252\324jD\007\377'\211?@*(L\274\263|\252\347\237\367\177\274FT>uZ\177\217\341L1\244\225\333\332\006\365\330C1\260\262\246\211\016e\205\221\007c]\366\246\361\223\202\010\3217t\331\221\0335e1\2776\026\323\257v\256I\3162<\243.M^9\271\273\001n\306\374&\351.U\2001\235\t\261\272f\334\343\2767!\033\r\330\306\344\035\357\372\231\\\305\335\255=`\34462\322\366:\313z@8\306\324\324\272\357\240}\211\273B""Q\332\351g\353\272\321\231\254\353\326s\234v\272\257P\031$E\217\356\303\300$)\261\377\230\342wa#8\001\373\002\217\266m^\na\336\027\276\265\262\373\230?\3333\307J\346\364\330\324J\227BlUv.\032~ib\n\242\234\353\213;\023*%\345\231\240>\t\232\004\r\260\364V)\216R\266#[_g*$\247(w\356\346Xm\"\233\227\267x\306h\306\272\204X\341\303\214\265\022)-\350\211\220\246\270\346\032\355\337\346\221\254\002\237\362mR\347m\377DY\335\341\264}$u\024)\351\272\004roE\033}F\246\214\\\031wq|\226\327Y\270\314]tER\324\375\211\251\210/M\030\330\014E\316\272'O7\340\206i\031((\275\274\014\010B\253\345%\332\315\371\264\303v\323\t\305\240\227\262\002\242\206\262*\325\372\214\016\223\304\005\355\242\302\305\364,R\252u^/\002\2025[K\262o\231pc\210+`\372\221\3676\304\376\252\372LH\376_A\261\005D8I5\362#C\240\212\323\375\320\270C\243\211[\022\364{\002\206\330'\253\376\244e\310\217\362\274\035\274\027fp\030^P\023\356\246\024t\222;\233\035\2371\301fd\250\352T6\233\014\327\261\247\003\t`\340\216\255W\003\205\312\221\321\":\023|\212\362\227\022k^%o\371\033\326\017U\207z\255eW\366c\233\220\373\330MR\334>\337\206\336\305\026\3426wo\270+\336\017P\003l\003\257%J\037\240\025t\037\267=z\007\256'\330\tkt\035M\244\275\200MRQ\351\035\367\224=Iv/\377\023\377\n}\213\177\312\370\212\334I~\205\354b\024\222\265E\224\031[\263\010\321\016\021\373\227c\323\231\303o\377\326C^h\004\365\0142P\243\207\333\274\035\200/\377!\351\241\n\207\351J\017\236k\017L+\r\273#I\373{0T\240\025\264\247~\205DSQ\006\"k\277\006[\333 \351\226z\257G\035\021AO\t\225\230`\260\323\003\373\242\003\374\213\367ZZ1l\013\236\327(\\\334\223QE\022\241S\033T5\260`9}\210\204\232\000.\367\276+C\347\003\353\215\211\034M7\264\244\007\255Z@~\212\200\232\004\307\\W\013\326*\357[\230\311\361q\216\321\377\r\357}\325\2672\224H\016\177\"\215# \252\021\310\346\006wh\223\301\003\007\216\262\204\347'[Z\254\004G\0060\310\020\332{\324F\017&]\300(\200b\310\347\300q\r/\331$\257\276\353l\001\"\370\340\327S<T\006\245j\033\334\005\265+#9\004c\024\264\233\007Ek\216\373\n~\024""\320\253/\357\031G\351\360`\177\350\305\307\016`\344\0253\317m\316\360\016\373Az\n\330D\356\037\022\251\342a\251\323\244\373\257\007\206\002\217p\004\363f\215\324\002\212\227I\211\003i\035\232\030t\215\277Y{f\000\366\262\356@\004\316J~\344\373\265iQ*\243\014O\270\214\365\230\351\254\021\244[^\026\2634]\034\277\361#\332\217>\tFZo#=\255\272C\257\326\263\235='\252\233q\320\013\332\302\264\242\227\"\223\201\356+W\275\263\311\004\207\033X?\337\330[\340\271X\373\215\026g\211\306\314\306\\\201\320\006\232`\206\"\023\n\t\263\250\324f\024\212\371Vj\326R&\351Y\t5\326\231X\235\035\177r$\311s\310\224\350\361V\262\207\004\320\370Nl\217\2445P*,L\377y\315\307 \236\346)w\300\231\313\026\006%\321\013\003\355\246!\016\240u\375%\346\251\024_\030\303\324j\007\240\200f\220\022\031\334\245\302K>U\204@\3365\343\\\200i\351\366{\033\032\335\247\343\255|\371\002B\360v\336b\030\356\311\217?\372:\211\340Q\022\027\352\233C\326\225\3617\204\207\0010\010qh\022\227\010A1VO\260\"\3021>34Jl\002\325\367a\020\256\037\301\307\207y\260>|\023P\233\335\230\351q cv\311\225dZ\241\312l\225\032\206\255G\026\210\366\000\237\261\207\313\314\303\233\221\346\270\333s/H>bL\364\260\000b@\216xd\355\261\302\213R\200\255a\326B\263]\271\007\344|\333\211~T\373\007\037\177\210\266*\357\036s\026\210\352\222v\226\t\342\355\030>\231\234\257\353\202\0373\225\261\027\327\3139F\\\371$p\366tn\206,\210\324\"\036\332l\235(\0325\203;\2153uS,\245.2,\016\226\227d&J4[\264\031\363\001M\343\275\333\024\030\200\\\207\222+w\343\347~\243\023\326\231\325z\020\360\210=\241l\203\2566G1\352n\2175\217\350%9q\270\342\276\035l\022\246\275;\006$\312OC\357`\203\025\024>\037\200\304@%\0256\310A\227C\370Yq\367\233\321\nr\347\325\325\266I}\335\013\366\3104\224\326\202'\320\013\332c7\200\307i\324\312\241~\212\337\252)4R\022\250f\020\217S\025\361\221p\ni\234\277\2717\327\367L\243\371s\231\241\257:|\202mK\312d\322\375\317\270\177{\356\223\236\343\002\004\211\370\225\230,\242\377\2342Qop\333\n\317d\327n\230E\262\344\353\006M\342b\373\200B\037\023\325r""\256\" \n\361_(\3466\016\001k>`>\271\357\356\325##\263\370#i\017|\256\300\307\322\217\345\376%z[\255\245\0330~\346\3426\247\r\200;\331P\335aM\202B\026xY\301U<D\2512\213\"\314q\352E\337\211`_\025\202\215ep!\224\022\t\375\317|\354\010\245\202z]B$5\027\001";
-    PyObject *data = __Pyx_DecompressString(cstring, 5682, 3);
+    const struct { const unsigned int length: 12; } index[] = {{1},{179},{1},{1},{8},{10},{7},{6},{2},{9},{39},{34},{10},{22},{205},{14},{6},{24},{26},{21},{13},{18},{36},{38},{5},{4},{6},{5},{121},{107},{20},{26},{24},{22},{27},{25},{8},{4},{3},{7},{6},{7},{6},{4},{5},{4},{6},{6},{18},{4},{6},{4},{6},{15},{11},{6},{9},{8},{8},{18},{11},{17},{11},{12},{18},{12},{8},{9},{7},{7},{5},{6},{8},{5},{4},{11},{4},{9},{4},{3},{8},{9},{1},{4},{5},{6},{17},{3},{4},{8},{12},{15},{3},{7},{6},{12},{8},{17},{18},{16},{16},{17},{6},{7},{7},{8},{3},{8},{11},{3},{13},{7},{8},{5},{4},{8},{6},{6},{6},{6},{10},{6},{11},{15},{12},{11},{13},{4},{8},{6},{8},{12},{8},{15},{16},{16},{17},{7},{10},{16},{13},{4},{8},{7},{2},{3},{5},{1},{3},{7},{3},{2},{6},{7},{3},{4},{3},{6},{13},{14},{12},{11},{10},{21},{32},{33},{44},{14},{12},{7},{4},{10},{17},{13},{9},{6},{17},{25},{14},{15},{26},{14},{18},{13},{6},{9},{11},{6},{5},{6},{4},{10},{11},{8},{7},{6},{12},{10},{5},{12},{19},{9},{6},{5},{5},{10},{4},{9},{6},{8},{7},{9},{9},{9},{10},{8},{3},{9},{13},{6},{5},{6},{12},{1},{5},{6},{7},{6},{20},{21},{6},{19},{18},{7},{10},{11},{13},{12},{11},{18},{17},{19},{20},{18},{18},{19},{5},{6},{4},{1},{8},{1},{4},{14},{10},{11},{12},{58},{38},{58},{76},{28},{18},{2},{11},{121},{14},{13},{13},{254},{44},{44},{27},{27},{27},{24},{12},{15},{13},{156},{290},{14},{118},{41},{12},{12},{12},{12},{12},{12},{14},{12},{12},{12},{12},{15},{689},{62},{320},{100},{59},{115},{124},{2},{52},{633},{11},{41},{55},{58},{190},{3225},{36},{22},{288}};
+    #if (CYTHON_COMPRESS_STRINGS) == 3 && __PYX_LIMITED_VERSION_HEX >= 0x030e0000 /* compression: zstd (5717 bytes) */
+const char* const cstring = "(\265/\375`\n*]\262\000\272\316\204,G\360\n\273\001\314\300\010)$\025\260\014P\370\260\232p\026>\310'\314M\013QI\241P:\255f\277\375f\301vJ:\351@D\007\227\346H\206\264X\010!)\016\245Z\362<\250\3525s\361\256?\030\014\252\366\307\373\276\215\212\002\267\002\324\002\301\236f\333\037\023\250\335\277T\003\001\355\366w\366~,?V\367J\036\273\352X\267\267\272=\315+w\020\332\356`\316uY\267\324\272}\352\255\242\274\335\256\354n\313\336\312\262*\373sO\364\204]\201\322\340.[U\243\247fS\375\363\271@;\3751\321\236\372k\177\314\335\323+\313\332N\330[{\345\256w\246\253N\267\372\344\326\265\307\323jY\326\332\235\376\316\225\367\343\241B\025\345\225A\315c\367N\253m\271\177TT\363\312\335\272\273\335,p\253i\372\323\t\327}\226m\217g\226\245\t\351\242\351NK\237\266,[\324\325\355\264l]\264L\333\236\222\355qwm)4\325\375\363\355\334\232\353\001\256\251\026\356\037\264,K\240UW\246)\252\323\355^\t\324\354\271MU\247\373,\313vov\267\317\255\252\373\247\3741u\216uK\365\334\273\327\2269\036\312\333{W\2265\035\320N\267\320EM\335\323f\232\376L\327]s.\232\346Z4\327\242A\215\272\277\265\266\242\246*lu\253K\266\354\365\264\253\376V\236.O\275\331\036\034\341\017\016g[`Sc{\271\301\355\264\367sU\324\325\274\225\325\225\246n\337\270\301\375\240\204\351i\026XC`\256iKM]\203Pv\355Y)\335\236\035\272{T\312\036\367D\201)%J)\354\225\253[\232\356.K\315\343i\233\264,Ot\005zQ)U\312r\353Hr\305\2444\325\237\314K\031\024\332\224\245\253\242\253\215\215L\016\002\273u\272\237K\217\333\3330\354>\325\315\266ei\226\333\374\235\233-\313\332\013\202m\262\277\265\335\251-@-\\{\245\272\366\364n7\352\242\256\272\313\262MS\r\334B\235\366\326T'\262\253\230\242\333T\327\007b\273cuY\323\245\273\335\246\326\261?\\m\327\353q5\357\347\262k\217\207\246\250\326\211B\315\262\372\307\253mv5\313\232\260\307\373\251g\213\232;u\3574\247[\364\014\n{5\2366wy\236:A\255\266\333T\313l \224EO\221\266S\321R]QW\273\253\252j\232\350\356VTw\253{\342\352\212\347\336\252\370[\205\242\216F\254\265\273'tE\025uS\364\227\023u\253\330\356\266\325\251\231\373""\265b\353\232\333g\263\342\251j\021\205\005%\200M\214\215\250\262\3335Q\326mEa\272]\315\356\034\232\356SlQQ]{\\\341\213\350\352\036W\334\356\372\300@/(\224\313\t\010<\231\346IG\347\204\303\235nnN\247\031\323\205\013\246u5\375\374\230||Leib`bP\312\220\241\024\024T\022\nK\252Z\332\331)\325\324\224\026,(\315\224fHBB$\327%\365\364\220\316\223d\232\244\235\035\322\203\007$\027\222\313(\203\203C\021\006\241X\310\027\373\316\370\334\211wpb\034\\,A\264\200%\256\361\365\006D\013\034b\337\303\0132d\r!RsLCw\216\231\365\331\221\307\350c\312\013\230\315\333\267}\2241~\355X|\304Sl\177\374\021>\325ax\314\247\203d\220\236\245\317p\222C\010p\021\313^\026\313\233\275\004\203\007I\274\364\021~\276\267\367\2449\360\r\016Q\206*>\323\334b\324A8,\005#{\204\231\325_\234\366\2666p\376\303\267\375\246\237XC,\214~\240\277\361;\335d\245_\006,n\276'o\313\233|\256\243\372<\322O\230\213g\250\344\227j\036\375\216N\341\2650\305\"\246?\300\365\311\361\237\276F~\327\013x\305\276w\302p\3656\270y\222\356a\321g\262\017\2761\362!\032#\177\220\361\362.O\353&^\203q\241\277\312\330=F\021f\351\262\017\017\033\217i\334~\212\357\257t\304\2323x\027\014U>\032\316k{M\036c\027z\365\013\234-R2\204\034\301\357\272\013\356g\241\222o\034\350\275y/dr\2505D\203Ip\207g\373K\377\241\274\025\251\371\267>9\306,\017\360\266R\263l\363\244\027\021\276\030\251Y\276y\233_\220\3013R\363\310I<\345\242\250\305\222+Z3\005\000\331U\001`\202\325G\261c\324EU\254J\311\035\034\344\353\016\001\364\017\230l\333`\353\036\235\324s\274\344=\207\023$o\361\240!\200\225|\373&\377D\214S\034\346u\3414\306~\216\236\344}\270\013W\275\024*\231\325q\270-\306\005\341@Q\024\223>B\267u\331{\343&<\302k\362\262\214o\313!\276\275$\332\273x\215\256\302K\034c\034F\330>\206~\321Y\036\214\031\316*y\3542\274\242b\345R\311>~\301\331\367\342U\031J\244d\315Q\034\367\356\014\2016<T\330zE77\"l\237\374\245\357\363\027>\246\223}\363\033\377\340,\256\362\356\341mh2\223\\\303!&\207\022&\371\326?z\3135\347H\311#\213\213\274\254w\364R\244d\362\035\337\234\341i\2302\311""\266\227|%\206\020'\207T\321h\0039T\235\034PE'\323<\332\340\373\027\177\364\007\230\344\321\206}\376v\232'l\323\035D{e0<\363\210\326Wxl\345\000+\322\272\221K\221\306\341\034+\007U\221)\236Y\334\0019\263wd\210\034Bc\371\230.\333\220KHd\222\021yDD\026\t1I\330\211kD\014Rb\355g\025\361P\355gx\276\362\n\231\344\237!\003\260\304\037 \306\246y~U\206.\313\007q\335\202\270\351\341\304\010\217\324\314&\014\031\370b\264X\234}\203+\275\324kt<\315\205\211\324<\n\340#z\316B\377\333\337y\t\335\3045\363x\023\026\354%\263\374\253\263\274\303\345bm\304|\274#&\30386dX\206/\211\305\0130<\333[^,\327\255\323\300.\314#\306D\214e\341\222M\027E\356\347<\260?\274\214\277\005\242\311\340\273\000\200!\024\006\316\370\n!\277\321\2510\031\212\000\233\300B>\330QF>\327\201\\\\9\264\212F_\330\203\034\205k\374\240GQ\351.\357\370=^\346I'\357X9L\024i_s\333\270ecv\027\357xb!\"\024\242\t?\346q \264\205\330\202C\254_\037\017\020\000\026\303<H\217\340\271\367\"5\223\276\345E0\342\331\333\202=\340\366\177\304,\334\325\260,\365y\372\0146\301\271\006]\346\352\343\220\202\215x\303\024G@\310\020)\212\227\265\242\250x\331!\200Q\027\332\206\025C\366\365\r_N&yGG\226Y\337\364(\017\323M\255\304\310s^\240q\276\271\3054\242\013\360\003\354\373(\377d\364g\227\360\322\363mh\007\033\3703\236\364n\247\001\210}#\376J\315\2761\346\325\3212/\371\316\014U&\031\225\203\302\301A\331\330\240hhP\250\230\323\272\236~~N88'\033\233\323I\201IH\310\244\252\026,\230(P0\311\310\230L.%\037\237\222NW\222 \241\224\223Sj\320\240mI\353J\242@\301\201\003\022\211f\344\366\342\036O\314\243\023\353\330\3040D\004\206\\\270\345\273\036\200\306\2133\234\200\335\217z\263\237\370\374t\031\014\367\230}7\037\353\243)f\301\016\274j\222'z\023\353:\241\252\023\2469q\273M\304\304L(\230P\260\322\240a\345\272\253U\272ZYX\255xV\253\t\253\025\004U0\250JS\325n\247\322\351T<<*\325\213\004\020(\301\262\022>\237\204N'\221\223#AC#\001\003#!\361\022\021\014F\240hD\205\n\021;;\021::\02155\021\0216\210\337\017\242\327\203XW\210\363\204p\340\000\302\006aK\t\t\245.""\\H\365z)\035\235T\203\006)\031\231TL*\346!(\350!M\037,Xx\340\341y\2300\341\001\002\204\007\230\007\030T0\210r]T\333\242zzP8\034jf\006\365\022\344P\3024\343\274$\344\353Z\300M!\374d\271\201\274\255\023\375\226<\274\276\341,\002?\315&p\2407\302J\306\326r\364E\275\270\241\211\315\242\3578\314W\002\313\353\362\334^\232\016\230\374\302\230\365?\211\361%s\313,v\245\220|\233N/\313\301\353\362\3013\370\366SBdYiD&\343\204\2356n\374\223\231\216d\234YD\020\270\237R\"\217\370\021\0010\201\277\002\002G\324.8\230I\242\026\321\017iBG\0217\034(Z\374\036\355.xM\222#\002\243\215\362\351eD$\244\031\201b<\325\367\225\220v\267\350\0364\230Fh\302\262y\235\307N\355\264\003\344\203\210\356\343/z\310e\010\303G\320kfy\225\020\220\226A\237\351\016c`\3628\327\371\341\317\321O\221\020\035D\373`\272\256&\244\2105\223Ap\203O`v\321\310\235O\323\311\240\220\333\336\202\261\372\207\305L\311\207\214\036\361\307\010\306\370/O\213\315&4\331L\312f\037Q\203\241\212\002!-#1\311\014B\200\010\0312\223\311#\231\006\220l\036}2\276DvC\2041\004\341\302\3721^\2672\317\262Yl\364A\034\314\377\345\377\374\213\204\212\207\001\347\233>\213\375\327\254\347p\216]\007Y1\273KN\037_\362\330\322\243\016\253\233\234\003\003%\244{dX\234|\304\260\013\334B\022\267|\014\373Wh\361\315\t\005.\221_\250\353qc\003FF~]\370\350<\217\337D\234GC>\370e\345\237\210:\343\020+\305\034\301\270\357\262\360\"b\314\006\223\360\214\257\207\224\214H/\304;\332N\023\0213h\031\243\212\037gQ\026\331\036\234?p\376\351\004$f\022#\221|\212\365G1\215O\306d\022?\022\233GqD\276,\034\"d\034\306\037x\np\344}\032\024\263k\202\255\317\243\357\313\365\327\307\217\330\2207b\034qG\206o\351\261\212\317\372\007Yl\266\r\221CB\177\366C@\304\025\314C\027c1\331\347Q]|\315,\330TId\364\004\265\270\346\232mC\036C.\002\342\033\\\237e\374\233_\300\223\274nZ0\005\226\376q\362=r\276$\245a\t?e\214\307\327+&[P'\347\240\230\331w\366V\220\256\371\347\374F\037\301z8\007\254\203\274\344\033\314[\n>\363\376\206\024,\227\021\307\235\264\374E\3261><\353tj\355Q\343H~\026?\372\266_""\340J\334\347\2035l\001\277>\216w\245t\226\013\325\374\201\253 s\243\366\235p\367dT\342Ct\257\314\346=\274L\327iqV\277\0264\016\023\261\365\331\352\223F>\205\201\250\243u\243\250\232f\206hd\024$IR\350cQ\030D(\217\212\0054Z\371\001\363t\2051\014#b\020!\"B\"\"\022DA\222\202\024j,\007qE};\246o\225V\220\235\314H\230\024\255\314\357-\026\221@\245b\254\220\242\265\032\242\236\301@@\035^\340\270K\341\340\231\251\330\371\221\353\202F\206}\224\317\261\220\370\r\215\257\3120\204~\336\364\316\302\310&\204\246\332\251^\3510\303\036\3516r/B\216\350b\262\370H\034\340\272\354\013\034\214\374agH\302\222\200\213y\366=92\352q\217k\036\365t\244\005i|\022uo\275]Z\355d\221\351\004\354\327\342Ui#\227[\302,IjCh\305\373\235\224\000\\2r\000\214~$YG\371\340\323\311\337(\355\325\366\335T\344\234Y\226)\3213\306cJ\016\232XAvf\001U`u!zO\270\302\221.7\347FkK\304\354\216\272\201\357&]\006\3309v\322\034 )\340\327\004ZGc\225\356\317!j\341\310\302\311^\3719u\353\355\207\216\007\253\3239\225\033\032!\217\266nq\221\216\007\266\340\334\320\342\372\256/\023\224\333G\352>\233\225!v\351\215\246s\340eXTA[\0300\030\230\001\004\231\237\241'\235\253\200eS\233Q4\227j\262p\030\333\001\332\305}\215'P\036\035\347\303\360^C~`(\374\301\236\214I\243\200\032-\262C\206\362\340\021\3353\340\211\322\221H\321\335\004\264\003\231U\215\027 \002\005|\300\336s\007\002\025\271B/f\343\276\212\316\206\"\212\256\261\252\253\016|_To>\371\232\325>\271\230Sa\017x\007\325\033:\372kJ\0319/\355]f\220\n\373N \020\035\357[\272\315<\300 %Z8\241p\307)\342\260\216\365ZN\007\227\270C-<\016\317Z\"n\323\252\333\\\210\226E~\232Q\305\322\3520\323m\335p\\a\236\270\243\216\320\331\240\240\354I\361j\235\016\327I=\035\230x\314.|1\036\nr;\361\372\320\343i\275\005TjS\350\272k,\023\2569S\034\032Oa\265\227\205\352E\317PQ\232\313^\334\313\035\2465\027\212\361\007\004\340q]m\257T\222z\320\301\"P0\nKD\335\361at\24155\305:\204F'\331\355\037\275\334\376\200\232QB\031\032z\200A\035\336\365\327\020\350I\014)\247\313\\\247\\\3630\353X\331\221,bZ}\007\264F\270""\351\2160=0\306s\234\224gR\326\371<\234(\230\201\255[\252\276OP\317/\326^jh-\331\025\005\300\221\300\224LM\360<\275\266er\320\\\037\242\014pv\021z\230\345\301\337\363\217\260W;\267L<\232F\257>\320\263k\231\276-T)+\206\021\205\200+\275\330\2464YWI\204\262\276\\\317\344K\370>\000\345b\304\371\253p\002\006\310\263\030\377v\344\033\351 \023\035\2153\026U\273\316\354\"\215S\244\372y\026-\333,s't\020\3370p\231D3\351\022Q;\235\363\205\023\345e\002:\033P\261\3748\376\264\006\322\006\212x`\267%\020\340\342\234(\271\206\213\241\r\030ej?\363\020R\202\352\224@\363,%\334\353\227\034\312\017\033\246\363l}@\214\026\204\177D\361J6Y\360\216\263\263\313\\\n\264\330a b\262\014\033\343)\335\277\236\305\374V\364\254E\013\224\305\234\310\375\200\3032\250\277\201P\245\006\264\371\017X\276\001\017\367.\326\344\337R\205#\252J\316G\311p\200\351\205&X\322\305X3\310\255\323~\re\314p\303\253\312\373 N\303\345\234/W\325\241|0\377\355\343\346\313~vr\225\343-(\031K\205'\311J\207\031m\3747\201\367\353,\367\363\372\2003\254Ju2\nB\033\004R\210\350\013[\014\201+h\002\353\355\034\316\222\204\205\230\264W\0274\304\212\376 \t\206N\376\240\345[h\360H\265)9\004w\336\322B\303\033\270\352\030\342\324@<J\226\003\"\356\304\336`\235\331\371\006\376\312\223:\324\234\202\022\210\211\235dV\362\312\301G\200j\352\214\335\372H]\237\360\024\315\262Q ;\274\275\226\205Vz\274W\260\326\3126\t\014\267{\224\335\265\r8\200\244-\323\352\311t\013\343\231\256\261\034\004\316\333\321\347\276\204\225\004\277Z\016}\265\237\307\374\262t\231<J\300ik\002d\307\274\311DD\201X\327F\266\021\325\242\223\225[k\256\213\336\346\304\252t\275O:\232Z!D\377\301\207\362\026d\244_it^^FU\007\363'\345\037\346A\304%\226Y\332:\355\324\367\325\\\036V_4\226\336\013\036Z\330\227\301\342\352\313a\272\263\342\255\024r{\325\243\241\307\276K\241\316T\375\014O\313\023-\233&S\024\262E&k@(\016\342\034)4\230\001\225\346\006\215\321\261\216<\302\326\3435\032\033\200\033\301\004\240\236\226\2172\216\274\344\035\025x#J\2077\372A\256#\337\2314\374R\374\310Ix\250C3CZ""F\373\3528\3659\251\211\321Bs\027\200\260\331\003\317\017\002&\327C\235\246\332W\200\275\022\272\307\316\222\315\021\223\370\277M\311\367\201l\033\002\003\330y\006\2712\327F\010\362\335b\"\333\263o0sU\211H\257U\223\255\217\036\272\212\313\315\345\260_T\3624\211}\304o\335\244jUJ\362\344\252\005\203\353\233\310\327\023\005h!\232hn\002\004\370qF\365\243\025Z\371\204W\347\210\376\326ghW\214\233\211\242{M\222\274\262\243\337\020E8hm\347\030\326\275\372\354\222[-i\277\027\332\350\340\033\256\263\3712\344D\3437i\224\276\264\016\2438\010h\260\270\261\317)\252\013\351\263\307\036\303pA(\306\026&y\222\204c\036\370\021O?\303\004\035\222\254\344\346I\316\014\257\251\212\315\254m\365t\032n\225\n_A\251KK`\3554%\257\025\273\251\217\004\266(\235D\014{T*P4pU\311\254/D`C|\334#\252\270\230\353\"[\265\316\365\302 X\335Z\222\376\226\t#\026\270\002f\037\371\357C\354\263\252\317\204\024x\006\024\033@\204\222T\220\037\021\017\3258\233\001\022\037Z\031y\003:Z'\364\255l_\2219\207\344\373yu\345\221\240D\0077\345M+\305\235\265\212N\246l3\344S\017l\346\014U\220\noS\341Z\3774F\021\0144\260=\031@\24192\0040\024!\211^#\031\311\037\200[\236\302\306\003^\234/\200\t\273\235Dh\022^p\014\360{<\246\027F\216\220\214J4l?xF\036yX\271^8\266)\2610A\316\000N1\n\220\345=`\374#\344\361\210c\334-N\0017T\224\3447\376\226\274\342\260D\201b^An\261\t1E>\241\274q\264m\031\n\241m)\311\254\257Yxm\202\030h\311\321H\330Q\355\377\362\220\0266CM\201\304\374\313azi7\362\033sHx\350wX\2712\200\227\335\003\241\24507}\244\031\036\310\t\354\352\366\324_!hj\351\\\313\"\247\201\334\306\230\270\225\336+2G\304\320\337BY/\370\354\364\300J\224\201\374\341\305&'\206?\203\307\032\355\21742rI\"2\313>E\016\026\225\323\021\021\001\t\320\3116\207r\2528\020\337\270\236\003\363\006\233\351\201U\027\366\017$`\235\020\231\013k\3015\345k\016\343\034\331p0f\227\365\250[/U&\023\221\021\252HU\006T\0261\\9TD\013\323<@\326YK\220\376\353*\220\235?r\260\335\203!\031\273\003i\330\032\345F\311\364@~\017t!\306R*\365d\200N\010\220\321\017p}\313\241TP\266""\266a\\@*\262\223!\250E!\246\371/\232\273\014T\014\010\022\245\372\332\317hG\207S\375C\022_\335\003\222W\356<?8\335\367k9\363S\340\023\257\177\210\243jy%0M\r\337:0\n,\302q\314\2345V\013:\3366%\021\210X\342\314\347\213\375\r\312\217\006\220\313d\016z\020Wr@\376\nN\353\251X\000\005\301\351\352`M\253\215&\335\0062\240\245\023n\355\017Vq\235\363\212\220\246\242YU\223\t\030\004\340\306L\201}\003\t/t\324\272\244u\007}Z\244SNES\021\323\302\367\3659\332\304\311\037\207\201\274Ddcm\211s\263\246\013\255\274\345\234\257\3034up\202hw\2069\023\026\013cQ\241nP\215YW\337\257R@\312Z\tj\364/S\3350t\342%Iw$\224\350tB\272\205\264h@2\250\037\3475\260-\316\232~\005\315\001A\276\346#7\307\031\353\022\002\005\321\000\003\345\276!|\310@\275%&\220\324\350\010\303$h\027\220\000f\220\t\362\337\245\027+>U\304X\326\265\340Z@\t\361\362\233\025\\\356Kg\204^\276 ]x\233\256B\0147\304\217\372\034-\201\350\321\322\205\246^Kh\233\021k\200\007\003\014\001Q\250D\356\010A1\254N0E\266\003\"\3274BX!\0350J\020\252\237\302\307\007>\276{\214\022\3506\3731\301o\260M\317\222+\321\224C\265\270U\350\014+\036\3611\357\225>G\036\216\345\005;\217\311Q\006L+\010\327\"H\361cA\310\200\211\320\330\332{\363\027\204\300\236\206\037\311\310&rO\313\001\363\310\375\2666\217~}\021h\025&\034\346\024}\324e\032&\243\307\376\370x\002q\236\332U<\357*k/\211\2679\332\275#$\370\360\264\334L_&\251\215\264\265\331>\327\032\265\200#\2053\313&i\244J\322\251m,\365\344\320\021\336\023hC+\017(\206u\357\031\230\000i\207\032Wr3\347\"\321\334\342\345\253_\020\023^N\336l\003\277\266\267\230\252\233\014r@T\233<Ar\205\206\235\330\354\324xw\2076SO\233(t\215\335(\244A\003\021\244\032\010\243\344\034\027u\273Q\t\363K\322J\260y\316*t\247\337Y\n\266\375z\331\326\226'\322\205\305#0p\305\315\335j\374\375\201\337\01654\215$\330ev\003\263*7 \201#\244e\177\313^?\355\327OM\210\211\2417,\274\242}I\2324!\373\217\312}\\\356\007\356\311\375\303\213x$\227\254\247\377\22021m\020\334\304\3244\330\330\303E\242\344\253\0015\3434\233\200B\037\023\325r^A\035e\375G""\214\335\360\241`{\017<$c\335;\t\3120!{#m\001\237>\334\314\365\273\334.\242\346\345\032\335\302\336wn\217\365w\006\320\201S\353\240l6\024g\352E[W\221\020U\301\t\n\000\315I :U\262\277\252\026\266\310\240\212\320\013\025\244\237\276\030q\003\005\225\272\204H\202/\002";
+    PyObject *data = __Pyx_DecompressString(cstring, 5717, 3);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #elif (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (5448 bytes) */
-const char* const cstring = "BZh91AY&SY}\252\217\020\000\006\215\177\377\377\377\377\377\377\377\377\377\377\377\377\376\377\377\377\377\300@@@@@@@@@@@@\000@\000`\025\337=\356\367f\336\344\351\355\247\246\221\330\036wq\331c\271\216\354;5\2404:\326\200\323\240\031\331\253\331\322\311x\000\003\001l\033\320Q \224!\001M=LD\247\372M\251\262\022\233\315F\251\370\004$\336F\005=P\007\230i\210\246\223=\r\023F\202y4\312oT{R=\252y&\202Q\t\2234\231\010\020\215'\244\322y\031\033T\036MFC\324\310\000=@\001\240b\000\365\036\240\032a\250\320\365\003@\324\361\010\210I=OM)\352d\321\240\320\032hz\232i\352\r\000=4\366\002\221\000oJdi\243\324\003M4\320\032d\000\r=J\236M%?I\000\365\000\032\000\000\036\240\321\220\003\324yO\325\003\3244\000\001\352\003@\0004\006i\002\r10\t\200&\010\323L\000\t\200\023CC\023\000\000\000\000\214#\000\21512\030\002D\202&!2\030&D\312x \3210\232\233Q\350\365C@\215\241=M2bi\246\324\301\030\214\217Q\2434F\0016\211\374\300Ic\273\006\\\306\035\326g\224j\210\014\356\031\266\330\235\372+1\215\037\003w\305\223\206\306\324\224N\350\224\3221\211\024i\010l\021\366Zl\006\010@\311\227\023\027\335\373W\257c%\216\315\006W\231\224\022\213B#c\254\203\3704#\021@_\026E\304\241\022\025\222\220\220J\305``\300W\014\223\200\014\312\212\365\211\354\341\356\202\017O\373\354\273\177\362w\374g\333\367y\271\275<\3705DJ\210`\tP\022\376\212(\271\225\357k\347\236\236\277\247\306\276\247\342\374}\377\007\255\247\207\305\376yNS\2259NT\271{\336\371^\372g\236z{\237\370C\014\220\000\003 H\022\325$0\351\334\030\257\177\221\346\304\277\326\374\262\213\236\315>\261a\022\301`K\002Xy\201E\024QE\005\027\364`S\313\003\334\3776?\337\350\364\372\375T\262\377D+\245b\270\225\312\346\315\024_\321E\375\027\364`S\237\\A\016\247\347\351\365i\340`_\321\241\241\241\207\207\206\030fnw\275\257{^\367\276}\217\347\353\373^\036\257\213\215\020\3428\216#\210<\261\231\231\232\274\200\034\375\221\0200!\002\031\231\201\003$\2013\003\010\004\230\004\002lm\215\2646\035[<>~\177\341\337\320p\234+\2061b\305\213\026+\257;\3511\240\355\377:\272\226\245\376""\210mb\325\014\353\032\360\t\347\236y\357\260\304\306\217\267\203\333\347\350\352!\330\252b\230&\351<\363\317<\367\3329\366\263\264u\275\336\374\024\014@UL,\223\245\204nR\245J\225*T\257\353&@\005\245\005Q\r\21166\332\0301\215\237\0316C\002\030\033\370xn\377\357\017W\031\244Z\206\000u-&\231\002/\276\373\357\303(u\246\333A\374\374\236L^K|\271\327\316\272\032=\344\3479\316t\340e\335\355x\273\276\207?@\350h\033U9\376\320\314\314\315^\220o\233UF d3L\203\372\363\026\244\035\306\332e\224-\036fb!\217\353qZ\322e\375\354V\226\363\001\336\n\240\361\243\234<\353\3162u\244:\305\034L\367 \244\346o2\304\201\026\272\010\221\n\246\356\255\343@l\233\337\233\220sw\334\203\220[\221 R\330\205R\240\214\tR\305\241\367\013e\277]o\005\013\251\232\212\341\303\210m~\206d\263\030\3032\336\263\350\254\250[\351\266&\300lcC\033\320\260\316@\271YR\016Gd\211\226H\231#\275#B\242\320\307AER\346\210\323`\335\367D8T\337\246\2655%R\250T*\232\354\256t\243\214\307\014\253\010\016{\3343\003%\014\250\257\321U\232\370f@\300\300\204\0140 @\301\225wg\023\n\241\367\266\324\3172\357L\307(\343<\3234\317<\010\037\177}\305DUQR\314\214\265R.$\214\337\201\023{#(\231\356j\213j\2131\230\374)C\000\222\305\234\345~,\331\013\263/\256\027 8Zm6\010m\2614\306'\302\230c5g,d\241\216\216F\322\276\233\006\252\240\242\252\206[\032\234\007T\332z\206\016!\226\222\2120R\232F\234R\022\206\206\367\205\275P\252U\020d\310\210\\\233\2129\323q\227|\313\367\003\001\032\030\233_\305\303m\031\002\006A\341\351\377\230\003\257\337\365\376\177\373\177\177\271\210\263\323\332Y'\332\377\245\240\314+>m\202\262\352\222\256IEUq\360q\361\355[%\266L$\320}\365\2445\363\354G\207\311\336\362x\005\000c1\363\364B\203,u\312}\002:\004w\305\207=N\232COy,' @3\001HA\302\035B\007\306\231P\356\t\265\357r\t\0021\202Hr\306.\332k\0014\337\241k?S\261\222\003\001Q\014\200\267\351.\227\013\223\245\216\303\223D\264\025\352\213a,\226B\332G\276Y8\305UUQv\227L\203~E\224\233\351\203\307:\3262J~\244\3442\331\311\202\027\350\327\217M\025s|\034\235\277\326\343Cy\244\014\262""\311$0\273\021\325\225\003e\016\276\272\316\245P\246i\227%\275\371y\255\320\272]\016\227o1\022\3269\273Y\026V\033\236i\310\274\273N\206\355\324g\016\332*\216qP\375\000P\340k\030\251\202\216\337$\315\337\265'>B\270\316\216\245\017\331\373\251=\013%\013\320\254N\351\347C\317\362\312\221j\322\213773\265\205\221\356\320U\3174\205\034\241\24713\315v::_\250\315\255\203\227\245\327\251\217gNY\031\227Rq\352{\014\177\304\254\301\235g\025P2\025\036\250\235TG\"\232\016\016\236\246\361\3514\240\274\365\360X\257\300\030\312\340\233\202JU\210\223\234\233\222\022$\003d\211\271\014@\201)\253;(\021\355\r\341]#_\214u3\265\010\006\010\024D\276\244\300\240\336y1&\204\321&\034'\334^\330\243{~\306\206aP*\025\250n;~s\006\251\273\306\250\300\314\234\274\213\354d\301\210\227I\2119\205\311\355\025|&$\202D\211\022:gq\223\342\347\313a\231\206a\350\351\364d?[00\214\314\233\351\213\351s\215\0333?.Y\216\325\245\354\366[\031v\355\375\327\325\026\233\025\020FD(\001\002\334\3263\035i\247\022\234;R\2112\217\354Q0\032\247\"H\264u\325\230\272\261\024&\321\026\263\004Y\243d[&\021\224\"/.\315|\375^\251\365\217s\313B\220\021\242N$\244\311\315J_\301}K\370\371\355\032\252lj\250\3079\330\303+%R\250\225M\233\022\372.uC\321\241A(\024\n\t\332\237\005\366\227\353\374\234\321\031\n%\022>\351z\2333\361\314S1'39\236\320\254\273rI\314\304LH\370\327\220\211\026H\307\317^\232\262\360\322s\t\314\213`d\"a\222{q\212\354\222N|\330Ey\273\362B\243a\265z\330`\326\222F\\7\222\355\177\266\345m\234O\334\261\024R\334\364\375{\277\327\321\356\236K\262\240\305\315U\301\275\277\263\2070\350\207`&\302ma6\264&[p\310p\030.\301x\202C\004'\020\020d\210\010\210\013\301\r\314!%\212\317\233\366\374\310\260\234\205\256\000\312\331\000\337M\263\315w\322\335\036\367\225\346\353\232f\026D\262\031\206V[e\276\205\020\242P\242SZt\331\336E\020\240R\211HB\000@ m\225\227\250\275O\247\243\014\310\303\031\247\223C\310\027E\253\r41?\217\202X\306\262$x#\325_:HJW\3062^\262\343\221\244\346M2\226k\346K\007\351\220#Ct\305,\032DGd\310>\201\3068\346\312Tg""\260\210\363Lf\031\376\026\225\301AJ(\241\302qw\301y\333\331\217\022\376YoR\244}\223\014/\211\377\217\326\234\246cp\307\330j\367\220W_\002\260\036\333\007\006\n:8\023\306hKF\241\006\035\213\210\215A=\207CU\241\234\036Y+\235AH\024\304V\221\257\270\030RC\224r\216+\214\254\352,E\216b\340>\003\245\336\236R\276\315JU\240\257fz:\224~9\332\201\277\322M\312HB\205\007\005\214q\333\037\023C\024\253\253\304\302b\251\232\251\270\307\034\007\211\014H\204\210\353\216\250\t\362\362\214\231\003\253\313\326\016\375\364r6\311d\274\307;\205\023\205^\006\307\320\371\371\342\344-\341\234\033\331\037\016\207FA\242\271\005\243\340\260\225\267b\031\245\031\322\373\261\357\362-\266\247\361\325\030\306\r\230\365\335\225zf.O\243\230\374\203\270\316\001n)\371\r\020\247QU\026sA\306\354\010\325:U\277\216\230\222C%I+\205\252\333h\354\035V\tT\331\tT\030y\374]\236\257\200\017\020\244\203\260(*\322(\221B\207\342\224\351\t*d\037&\340\\\273!\024\025\222D0\351\206\342\014\3070\032\201\026\347\360\315{\337\356\212x\003F\223\224m\266\342\336L\270\3222#*\014\310\351\361\277C\355\30008\3707\326x\371\205wT[xx\033\007D\346\206D>\231-A\212)\336\031\251\213\305\222\252\301\241\215\035\302\340\250\237ql6\013b6#b\325\261\374\214X,fy\022a\230y$\372(\2113\207f\375wZB\032\023\250\307/\035f;xl\360\356\310\212\"\026\235\"\322\013J4\243\327\353\274X\372\367\370\371\335;\255\347;\243(\345h\3425\262rq61\271U2R\266G\255\213\363\224S\256\332cC\365@0\262\373+\377\241cx3)+\315%\256(\211\\J^\336;\346\242\364\260E\266M\343\3422\001\361\332\244nr\324\254Q\325c^\266\032t\303\rog\240\213'2\262\252\340\235UG\372\310I\016\025\016\3555\242(&\322\242K}\367p\2476c.S4\314R5A\222pd\2268\212g\255\330\r\2143\016\0306\212\331[\221\027\026~\331\034\025\346\016`\3469\216n\276\327\355?\213\325\371s$j{\341\336\034\276\241\310\214\310\225\262\341Em\215/SE)a-\216G\001\300p\036,\371\366\033\230q\230^vJ0j\207\030\021K,\354\261X\221\264\311\220U\322\215/\276\236z\356c\210\025\252\026\226\266\210\347\004\021\016Q[\343d\251 \014\224\360\022\373n""\321N\346\260\360L\325\314x\321b6\204\332\200\3348G7=\351\035&z\331\330p\325\020U[\212\025}m\204\245e\306\256z\246.\343r\017\211\216H\017\272\277\237\263\213\302F\363\302\344\241)RCx\372\314\241\327\244\346\346\327\340g\264o#}\335\323\273\244\262\307\350\315\267{S\201\2054d\243\342%\331\\\305\331\230\251Mq\022\265$\2627qJf6\220V\213:!R%&rc\211x\354*cU\363\300,\217!\036Z\006\014&\316k\321f\027\336Np\214\261\035k\370\277i\207d\362\241\272\341p]E2E\307\037Qf\266V\264\225\245\240\211\345\237\253aT\330\256+C]\271\352QY\217\206|\231:\037\250\373o\310]l\0204\241\261\303@\342 \226K\334\321\2009\247\262\250\222M\001 ,G\201\222r\236\342\374T\021T\231VhvZ\006\353/\007\242\225\032iM\342\003o\177V\274}F\215\3573\320\372\337k\325pdij\\\2420\211cZ=\217H\3727\373\232\255}\303\226\236\313\205\re\211\0040m\014\366\020J\\\271E\030\267\262\212\010\013\207ps\310\307`\034\300Yr]\231l\224I\226v\357\226\2748si\272\217\027o5\207\232\273w\215\260\036\235:>g\210\340\255\230\000g\231Ta>a\017/\246*TT\254\244\203\247\323\303\354\273\003\027\227\314\374\307w\326\023\357%AP<\310\235\020\315\370\255\"\007?\246;\\\206Y\025\265D\221%\211\271\2122\310-\010\224mR)\322}\312~E^\205\332GVN\034\254M\246\2234@C\001m\340\342\203\320Mo\330\005G\305h\372\315\224.k\003wr[\226\330E\254YC\240\"\3678F\rX\025\344s\t'\275N\274\\\264,\255\2029&\240\344\330l\r\301\310\006\324m\343&h\323\342}\2737\262\326@K7\024\007[\221\001B\224\230\331\005+*VD\350\336\302\013)\252\2236\213\354\024\262vU\225\230\246\365\265\215\234L\350\335\\\264\312\312\231H\331V\342\010\361dU\2654\321\020M\206?ZVn\231#\313^\314\323\220\315\373w\006\2607 \334\215\307\251\253s\334\376\025\332\200\307\352\032\r\177\021\355&E\203y\345\"\302vP\2419\304q\262\226YL\222\247\014\030\244m\304\026\363\300\214lw_b\234\247\202Ce\t\226SM\023\037\201\035B\234\302\253\271A\303\352\211z>8\013z\211H(\376\241\323\327$4\276h\212\353l\320\030\353*\024\317\0220z\350\211\t\346\"\305PU6>&\342\017\007\311\234\333z\306H\211e\022\312Y,\226L\233\352\266\014\312\276\250%\204+81""S\235\017\327\215\\\215,\332\233\031\206\327\312\212z\007\2647\276\236b\031\354\342m\021\3133v\343q\266e:o\205\315\027H\203\333q\312\027\205\353\224\\\177\r\370\365Z5\331r\301\213K\r\003;\254\257\322%#\177d\267\214\303zi\274\352\353\346/\242\277\023\256\233\224M\017-\310\035\007\301:\367\013\205\313\334\257v~T\317c\212\027*e1\365\022\327\256\2013tL,\200\250\311\307\206b\231\355\330\225\340TCP\327S\223\237f\305\364x\t\300\2312q\364\027\341\304\211\207\035j\222\363Vk>\347\222P+*\025\024`\330\205O\255\013.`a\334\356\363\337Kf\260\243\007\321\036\322$\240\3561\027\230S\306h\222n\254\342H\320{\002\366|\006\ryC\261\213\242!\270y\030{\323Fq\340\304(`?\244|\263\341\"=\0014M\037}\347\032\357\373\263>S@~Mp)\020fQ\342a\250`\366\335\320\360y\234|\235Aw\231\317g\342\n\220U\335+\363!\353I\006\3066\270\230@\376dA\310\205\307\357*\376\261\362\263\247\371H\244\211\237\320\303\024R\311\225\032\033\254\341>\371\023\271\362y\216\237\274N\243\010r=\321\207\2714\211\373\355\251\222\326\217\314\362\367\336~\n*\247\315\242C\200\225%\316#\017F\3713\257u\372 \276w\273\335\036\032\271\323\210z\2671lX\3347\341\226\0262\202\300B\223*\207B\354\367\322\221\023\346I\236IT\204\032\254\244\241\005@\212\262\250\335E_\005VX\203\010;N\321\214\321{\261g\026\371\347\223\277\310/\260\324\3245\233X\326\366\267\225\361C`\200\371\017\311^,&i\240\370\307\312\244\237a0\316&\376\037V\332m/\177\343\361\300\363\017\275O\240tnIbs\221\352\217\036\362Av\377\332\037i\270s!\355\332\213\375\335\311\"ji\303\232\230\202\231NO4!\024\242:V\355*i\022\207\225=\276\270\2331\366(\270$\3339\3767\026\305\010\027\275v\267\205\333\365\307\260\355\003X;\200a\020\256\010\022\030F\306\344D\324\366\273C\013\243]\254;q\263dT\013\177_R\303\014@\2246\331]\347\010\013\340\261,\250\204=\217+\267q\320;`\235hk\200\036\272v\300\374\310VY.\367\2535\200\225*\336\231\035\023\351\357\331\032\344m\236\001\222B2\032\023q\303\317\205\214^\321\330@\322\027#\036\262\301\343\205 \234p\342\267q\033\267\210\003\203B\341\325\010%\370\367\013\214L1\210""\\U\177\236\326\273\022O\227\243\242\025\272\006\320C\0015\037.;\236\312\010oBn\263k\213b2\254\304h\231\300\201v\340\364\351;GB\327\020A\357\365\302\200F\304\255\335\n\302\204\004/1\274\357r2\007:Q\247\346\201\260t+lJ\003D\021\362\216\335\341\t\035\325\354\337\210\277\031\203\222\313!&%-D\200{\243p\336\007\234\243\214\206\2302\352\"\t&\310\0162\031\016\336WF\301\331\004o\033\202c\261\373\266\305\356q\003\006g\0354\270\224I\253f\207U[\243g'\234\274s\300tk\332c\206Y\260o\214\001|\344>\225\026\313~\210\242F_WwG*\334\266\354\331\312\013S'g\3333\323\023\274+\212\303(\214g\246\"\230\275\357\321\273e\266\353\3346\215\3353\322\347?j!`\214<\245e8\027\222\305\025b%!\005I\006\372\020\355\371{\275\007\314\366\231\215\220\376\200gw\010\033\310\373\370l]\\\210V\031\300\321\257\224o\335\303j\3347\360\033\302\nZm[\227!\232\240H\201\335H\202\363]#\177\002w\363m\337\271\037\255gxc\212\341xF\240\214\262PNV\206\025\246\377\274m\036\201\035\336\034|\316\340\221\316\257u\351y\211O\236YbH\331a\362\301cU\2329\3448a+\245N\367\315\301m\333\351\353\266\243\013r\030\234\215\027\345\022\313(\361a\006K\305\341\222y7\267\355\3575\316\026\203]\216!\334122\277\311#\337 \327}\367E\357*\227-\360p]\341ti\340|P\274\356(\332\020\232\014\316\204\223B8 \361\335\356\016\305\336\033e\270[\211W\374q1\013\260\212A\234,\034I\305;\305v\376\357\006\205\347\234)m\237y]\344srI\307#\334\315$\314\370qq\334\272r'\031p\343\270q(F\272\251z';\233\215\316\032h\017G\214\342_\322\276\221l\27038\274\267a\006\203\330U\271\341k\312<\221\242\025\337\373\223\214\274o\016.\3332\224X\013\017\251\235\001\242\272\302\3069\334z\\7\013\216+\257.\360\365\005Go:\005;\360\354}\357G\333\207\267\315\336\270p\022\030\363R\035\354\013\254\227\305\3326\255}\317\006gY\333\017\377IIM\025q:\2362E<kN\270\356\205n\357\212\236.r\313Y\264\350\267\005\0301i:4;\232\302\354\033\233\211\344;~#\270r\353\214r\365\365\325\333\004\031\321\370\334;\302w6T\361kk\3559\275\276\037\007\200\326\031_\254\377\332j\213\251\345\370\207\256\246\257\374\302\177\213]y~""\023\223\300{\334\237\330\355\n\235\255-\022\267\354\3148\263\276\016\267\017\016WVls\0237\245\270\325>z\251\374\352]\320\352\374\035\334\022\276N\273\331\356\256\312\272\010\007\322\251\343\016\236^\304\352\241\360\236S\370\322D<\304\017\243\007(\224n\311\336K\331\374|u\363\337\253\365\356\344\032\033]\335\251v{\033\376\337\026\237\263\023\247\335\222\322X2\233\250\347t\236\351\036\345\177[n?\255b\221zeOF\253\3233I\226\241\311\226o\317\352Q`\323\252\352V.\346\240\006\247\344\257I\345Y\035\207\031\370\253/\027\0241\203\335\327\347t\333\t\301\337?\336^y\307\032Y\376\205\364\265\326\304\317\251\031<\314]\252;\032\023\32694^\207)\030\313 \261\004i\304\014\033g\326\306\207\224\305\310\313\014\030\232\202\242\221\200\201\240\224\202\241E\310\243\026\361\210\023\021\207\211\224\274\206\315@\243\253`C$\006\214\\1\242#/\032D\3424\262.t\014\004\013\227@\"\"\206W\n_~C\221F\3640\334L\220\352\322 \270M\276\270\250 >\250]\203oF1\351\205\243QF\232ZFnn\002\241R\251\026t\251\213\211\270\213\261\253\030\030\013!\345\005=^\346\005EA\205\257%H*0\316|cC\001\331)\002B\200\322\250\212\255\267\272<\270\013\013\323\357\034J\035\222Gf\255\243\300\325\310\364xEP\315\231\255\035D(\210\367\264\256I\300\275\030\016\370.\336\022\020F\005c\324\305N\022\353\214\314Dd%\224Me%\031\250\310w\316\2324%\341\340F\014\302s\342i\344\360\376\327\223\327;\235\336\363\237\335\234]\366\006\301\323t\243\010\255\"\313N*Q\2349W\026})3\007,\346\265v\025\212\230B\030\263\2536\241\n\266\014\223i6\0304\335&\205]R5U\237g\014c\206\255:F\255Zt\245\262uh\347\345\034\375e\317\326\347a\365\2307\232\n~\221\232\tMbb%\342\272\342\366\022\031\367b`\210\314\313\214\005\224\264\343\340Fg\377\213\271\"\234(H>\325G\210\000";
-    PyObject *data = __Pyx_DecompressString(cstring, 5448, 2);
+    #elif (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (5469 bytes) */
+const char* const cstring = "BZh91AY&SYRy\200\360\000\006\226\177\377\377\377\377\377\377\377\377\377\377\377\377\376\377\377\377\377\300@@@@@@@@@@@@\000@\000`\025\377y\356\367Z\336\356\356\323\333N\232^X+op\333\270\347c\273\270\325@\025v\222\202\262\350\035:\322\267x\353\313\200\000\000bAy\n\022\022\210F\246\211\232\023S\323$\375\"m\0234\320S6SL\246f\232&\223F\215\036\215\007\242z\241\2461M\014\2322f\243\32223P\001(\204\311\200\204\0214jx\200\232e=\244\300\247\244\362\232m@\006\232\032\000\321\3521\000d\320=F\320\324z\207\250\321\240jy\004BD\236\232\220\364\236\246@h\003\324\323\3213$i\265\006zc4\0216\243E<\312i\017)\352z\201\352i\243M\017L\240\000I\251S\322\220=A1\242`\t\246\000\203\000OA4a0\000#\010z\004`\000\230\000C4\004\032b`\023\000L\021\246\230\000\023\000&\206\206&\000\000\000\001\030F\001\032bd0\004\211\004LBd\311\243F\215\025=\204Lh\206Q\3521\250h44\014\2004\001\240h\017P\000\000\030Op\004\226;\260e\314a\331fyF\374@gp\316+bw\357Vc\032=\246\343\253\025jQe\351V\306\325\353Hc\311\013\231\010(C\371b\200\250\213\010n}>\037\374\304\304\366\207\272KC\022B\301t\265\314\367\036\367\340\313]p\220+j\"\317\n\014 \250\224\004\202T*\302\305\302\250bM\2001\002\212\345\205\314h\346\300\203\223\371\365\336\235\177\347\340<\277\207\217\325\350\366R\301\021(\241<J($\350\343\275\312\336\366\276Yg\342\365\371\013\354~_\315\355{\237\323?\037\227\375o\233\346\372o\233\351r\367\275\353{\347\226Yg\361|\221\214\005UX((i\001\215\025K\034\034\377\277\263\332\317\351\374\271\023\311\303\237\234p\"p\034\002p\t\3008\312\367\275\357r\366\276Y\364\300\370]\355\362\374?\313\371\370\275\332\364\377\362\022%BA$$6#\216tq\316\216ts\350L\272 \205o\363\321\303\316\237>tz\032\032\025j\325\n\247\036W\275\257{^\367\276]/w\305\360x\371\376^B!\272n\233\246\350t\311\316s\234\351\274\001\307\324 \261DQ\222E\026\000\244\213\021P\212\212\3061\2666\320\330t\353\356\370{\037\367\312\3364\232V\236\314\256\272\353\256\272\374\017)&4\013\237\256\247F\314]d:X\264\203\007\026\354\0012d\311\2230*\211\214\375ZZ\276\316:\310h\326\244b\034""\203\354\024\245)JW\257\347\364z\275\177\225\360\377\315\210\034\240UM\273M\273\017\237Z\326\265\255m\272\234\300\016\212\nAI\024U\202\010\210\237\214R\220)%#\335\303\273w\376\356\364\361\232\205\2760\003\245j5H\021}\367\337~\030\303\2516\332\017s\255\326\217[\036\276\211\351\335\014\332\3221\214c\031n\025\364{\036_G\322\343\344\234\234\303Z\247\037\336'9\316s\303\2147\261_\203\030\201\220\315R\017S1jA\265\266\231e\013G\231\230\210c\372\2346\264\231\177k\025\245\274\300v\202\250;\350\354\007\205xFN\264\207X\243N4\241\016\346\261\014 \007\245PD\207S\025i\247A\30315\256\336\310\333\3636K\tf0T\266!D\240$\301(X\263\277\001j\355\323K\271B\352d\242\260\202\t\350\226c2Y\214a\231nY\352\254\250[\251\266&\300lcC\025v\2454\030-l\250\346#*\211Z\242U\031\353\031\224\026F9\212*\2273I\306a\263\360\210nP\333\236\224\252\350cR\250T*\232j\255g9\260\310aEW8\253\327\250\277|/\313\360\277\203\372\230\371\220d\026,Q\0261E\026*\331\214F(\212\252\037\213]\014\262.\324\310b\2142\3112L\262\300q\340\333qQ\025TT\264\322kE\036\302\t9\3764M\263I\250\231\347\262\225\026\365\026E(a\371\022\362\241'\\\"\034\261g\312]\235z\301r\003KM\246\301\r\266&\230\242.h\241SwB\305T1\315\211<\351\353\3144U\005\025T+\252r\334\031CY\354\0300us\203\322a)f\371n\300I\031\233Z\026\366B\211DBiQ\341\224\305\005\321\030\240\313\272e\365\303\001\033\314M\257e\303m\031\002\006A\335\350\363\260\013\037\246\227[\313\177j!\375\033\203\332\267\027\342T\n\002?\252\361\037.\021\260\316k!Hf\322\304\304\2210\333#T\032\250\036$\302\n\271\030hg\350Y\320\315\021\200M&\344r\330\214#e\206\317\234G8\217(Xi\2550\254\030{\021\026\304\250\023\035&E\010%82\260\357\341\203\034\330\n\251\010@r8{\334\220\030\257{5\2328L\366\346Z\315\320\351U\002`PB\240[\366\027K\205\310\312\307I\211\232Y\312\325E\260\226K!l\337\355\026N@\252\252\252.\262\351P\333R\312E\262\301\2430m\254T%\355\246\361][\330\005\371U\344[5\\\232\346'g\366\260~f\323:<\253*\230\224\027R2\260\222\032\244y\332i\032\024BY\245w\255\361\313\305n\027K\241\346vr\021-c\207\261R\3132|qM""\345\337\326p\351\323w\207\t\022\3226D\030\303\330\002\363|\335\255YFF\253\026h\362,X\270L1\214\231)\037\273\370J:\026I\027\272\260\233g4?\217\202)\317\207z\320\352\365x\373\233y\337\017]W\254vE\032\241\243,\226\342\353\016<*\2076\255,\376vu\034|m\030\2451\213\2510r\236\263\037\210\250\300\362\371x\332\016\303Sis\245$\246\203GOSx\365\032\220^x\260X\257\300\030\311\311BPj4\244\305\330\230!\"@4H\232\220\301\303\210L\250\324c\207n,\034\3101\212\377\322^I!\301\202\004\221/\241\020$O\272DH\241\024H\206\344{\213\333\024\237\223\336\314\310(\005\002\224\r\207o\2730\3216pP\230Ni\277\274\276\365f\030\211t\210\221\210\\\216\261W\306b@ @\201\003\210\356M>f[\366'9\223\230\324dyP\033\247\016\006\303\251\320\244\212G\252v8d\356\234dz\035\025\356w\031\304\277;\350y0\316\363A\235\n\0222\2011n\247I\357R\262\235\"S\222\254N\216\223\224~\250\207p\312Z\004\021G\347*0\252\241\022\"\216\364\243\002(\310\3212d],\014\034\347\300\324k.\315\364/\n\366:\250M\001\350\223\004\210\226\236\251\261zW\205x\274\331f\242\235\376\362\214<\207k\220n\246\243P\232\215Z\222\371\256TC\277\"BH$\022\023\261\035\305\370\027\355\375\014\221&\204\222H\376r\3635e\3131L\204\214L\242|\002\315u\325#\023\0211\037\301x\010\217\232=\377!x\226k\271\234b\021\210\371\340TD\302\251\344{\327T\0220\217\013\340\273\177%\250\300\302\232\037M)\206\026*\331\253q/\033\377W+l\341~\245\210\242\226\307\253\326\273\362\370\276\321\345\335\225\006.j\255\033\233\272\364\346\035\020\320Q\024H\242S\2119JS\223%9\r\250H^\210\200\300\204\316\341\006$8D=\027<3C\241\005\204\337\267\373\376\343\220\302\"@\010\244A\255\360$\244\273enW\251\321\355i\222d\026D\262\031\005l\266\256\331\022BI\"I-%\3056sd\204\202RI9\316\001\300\343\\,\274\305\346z\271\314\234\322d\314\223\315\221\315\0275\244\311\305\014O\017\271\014_H\020=\307\363\327\320\202\020\205\361{\327)eM(E\022D\223_=s\237\003hc\210\310:\346!\212[!9\3469\342\032W\032\313\rD\340Jg\200\210\"~\274b\220PR\212(p\234]\355^x\373\230\361/o-\352P\271FL\230'\356\361\2738\330(\203\366\0075\2309\\\310""\031\0346\033a\001\004)\201\034b\2043\234\207Lf,\036NB{\314v\213#'4\262S*\002\216%\210\263\201\247\304\030J\003\024b\214)\214,\315sd\005\206b\274k\206c\352J\320\313^\242T\233\225\263\233Q\222\223q\316\362\r\276\262mR\002\022$0,c\216\307\371f\354R\214\246\273\305k[\215\232Km\241!ZQ\225\"\031\276h\010\226l\306)0\321\233x\2242u\232\326\252\265U\26265\3317\007\305\220\336\336^r\363y\254\232\t\230\246\314\356\267\332\270)\006\365r\013{\332\260\225\267b\031\251\031\322\373\361\374y\027\025\251\374\025F1\203f>\013\256\235\327\t\301\352\346xE\221\240\201\214]\3266\272\\\305TX\305\006\0330\037D\363)~ZZX\214mX\340x<\232\010\244axYS\\%Pa\341\353\356w\273`u\212H;\201AV\221D\212\024?4\247H*\345)I\217\317\260,rPN\244(\210d\211VD\2459\272Ot1\214Zv\234\033\236DS\266\033\332\216Q\266\333\213y2\230\3222#*\014\302\350\357\277\023\361\340\030\034z7Vx\364\212\354\250\270\264\350l\035\023\232\031\020\372$\267\303\024S\2643}\213\257%U\203C\0326\227\005D\366\255f\261kF\264k[\372\337\302\305\202\306g\221&\031\207\222O\236\210\2234\353\335\256\313HCBu\030\345\337\254\307n\233;\2732\n\210\205\253P\265\002\324\215H\367\235W\213\037V\357\037a\323\262\336s\2622\216V\216#\201\223\223\211\261\215\312\251\222\225\262<\030\277\221E:\361S\032\037xA\205\227\331_\352\0267\2032\222\274\324Z\342\210\225\303[\365+7#&\005\020\306\016Z\362K\001\337T\301\3677\350Q\350\312L\323\241\206|AL\371rI\t\331\027\273\333t]\rK\367\"\304j\250vi\300\210\240\233J\211-K\321\246\034\274\313\334\315\304Zn\260\263\230Y\265c0\321\362\240\252(f+\024\025P\205\360\313A\222\307\373ZR\206\270W\n\345r\275\213\213\260\272\331\\4\021\n\230,T,\212\337\244r#2%l\264\242\266\306\247\276\321JXK[\221\240\320h:\363\347\326la\306a0\316k0\025 1\020\031\003\337\234\364z!!:p\222$v\377*\034\325\370+\210\025(\231kR\320\326\241\002!\276+:lJ2\220\030\024'\246\006\316Y\007*\250f\270\251\\\346\210\3648\202l 6\016\021\315\330\275#\240\317[;\206\232\242m\274\243\014%\206JYfGn\021&\255\216\010D\252[\215\004\262\271u\367m\220Xn<.J\022\225$7\217\250\214,a""\025\353\325\315S`\236\206\n\313\311\255\222=\353\247BI\365\032\014\024\265*>\201\026\302\347\257\243q\2373\341[\370\326\322<l\314r\371\241\277^\365F\252\311\234\230\342]\373\n\230\325|0\013#\310G\231@\301\204\331\315z,\302\373\311\316\021\226#\251{/\321a\334\236T7\\.\013\250\246H\270\343\351,\340ekIZZ\010\236Y\367\254*\233\025\305hp[\236\245\025\230\364\317\223';\367O\307~B\353`\201\245\r\216\032C\210\202Y/sF\000\346\236\272\242I4\004\200\261\035\266I\312{\013\361PEReYM_(\n\317\230\013N\010EEDr\304\004\231\225*\315\312)\317\266\264\326\302\334Z\222\302sK}r\210\302%\215oy\376p\371\367v\357\332\366\234\264\364\034(k,H!\211\2643\274\200\326\361\\FG+\210\301\201!d\034\326\225\200\034 Yj\272\253\252\017\"Y\233>\212\356np\347\262M\027_\r\206\2323g\006\240jqIyk\023[\341A\003G\017F\023\346\020\362\371\321R\242\245e$\035\036v\237A\330\030\274\3175\371\247g\300'\332J\202\240\036\245\003\305\001\033ja _\210\033\026\004UM\223\301\020XEK\311\206c\224\023\2445Z\025\225b^\255e\341\255\225,\224C\307\223NV&\323I\233\320\020\300\\Z8`\361\023[\266\001Q\360\332>\243]\013\232\300\331\266[\027\024\"\326,\241\316\021{\234%\203V\005y\034\302I\356S\253\027-\013+`\216I\25095\232\303`r\001\304\216.2f\366\256\267\343\327\271\226\262\002Y\270`:\234\210\n\024\244\306\310)YR\262'F\365\220YM\372L\342\027\327)d\354\253+1M\3605\215\234,\347\331\\\264\312\312\231H\327V\342\010\353\310\253ji\242 \233\014~\tY\262d\213P\246u\0074S\006U`\252\005d\n\310V1\352VZ\313\317\227P\t\270\3452\257Ad&E\203y\345\"\302vP\2419\304q\262\226YL\222\246\2301H\342\304\026\366 F6;\257\261NS\301!\262\204\313)\252\211\217\266\216\221\233F\343`A,\022^My\200\267\240\222r\215\346\034ZU\014\357\222\"\262\332\263\t\235\005BYb=\315y\222\236-\301:\2646n\312\246\222xL'n\021\206\216\223\244Kj[V\323i\264\312\300\245\212g\322\341\2011P\252\320\304Ob\034\274j\303\323\225\227/\031\203*\343!\006\230\262\004\376\325\002\031i\3506\321\034\3236l6\034S)\321|.h\272D\036\233\216P\274/\\\242\343\367\257\277\277h\327r\345\203\026\246\267\2648""\351ce\237<\224\226\215r\314f\rK>\245\321\273\234\272\353\255e)\250\224\014\326 H\327%\230\3020\214\2163\002\344Yq\032\22210\321H&\364\222\340\340\240L\331\023\013 *2q\335\230\246zv%x\025\021\2343\3475\361\352\324\275\375\3017\010\221\"\377I~K\307\341\310\245\022\035\245\212\307\267\346\222\n\023'>\357a\315\361\3409\247\247\257\203\335\353/\235\271\220\210u\350\037|\301\253\244haI\026\211MBd\216}(e\215\2416\272\222\3735\201\252I\242\252Zr\010x-\014\230\337HJ@y\006\354\330B\266AhZ\035W&3Q\207ct\300<9\212%\342\352\244\2613\010ev\267\275\266\013\037q\316\316\017\032\257Z\255\232\031r\361L\337\236\036I\213\024E\231\244 ~\224A\310\205\307\372U\177\300\371Y\321\355\310\244\211\237\031\206(\245\223*47Y\324u\005[\032\347\265\246\217\372-\200!M\343\014C\211i\013y\2254\225\246>\007[\367\261\351QU;\326\210;$I\0270xy\366\311m\334\314\343\201|\316\205\337\323*\253X1Ed]\216+v\364S\367CS\214q\246(\364\032\275\256\tS^\365\201x\225\350\307\203\\\344\211\357\034\342b8\0259\206\016\021\216;LE\303\251u\330\027W\367t\244\333V/\025V\352\030\312\365\230XF\335u\007S\373\257\003\314~\001\001\354<e\301\213\325\360\365\017q\026\375b\360\230_\275\341\366\251\370\217o\333\357@\375!\370\366\277\300j\265.\226j9\243\207q`}\257-\007\354\033\203\371\202\267\367\241|I\032\2039\263k\234\320H\221ciw\200 \2407\367\206l\304\007\360\246\307\306\"\2145\311g$\322\370\370j)i\016+Y\334\320\026\357\214y\032\2162\203\234\006\010\205P@\200\301\032\032\220\3611\271\270,\267\362\322\203u\363fyqO\213\336\240\263\007\020\2064Uk\335\001[\026\020\305;\241\344\334\352\324o\r\320N\372\033\356\003f\226\245\207\205\t\272\345\340\367\342l\022\225:\023\021\226<Zq|\3203\306!\211!\030\014\204Ti\367\035Z\325\243\364P2\205H\267\361V:\254\240\023m:\226}C>\200\340id*\032d9-\352T-O\016\302\316\265)\377;\231hI;\330o\272\246\370\304\020\300&O\353\277\007\225\0044!\025W\262\324\3149b\374\003\344w\260qVg<\233\0078\312\263;\220v\363:pF)S\224*\t\016\020\254>\223\245\240\\\r\362\237'\260\006#*\246)8dA\036\271\317\244!\003\225yk\300+\301""\016nW\\ \274\004\266\t\000\362\215\003H\035\304\374\020\03100\322\356\344\223D\007\004\006!\200\335\313\210\351\2024\215\0010\364\377\206w\255M\234X\304[\222W\001D\231\245\350y\252\231q\331\356/\266u\014\271\263\227\325u\354\rm`+|\006\344OK\264\340\362H\273\333\321\227ihY\361\307h:v\2078\366Lr<i\n\242l\305\021k\362;\313\n\326\271tcL\371\264\014\343G$r4^<\347V\"\315t+\242\302\260XIT\"\022\016T\020k\202\033\273\331\363\266\333ba\363;u\003\034\372\\h#\226\314\302\252\244:\240\275\306\031v\206\214\372qY\306\215#@AC&eM\253\205\352A!\307\"D\026\275w\006\215$\350\333\307Ft}\2725]\206\245\246\256\214\271\027\\\234\233\250\354\025\"\277\000\304wH\344\323\253\207\200@\370\312j\273\334=\266C\334\276\373R\310\305`\324\233\353\205\206\270\271\256\246\236^\267\023p\323\340\342!\003\327\216\177uO\222M\327\007\006!S\214q\205L-\301\303\305\300\272\372\324.\305d6\271TE\373\366~\314\\\033\217\375\361\203\250\221\330\327\305\305\307\327j\323\335y\216\313v\252\242/\204\232-|V\006\006\220\037W\027\255\307\327\3265\306\271'\371v\220\2168\233\004\300\303\013v\260p[\255\301\305\351\366\\u\351\255?d\267}\227v\337\216\316\3262T\266:\016\355\373\333\207}/\227\213\367\216\352\203\327U7ak}W\332\321\222\340\034\216\030\322/\372Kgl\2741\2157Wr\010\031\003\230*\336\360\263uG\022\231\010\255\377|\027\315\323li\271\333,(\260\013\007\334\306\3002\035\306\n\361\255\277o\271x\274\322E\337\333\034\240\250\330v\335\001V}]\036\337\346\364\003c\305\241j\322 0\342Hx,*\256^\226q\235e\315\317\210\312qv\377\325\0346\025\221\302\020\272E\201\307w}\r\344\010\313\337\374\370\356y\335Zuw\3209\\C\200w\302\013Z\327E\330:\235D\361\0277\315f/\006\270\303\2037][\260@\306\312\372\3327x\326\351)\277w_e\254\367ox<*]\030\256\272\356\201\252.\247\325\321\034\272\232\276\336C\267\265\327\177L\360xO\355\251\3364\205M+v\212\231\331\347w\231\223g\271\334\261\221.\271\311\367\251\365\031G\277\202\235j;\232\031\031;T\2112\256\271\216l\214U\320@>\325N\000\303\315\314\327\300U\013\376\371\366\037\034h\207\214\204\371\251\331%\214""\322:\351\273j\375\374KN\325\362v9e\275\235\255\230\272Z]\237v\367?\327\311\303\332\225\230\230\245\226Vki\271\262\234\325voM\376E\206R\341\224|\367\036\236\227\252\226\300\331\272\366\356\363$\2602\323<\311\265Z%\300e\0355\336k\246\343\211\265\377]G\247\213\314\\\326y\336{#<\"\346}^\275\343\223\361\225\233\362\357\235\256\266\"}\227\301\246B\353Q\230\310\216\216\264\340\36351\214FA\330\224\216\004U%\2661lpt\024\216-\025\330=\305<\242\341\003!(\005:w\252r$\252t\010\022\357f\254B]&c.$\354b\020\271\001\205\252\030`\357wB\004Y\3621\0258\013\004\013CH\010\207\221uB\206\346\220\320$\326E\231\236 \206\232@r\316\231\233\234%\310\r\346\205\3214\365^\336 \260\330(\313%\220^\321P\024\211\205(\261\310\241\352\"\241\320i\\q0\026\003I\n{=\274\n\n\204\305\246\365\007*L\233\032\367\310\300f\301\016*\010\014\224\273\314\364\353Tv\254\025\227\213\300m\010t\211\035)\246\037'ce\260\363\312\221{@\2349\210I\017\364j\252RV\025\222\341\253b\324\363\320r,&\336\365\246,\2278^]\336\341\014Q3t\024b^\341\3464\2622!\254\326\017c\016\232=\034\233?3\261\354}Q\353{9\323{7J\3260\205r\254\274\233\347\003\177:\373\360A\023l\032\371D\301\213\030\255\031\205\036\246\016v3e#9\016\244\360\232Fp\236\030N,\204\335FP}\025c\324\303\027\341ZP\255iF3\323\302\263\331\231\263k6m\330\321\273Z,0x\314;\353\203\304\242m\016\360\326\236p\255\004\006?<C\220\367\230g\260WC&\177\250\367\237\376.\344\212p\241 \244\363\001\340";
+    PyObject *data = __Pyx_DecompressString(cstring, 5469, 2);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (5727 bytes) */
-const char* const cstring = "x\332\275YIW\033Y\226F @\200\300\010\204-0\330\022\203\001\333I\226\000\017U\345\356J\006\317C\232\301\006\333Y'\034H!\220\021\232\"\004\310\246\252r\251e,c\031\313X\306RK\226^j\031K\375\004\377\204\376\276\027!\014\306\256\354>\247\273\317\201\270o\036\356\360\335{\237\376\372\"\247)QmG\326\242Kem'\227\215\246\325hR\311\244\267\224\242\254)\231rT\325\212\351\204\246\0249(\033}y\377\345O\363w\347\243r6\031-*\037\224\204\246F\325\322V\"#\253\252\242Fs\251\350V)\235\321\322\331\250V\316+\352L\364q*Z\316\225\242YEIF\265\\4\217q\247'h;J6\252*\032\013\321I9\233\315i\262\226\316e%LOg\267'\243\311t\021\233\244\367\025\316~ gTef\346or2)a\244\222\220\367p\314\231|\3710\231V\345\255\214\242d\371\335N\244U\267\224\314\226\366\362\345\031)\221+*3{%\034L.\026\345r4%\2473\356\201\322{\371\\Q;=\254\264'k;\347F\344\267g\326J\305\224\234PT%\223\232\221\344\342\266J^\341\030\321\027\271\254\327\232P\322\031\034\373tG4W\214\272\235\251L\016\345\357v\3453rY\371A\337\201\234\311\250\022\030.)Y-\255\245\025\365\007\343\0249\357\312\357G}R>\367\203\271e\371\340t\307=\n=\273\255\346J\305\204\362\237K\202\313\356wF\222\212J\262\224P\244\204P\027I:i\207\024U\010\357|OQ\311&\225\242w\006\257\321k[V\362\332\316b)\225R\212\277nQ\233\316\267\234\337\361\273c\316\355\376\200\334\346e^\n\336\276\314\245\263\232$\275,\037JK\017J\331\2044{'\036O)\222t\333U\"\351\266{2i?\227NJR\346\245\214#zM\320\213\275=Y\022\013H\212\226\220\264\234\224/K\363\344\235t\353 \235\324v\244\333;Jz{G\223\356\354\344\212\351\217\271\354\314\275L.\001u\375\317\231\203\242\234\377\177\334\330\335\352ey\031V+\275P\016\265U%\345\266%\204\356K\251bn\217\253@\035e\355L\217\273\372\217\332O\370\367\265U+\3453\312\367'\270]\230\263\266\272\264\360\354\345\243\2055\234ym\267\354\031\321\372NQ\221\223\222\274\227+e59\237\207:\320\242$\357S\224\304B\262J\024\221\325r6\221\316\315\300:s%@\213\242\312\207iu\0136\236\320\2662im+\247i\270\022\270\235(e\250\0020A\245Q\003\226x|N\310y9\221\326\312\r\3320\326\023\252d\224}wB\nr\232qo-\t""\244\222\266\025\230\236\262\307jzoKR\363\300\263\323\345\004\367\304u%\255\210\333m\311\211]\t\027\332U\262\3420,\342\330\252\324($\225\355\242\242\250\222\004\250\345\007\372\354}\245$\345\346\022\200\232\370\227\263\320~-\227,\312\007'g\224h@\342/O\315V\200`\002\261S\251t&#\220\306\305\033\267H\364\360\256\231\312\355K\374\227xI\t\027\303\231\001u\322\256RfE,\342r\037wf\277\367\221]\352\032\031\212\231\334\001V\333\201\024\267r[P*\245PR\262\211\262\364\343\026\025\247\334\326v\276V\213\242.}\333\340)\264K\032Z\355\321\035\025\374Jg\323\032\277*pY\312()\215\252\231V\245\023\005A\231^C\362(%\247~\000\2338V\302\3152\356\306\340\245\222\201\014\323Z\\|g%A\244\304^^\024T\311#\3647^1\251\340\230\271r\243\232*e2\215rV9h\024\213\360\007\032%\217\177\025\352\006\216e(UiO\206\216\340\273\253H\252k\t\250d\345m\245\270'\037\n]\361\356-}S\337Kg]\374/{\212\362m\003\352\351\275\0224t/\227,A\236\036Ug\032^\243Q\027\267\246/\224\244,,\203\247\342\311\245l\036:$\034a.\267\365!\227J\021Rs\231d~\333\365N\236\223\312\347\362\364#\374+oc\276\373\235q\375\265\004\223\001\n\354(\211]\225ga\r\274\020\233\261\354i\017\213\264l\267T\312\346\323\211]\034\271\201z\337m\304iNO?\351\377\216\017\371\343\001\337,\266\2571X '\n%9\343r\245('\323rV\025z\324\360@\322y_\324hP\016Y\314\270\262\360\274\233G\276\332\254\327p\316&\033\035\236\350\275\332>\266\316\025\347N\374\347\2718\340\254g\375\246\006\001\235\264\320Q\024\025\255T\314\026\335\r\344r1'\256\017X\317K*\300R\361>\305\034v\241{Q\225\2754$\316\310f/\3551\203E\001\026\202\201\342#{\324e\032JI%%S\336\324\236SnY\372\216\213f\213\3068\203\262(j\215\217\006\205\331\362\254\203D\024\tH\350\027p\204\001\342{\210\033)\r\252j\302\245`9qB5\375Q\221\316\226\366\344\274\226\313\003\240\263j*W\334\223D)Ow\213\003\t\365-\001H\356\226\362I\034\241\244*'\007\336\337\2273%E|TO(\373\350H\354R$\r&\237\000\365\017\033\325\357\210\360;Bu\345wJ\212\347\213BV'\025\260\347\\\361,\002\377\3736\017\227O7x\310|\276\311\2159\304\227q\315\341\241\224O\037*\031\265""\314\020R\374\357\311\333\200\347RR\0215\301\264\337}\216\377O\266\317\276h\027~\367\325\375\255_\332\232Z\203\225\370\357\276/\201\246\326\216J\227\036\327\027\034\177\240\322Zy\245\307\364\270\023\350\325}zH\2376P\014\241\020s\002W\014\331P\3151s\305\361wU\342\265\246\313F\274\216\322le\245\242\350\267\215\2201f\254\030\212\0317\357[\027\255\202\335b\307\355\205\306\372\235b\321\177\277\376\010\246'\314~s\301[\277\2373\332\177\337\257l\352kF\233!;\201\256\312m\375\242^4.\032\005'\030\306\201\273\373\261q\277\361\300\2149A\014\257\007\305\034\314\256\334\307\300C\243h^4\377\301S8\376\316J\014\263/\031-\306m\363\262\265h\311l\272\241\257\324\232\372\2609\346\334\325g\365\327\306\254\261\242\213\361\343\346\202\371\332\212\327X\370\322\333\324\021\006\207\356c\257\005c\335\0149\301^=h,\032\037\254f+\326\250$\315\030\270\352\r\274\214\351k\354\305\375\277\316u\272\303\372\262\021\250E\347\354Y{\305\351\276P\371h\364\201\005(\340F=\225\244~\323\3302\233\315Qs\341\367\005gh\314\004w.T4=\216\332\225\253N X\013FM\037*W\243\242\0223C\250\364\\\300\276\375a\007\177\027z\353}\375N\250\357\313E\356z\313h6b\365\300\2401\210\025\037Y\013\326\212s\272R\017\\\322\313\330m\332\212[\013\316\351J=\320\247\377d\024k\261\270\335g\343\014\247k\365@\277>\017\336\226\314%\263h]\2556W'\217\373\2161\350\273\315\344\310E}U\3377V\234\340\000\n%ppM\\q\321\334\266^SI\234\016\241\014N`\340\2777\260\016\236\034\350\262~d\222/\261Q*\223__\320\327\241\203\223\220xA\360F0/Xy\244?1\344\332\325;\320{\227m\337\033\013>\236\032{\313^!\367/\213\256aH\355k\027L\010]\243c\242\013\232q\252\353n\225]\321\230\350\0325c\247\272n\3332\272.^b\3233\303\357\352\2209i\205-n\024\031d\373\013#\206\362\345)\313'\026\2001\240:6.*\023&+\003\243\346\rJ\360\364\262gO}\3664go\177\366\022\254=\325\321\330]y\253\027j\221\237-\215r\366j3V\322\216\235\324\342v\230K{\265?\331~\010\242Q\233\346\035j\376\001\3757\363\252\355\253\007#\274\235\023\0344\302\024\343\220\200\204\244y\235\366V\027\007\200\366\233m\346\226\345\267\004""\357\356\353}\372\234\2360B.k\304\271\236\3502\265\246\233\"\23457\255U\353\300NW\213\307!O\377[\315US\265\306\254\265\223kp\370H\003\005\346q\255`\237>iDLh\312\210\361\032z\360M3\307\017\t\024\t\014\031\327L\037\255b\200\0003dL\030b\265`e\276r\250\037\240\r\306\335\252\257\350I\343:\024\273@\014\232\207\321^\302\244\223\236\233f\302\n\271\267\t\351\343\265\213?5\216\366\253\0217\036\232w-\252\351\300\025n\3200\346\301k\346\207\2231N`\330X6\003V\247\035\263=\235]\340\221o\031>0\006\260\260\ru\215\324b\363\366\002\004\201zB\000\346\037\216\250\177\025\371\317\026\325\037\320\020\210\231\227,\037\000\272h\207\352\336Vd\353\025\201;\000wS\366\354\244qT\352\340i\014j\224\251\351\2152m\260Q\246q\234\\S\330A\243vy\370k\231Gi\224i\030\2152\215\301+\327\003\035\225P\345\232\336\016T)\324\232\036}\006*\023i\237\232\005\250\317\263\332\335G\237\273jk\353\265\365\315\332f\262\226,\324\nG\265\243\177|ij\372\247o\261\031d\261\371\005\311\213\346M\222\315\346\004I\2429I\222l\336!\331i\326H\264\346#\222\243\346\207- \017[\036\221<jyF\362\254e\223d\263%K\222m)\223\224[>\222|l\371'\311?[\236\370A\236\370%\022\311\377\201\344\203\177\227d\327\237#\311\371?\221|\362?l\345\016\255\253$\253\255k$k\255\033$\033\255\t\222D\353\001\311A\353b\033\357\320\266D\262\324\366\220\344a\333\032\311Z\333\016\311N\233J\242\266i$Z\333!\311a\333r;\310r\373\257$\277\266\277%y\333\376\216\344]\373{\222\367\355\031\222L\373G\222\217\355\367\003 \367\003\017H\036\004\236\222<\rl\220l\004\362$\371\300'\222O\201#\222\243\300B\007\310B\307s\222\347\035I\222dG\216$\327\221'\311w\224HJ\035\013\235\034\331\371\214\344Y\347\006\311F\347&\311f\347\337I\376\336\231&Iw\036\222\034v.u\361\266]\313$\313]\217I\036w\275\"y\325\225\"Iu\025H\n]E\222b\327\001\311A\327R\220\363\202\357H\336\005S$\251\3406\311v0C\222\t\036\222\034\006\177\355&_\272\337\222\274\355~G\362\256\373=\311\373\356\014I\246[#\321\272\377E\362\257\356_z@~\351\271Or\277g\205d\245'A\222\350\311\222d{r$\271\236|\217\343g\020\223\265\236WC5\177\314\034""\266V\032`R\250\303\251\021,Fa\352\315\346\270\271+<+L\365\203p\010\257\3159\240\010\300\324J\333Z\325\213\313z*\353\372e\214\277\000t\276W\325\216\377\374y\271\366r\243\266\361\256\366._\313kd\261\35715\367q\363s\222\347\rU\377\215\344\267\346\034I\256Y%Q\033\312\375\224\344i\313+\222W-oH\336\264\244HR-\037H>\264,RW\027\375\017H\036\370\177#\371\315\377\236\344}C\271\263$Y\377\021\311\221\377\027\252\354/\255/I^\266\256\223\254\267\356\222\354\266\346Hr\255\367\251\235\367\333\036\223<n{I\362\262m\235d\275\355U\233\343\017V\036\"Jz\0000\225\335\250o\003!\023\275H\200\361\031\202\223B=\020\201\203@\037P\370B\355\302\244\251!Tyh\377\265\272}\214P\346L\213\374\225\177\021,\362\306L\"L\373\237o1g\317\333\205j{\365\323\347\311\332\312j\375lS\254\021\333\272!\355m\372\260\013\225}\375\225\021#\244w\t\017\242\302\275\370\315e\253\315J\330!\347$<E\200\271\261\351\370\305f\255D\374\245JA\207G\341\021\260{\261\322_Yp\233\017\021\224\371\030p^\250\024\365~\200u/\312\335\"\344F\270\213\310\371T\217\230\215\010\311\tt8\035\235\236\033`\211\301v\315?R\033\371\345\030>:f\206\341U\341&\2729E3\356\326\306\020I\330ju\264\212E\372\364\t\375\023b\223>+~\276\273\3569\271\237\214\202.\327\232\336\327\336\313\304\344\016\021\356\256[\303\366[2\346\363\374\347\243\332\273\355\332v\261VTk\252v\306*f,\371KOS\367U\204\005\327\020\037\217[;\210b\202W\r\315\274\215=\347\255C\033\246r\331\2307\016\315\262\355\373\322\327\324\0355\016\0200\370\330Jw:o\036ZG\325\331\352\353\343Y\312\275\037a\373\006\014h\325(\303\257\365C\374\363\366A5},\334\370\005\262\211\262\370\013lOA\276\202\310\244\337x\214\000b\037a\205\212 \007i\304\022X\334n\036X[p\310AF\226[\020Ko\030\2163A_\351\204\007\274\277\020bAhKw\017\227\271\004+\216\3251\376\023L\032|\033\002y\214\334\310\033M\321\206qm\234\"\024\001\027\357!(\276\204\320\351\021y\214(\2516|\323\0221\346\340\2203r\205\216u\010\243\235\341\253\010JP\037\036\201n\205\302\"j\t_E\036\023A\204\021\031B\310\032B\204>k\275C|=^\225\341.\353a\2068\263\346\033k\333^\261""\0319\205\006p\364-\263\323\372\t\232\352\253\007z\204\256\374!\023>!\322~lm \270\373z\251\260\376\314l1\357\300x\3163\201\303\016\221\214\205\376\355\335\373\274\352%\004S\310\r\235K\344\234\237\371G\375\377\236\r\317 \243\353T\273j\214)]OE\206}\256\260(\002\376\016\361\327\207\234K6>Z!Z\236\206\034\221=u\327J\353~\034\244\026\375\223\335U\375\353\361.0\300\3613\343D\010\211\270\006\303\217\364;\006\220\003A\2735h\317\034\373\234\037O\253\365O\320\352,\371\324<\204k\265[O>\317\3246\337\2709\257\037&\214\033\203\037S\323\316\364u\347\372\r\347\306Mgd\034)u\210\201\030b\256\311)g*.b\267\323A\3336VV\230S\322B\037\222_\236W\211\237\n\254E\300/2\215FV\321H5\032\231\345\351d\350\271\341nr\266\271\221\332\234\344W\356j\014ck~D\231_\202M\335W\220\336@P\220\001\314\\\376\262\350#M!\215\223\277\0145u\017\033w\000/\227\230-\214\030\357\300\271Kv\263\3154\271{\002\2316\346L\323\326\207\014/s\276\003a\303\nEF\000\354\031@\336Wp\204\375\371D \337\315\354\262\210,z\326\3300\037X\243P'\204\371\343zJd\344S\326M{\013\251\020\220w\01635c\016\262.\270#d\240s\014\r[P\361\270\310Z\373\221\025\257\3414cT\241z\360\242\230q\327\274\205C\206\255u;R\035\250\312\325\202k.\005\243\005[\256\341\024\027\221\215\304\254\273\266H3\350_b\270a\014\263\332,\031\251\213\214\334\013K%\275\275Z\201\223!d/\253V\201x\217\034\326\024\301\376\035c\334=\232{R\025&\265d\250Xg\316\005\277\001}\r\301~?nE\231\307\234\363\r\2643\367\025d\020\311-\234\020q\266\267R\322\037\302\037\365\362\004\356\016\275L\206pu\032\245\007\357[U\177u\241\272\342D\256\3015F\230\327\016]1vP\036bf\3423G\000\216~\221[\234\214\250\207\t\322<`\234\262\353\207\333(\322\231\326{\257\360%\304d\346\017\313\275\007`\217\003\003j\021f\266\210\356#.~4\010\0147V\213\335\262\337\300\212\201\024\001\\\345&6k\266GmlA\376\314q\3031dQ\263\326o\325>\000\377*D\020\271a\375\305^\005g#T\303\301\ts\215\253\263\214\236Yk\265\366\363\342\361\350\361\202h\252\207gj3\177c\002\211\275\314A\241\"\330\252\013h!\316A\006\372XX6\203|\026\201GJTC\365H\024\211*""\342\006\370\301\010\257Zp\206\033\371(1s8\n\247A\225Y\3668\203\206nx\325\3505L\232\262'\354\243\343\370\361B}x\034\336\277\035\331V?\200u\030\266c\336\263h\342\203WkW\230\207\017\2178#<}'\225\316\031&c#0L\310\274\335*\300Fx\001\370\326M\353-.\033\306\374z\357e8\223\002\256\333KL\025\254\246Ho\031\3558bx\010Bv\331\337\3314\020q\025\236\347\217\343|D$\0371$\312\307\255\225\023\022\253\017_\267nP\347\235\341\270}Yh\302\360\204\371\316\366!f\301\265\002\360\3234\243f\021!\014O\303O\317Z+\365\341k\202=s\020W\253\275\016\220\035\243h\352\300\356C0&\344D\341\352\235(\360\275\036\233\026\341\304I\2033\314\022\330\t\317b\335\026\217J8A\014G\036\234\244\264Ynk\032\214\272\352\345D\246\205eBX\223\302\324\320r\3258B\250\267\214\353`\360M\332\030'O\201/d\233\337~X\215W\t&\203\303\2749\275It\332\032@\020\026\266\327\252>H7*^.\320\320g\337\022oU\241\343\030/\275!\236\0061\303\335::g\337\301\255\227\252\005DN\321Y;Vo,vnv\375\354\016\215\305\322\366'\256\374\343\005#\336K\243\363\265\340\336\356\001l`\231K\361\036#\364\2248\032\2569\022\203b\312\346\221\035GwKu\236KQL\337ml\025\226!\n\253\265\311;vQ,\007\225\273o\365\325n\334\253.V)\210\332\230\373 \371\277\257#\256(\007\006\377\330\334F\001\3261\004\200\005\nu\232\016\302\211\\A\010\026B\234\350\003g\251e\033\256Pc\356\003*j\247\207P\"2,\255\017\034\2169\221\030\237\222\315W\356\232\364\241\213H\260\372\254;d\37158L\0000m\\l&X|\305xeN\210\267\005\252@D\274\342\330\303.\334L Z\202N\327!\232\003\260\271@\031\025\315!(\257\270}\027\304\265d\225\354%\030\351\010\326\254\343z\317\001\363\327l\346\010PB\"\345\004\224w\234\341I\035\214\203\234\353B*<\340\035\242\035\221#e\335\267C\250,\202\223\035\307\227>C\022\304\234Ul8~\023\n1\201\210\256\271\032\253\217\323\252\274\256}x\246\313B\216\343P'\350\243\317\031\237`\3740\345>\336NM\343r\323?\203\177\035\200O\302\362\304\215\332\365{\340\335\324_\240\271\375\307O?\027\352\343q\261\2570\233\372\370\244\210\014\311\311Y*3\226\250\017O\022s\254\210}\251J_<2V\033\235\267\305#Pl\312j\341e\300E@""\353C\276\323\"\010\030\030\023\257\341\241!\372\004\210\250\2178\016\006x#\234\336\301\357w\210\250\020\256aC\210+dM\0228\355Mh\333\217;\030\222\361\025\235\221\246x\325\0133S\340s\240Wp\263\2310#\030\266\324\277\035\310\376?\333O\253\247g6\006\023f?\342\224q\276\226\027\370\336\366e\212\241\010c\252 \0218\005\200\367Y\"\017+\270i\203L\030\276fv\234\3443a\327\317/[\001(5W\0261[\022Q\300\212\225\364\242\2150\267a\307\032\337F\353\360\224\300W\2271OD\014q\266J\265\032\202\367`\210\007w=,\234.\211\354}\316\3674\006P\327'\314'\260\025\325E\030\332\3365\372\317)\242\247g|.\236\002n\211\323\267q\277\223\265\353\021!\361S\355\215\225\351\255(\315\217P\2461\270\347\177\034/\036\3134\365%\243\200|\304\365\025\3028\\\020\200\001\360}\377\205P\177T:\204\234\274\302\177P\323\251j\223f\026\006\261M\300\031\025\214K\0016\326\261E\014\352\271j\227\tt\"\000\000H\310\004\254Ea\335\274\334\343\252\200\240I\032\002\227\0325\007LE8\216f\272\360\2330\332\202\035\244\361\270\033\355y\2502\354\336c_\310'\006\275|\014\030(\303\034\341\240\227`\010\255n\207\023\233\004*\014a\022\302\027Z\200xV\345R\323\030\362JX#.\341\014\337\300\315e\353\023\261\321\335h\033\251\213\217\026\257X\367 \314\336\246\221\250\310\200\207\220\275j\3258\355j|\302|\213\3235\013\0311\315\331\375\334\3679^\307\375\236\013\273\206\225~\022Q\322\370\014\270\332Y\275v\354\023Y\303\035(\3348\237\227\371NO\030\340\346\274\305\237i\362\004\203\211\237\277N\270n]\247\n87o\301\322]\277\321\3619T\347*\030\031\273!\364-\205\231\300\224\2119\233\261\036\374\217\013[8\346$\222t\021/\273@\265F\305 \2069\343\327=\214\021y\014S\031\342i\013<\375\270p\330\316\324-\250=\200\277:Q-|\023\334\207\365\347L\260\030\334\207\364V\361\240\302\260\375@\374l@\237\217`\026y,\023T\021,;a\326o!N\r\327&\356\321\267\326\031p\336\304A\372\3549[\026iU\375R\304\031\272\312<\317\373\215\201\344\261\276\342\345G\374\r\343\035\364N\374\270\244\351w\335\330\376w\237\373P\364FO\270?\027\300\306y\330+\200\256m\023\311\326\000\027\300\007\326r\352%\210\277""\260-|\363\0324[Y\323\333\3644\374\300u\250\357\206\375@8\312 _\236\202\335n\3529[y\255\307\335\337\021\310\211}\343-5\220c&\200<\2550hf\"\256c\365wV&*\005\275\035\374B\361\246.\003sON0\207\354\347\354\376}\3725,\260\",5\300\337:\347\220\016L\211cz\313\373\215GB\265\371\303Lo\210@&\222\2610N\344\215@|Y\027\277\231\256\023mE\206\374_\264\037m\227";
-    PyObject *data = __Pyx_DecompressString(cstring, 5727, 1);
+    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (5765 bytes) */
+const char* const cstring = "x\332\275YIW\033Y\226F @\200\300\010\204\021\030l\211\301\340!\311\022\340\241\252\334]\311\340yH3\330`;\353\204\003)\0042BS\204\000\331TU.\265\214e,c\031\313Xj\311\322K-c\251\237\340\237\320\337\367\"\204\301\330\225\335\347t\3679\020\367\315\303\035\276{\357\323__\3444%\252\355\310Zt\251\254\355\344\262\321\264\032M*\231\364\226R\2245%S\216\252Z1\235\320\224\"\007e\243/\357\277\374i\376\356|T\316&\243E\345\203\222\320\324\250Z\332JddUU\324h.\025\335*\2453Z:\033\325\312yE\235\211>NE\313\271R4\253(\311\250\226\213\3461\356\364\004mG\311FUEc!:%g\2639M\326\322\271\254\204\351\351\354\366T4\231.b\223\364\276\302\331\017\344\214\252\314\314\374MN&%\214T\022\362\036\2169\223/\037&\323\252\274\225Q\224,\277\333\211\264\352\226\222\331\322^\276<#%rEef\257\204\203\311\305\242\\\216\246\344t\306=Pz/\237+j\247\207\225\366dm\347\334\210\374\366\314Z\251\230\222\023\212\252dR3\222\\\334V\311+\034#\372\"\227\365Z\023J:\203c\237\356\210\346\212Q\2673\225\311\241\374\335\256|F.+?\350;\2203\031U\002\303%%\253\245\265\264\242\376`\234\"\347]\371\375\250O\312\347~0\267,\037\234\356\270G\241g\267\325\\\251\230P\376sIp\331\375\316HRQI\226\022\212\224\020\352\"I'\355\220\242\n\341\235\357)*\331\244R\364\316\3405zm\313J^\333Y,\245RJ\361\327-j\323\371\226\363;~w\314\271\335\037\220\333\274\314K\301\333\227\271tV\223\244\227\345Ci\351A)\233\220f\357\304\343)E\222n\273J$\335vO&\355\347\322II\312\274\224qD\257\tz\261\267'Kb\001I\321\022\222\226\223\362ei\236\274\223n\035\244\223\332\216t{GIo\357h\322\235\235\\1\3751\227\235\271\227\311%\240\256\3779sP\224\363\377\217\033\273[\275,/\303j\245\027\312\241\266\252\244\334\266\204\320})U\314\355q\025\250\243\254\235\351qW\377Q\373\t\377\276\266j\245|F\371\376\004\267\013s\326V\227\026\236\275|\264\260\2063\257\355\226=#Z\337)*rR\222\367r\245\254&\347\363P\007Z\224\344}\212\222XHV\211\"\262Z\316&\322\271\031Xg\256\004hQT\3710\255n\301\306\023\332V&\255m\3454\rW\002\267\023\245\014U\000&\2504j\300\022\217\317\t9/'\322Z\271A\033\306zB\225\214\262""\357NHAN3\356\255%\201T\322\266\002\323S\366XM\357mIj\036xv\272\234\340\236\270\256\244\025q\273-9\261+\341B\273JV\034\206E\034[\225\032\205\244\262]T\024U\222\000\265\374@\237\275\257\224\244\334\\\002P\023\377r\026\332\257\345\222E\371\340\344\214\022\rH\374\345\251\331\n\020L v*\225\316d\004\322\270x\343\026\211\036\3365S\271}\211\377\022/)\341b83\240N\332U\312\254\210E\\\356\343\316\354\367>\262K]#C1\223;\300j;\220\342Vn\013J\245\024JJ6Q\226~\334\242\342\224\333\332\316\327jQ\324\245o\033<\205vIC\253=\272\243\202_\351lZ\343W\005.K\031%\245Q5\323\252t\242 (\323kH\036\245\344\324\017`\023\307J\270Y\306\335\030\274T2\220aZ\213\213\357\254$\210\224\330\313\213\202*y\204\376\306+&\025\0343WnTS\245L\246Q\316*\007\215b\021\376@\243\344\361\257B\335\300\261\014\245*\355\311\320\021|w\025Iu-\001\225\254\274\255\024\367\344C\241+\336\275\245o\352{\351\254\213\377eOQ\276m@=\275W\202\206\356\345\222%\310\323\243\352L\303k4\352\342\326\364\205\222\224\205e\360T<\271\224\315C\207\204#\314\345\266>\344R)Bj.\223\314o\273\336\311sR\371\\\236~\204\177\345m\314w\2773\256\277\226`2@\201\035%\261\253\362,\254\201\027b3\226=\355a\221\226\355\226J\331|:\261\213#7P\357\273\2158\315\351\351'\375\337\361!\177<\340\233\305\3665\006\013\344D\241$g\\\256\024\345dZ\316\252B\217\032\036H:\357\213\032\r\312!\213\031W\026\236w\363\310W\233\365\032\316\331d\243\303\023\275W\333\307\326\271\342\334\211\377<\027\007\234\365\254\337\324 \240\223\026:\212\242\242\225\212\331\242\273\201\\.\346\304\365\001\353yI\005X*\336\247\230\303.t/\252\262\227\206\304\031\331\354\245=f\260(\300B0P|d\217\272LC)\251\244d\312\233\332s\312-K\337q\321l\321\030gP\026E\255\361\321\2400[\236u\220\210\"\001\t\375\002\2160@|\017q#\245AUM\270\024,'N\250\246?*\322\331\322\236\234\327ry\000tVM\345\212{\222(\345\351nq \241\276%\000\311\335R>\211#\224T\345\344\300\373\373r\246\244\210\217\352\te\037\035\211]\212\244\301\344\023\240\376a\243\372\035\021~G\250\256\374NI\361|Q\310\352\244\002\366|\277\350\351\323\351\026\241\nn""\303Y\220\376\367m\036t\237n\360\300\373|\223\033\226\270\033!\3649<\224\362\351C%\243\226\031e\212\377=y\033\010^J*\242&\370\372\273\317\361\377\311\366\331\027\355\302\357\276\272\277\365K[Sk\260\022\377\335\367%\320\324\332Q\351\322\343\372\202\343\017TZ+\257\364\230\036w\002\275\272O\017\351\327\014\024C(\304\234\300eC6Ts\334\\q\374]\225x\255\351\222\021\257\2434[Y\251(\372m#d\214\033+\206b\306\315\373\326E\253`\267\330q{\241\261~\247X\364\337\257?\212\351\t\263\337\\\360\326\357\347\214\366\337\367+\233\372\232\321f\310N\240\253r[\277\250\027\215\213F\301\t\206q\340\356~l\334o<0cN\020\303\353A1\007\263+\3671\360\320(\232\027\315\177\360\024\216\277\263\022\303\354A\243\305\270m^\262\026-\231M7\364\225ZS\0376\307\234\273\372\254\376\332\2305Vt1~\302\\0_[\361\032\013_z\233:\302\340\320}\354\265`\254\233!'\330\253\007\215E\343\203\325l\305\032\225\244\031\003W\275\201\2270}\215\275\270\377\327\271NwX_6\002\265\350\234=k\2578\335\027*\037\215>\260\000\005\334\250\247\222\324o\032[f\2639f.\374\276\340\014\217\233\340\316\205\212\246\307Q\273|\305\t\004k\301\250\351C\345JTTbf\010\225\236\013\330\267?\354\340\357Bo\275\257\337\t\365}\271\310]o\031\315F\254\036\0302\206\260\342#k\301ZqNW\352\201A\275\214\335\256Yqk\3019]\251\007\372\364\237\214b-\026\267\373l\234\341t\255\036\350\327\347\301\333\222\271d\026\255+\325\346\352\324q\3371\006}\267\231\034\271\250\257\352\373\306\212\023\034@\241\004\016\256\211+.\232\333\326k*\211\323!\224\301\t\014\374\367\006\326\301\223\003]\326\217L\362%6Fe\362\353\013\372:tp\n\022/\010\336\010\346\005+\217\364'\206\\\273r\007z\357\262\355{c\301\307Sco\331+\344\376%\3215\002\251}\355\202\t\241kl\\tA3Nu\335\255\262+\032\023]cf\354T\327m[F\327\305A6=3\374\256\016\231SV\330\342F\221!\266\2770b(_\232\266|b\001\030\003\252\343\023\2422i\26220f\336\240\004O/{\366\324gOs\366\366g/\301\332S\035\215\335\225\267z\241\026\371\331\322(g\2576c%\355\330I-n\207\271\264W\373\223\355\207 \032\265k\274C\315?\240\377f^\261}\365`\204\267s\202CF\230b\034""\026\220\2204\257\323\336\352\342\000\320~\263\315\334\262\374\226\340\335}\275O\237\323\023F\310e\2158\327\023]\246\326tS\204\263\346\246\265j\035\330\351j\3618\344\351\177\253\271j\252\326\270\265vr\r\016\037m\240\300<\256\025\354\323\247\214\210\tM\0315^C\017\276i\346\370a\201\"\201a\343\252\351\243U\014\020`\206\215IC\254\026\254\314W\016\365\003\264\301\270[\365\025=i\\\207b\027\210A\3630\332AL:\351\271i&\254\220{\233\220>Q\273\370S\343h\277\032q\343\241y\327\242\232\016\\\346\006\rc\036\272j~8\031\343\004F\214e3`u\3321\333\323\331\005\036\371\226\341\003c\000\013\333P\327H-6o/@\020\250'\004`\376\341\210\372W\221\377lQ\375\001\r\201\2309h\371\000\320E;T\367\266\"[/\013\334\001\270\233\262g'\215\243R\007OcP\243LMo\224i\203\2152\215\343\344\232\302\016\032\265K#_\313<J\243L\303h\224i\014^\271\036\350\250\204*W\365v\240J\241\326\364\3503P\231H\373\324,@}\236\325\356>\372\334U[[\257\255o\3266\223\265d\241V8\252\035\375\343KS\323?}\213\315 \213\315/H^4o\222l6'H\022\315I\222d\363\016\311N\263F\2425\037\221\0345?l\001y\330\362\210\344Q\3133\222g-\233$\233-Y\222lK\231\244\334\362\221\344c\313?I\376\331\362\304\017\362\304/\221H\376\017$\037\374\273$\273\376\034I\316\377\211\344\223\377a+wh]%Ym]#Yk\335 \331hM\220$Z\017H\016Z\027\333x\207\266%\222\245\266\207$\017\333\326H\326\332vHv\332T\022\265M#\321\332\016I\016\333\226\333A\226\333\177%\371\265\375-\311\333\366w$\357\332\337\223\274o\317\220d\332?\222|l\277\037\000\271\037x@\362 \360\224\344i`\203d#\220'\311\007>\221|\n\034\221\034\005\026:@\026:\236\223<\357H\222$;r$\271\216<I\276\243DR\352X\350\344\310\316g$\317:7H6:7I6;\377N\362\367\3164I\272\363\220\344\260s\251\213\267\355Z&Y\356zL\362\270\353\025\311\253\256\024I\252\253@R\350*\222\024\273\016H\016\272\226\202\234\027|G\362.\230\"I\005\267I\266\203\031\222L\360\220\3440\370k7\371\322\375\226\344m\367;\222w\335\357I\336wgH2\335\032\211\326\375/\222\177u\377\322\003\362K\317}\222\373=+$+=\t\222DO\226$\333\223#\311\365\344{\034?\203\230\254\365\274\032\252\371c""\346\210\265\322\000\223B\035N\215`1\006So6'\314]\341Ya\252\037\204Cxm\316\001E\000\246V\332\326\252^\\\326SY\327/a\374\005\240\363\275\252v\374\347\317\313\265\227\033\265\215w\265w\371Z^#\213}\217\251\271\217\233\237\223<o\250\372o$\2775\347Hr\315*\211\332P\356\247$O[^\221\274jyC\362\246%E\222j\371@\362\241e\221\272\272\350\177@\362\300\377\033\311o\376\367$\357\033\312\235%\311\372\217H\216\374\277Pe\177i}I\362\262u\235d\275u\227d\2675G\222k\275O\355\274\337\366\230\344q\333K\222\227m\353$\353m\257\332\034\177\260\362\020Q\322\003\200\251\354F}\033\010\231\350E\002\214\317\020\234\024\352\201\010\034\004\372\200\302\027j\027\246L\r\241\312C\373\257\325\355c\2042gZ\344\257\374\213`\2217f\022a\332\377|\2139{\336.T\333\253\237>O\325VV\353g\233b\215\330\326\rio\323\207]\250\354\353\257\214\030!\275Kx\020\025\356\305o.[mV\302\0169'\341)\002\314\215M\307/6k%\342/U\n:<\n\217\200\335\213\225\376\312\202\333|\210\240\314\307\200\363B\245\250\367\003\254{Q\356\026!7\302]D\316\247z\304lDHN\240\303\351\350\364\334\000K\014\266k\376\321\332\350/\307\360\32113\014\257\n71a>\205k\335\252\372\253p7\223\346;;\200\250m\242\n\237\327\315\3054\343nm\0341\206\255V\3070\242\267O\237\254\r^\263\372\254\370\371\336z\340\242\276et\232W\021\276\004\207k\303?1\272t\035\342OFA\227kM\357k\357e\342w\207\010\215\327\255\021\373-\231\370y\376\363Q\355\335vm\273X+\2525U;cA3\226\374\245\247\251\373\nB\210\253\210\245'\254\035D<\301+\206f\336\3061\346\255C\033fu\311\2307\016\315\262\355\373\322\327\324\0355\016\020\\\370\330J\327;o\036ZG\325\331\352\353\343Y\352H?B\374\r\030\333\252Q\206\017\354\207\252\314\333\007\325\364\261p\371\027\310R\312\355/\260S\005\271\r\242\230~\3431\202\215}\204 *\002\"\244\034K\020G\273y`m\301y\007\031\205nA\204\275a8\331\004\375\252\023\036\360\376B\210\033\241Y\335=\\f\020\026\037\253c\374'\230?89\014\362\030y\2247\232j\020\306\265q\212P\004\214\275\207\000z\020a\326#r\035\021Um\344\246%\342\321\241ag\3642\235\3600F;#W\020\300\240>2\n=\014\205E\204\023\276\202\234'""\202h$2\214\3606\204h~\326z\347I52T\0173\034\2325\337X\333\366\212\315(+4\200\243o\231\235\326O\320j_=\320#\364\352\017\231\360\tQ\371ck\003\201\340\327K\205\365gf\213y\007\206v\236\t\034v\210\304-\364o\357\336\347U\007\021x!\217t\006\3119?s\225\372\377=\033\236AF\327\251v\325\030\323\277\236\212\014[^aQ$\007\035\342\257\017\371\231l|\264B\264R\r\371${\352\256E\327\3758H-\372'\273\253\372\327\343]\340\205\343gv\212p\0231\020\206\037\351w\014\240\014\002|k\310\2369\3669?\236V\353\237\244\205Z\362\251y\010\355j\267\236|\236\251m\276q\363c?\314\0357\006?\246\2579\327\256;\327o87n:\243\023H\277C\014\332\020\237MM;\323q\021\347\235\016\360\266\261\262\302\374\223\026\372\220\374\362<P\374T\020.\222\003\221\22542\220FZ\322\310BO'N\317\rw\223\263\315\2154\350$\027sWc\310[\363#\"\375\022l\352\276\214T\010\202\202\014`\346\362\227E\037i\n)\237\374e\270\251{\304\270\2034i\220\231\305\250\361\016\234\033\264\233m\246\324\335\223\310\3121\347\032m}\330\360\262\354;\0206\254Pd\017\300\236\001\344\210\005G\330\237O\004\375\335\314D\213\310\270g\215\r\363\2015\006uBJ0\241\247D\366>m\335\004\030\372\210\322s\230\251\031s\220u\301\035!\003\311ch\330\202\212\307E\206\333\217\014z\r\247\031\247\n\325\203\027\305\214\273\346-\0342l\255\333\221\352@U\256\026\\s)\030-\330r\r\247\270\210\314%f\335\265EJB_\024\303\rc\230\325f\311\300b\031y\032\226Jz{\265\002'C\310tV\255\002}\003\362]S$\006w\214\t\367h\356IU\230\324\222\241b\2359\027\374\006\3645$\006\375\270\025e\036s\3167\320\316\334\027\223!$\302pX\304\331\336JI\177\010\337\325\313\023\270;\3642q\302\325i\224\036\342\013\177Q]q\"W\341F#\314\201\207/\033;(\0173\213\361\231\243\000G\277\310CNF\324\303\004i\0360N\331\365\353\223\220\002\034o\275\3672_ML\276\022\300r\357\001\330\343\300\200Z\204Y02\201\210\213\037\r\002\303\215\325b\267\3547\260b E\000W\271\211\315\232\3551\033[\220?s\334p\034\031\327\254\365[\265\017\300\277\n\021DnX\177\261W\301\331\010\325ph\322\\\343\352,\243g\326Z\255\375\274x<v\274 \232\352\341\231\332\314\337\230lb/sH""\250\010\266\352\002Z\210s\220\201>\026\226\315 \237P\340\221\022\325P=\022ER\213\030\003\2561\302\253\026\234\221F\356J\314\034\211\302iPe\226=\316\240\241\033\0368z\025\223\246\355I\373\3508~\274P\037\231@\244\320\216\314\254\037\300:\002\3331\357Y4\361\241+\265\313\314\331GF\235Q\236\276\223J\347\214\220\261\021\030&d\336n\025`#\274\000|\353\246\365\026\227\rc~\275\367\022\234I\001\327\355%\246\nVS\244\267\214v\0341<\014!\273\354\357l\032\210\270\n\317\363\307q>\"\222\217\030\022\345C\330\312\t\211\325G\256[7\250\363\316H\334\276$4a\204\261\203\017\361\r\256\025\200\237\246\0315\213\230a\204\341\302,b\201\221\253\202=s\020W\253\275\016\220\035\247h\352\300\356C0&\344D\341\352\235(\360\275\036s#\214\223\006g\204%\260\023\236\305\272-\036\240p\202\030\216<4Ei\263\334\3264\024u\325\313\211\\\023\226\taM\tSC\313\025\343\010a\3412\256\203\3017ic\234<\r\276\220m~\373a5^%\230\014\215\360\346\364&\321k\326\000\002\266\260\275V\365A\272Q\361\312\201\206>\373\226x\327\n\035\307x\351\r\361\214\210\031\356\326\3219\373\016n\275T- \312\212\316\332\261zc\261s\263\353gwh,\226\266?q\345\037/\030\361^%\235\257\005\367v\017`\003\313\\\212\367\030\245\247\304\321p\315\321\030\024S6\217\3548\272[\252\363\\\212b\372nc\253\260\014QX\255M\335\261\213b9\250\334}\253\257v\343^u\261JA\324\306\335\307\313\377}\035qE90\364\307\3466\006\260\216!\000,P\250\327\350 \234\310e\204`!\006\240\340,\265l\303\025j\314}lE\355\364\020JD\206\245\365\201\3031'\022\343\263\263\371\312]\223>t\021\311X\237u\207,\277\n\207\t\000\246\215\213\315\004\213/\033\257\314I\361\016A\025\210\210\027\037{\304\205\233IDK\320\351:Ds\0006\027(\243\2429\014\345\025\267\357\202\270\226\254\222\275\004#\035\305\232u\\\3579`\376\252\315|\002JH\244\234\204\362N0<\251\203q\220s]H\205\007\274C\264#r\244\254\373v\010\225Ep\262\343x\3603$A\314Y\305\206\0237\241\020\223\210\350\232\253\261\372\004\255\312\353\332\207g\272$\3448\001u\202>\372\234\211I\306\017\323\356C\357\3645\\\356\332\317\340_\007\340\223\260<y\243v\375\036x7""\375\027hn\377\361\323\317\205\372D\\\354+\314\246>1%\"Crr\226\312\214%\352#S\304\034+b\017V\351\213G\307kc\363\266x0\212M[-\274\014\270\010h}\3107]\004\001\003\343\342\345<4L\237\000\021\365\021\307\301\000o\204\323;\364\375\016\021\025\3025l\010q\205\254)\002\247\275\tm\373q\007C2\276\2703\322\024/\200af\n|:\364\nS\002~\302\214`\330R\377v \373\377l?\255\236\236\331\030L\230\375\210S\306\371\262^\340\333\334\227i\206\"\214\251\202D\340\024\000\336g\211\234\255\340\246\r2a\370\252\331q\222\317\204]?\277l\005\240\324\\Y\304lID\001+V\322\2136\302\334\206\035k|G\255\303S\002_]\306<\0211\304\331*\325j\030\336\203!\036\334\365\210p\272$\262\3679\337\323\030@]\2374\237\300VT\027ah{L\362\340\242\201\236\236\361\271x\n\270%N\337\306\375N\326\256G\204\304O\2657V\246\267\2424?B\231\306\341\236\377q\274x,\323\324\227\214\002\362\021\327W\010\343pA\000\006\300\337\002^\010\365G\245C\310\311+\374\0075\235\2526efa\020\333\004\2341\301\270\024`c\035[\304\240\236\253v\231@'\002\000\200\204L\300Z\024\326\315\313=\256\n\010\232\242!p\2511s\300T\204\343h\246\013\277\t\243-\330A\032\217\273\321\236\207*#\356=\366\205|b\320\313\307\200\2012\314\021\016z\t\206\320\352v8\261)\240\3020&!|\241\005\210'X.u\rC^\tk\304%\234\221\033\270\271l}\"6\272\033m#u\361\321\342\025\353\036\204\331\3334\032\025\031\3600\262W\255\032\247]ML\232oq\272f!#\2469\273\237\373>\307\353\270\337sa\327\260\322O\"J\232\230\001W;\253W\217}\"k\270\003\205\233\340S4\337\364\t\003\334\234\267\3703M\236`0\371\363\327\t\327\255\353T\001\347\346-X\272\3537:>\207\352\\\005#c7\204\276\2450\023\23029g3\326\203\377qa\013\307\234B\222.\342e\027\250\326\250\030\3040g\342\272\2071\"\217a*C<m\201\247\237\020\016\333\231\276\005\265\007\360W'\253\205o\202\373\260\376\234\t\026\203\373\220\336*\036_\030\266\037\210\237\030\350\363\021\314\"\217e\202*\202e'\314\372-\304\251\341\332\344=\372\326:\003\316\2338H\237=g\313\"\255\252\017F\234\341+\314\363\274\337#H\036\353+^~\304\337;\336A\357\304\017Q\232~\327\215\355\177\367\271\217Jo""\364\204\373\323\002l\234\207\275\014\350\3326\221l\rp\001|`-\247^\215\370k\334\3027/G\263\2255\275MO\303\017\\\207\372n\330\017\204\243\014\362\225*\330\355\246\236\263\225\327z\334\375\315\201\234\3307\336R\0039f\022\310\323\n\203f&\342:V\177ge\262R\320\333\301/\024o\35220\367\344\004s\310~\316\356\337\247_\305\002+\302R\003\374]t\016\351\300\2648\246\267\274\337x$T\233?\342\364\206\010d\"\031\013\343D\336\010\304\227u\361\373\352:\321Vd\310\377\005c\202\215\321";
+    PyObject *data = __Pyx_DecompressString(cstring, 5765, 1);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #else /* compression: none (10939 bytes) */
-const char* const bytes = ";Note that Cython is deliberately stricter than PEP-484 and rejects subclasses of builtin types. If you need to pass subclasses then set the 'annotation_typing' directive to False..?add_notecamera.pyxdisableenablegcisenablednumpy._core.multiarray failed to importnumpy._core.umath failed to importpg.Surfaceself._args is not Noneself._ceiling is not None or self._floor is not None or self._player is not None or self._walls_and_entities is not None or self._weapon is not None or self._weapon_pos is not None or self._yaw is not None<stringsource>CameraCamera.__reduce_cython__Camera.__setstate_cython__Camera._render_weaponCamera.render_DepthBufferObject_DepthBufferObject.__reduce_cython___DepthBufferObject.__setstate_cython__FloorNonePlayerPoint__Pyx_CFunc_2711fe__6camera_6Camera_void__lParenCamera__comma_int___etc_to_py_4self_5width_6height_7horizon.<locals>.wrap__Pyx_CFunc_2711fe__6camera_6Camera_void__lParenCamera__comma_int___etc_to_py_4self_5width_6height_7horizon__Pyx_PyDict_NextRef__Pyx_carray_from_py_float__Pyx_carray_to_py_float__Pyx_carray_to_py_int__Pyx_carray_to_tuple_float__Pyx_carray_to_tuple_intSRCALPHASelfSkySurfaceThread_amountappendargs_args_arr_arrayastypeasyncio.coroutinesaxisbisectblitbottom_calculate_linecalculationcamera_capacitycapacity_ceiling_ceiling_elevationcfunc.to_py__class_getitem__climb_speed_climb_speedcline_in_traceback_darken_linedarkness_darknessdegrees__del__depth_depth__dict___dictdistdistance_todrawelevation_endendendpointenumerateffillfloor_floorfloor_and_ceilingfov_fov__func__gen_tile_key_generate_arrayget__get__get_at__getstate___glowingheadbob_frequency_headbob_frequency_headbob_stengthheadbob_strength_headbob_strengthheight_heighthorizon_horizonhsl__init__insort_leftint_is_coroutineis_rect_is_rectitemsjoinleft_raylength_levellimit1limit2_limit_cmplimits_limits_add_limits_destroy_limits_full_limits_new_limits_resetlinelinspace__lt____main__make_surface_managermax_line_height_max_line_heightmin_entity_depth_min_entity_depthminimu""m__module__modules.entitiesmodules.levelmult__name____new__npnumnumpyoobjoffsetsoldpgplayer_playerpop_pospospygamepygame.typing__pyx_checksum__pyx_result__pyx_state__pyx_type__pyx_unpickle_Camera__pyx_unpickle_Camera__set_state__pyx_unpickle__DepthBufferObject__pyx_unpickle__DepthBufferObject__set_state__pyx_vtable____qualname__radiansrect__reduce____reduce_cython____reduce_ex__rel_depthrender_render_elevation_render_floor_and_ceiling_render_height_render_vector3_render_walls_and_entities_render_weapon_render_weapon_pos_render_widthreturnright_rayrotate_y_ip_scalescalescrollself_semiplanesemiradianssemitile__set__set_at__set_name__setdefault_sets__setstate____setstate_cython___settings_startstartstatesubsurfacesurfsurfarraytarget__test__texture_texturesthreadingtile_size_tile_size_tilemaptoptransform_transparencytypinguint8updateuse_setstatevvaluevaluesvector3vstackwall_render_distance_wall_render_distance_walls_walls_and_entitieswalls_and_entities_weaponweapon_pos_weapon_pos_weapon_scale_weapon_surfweapon_surfweaponbob_frequency_weaponbob_frequency_weaponbob_stengthweaponbob_strength_weaponbob_strengthwidth_widthwrapxx_pixelsy_yaw_yaw_magnitude_yaw_value\200\001\330\0040\260\001\260\026\260q\200\001\340\004\005\360\006\000\005\014\2101\200\001\360\010\000\005\t\210\013\2201\220A\330\004\010\210\005\210U\220!\2201\330\010\020\220\001\220\021\220)\2301\330\010\021\220\021\220!\330\010\036\230a\230s\240#\240Q\330\004\013\2101\320\000\033\2301\340\004\013\2102\210Q\210e\2206\230\021\230#\230Q\230e\2401\240E\250\026\250q\260\003\2601\260A\200\001\360\010\000\005\t\210\n\220!\2201\330\004\010\210\005\210U\220!\2201\330\010\020\220\001\220\021\220)\2301\330\010\021\220\021\220!\330\010\035\230Q\230c\240\023\240A\330\004\013\2101\320\000\023\2201\330\004\007\200v\210X\220S\230\006\230a\330\010\013\2106\220\026\220r\230\026\230q\330\014\024\220A\330\r\023\2206\230\023\230F\240!\330\014\023\2201\340\014\023\2201\330\004\013\2101\210E\220\026\220x\230r\240\026\240}\260A\200""\001\330\004\n\210!\2106\220\027\230\003\2306\240\033\250B\250a\330\004\n\210+\220Q\320\000\022\220!\330\004\013\2108\2202\220V\2302\230Q\220A\200\001\330\004$\240A\240V\2501\320\004$\240A\360\020\000\t\024\2201\220E\230\023\230A\230T\240\021\330\014\020\220\014\230B\230j\250\002\250!\330\014\020\220\014\230B\230d\240!\360\006\000\t\024\2201\220E\230\033\240A\240S\250\002\250!\360\010\000\t\024\2201\220E\230\023\230A\330\r\024\220D\230\010\320 3\2602\260Q\330\r\017\210z\230\022\2301\330\r\017\210q\330\014\016\210d\220,\230b\240\002\240\"\240A\200A\330\032#\2401\330\010\017\210t\2201\200A\330\036\037\330\010\014\320\014 \240\001\200A\330\037 \330\010\014\320\014!\240\021\200A\330\016\017\360\006\000\023\024\330\023\024\330\017\020\340\022\023\330\021\022\360\026\000\t\024\2205\230\002\230!\340\010\031\230\031\240\"\240H\250A\250Q\330\010\031\230\031\240\"\240H\250A\250Q\340\010\027\220y\240\002\240)\2501\250A\330\010\027\220y\240\002\240)\2501\250A\340\010\022\220-\230r\320!1\260\022\2601\330\010\022\220-\230r\320!1\260\022\2601\340\010\023\2204\220x\230u\240C\240r\250\037\270\002\270'\300\022\3001\330\010\023\2204\220x\230u\240C\240r\250\037\270\002\270'\300\022\3001\360\006\000\t\026\220R\220v\230Q\330\014\025\220R\220u\230A\230S\240\002\240\"\240B\240g\250V\2601\260A\330\t\020\220\001\220\021\330\010\025\220R\220v\230Q\330\014\025\220R\220u\230A\230S\240\002\240\"\240B\240g\250V\2601\260A\330\t\020\220\001\220\021\340\010\017\210w\220a\220|\2401\200A\330!\"\330\010\020\220\004\220A\220T\230\021\230'\240\026\240q\330\010\014\320\014#\2401\330\010\014\210H\220J\230a\320\0377\260q\200A\330\037 \330\010\020\220\004\220A\220T\230\021\230'\240\026\240q\330\010\014\320\014!\240\021\330\010\014\210H\220J\230a\320\0375\260Q\200A\330\032\033\330\010\014\320\014\034\230A\330\010\014\210H\220J\230a\320\0370\260\001\200A\330\"#\330\010\014\320\014$\240A\330\010\014\210H\220J\230a\320\0378\270\001\200A\330 !\330\010\014\320\014\"\240!\330\010\014\210H\220J\230a\320\0376\260a""\200A\330\026\027\330\010\014\210L\230\004\230A\230T\240\021\240'\250\024\250Q\200A\330\030\031\330\010\014\210N\230!\200A\330\033(\250\001\330\010\014\320\014\035\230Q\200A\330#$\330\010\014\320\014%\240Q\200A\330\025\"\240+\250Q\330\010\014\210H\220J\230a\320\0376\260a\330\010\014\210H\220J\230a\320\0375\260Q\330\010\014\210H\220J\230a\320\0378\270\001\330\010\014\210H\220J\230a\320\0377\260q\330\010\014\210H\220J\230a\320\0370\260\001\330\010\014\210K\220q\330\010\r\210Z\220q\320\030/\250t\2601\330\010\r\210Z\220q\320\030.\250d\260!\330\010\r\210Z\220q\320\0301\260\024\260Q\330\010\r\210Z\220q\320\0300\260\004\260A\330\010\r\210Z\220q\320\030)\250\024\250Q\320\004\025\220\\\240\037\260\001\340\014\030\230\004\230A\330\014\031\230\024\230Q\330\014\032\230#\230Q\230d\240*\250B\250a\340\010\014\210H\220D\230\010\240\006\240b\250\004\250A\330\010\014\210E\220\022\2203\220c\230\021\330\010\014\210L\230\001\330\010\014\210J\220a\360\006\000\t\r\320\014#\2402\240X\250R\250w\260i\270r\300\021\330\010\014\320\014 \240\005\240R\240s\250#\250S\260\001\330\010\014\210K\220q\360\006\000\t\035\230F\240!\330\014\023\2204\220q\330\014\022\220'\230\030\240\021\340\010\035\230V\2401\330\014\023\2204\220q\330\014\022\220'\230\030\240\021\360\006\000\t\032\230\026\230q\330\010\032\230&\240\001\330\010\031\230\025\230a\330\010\032\230%\230q\360\006\000\t\014\2104\210x\220w\230a\330\014\020\220\005\220Q\220d\230*\240C\240q\330\010\013\2104\210z\230\027\240\001\330\014\020\220\005\220Q\220d\230,\240c\250\021\330\010\014\210E\220\021\220$\320\026-\250S\260\001\330\010\014\210O\2301\230G\2408\2501\200A\330\025\036\230a\330\010\017\210t\2201\200A\330\031&\240j\260\001\330\010\014\210O\2301\330\010\034\230D\240\010\250\n\260!\2601\330\010\014\210H\220A\330\014\023\2205\230\001\230\021\330\014\016\210g\220T\230\030\320!4\260A\260Q\330\014\016\210c\220\021\220!\330\014\023\2205\230\001\230\021\330\014\016\210g\220T\230\030\320!4\260A\260Q\330\014\016\210c\220\021\220!\340\010\014\210H\220J""\230a\320\037/\250q\200A\330\022\023\330\010!\240\027\250\001\250\026\250r\260\021\340\010\014\210H\220A\330\010\014\320\014\036\230b\240\002\240#\240Q\240a\200A\330\037 \330\010\017\210t\2201\200A\330#$\330\010\017\210t\2201\200A\330\036\037\330\010\017\210t\2201\200A\330 !\330\010\017\210t\2201\200A\330!\"\330\010\017\210t\2201\200A\330\"#\330\010\017\210t\2201\200A\330\031\"\240!\330\010\017\210t\2201\200A\330\033\034\330\010\017\210t\2201\200A\330\022\023\330\010\017\210t\2201\200A\330\026\027\330\010\017\210t\2201\200A\330\030\031\330\010\017\210t\2201\200A\340\010\t\210\021\210&\220\007\220x\230q\320\000H\310\001\330\004\020\220\014\230K\240q\250\004\250L\3208H\310\013\320ST\320TX\320Xd\320dq\320q|\320|}\360\000\000~\001B\002\360\000\000B\002N\002\360\000\000N\002X\002\360\000\000X\002c\002\360\000\000c\002d\002\360\000\000d\002h\002\360\000\000h\002t\002\360\000\000t\002|\002\360\000\000|\002G\003\360\000\000G\003H\003\360\000\000H\003L\003\360\000\000L\003X\003\360\000\000X\003n\003\360\000\000n\003y\003\360\000\000y\003z\003\360\000\000z\003~\003\360\000\000~\003J\004\360\000\000J\004_\004\360\000\000_\004j\004\360\000\000j\004k\004\360\000\000k\004o\004\360\000\000o\004{\004\360\000\000{\004G\005\360\000\000G\005R\005\360\000\000R\005S\005\360\000\000S\005W\005\360\000\000W\005c\005\360\000\000c\005w\005\360\000\000w\005B\006\360\000\000B\006C\006\360\000\000C\006G\006\360\000\000G\006S\006\360\000\000S\006h\006\360\000\000h\006s\006\360\000\000s\006t\006\360\000\000t\006x\006\360\000\000x\006D\007\360\000\000D\007O\007\360\000\000O\007Z\007\360\000\000Z\007[\007\360\000\000[\007`\007\360\000\000`\007l\007\360\000\000l\007z\007\360\000\000z\007E\010\360\000\000E\010F\010\360\000\000F\010K\010\360\000\000K\010W\010\360\000\000W\010p\010\360\000\000p\010{\010\360\000\000{\010|\010\360\000\000|\010A\t\360\000\000A\tM\t\360\000\000M\td\t\360\000\000d\to\t\360\000\000o\tp\t\360\000\000p\tu\t\360\000\000u\tA\n\360\000\000A\nL\n\360\000\000L\nW\n\360\000\000W""\nX\n\360\000\000X\n]\n\360\000\000]\ni\n\360\000\000i\nx\n\360\000\000x\nC\013\360\000\000C\013D\013\360\000\000D\013I\013\360\000\000I\013U\013\360\000\000U\013f\013\360\000\000f\013q\013\360\000\000q\013r\013\360\000\000r\013w\013\360\000\000w\013C\014\360\000\000C\014[\014\360\000\000[\014f\014\360\000\000f\014g\014\360\000\000g\014l\014\360\000\000l\014x\014\360\000\000x\014O\r\360\000\000O\rZ\r\360\000\000Z\r[\r\360\000\000[\r`\r\360\000\000`\rl\r\360\000\000l\rt\r\360\000\000t\r\177\r\360\000\000\177\r@\016\360\000\000@\016E\016\360\000\000E\016Q\016\360\000\000Q\016c\016\360\000\000c\016n\016\360\000\000n\016o\016\360\000\000o\016p\016\330\004\035\230Q\230n\250M\270\021\320\004!\240\034\250Q\360\006\000\t\014\2104\210q\340\014\025\220Q\220d\230\"\230D\240\002\240$\240k\260\022\2601\330\014\016\210j\230\004\230A\230V\2403\240c\250\024\250Q\250i\260t\2701\200\001\360\010\000\005\016\210T\220\033\230D\240\017\250t\260<\270t\3009\310D\320PW\320W[\320[p\320pt\360\000\000u\001I\002\360\000\000I\002M\002\360\000\000M\002X\002\360\000\000X\002\\\002\360\000\000\\\002o\002\360\000\000o\002s\002\360\000\000s\002G\003\360\000\000G\003K\003\360\000\000K\003U\003\360\000\000U\003Y\003\360\000\000Y\003f\003\360\000\000f\003j\003\360\000\000j\003B\004\360\000\000B\004F\004\360\000\000F\004\\\004\360\000\000\\\004`\004\360\000\000`\004j\004\360\000\000j\004n\004\360\000\000n\004|\004\360\000\000|\004@\005\360\000\000@\005P\005\360\000\000P\005T\005\360\000\000T\005k\005\360\000\000k\005o\005\360\000\000o\005E\006\360\000\000E\006I\006\360\000\000I\006P\006\360\000\000P\006T\006\360\000\000T\006U\006\330\004\014\210G\2201\220F\230,\240a\330\004\007\200v\210W\220E\230\024\230Q\330\010\022\220!\330\010\027\220q\340\010\030\230\001\330\004\007\200q\330\010\017\320\017'\240t\2501\250G\260;\270g\300Q\340\010\017\320\017'\240t\2501\250G\260;\270a\200\001\360\010\000\005\016\210T\220\030\230\024\230Y\240d\250!\330\004\014\210G\2201\220F\230,\240a\330\004\007\200v\210W\220E\230\024""\230Q\330\010\022\220!\330\010\027\220q\340\010\030\230\001\330\004\007\200q\330\010\017\320\0173\2604\260q\270\007\270{\310'\320QR\340\010\017\320\0173\2604\260q\270\007\270{\310!\200\001\360\010\000\005\t\210\005\210U\220!\2206\230\021\330\010\017\210v\220U\230!\2301\330\010\013\2104\210x\220s\230&\240\004\240D\250\006\250c\260\021\330\014\023\2201\330\004\013\2101\200\001\330WX\330\004\030\230\001\330\004\005\330\010\014\210C\210q\220\001\330\014\027\220q\340\004\007\200r\210\023\210A\330\010\014\210C\210x\220y\240\001\240\021\330\014\017\210r\220\023\220A\330\020\021\330\014\r\210Q\210e\2201\340\014\021\220\021\330\014\017\210r\220\023\220A\330\020\027\220q\340\004\020\220\001\330\010\t\330\t\n\330\014\016\210c\220\021\330\t\n\330\010\020\220\001\320\004\035\320\035@\300\001\340\014!\240\024\240X\250Q\330\014\r\330\020\027\220t\2308\320#6\260a\260s\270\"\270A\330\020\022\220%\220{\240'\250\022\2501\330\020\027\220t\2308\320#6\260a\260s\270\"\270A\340\010\014\210E\220\021\220-\230q\220a\320\000`\320`a\330\004\020\220\t\230\033\240A\240T\250\034\260Z\270{\310!\3104\310|\320[g\320gr\320rs\320st\330\004\035\230Q\230n\250M\270\021\320\004.\250a\360\016\000\r\037\230d\240&\250\002\250$\250h\260a\330\014\037\230t\2406\250\022\2504\250x\260q\340\014\033\2304\230x\240y\260\001\360\022\000\r \230w\240b\250\001\340\014\033\2301\230G\2404\240x\250|\2702\270V\3002\300Q\340\010\023\2202\220W\230A\230R\230y\250\001\250\023\250G\2604\260w\270i\300q\360\006\000\t\017\210e\2201\330\010\013\210:\220Q\220e\2301\340\014\031\230\023\230I\240R\240v\250R\250s\260!\330\014\024\220C\220y\240\007\240w\250b\260\001\330\014\017\210w\220b\230\001\330\020\024\220J\230c\240\027\250\001\330\024\025\330\024\025\330\024\025\330\021\034\230A\230Q\330\r\016\340\014\031\230\027\240\002\240!\340\014\017\210{\230\"\230A\330\020\032\230\"\230I\240Q\330\024\025\330\024\025\330\024\030\230\001\330\024\035\230Q\360\006\000\021\030\220t\230<\240r\250\027\260\004\260H\270A\330\020\030\230\004\320\034,\250A""\330\032\033\330\031\032\330\035\036\330\036\037\330\032\035\230Q\330\034\037\230q\330\035\036\330\034\035\360\010\000\021\024\2204\220q\330\024\037\230r\240\030\250\021\330\030\032\230'\240\021\240)\2502\250[\270\002\270$\270a\330\030\031\340\024\035\230V\2402\240Y\250g\260Q\260a\360\006\000\021\025\220J\230b\240\n\250-\260q\270\001\340\010\016\210e\2201\340\010\013\210:\220Q\220e\2301\340\014\031\230\023\230I\240R\240v\250R\250s\260!\330\014\024\220C\220{\240\"\240I\250W\260A\330\014\017\210{\230\"\230A\330\020\024\220L\240\003\2407\250!\330\024\025\330\024\025\330\024\025\330\021\034\230A\230Q\330\r\016\330\014\017\210x\220r\230\021\330\020\032\230\"\230I\240Q\330\024\025\330\024\025\330\024\030\230\001\330\024\035\230Q\360\006\000\021\022\330\024\030\230\001\330\024\027\220w\230e\2401\330\027\031\230\027\240\004\240H\250A\340\020\030\230\004\320\034,\250A\330\032\033\330\031\032\330\035\036\330\036\037\330\032\035\230Q\330\034\037\230q\330\035\036\330\034\035\360\010\000\021\024\2204\220q\330\024\037\230r\240\030\250\021\330\030\032\230'\240\021\240)\2502\250[\270\002\270$\270a\330\030\031\340\024\035\230V\2402\240Y\250g\260Q\260a\360\006\000\021\025\220L\240\002\240*\250M\270\021\270!\200\001\330\004\016\210a\210v\220Q\200\001\330\004!\240\021\330\010\t\330\010\t\330\010\022\220,\230a\230z\250\021\340\004\007\200t\2106\220\021\330\010\t\340\004\013\2101\200\001\340\004\037\230q\320 0\260\013\270;\300k\320QR\330\004\023\2206\230\030\240\021\240!\330\004\007\200|\2207\230!\330\010(\250\001\250\031\260.\300\001\330\004\013\2101\200\001\340\004\037\230q\320 0\260\013\270;\300k\320QR\330\004\023\320\023%\240X\250Q\250a\330\004\007\200|\2207\230!\330\0104\260A\3205J\310.\320XY\330\004\013\2101\320\004\027\220q\360\010\000\032\033\330()\330)*\330*+\330+,\330\035$\240E\250\021\330#$\330 !\330'(\330(1\260\021\340\010\014\320\014\036\230b\240\002\240#\240Q\240g\250Q\250e\2602\260Q\340\010\014\210G\2204\220q\230\004\230A\230V\2401\330\010\014\210L\230\001\330\010\014\210K""\220q\330\010\014\210N\230!\330\010\014\320\014%\240Q\330\010\014\320\014\035\230Q\330\010\014\320\014 \240\001\330\010\014\320\014!\240\021\330\010\014\210M\230\021\340\010\014\320\014 \240\001\330\010\014\320\014!\240\021\330\010\014\320\014\"\240!\330\010\014\320\014#\2401\330\010\014\210N\230!\330\010\014\210O\2301\320\004/\250q\360\014\000\r\036\230T\240\030\250\021\360\006\000\r\037\230a\360B\001\000\r\037\230f\240B\240a\360\032\000\r\034\2307\240'\250\027\260\001\340\014\035\230[\250\001\250\027\260\002\260!\360\010\000\r%\240A\360\006\000\r)\250\001\340\014\032\230!\360\010\000\t\024\2207\230'\240\027\250\001\360\006\000\t\r\210E\220\025\220a\220q\330\014\031\230\027\240\001\240\021\360\006\000\r\026\220R\220r\230\022\2302\230W\240F\250\"\250A\330\014\022\220$\220f\230B\230d\240(\250,\260b\270\001\330\014\023\2203\220a\220t\2303\230a\230q\330\014\022\220$\220a\220s\230!\2303\230b\240\003\2401\240C\240r\250\023\250A\250S\260\002\260#\260Q\260a\340\014\026\220a\220t\2308\2405\250\001\250\024\250T\260\030\270\025\270a\270q\330\014\024\220C\220q\230\003\2302\230S\240\001\240\026\240s\250!\2508\2601\330\014\023\2201\220F\230!\2307\240!\2405\250\006\250a\250w\260a\260q\330\014\026\220d\230!\2303\230b\240\005\240T\250\021\250#\250R\250q\330\014\027\220|\2401\240A\330\014\023\2207\230$\230a\230q\330\014\023\2203\220a\220s\230\"\230C\230s\240!\2403\240b\250\001\340\014\025\220S\230\001\230\023\230B\230b\240\002\240!\330\014\025\220S\230\001\230\023\230B\230b\240\002\240!\330\014\030\230\001\330\014\023\2201\340\014\031\230\021\230!\2301\360\016\000\r\020\210u\220G\2301\330\020\026\220d\230$\230a\230q\330\020\023\2204\220s\230!\330\024\027\220t\2308\320#6\260b\270\004\270A\270Q\330\030&\240a\330\030$\240A\330\032\036\230h\240a\330\032\034\230D\240\001\240\035\250b\260\004\260A\260Q\330\030&\240a\330\030$\240A\340\024\033\2304\230s\240!\2401\360\010\000\r\023\220%\220r\230\024\230Q\340\020\036\230d\240!\2401\360\006\000\021\024\220<\230t\2401\330\024\030\320\030(\250""\001\330\030\031\330\030\034\230A\230Q\330\030\034\230A\230Q\330\030\031\340\024!\320!5\260Y\270a\330\024\030\230\010\240\002\240,\250b\260\002\260\"\260A\340\024\027\220|\2403\240a\330\030#\2408\2502\250\\\270\022\2702\270R\270q\330\030+\250:\260R\260q\330\030#\2401\330\031%\240S\250\001\330\030#\2401\330\030+\2502\250R\320/B\300\"\300A\330\030#\2401\340\024.\320.?\270r\300\021\340\024!\240\031\250\"\250A\330\024\030\230\013\2402\240Q\330\030\034\230B\230b\240\001\330\030\034\230D\240\014\250A\250Q\250h\260c\270\021\340\030 \240\006\240d\250!\2501\330\030\033\2304\230q\330\034#\2402\240X\250R\250s\260!\330\034 \240\007\240r\250\023\250D\260\004\260A\260Q\330\034 \240\r\250Q\330 &\240d\250(\260%\260|\3001\300A\340\034$\240D\250\007\250r\260\023\260A\330\034\"\240!\240<\250q\360\010\000\031\037\320\0360\260\001\330\034\035\330\035%\240S\250\n\260#\260Q\330\034$\240A\340\030%\240Q\240b\250\007\250q\260\001\340\030#\2401\240A\240X\250Z\260q\330\024\"\240!\340\020\033\230<\240q\250\001\330\020\027\220w\230d\240!\2401\330\020\023\2205\230\007\230q\330\024\032\230$\230d\240!\2401\360\n\000\025\030\220t\2303\230a\330\030\033\2301\330\034 \320 0\260\001\330 !\330 $\240A\240Q\330 $\240A\240Q\330 !\340\034*\250+\260Q\260a\330\0341\260\033\270A\270Q\330\034%\240[\260\001\260\021\330\034 \240\010\250\002\250,\260b\270\002\270\"\270A\330\034)\250\022\2502\250Q\340\034&\240d\250!\2503\250b\260\005\260T\270\021\270#\270R\270q\340\034\037\230x\240r\250\021\330 .\250a\330 ,\250A\340!)\250\022\2501\330 .\250a\330 ,\250A\330\034.\250a\330\034#\2407\250!\2506\260\022\2601\340\034*\250!\360\n\000\031'\240a\330\030*\250!\360\006\000\031 \230s\240!\2401\330\030)\250\023\250A\250Q\330\030'\240s\250!\2501\330\030\037\230|\2501\250D\260\001\330\030*\250,\260a\260q\360\n\000\031(\240q\250\007\250q\260\004\260G\2701\270A\360\006\000\031\034\2301\330\034\037\230q\330 )\250\025\250c\260\024\260S\270\001\270\021\340 )\250\024\250Q\250c\260\022\2605\270\002\270'\300\021\300!\330\034%\240W\250B""\250a\330\034\037\230s\240!\2401\330 3\2607\270\"\270C\270q\300\001\340 2\260!\340\034\037\230q\330 )\250\024\250Q\250c\260\022\2605\270\002\270'\300\021\300!\340 )\250\025\250c\260\024\260S\270\001\270\021\330\034%\240W\250B\250i\260{\300!\330\034\037\230s\240!\2401\330 3\2607\270\"\270C\270q\300\001\340 2\260!\340\030$\240A\240V\2501\330\030$\240A\240V\2501\330\030\037\230|\2501\250F\260\"\260D\270\001\270\021\360\006\000\031\035\320\034,\250B\250a\360\n\000\035!\240\006\240a\240|\2601\260D\270\003\2704\270q\300\001\330\034 \240\006\240a\240|\2601\260D\270\003\2704\270q\300\001\330\034 \240\005\240S\250\001\330\034 \240\005\240R\320'7\260r\270\021\360\006\000\035%\240E\250\022\320+<\270B\270a\330\034#\320#3\2602\260Q\330\034 \320 0\260\001\330 !\330 $\240A\240Q\330 $\240A\240Q\330 !\340\034*\250+\260Q\260a\330\0341\260\033\270A\270Q\330\034%\240[\260\001\260\021\330\034 \240\010\250\002\250,\260b\270\002\270\"\270A\330\034)\250\022\2502\250Q\340\034*\250!\360\006\000\025\031\230\013\2402\240Q\330\030\034\230B\230b\240\001\330\030\034\230D\240\014\250A\250Q\250h\260c\270\021\340\030\"\240(\250!\2504\250q\260\001\330\030)\250\027\260\001\330\030\036\230c\240\021\240&\250\001\250\025\250b\260\005\260W\270A\360\006\000\031!\320 3\2602\260W\270A\330\030\036\230c\240\021\240&\250\001\250\024\250Q\250a\250r\260\022\2607\270!\330\030!\240\023\240A\240U\250!\2504\250q\330\035$\240B\240c\250\022\2507\260!\340\030&\240g\250R\250q\340\030 \240\001\330\030)\250\021\360\006\000\031\036\230U\240%\240q\250\004\250B\250a\330\030-\250S\260\001\260\034\270R\270q\330\030%\240R\240r\250\021\340\030\037\230w\240a\240q\330\030\037\230r\240\032\2506\260\021\330\034 \240\013\2501\250C\250u\260C\260q\330\035 \240\001\340\030\034\230M\250\021\250&\260\001\360\010\000\031\034\2304\230s\240%\240s\250$\250g\260Q\340\034%\240V\2501\340\034 \240\005\240U\250!\2507\260\"\260A\330 &\240f\250E\260\021\260\"\260B\260b\270\t\300\027\310\001\330 #\2402\240R\240q\330$,\250F\260%\260q\270\002\270!\340$,""\250A\340 #\2402\240R\240v\250T\260\033\270B\270a\330$2\260!\2605\270\001\330$%\330()\330(1\260\022\2601\330()\360\006\000)/\250b\260\t\270\022\2701\360\006\000%+\320*<\270A\330(:\270'\300\023\300K\310q\340$1\260\021\260\"\260G\2701\270A\340$'\240v\250R\250r\260\022\2602\260S\270\001\330()\340\034'\240q\250\001\250\030\260\027\270\001\360\006\000\035#\320\"4\260A\330 !\330!(\250\003\2501\340\034)\250\021\250\"\250G\2601\260A\360\014\000\025#\240!\360\006\000\021\032\230\024\230Q\230c\240\022\2403\240a\240s\250\"\250G\2601\260A\330\020\031\230\024\230Q\230c\240\022\2403\240a\240s\250\"\250G\2601\260A\340\020\030\230\004\230A\230W\240B\240c\250\021\250'\260\023\260A\260X\270Q\330\020\030\230\004\230A\230W\240B\240c\250\021\250'\260\023\260A\260X\270Q\330\020\023\2206\230\022\2301\330\024\030\230\001\230\026\230q\330\024\033\2301\230F\240!\330\024\033\2301\230F\240'\250\022\2501\330\024!\240\021\330\024\033\2301\340\024\030\230\001\230\026\230q\330\024\033\2301\230F\240'\250\022\2509\260K\270q\330\024\033\2301\230F\240!\330\024!\240\021\330\024\033\2301\330\020\027\220z\240\022\2401\340\010\027\220q\230\001\230\021\360(\000\t\r\210L\230\001\330\014\027\220w\230f\240D\250\001\250\021\330\014\017\210q\330\020\024\220J\230a\330\024\032\230&\240\t\250\022\2504\250x\260q\340\024\027\220|\2401\240D\250\010\260\001\330\024!\240\021\240#\240Q\240d\250#\250Q\250d\260#\260Q\260a\340\024\027\220z\240\021\240#\240S\250\004\250A\340\030\031\330\034&\240a\240s\250\"\250J\260a\260q\330\034&\240a\240s\250\"\250J\260a\260q\360\010\000\031\032\330\034\035\230V\2401\240A\330\034\036\230d\240!\330\034\036\230a\330\034\036\230a\330\034\035\230V\2401\240A\330\034\036\230d\240!\330\034\036\230d\240!\330\034\036\230a\360\006\000\031%\240J\250a\250s\260\"\260D\270\001\340\030\"\240&\250\001\330\030(\250\007\250q\330\030)\250\027\260\001\360\n\000\031(\240s\250!\330\034#\2406\250\021\330\034\036\230a\330\034\036\230a\340\030(\250\003\2501\330\034#\2406\250\021\330\034\036\230d\240!\330\034\036""\230a\340\030#\2403\240a\240z\260\021\260#\260R\260}\300B\300a\330\030\034\230C\230q\240\n\250!\2503\250b\260\001\340\030\034\230B\230b\240\001\330\034 \240\002\240\"\240N\260\"\260A\330\034 \240\t\250\022\2501\330\034 \240\t\250\022\250=\270\002\270!\360\006\000\035'\240n\260B\260g\270Q\330\034\"\240#\240Q\240f\250A\250T\260\021\260!\2602\260R\260y\300\001\330\034%\240S\250\001\250\025\250a\330 $\240B\240g\250R\250s\260\"\260I\270Q\340\034*\250'\260\022\2601\360\006\000\035\"\240\025\240e\2501\250D\260\002\260!\330\034,\250C\250q\260\014\270B\270a\360\006\000\035'\240m\2602\260W\270A\330\034#\2403\240a\240v\250Q\250d\260!\2601\260I\270R\270y\310\001\330\034$\240C\240q\250\005\250Q\250d\260!\330!'\240r\250\032\2602\260Y\270a\340\034)\250\026\250r\260\021\360\006\000\035)\250\005\250U\260!\2605\270\002\270!\330\034+\2503\250a\250{\270\"\270A\360\006\000\035'\240g\250[\270\001\330 &\240e\250<\260q\360\020\000\035 \230t\2406\250\032\2604\260t\2701\330 !\330$%\240Z\250q\260\002\260\"\260D\270\002\270$\270k\310\022\3101\340 $\240M\260\022\2601\330$'\240{\260\"\260A\340$.\250b\260\n\270&\300\001\330()\330)7\260q\340$&\240j\260\004\260A\330()\330(+\2503\250d\260!\2609\270A\330()\360\006\000%/\250b\260\n\270&\300\001\330(*\250*\260D\270\001\330,5\260S\270\003\2704\270q\300\t\310\021\340)7\260q\360\006\000!+\250\"\250J\260f\270A\330$%\330%3\2601\360\010\000\035!\240\005\240U\250!\2501\330 '\240y\260\002\260#\260Q\330 #\2402\240S\250\003\2501\250E\260\021\330$*\320*<\270A\330()\330)*\330)*\330*-\250S\260\003\2601\340$*\250,\260a\330(5\260Q\260c\270\021\270%\270q\360\006\000\t\r\210E\220\025\220a\220q\330\014\024\220M\240\021\240!\360\006\000\r\021\220\005\220U\230!\2303\230a\230w\240b\250\004\250D\260\001\330\020\026\220e\2301\230A\330\020\023\2203\220a\330\024\026\220e\2305\240\001\240\024\320%<\270C\270q\340\024\030\320\030,\250E\260\022\2603\260a\320\004\027\220q\340\027\030\330\032\037\230z\250\021\330\010\014\210J\220a\330\010\014\210I\220Q\330\010\014\210L\230\001\320""\004\025\220[\240\t\250\021\340\010\017\210t\2208\2302\230S\240\001\200\001\330\004\007\200v\210Y\220c\230\026\230q\330\010\017\210q\360\006\000\t\036\230Q\230g\240Q\340\010\025\220Q\330\010\025\220Q\360\n\000\005\t\210\005\210U\220!\2206\230\031\240\"\240A\330\010\017\210v\220U\230!\2301\330\010\013\2102\210S\220\006\220i\230s\240*\250A\250W\260F\270\"\270A\330\014\022\220!\330\014\r\340\004\007\200t\2102\210V\2201\330\010\014\210E\220\025\220a\220v\230Z\240v\250Q\330\014\022\220%\220q\230\005\230V\2405\250\001\250\022\2502\250Q\340\004\n\210%\210q\220\007\220q\330\004\n\210,\220a\360\014\000\005\t\210\005\210U\220!\2203\220f\230A\330\010\017\210v\220U\230!\2301\330\010\022\220&\230\005\230Q\230d\240!\330\010\013\2108\2203\220d\230(\240\"\240A\330\014\022\220%\220q\230\004\230H\240C\240q\250\004\250A\330\020\021\330\020\024\220A\360\006\000\r\024\2201\330\014\022\220%\220q\230\007\230q\340\004\n\210+\220T\230\022\2301\340\004\013\2101";
+    #else /* compression: none (11018 bytes) */
+const char* const bytes = ";Note that Cython is deliberately stricter than PEP-484 and rejects subclasses of builtin types. If you need to pass subclasses then set the 'annotation_typing' directive to False..?add_notecamera.pyxdisableenablegcisenablednumpy._core.multiarray failed to importnumpy._core.umath failed to importpg.Surfaceself._args is not Noneself._ceiling is not None or self._floor is not None or self._player is not None or self._walls_and_entities is not None or self._weapon is not None or self._weapon_pos is not None or self._yaw is not None<stringsource>CameraCamera.__reduce_cython__Camera.__setstate_cython__Camera._render_weaponCamera.render_DepthBufferObject_DepthBufferObject.__reduce_cython___DepthBufferObject.__setstate_cython__FloorNonePlayerPoint__Pyx_CFunc_2711fe__6camera_6Camera_void__lParenCamera__comma_int___etc_to_py_4self_5width_6height_7horizon.<locals>.wrap__Pyx_CFunc_2711fe__6camera_6Camera_void__lParenCamera__comma_int___etc_to_py_4self_5width_6height_7horizon__Pyx_PyDict_NextRef__Pyx_carray_from_py_float__Pyx_carray_to_py_float__Pyx_carray_to_py_int__Pyx_carray_to_tuple_float__Pyx_carray_to_tuple_intSRCALPHASelfSkySurfaceThread_amountappendargs_args_arr_arrayastypeasyncio.coroutinesaxisbisectblitbottom_calculate_linecalculationcamera_capacitycapacity_ceiling_ceiling_elevationcfunc.to_py__class_getitem__climb_speed_climb_speedcline_in_traceback_darken_linedarkness_darknessdegrees__del__depth_depth__dict___dictdistdistance_todrawelevation_endendendpointenumerateffillfloor_floorfloor_and_ceilingfov_fov__func__gen_tile_key_generate_arrayget__get__get_at__getstate___glowingheadbob_frequency_headbob_frequency_headbob_stengthheadbob_strength_headbob_strengthheight_heighthorizon_horizonhsl__init__insort_leftint_is_coroutineis_rect_is_rectitemsjoinleft_raylength_levellimit1limit2_limit_cmplimits_limits_add_limits_destroy_limits_full_limits_new_limits_resetlinelinspace__lt____main__make_surface_managermax_line_height_max_line_heightmin_entity_depth_min_entity_depthminimu""m__module__modules.entitiesmodules.levelmult__name____new__npnumnumpyoobjoffsetsoldpgplayer_playerpop_pospospygamepygame.typing__pyx_checksum__pyx_result__pyx_state__pyx_type__pyx_unpickle_Camera__pyx_unpickle_Camera__set_state__pyx_unpickle__DepthBufferObject__pyx_unpickle__DepthBufferObject__set_state__pyx_vtable____qualname__radiansrect__reduce____reduce_cython____reduce_ex__rel_depthrender_render_elevation_render_floor_and_ceiling_render_height_render_vector3_render_walls_and_entities_render_weapon_render_weapon_pos_render_widthreturnright_rayrotate_y_ip_scalescalescrollself_semiplanesemiradianssemitile__set__set_at__set_name__setdefault_sets__setstate____setstate_cython___settings_startstartstatesubsurfacesurfsurfarraytarget__test__texture_texturesthreadingtile_size_tile_size_tilemaptoptransform_transparencytypinguint8updateuse_setstatevvaluevaluesvector3vstackwall_render_distance_wall_render_distance_walls_walls_and_entitieswalls_and_entities_weaponweapon_pos_weapon_pos_weapon_scale_weapon_surfweapon_surfweapon_surf_heightweapon_surf_widthweaponbob_frequency_weaponbob_frequency_weaponbob_stengthweaponbob_strength_weaponbob_strengthwidth_widthwrapxx_pixelsy_yaw_yaw_magnitude_yaw_value\200\001\330\0040\260\001\260\026\260q\200\001\340\004\005\360\006\000\005\014\2101\200\001\360\010\000\005\t\210\013\2201\220A\330\004\010\210\005\210U\220!\2201\330\010\020\220\001\220\021\220)\2301\330\010\021\220\021\220!\330\010\036\230a\230s\240#\240Q\330\004\013\2101\320\000\033\2301\340\004\013\2102\210Q\210e\2206\230\021\230#\230Q\230e\2401\240E\250\026\250q\260\003\2601\260A\200\001\360\010\000\005\t\210\n\220!\2201\330\004\010\210\005\210U\220!\2201\330\010\020\220\001\220\021\220)\2301\330\010\021\220\021\220!\330\010\035\230Q\230c\240\023\240A\330\004\013\2101\320\000\023\2201\330\004\007\200v\210X\220S\230\006\230a\330\010\013\2106\220\026\220r\230\026\230q\330\014\024\220A\330\r\023\2206\230\023\230F\240!\330\014\023\2201\340\014\023\2201\330\004\013\2101\210E\220""\026\220x\230r\240\026\240}\260A\200\001\330\004\n\210!\2106\220\027\230\003\2306\240\033\250B\250a\330\004\n\210+\220Q\320\000\022\220!\330\004\013\2108\2202\220V\2302\230Q\220A\200\001\330\004$\240A\240V\2501\320\004$\240A\360\020\000\t\024\2201\220E\230\023\230A\230T\240\021\330\014\020\220\014\230B\230j\250\002\250!\330\014\020\220\014\230B\230d\240!\360\006\000\t\024\2201\220E\230\033\240A\240S\250\002\250!\360\010\000\t\024\2201\220E\230\023\230A\330\r\024\220D\230\010\320 3\2602\260Q\330\r\017\210z\230\022\2301\330\r\017\210q\330\014\016\210d\220,\230b\240\002\240\"\240A\200A\330\032#\2401\330\010\017\210t\2201\200A\330\036\037\330\010\014\320\014 \240\001\200A\330\037 \330\010\014\320\014!\240\021\200A\330\016\017\360\006\000\023\024\330\023\024\330\017\020\340\022\023\330\021\022\360\026\000\t\024\2205\230\002\230!\340\010\031\230\031\240\"\240H\250A\250Q\330\010\031\230\031\240\"\240H\250A\250Q\340\010\027\220y\240\002\240)\2501\250A\330\010\027\220y\240\002\240)\2501\250A\340\010\022\220-\230r\320!1\260\022\2601\330\010\022\220-\230r\320!1\260\022\2601\340\010\023\2204\220x\230u\240C\240r\250\037\270\002\270'\300\022\3001\330\010\023\2204\220x\230u\240C\240r\250\037\270\002\270'\300\022\3001\360\006\000\t\026\220R\220v\230Q\330\014\025\220R\220u\230A\230S\240\002\240\"\240B\240g\250V\2601\260A\330\t\020\220\001\220\021\330\010\025\220R\220v\230Q\330\014\025\220R\220u\230A\230S\240\002\240\"\240B\240g\250V\2601\260A\330\t\020\220\001\220\021\340\010\017\210w\220a\220|\2401\200A\330!\"\330\010\020\220\004\220A\220T\230\021\230'\240\026\240q\330\010\014\320\014#\2401\330\010\014\210H\220J\230a\320\0377\260q\200A\330\037 \330\010\020\220\004\220A\220T\230\021\230'\240\026\240q\330\010\014\320\014!\240\021\330\010\014\210H\220J\230a\320\0375\260Q\200A\330\032\033\330\010\014\320\014\034\230A\330\010\014\210H\220J\230a\320\0370\260\001\200A\330\"#\330\010\014\320\014$\240A\330\010\014\210H\220J\230a\320\0378\270\001\200A\330 !\330\010\014\320\014\"\240!\330""\010\014\210H\220J\230a\320\0376\260a\200A\330\026\027\330\010\014\210L\230\004\230A\230T\240\021\240'\250\024\250Q\200A\330\030\031\330\010\014\210N\230!\200A\330\033(\250\001\330\010\014\320\014\035\230Q\200A\330#$\330\010\014\320\014%\240Q\200A\330\025\"\240+\250Q\330\010\014\210H\220J\230a\320\0376\260a\330\010\014\210H\220J\230a\320\0375\260Q\330\010\014\210H\220J\230a\320\0378\270\001\330\010\014\210H\220J\230a\320\0377\260q\330\010\014\210H\220J\230a\320\0370\260\001\330\010\014\210K\220q\330\010\r\210Z\220q\320\030/\250t\2601\330\010\r\210Z\220q\320\030.\250d\260!\330\010\r\210Z\220q\320\0301\260\024\260Q\330\010\r\210Z\220q\320\0300\260\004\260A\330\010\r\210Z\220q\320\030)\250\024\250Q\320\004\025\220\\\240\037\260\001\340\014\030\230\004\230A\330\014\031\230\024\230Q\330\014\032\230#\230Q\230d\240*\250B\250a\340\010\014\210H\220D\230\010\240\006\240b\250\004\250A\330\010\014\210E\220\022\2203\220c\230\021\330\010\014\210L\230\001\330\010\014\210J\220a\360\006\000\t\r\320\014#\2402\240X\250R\250w\260i\270r\300\021\330\010\014\320\014 \240\005\240R\240s\250#\250S\260\001\330\010\014\210K\220q\360\006\000\t\035\230F\240!\330\014\023\2204\220q\330\014\022\220'\230\030\240\021\340\010\035\230V\2401\330\014\023\2204\220q\330\014\022\220'\230\030\240\021\360\006\000\t\032\230\026\230q\330\010\032\230&\240\001\330\010\031\230\025\230a\330\010\032\230%\230q\360\006\000\t\014\2104\210x\220w\230a\330\014\020\220\005\220Q\220d\230*\240C\240q\330\010\013\2104\210z\230\027\240\001\330\014\020\220\005\220Q\220d\230,\240c\250\021\330\010\014\210E\220\021\220$\320\026-\250S\260\001\330\010\014\210O\2301\230G\2408\2501\200A\330\025\036\230a\330\010\017\210t\2201\200A\330\031&\240j\260\001\330\010\014\210O\2301\330\010\034\230D\240\010\250\n\260!\2601\330\010\014\210H\220A\330\014\023\2205\230\001\230\021\330\014\016\210g\220T\230\030\320!4\260A\260Q\330\014\016\210c\220\021\220!\330\014\023\2205\230\001\230\021\330\014\016\210g\220T\230\030\320!4\260A\260Q\330\014\016\210c""\220\021\220!\340\010\014\210H\220J\230a\320\037/\250q\200A\330\022\023\330\010!\240\027\250\001\250\026\250r\260\021\340\010\014\210H\220A\330\010\014\320\014\036\230b\240\002\240#\240Q\240a\200A\330\037 \330\010\017\210t\2201\200A\330#$\330\010\017\210t\2201\200A\330\036\037\330\010\017\210t\2201\200A\330 !\330\010\017\210t\2201\200A\330!\"\330\010\017\210t\2201\200A\330\"#\330\010\017\210t\2201\200A\330\031\"\240!\330\010\017\210t\2201\200A\330\033\034\330\010\017\210t\2201\200A\330\022\023\330\010\017\210t\2201\200A\330\026\027\330\010\017\210t\2201\200A\330\030\031\330\010\017\210t\2201\200A\340\010\t\210\021\210&\220\007\220x\230q\320\000H\310\001\330\004\020\220\014\230K\240q\250\004\250L\3208H\310\013\320ST\320TX\320Xd\320dq\320q|\320|}\360\000\000~\001B\002\360\000\000B\002N\002\360\000\000N\002X\002\360\000\000X\002c\002\360\000\000c\002d\002\360\000\000d\002h\002\360\000\000h\002t\002\360\000\000t\002|\002\360\000\000|\002G\003\360\000\000G\003H\003\360\000\000H\003L\003\360\000\000L\003X\003\360\000\000X\003n\003\360\000\000n\003y\003\360\000\000y\003z\003\360\000\000z\003~\003\360\000\000~\003J\004\360\000\000J\004_\004\360\000\000_\004j\004\360\000\000j\004k\004\360\000\000k\004o\004\360\000\000o\004{\004\360\000\000{\004G\005\360\000\000G\005R\005\360\000\000R\005S\005\360\000\000S\005W\005\360\000\000W\005c\005\360\000\000c\005w\005\360\000\000w\005B\006\360\000\000B\006C\006\360\000\000C\006G\006\360\000\000G\006S\006\360\000\000S\006h\006\360\000\000h\006s\006\360\000\000s\006t\006\360\000\000t\006x\006\360\000\000x\006D\007\360\000\000D\007O\007\360\000\000O\007Z\007\360\000\000Z\007[\007\360\000\000[\007`\007\360\000\000`\007l\007\360\000\000l\007z\007\360\000\000z\007E\010\360\000\000E\010F\010\360\000\000F\010K\010\360\000\000K\010W\010\360\000\000W\010p\010\360\000\000p\010{\010\360\000\000{\010|\010\360\000\000|\010A\t\360\000\000A\tM\t\360\000\000M\td\t\360\000\000d\to\t\360\000\000o\tp\t\360\000\000p\tu\t\360\000\000u\tA\n\360\000\000A\nL""\n\360\000\000L\nW\n\360\000\000W\nX\n\360\000\000X\n]\n\360\000\000]\ni\n\360\000\000i\nx\n\360\000\000x\nC\013\360\000\000C\013D\013\360\000\000D\013I\013\360\000\000I\013U\013\360\000\000U\013f\013\360\000\000f\013q\013\360\000\000q\013r\013\360\000\000r\013w\013\360\000\000w\013C\014\360\000\000C\014[\014\360\000\000[\014f\014\360\000\000f\014g\014\360\000\000g\014l\014\360\000\000l\014x\014\360\000\000x\014O\r\360\000\000O\rZ\r\360\000\000Z\r[\r\360\000\000[\r`\r\360\000\000`\rl\r\360\000\000l\rt\r\360\000\000t\r\177\r\360\000\000\177\r@\016\360\000\000@\016E\016\360\000\000E\016Q\016\360\000\000Q\016c\016\360\000\000c\016n\016\360\000\000n\016o\016\360\000\000o\016p\016\330\004\035\230Q\230n\250M\270\021\320\004!\240\034\250Q\360\006\000\t\014\2104\210q\340\014\025\220Q\220d\230\"\230D\240\002\240$\240k\260\022\2601\330\014\016\210j\230\004\230A\230V\2403\240c\250\024\250Q\250i\260t\2701\200\001\360\010\000\005\016\210T\220\033\230D\240\017\250t\260<\270t\3009\310D\320PW\320W[\320[p\320pt\360\000\000u\001I\002\360\000\000I\002M\002\360\000\000M\002X\002\360\000\000X\002\\\002\360\000\000\\\002o\002\360\000\000o\002s\002\360\000\000s\002G\003\360\000\000G\003K\003\360\000\000K\003U\003\360\000\000U\003Y\003\360\000\000Y\003f\003\360\000\000f\003j\003\360\000\000j\003B\004\360\000\000B\004F\004\360\000\000F\004\\\004\360\000\000\\\004`\004\360\000\000`\004j\004\360\000\000j\004n\004\360\000\000n\004|\004\360\000\000|\004@\005\360\000\000@\005P\005\360\000\000P\005T\005\360\000\000T\005k\005\360\000\000k\005o\005\360\000\000o\005E\006\360\000\000E\006I\006\360\000\000I\006P\006\360\000\000P\006T\006\360\000\000T\006U\006\330\004\014\210G\2201\220F\230,\240a\330\004\007\200v\210W\220E\230\024\230Q\330\010\022\220!\330\010\027\220q\340\010\030\230\001\330\004\007\200q\330\010\017\320\017'\240t\2501\250G\260;\270g\300Q\340\010\017\320\017'\240t\2501\250G\260;\270a\200\001\360\010\000\005\016\210T\220\030\230\024\230Y\240d\250!\330\004\014\210G\2201\220F\230,\240a""\330\004\007\200v\210W\220E\230\024\230Q\330\010\022\220!\330\010\027\220q\340\010\030\230\001\330\004\007\200q\330\010\017\320\0173\2604\260q\270\007\270{\310'\320QR\340\010\017\320\0173\2604\260q\270\007\270{\310!\200\001\360\010\000\005\t\210\005\210U\220!\2206\230\021\330\010\017\210v\220U\230!\2301\330\010\013\2104\210x\220s\230&\240\004\240D\250\006\250c\260\021\330\014\023\2201\330\004\013\2101\200\001\330WX\330\004\030\230\001\330\004\005\330\010\014\210C\210q\220\001\330\014\027\220q\340\004\007\200r\210\023\210A\330\010\014\210C\210x\220y\240\001\240\021\330\014\017\210r\220\023\220A\330\020\021\330\014\r\210Q\210e\2201\340\014\021\220\021\330\014\017\210r\220\023\220A\330\020\027\220q\340\004\020\220\001\330\010\t\330\t\n\330\014\016\210c\220\021\330\t\n\330\010\020\220\001\320\004\035\320\035@\300\001\340\014!\240\024\240X\250Q\330\014$\240K\250w\260b\270\004\270A\330\014%\240[\260\010\270\002\270$\270a\330\014\r\330\020\027\220t\2308\320#6\260a\260s\270\"\270A\330\020\022\220%\320\027)\250\022\2501\330\020\027\220t\2308\320#6\260a\260s\270\"\270A\340\010\026\220b\230\n\240&\250\001\330\014\032\320\032-\250Q\340\010\014\210E\220\021\220-\230q\220a\320\000`\320`a\330\004\020\220\t\230\033\240A\240T\250\034\260Z\270{\310!\3104\310|\320[g\320gr\320rs\320st\330\004\035\230Q\230n\250M\270\021\320\004.\250a\360\016\000\r\037\230d\240&\250\002\250$\250h\260a\330\014\037\230t\2406\250\022\2504\250x\260q\340\014\033\2304\230x\240y\260\001\360\022\000\r \230w\240b\250\001\340\014\033\2301\230G\2404\240x\250|\2702\270V\3002\300Q\340\010\023\2202\220W\230A\230R\230y\250\001\250\023\250G\2604\260w\270i\300q\360\006\000\t\017\210e\2201\330\010\013\210:\220Q\220e\2301\340\014\031\230\023\230I\240R\240v\250R\250s\260!\330\014\024\220C\220y\240\007\240w\250b\260\001\330\014\017\210w\220b\230\001\330\020\024\220J\230c\240\027\250\001\330\024\025\330\024\025\330\024\025\330\021\034\230A\230Q\330\r\016\340\014\031\230\027\240\002\240!\340\014\017\210{\230\"\230A\330\020""\032\230\"\230I\240Q\330\024\025\330\024\025\330\024\030\230\001\330\024\035\230Q\360\006\000\021\030\220t\230<\240r\250\027\260\004\260H\270A\330\020\030\230\004\320\034,\250A\330\032\033\330\031\032\330\035\036\330\036\037\330\032\035\230Q\330\034\037\230q\330\035\036\330\034\035\360\010\000\021\024\2204\220q\330\024\037\230r\240\030\250\021\330\030\032\230'\240\021\240)\2502\250[\270\002\270$\270a\330\030\031\340\024\035\230V\2402\240Y\250g\260Q\260a\360\006\000\021\025\220J\230b\240\n\250-\260q\270\001\340\010\016\210e\2201\340\010\013\210:\220Q\220e\2301\340\014\031\230\023\230I\240R\240v\250R\250s\260!\330\014\024\220C\220{\240\"\240I\250W\260A\330\014\017\210{\230\"\230A\330\020\024\220L\240\003\2407\250!\330\024\025\330\024\025\330\024\025\330\021\034\230A\230Q\330\r\016\330\014\017\210x\220r\230\021\330\020\032\230\"\230I\240Q\330\024\025\330\024\025\330\024\030\230\001\330\024\035\230Q\360\006\000\021\022\330\024\030\230\001\330\024\027\220w\230e\2401\330\027\031\230\027\240\004\240H\250A\340\020\030\230\004\320\034,\250A\330\032\033\330\031\032\330\035\036\330\036\037\330\032\035\230Q\330\034\037\230q\330\035\036\330\034\035\360\010\000\021\024\2204\220q\330\024\037\230r\240\030\250\021\330\030\032\230'\240\021\240)\2502\250[\270\002\270$\270a\330\030\031\340\024\035\230V\2402\240Y\250g\260Q\260a\360\006\000\021\025\220L\240\002\240*\250M\270\021\270!\200\001\330\004\016\210a\210v\220Q\200\001\330\004!\240\021\330\010\t\330\010\t\330\010\022\220,\230a\230z\250\021\340\004\007\200t\2106\220\021\330\010\t\340\004\013\2101\200\001\340\004\037\230q\320 0\260\013\270;\300k\320QR\330\004\023\2206\230\030\240\021\240!\330\004\007\200|\2207\230!\330\010(\250\001\250\031\260.\300\001\330\004\013\2101\200\001\340\004\037\230q\320 0\260\013\270;\300k\320QR\330\004\023\320\023%\240X\250Q\250a\330\004\007\200|\2207\230!\330\0104\260A\3205J\310.\320XY\330\004\013\2101\320\004\027\220q\360\010\000\032\033\330()\330)*\330*+\330+,\330\035$\240E\250\021\330#$\330 !\330'(""\330(1\260\021\340\010\014\320\014\036\230b\240\002\240#\240Q\240g\250Q\250e\2602\260Q\340\010\014\210G\2204\220q\230\004\230A\230V\2401\330\010\014\210L\230\001\330\010\014\210K\220q\330\010\014\210N\230!\330\010\014\320\014%\240Q\330\010\014\320\014\035\230Q\330\010\014\320\014 \240\001\330\010\014\320\014!\240\021\330\010\014\210M\230\021\340\010\014\320\014 \240\001\330\010\014\320\014!\240\021\330\010\014\320\014\"\240!\330\010\014\320\014#\2401\330\010\014\210N\230!\330\010\014\210O\2301\320\004/\250q\360\014\000\r\036\230T\240\030\250\021\360\006\000\r\037\230a\360B\001\000\r\037\230f\240B\240a\360\032\000\r\034\2307\240'\250\027\260\001\340\014\035\230[\250\001\250\027\260\002\260!\360\010\000\r%\240A\360\006\000\r)\250\001\340\014\032\230!\360\010\000\t\024\2207\230'\240\027\250\001\360\006\000\t\r\210E\220\025\220a\220q\330\014\031\230\027\240\001\240\021\360\006\000\r\026\220R\220r\230\022\2302\230W\240F\250\"\250A\330\014\022\220$\220f\230B\230d\240(\250,\260b\270\001\330\014\023\2203\220a\220t\2303\230a\230q\330\014\022\220$\220a\220s\230!\2303\230b\240\003\2401\240C\240r\250\023\250A\250S\260\002\260#\260Q\260a\340\014\026\220a\220t\2308\2405\250\001\250\024\250T\260\030\270\025\270a\270q\330\014\024\220C\220q\230\003\2302\230S\240\001\240\026\240s\250!\2508\2601\330\014\023\2201\220F\230!\2307\240!\2405\250\006\250a\250w\260a\260q\330\014\026\220d\230!\2303\230b\240\005\240T\250\021\250#\250R\250q\330\014\027\220|\2401\240A\330\014\023\2207\230$\230a\230q\330\014\023\2203\220a\220s\230\"\230C\230s\240!\2403\240b\250\001\340\014\025\220S\230\001\230\023\230B\230b\240\002\240!\330\014\025\220S\230\001\230\023\230B\230b\240\002\240!\330\014\030\230\001\330\014\023\2201\340\014\031\230\021\230!\2301\360\016\000\r\020\210u\220G\2301\330\020\026\220d\230$\230a\230q\330\020\023\2204\220s\230!\330\024\027\220t\2308\320#6\260b\270\004\270A\270Q\330\030&\240a\330\030$\240A\330\032\036\230h\240a\330\032\034\230D\240\001\240\035\250b\260\004\260A\260Q\330\030&""\240a\330\030$\240A\340\024\033\2304\230s\240!\2401\360\010\000\r\023\220%\220r\230\024\230Q\340\020\036\230d\240!\2401\360\006\000\021\024\220<\230t\2401\330\024\030\320\030(\250\001\330\030\031\330\030\034\230A\230Q\330\030\034\230A\230Q\330\030\031\340\024!\320!5\260Y\270a\330\024\030\230\010\240\002\240,\250b\260\002\260\"\260A\340\024\027\220|\2403\240a\330\030#\2408\2502\250\\\270\022\2702\270R\270q\330\030+\250:\260R\260q\330\030#\2401\330\031%\240S\250\001\330\030#\2401\330\030+\2502\250R\320/B\300\"\300A\330\030#\2401\340\024.\320.?\270r\300\021\340\024!\240\031\250\"\250A\330\024\030\230\013\2402\240Q\330\030\034\230B\230b\240\001\330\030\034\230D\240\014\250A\250Q\250h\260c\270\021\340\030 \240\006\240d\250!\2501\330\030\033\2304\230q\330\034#\2402\240X\250R\250s\260!\330\034 \240\007\240r\250\023\250D\260\004\260A\260Q\330\034 \240\r\250Q\330 &\240d\250(\260%\260|\3001\300A\340\034$\240D\250\007\250r\260\023\260A\330\034\"\240!\240<\250q\360\010\000\031\037\320\0360\260\001\330\034\035\330\035%\240S\250\n\260#\260Q\330\034$\240A\340\030%\240Q\240b\250\007\250q\260\001\340\030#\2401\240A\240X\250Z\260q\330\024\"\240!\340\020\033\230<\240q\250\001\330\020\027\220w\230d\240!\2401\330\020\023\2205\230\007\230q\330\024\032\230$\230d\240!\2401\360\n\000\025\030\220t\2303\230a\330\030\033\2301\330\034 \320 0\260\001\330 !\330 $\240A\240Q\330 $\240A\240Q\330 !\340\034*\250+\260Q\260a\330\0341\260\033\270A\270Q\330\034%\240[\260\001\260\021\330\034 \240\010\250\002\250,\260b\270\002\270\"\270A\330\034)\250\022\2502\250Q\340\034&\240d\250!\2503\250b\260\005\260T\270\021\270#\270R\270q\340\034\037\230x\240r\250\021\330 .\250a\330 ,\250A\340!)\250\022\2501\330 .\250a\330 ,\250A\330\034.\250a\330\034#\2407\250!\2506\260\022\2601\340\034*\250!\360\n\000\031'\240a\330\030*\250!\360\006\000\031 \230s\240!\2401\330\030)\250\023\250A\250Q\330\030'\240s\250!\2501\330\030\037\230|\2501\250D\260\001\330\030*\250,\260a\260q\360\n\000\031(\240q\250\007\250q\260\004\260G\2701""\270A\360\006\000\031\034\2301\330\034\037\230q\330 )\250\025\250c\260\024\260S\270\001\270\021\340 )\250\024\250Q\250c\260\022\2605\270\002\270'\300\021\300!\330\034%\240W\250B\250a\330\034\037\230s\240!\2401\330 3\2607\270\"\270C\270q\300\001\340 2\260!\340\034\037\230q\330 )\250\024\250Q\250c\260\022\2605\270\002\270'\300\021\300!\340 )\250\025\250c\260\024\260S\270\001\270\021\330\034%\240W\250B\250i\260{\300!\330\034\037\230s\240!\2401\330 3\2607\270\"\270C\270q\300\001\340 2\260!\340\030$\240A\240V\2501\330\030$\240A\240V\2501\330\030\037\230|\2501\250F\260\"\260D\270\001\270\021\360\006\000\031\035\320\034,\250B\250a\360\n\000\035!\240\006\240a\240|\2601\260D\270\003\2704\270q\300\001\330\034 \240\006\240a\240|\2601\260D\270\003\2704\270q\300\001\330\034 \240\005\240S\250\001\330\034 \240\005\240R\320'7\260r\270\021\360\006\000\035%\240E\250\022\320+<\270B\270a\330\034#\320#3\2602\260Q\330\034 \320 0\260\001\330 !\330 $\240A\240Q\330 $\240A\240Q\330 !\340\034*\250+\260Q\260a\330\0341\260\033\270A\270Q\330\034%\240[\260\001\260\021\330\034 \240\010\250\002\250,\260b\270\002\270\"\270A\330\034)\250\022\2502\250Q\340\034*\250!\360\006\000\025\031\230\013\2402\240Q\330\030\034\230B\230b\240\001\330\030\034\230D\240\014\250A\250Q\250h\260c\270\021\340\030\"\240(\250!\2504\250q\260\001\330\030)\250\027\260\001\330\030\036\230c\240\021\240&\250\001\250\025\250b\260\005\260W\270A\360\006\000\031!\320 3\2602\260W\270A\330\030\036\230c\240\021\240&\250\001\250\024\250Q\250a\250r\260\022\2607\270!\330\030!\240\023\240A\240U\250!\2504\250q\330\035$\240B\240c\250\022\2507\260!\340\030&\240g\250R\250q\340\030 \240\001\330\030)\250\021\360\006\000\031\036\230U\240%\240q\250\004\250B\250a\330\030-\250S\260\001\260\034\270R\270q\330\030%\240R\240r\250\021\340\030\037\230w\240a\240q\330\030\037\230r\240\032\2506\260\021\330\034 \240\013\2501\250C\250u\260C\260q\330\035 \240\001\340\030\034\230M\250\021\250&\260\001\360\010\000\031\034\2304\230s\240%\240s\250$\250g\260Q\340""\034%\240V\2501\340\034 \240\005\240U\250!\2507\260\"\260A\330 &\240f\250E\260\021\260\"\260B\260b\270\t\300\027\310\001\330 #\2402\240R\240q\330$,\250F\260%\260q\270\002\270!\340$,\250A\340 #\2402\240R\240v\250T\260\033\270B\270a\330$2\260!\2605\270\001\330$%\330()\330(1\260\022\2601\330()\360\006\000)/\250b\260\t\270\022\2701\360\006\000%+\320*<\270A\330(:\270'\300\023\300K\310q\340$1\260\021\260\"\260G\2701\270A\340$'\240v\250R\250r\260\022\2602\260S\270\001\330()\340\034'\240q\250\001\250\030\260\027\270\001\360\006\000\035#\320\"4\260A\330 !\330!(\250\003\2501\340\034)\250\021\250\"\250G\2601\260A\360\014\000\025#\240!\360\006\000\021\032\230\024\230Q\230c\240\022\2403\240a\240s\250\"\250G\2601\260A\330\020\031\230\024\230Q\230c\240\022\2403\240a\240s\250\"\250G\2601\260A\340\020\030\230\004\230A\230W\240B\240c\250\021\250'\260\023\260A\260X\270Q\330\020\030\230\004\230A\230W\240B\240c\250\021\250'\260\023\260A\260X\270Q\330\020\023\2206\230\022\2301\330\024\030\230\001\230\026\230q\330\024\033\2301\230F\240!\330\024\033\2301\230F\240'\250\022\2501\330\024!\240\021\330\024\033\2301\340\024\030\230\001\230\026\230q\330\024\033\2301\230F\240'\250\022\2509\260K\270q\330\024\033\2301\230F\240!\330\024!\240\021\330\024\033\2301\330\020\027\220z\240\022\2401\340\010\027\220q\230\001\230\021\360(\000\t\r\210L\230\001\330\014\027\220w\230f\240D\250\001\250\021\330\014\017\210q\330\020\024\220J\230a\330\024\032\230&\240\t\250\022\2504\250x\260q\340\024\027\220|\2401\240D\250\010\260\001\330\024!\240\021\240#\240Q\240d\250#\250Q\250d\260#\260Q\260a\340\024\027\220z\240\021\240#\240S\250\004\250A\340\030\031\330\034&\240a\240s\250\"\250J\260a\260q\330\034&\240a\240s\250\"\250J\260a\260q\360\010\000\031\032\330\034\035\230V\2401\240A\330\034\036\230d\240!\330\034\036\230a\330\034\036\230a\330\034\035\230V\2401\240A\330\034\036\230d\240!\330\034\036\230d\240!\330\034\036\230a\360\006\000\031%\240J\250a\250s\260\"\260D\270\001\340\030\"\240&\250\001\330\030(\250\007\250q""\330\030)\250\027\260\001\360\n\000\031(\240s\250!\330\034#\2406\250\021\330\034\036\230a\330\034\036\230a\340\030(\250\003\2501\330\034#\2406\250\021\330\034\036\230d\240!\330\034\036\230a\340\030#\2403\240a\240z\260\021\260#\260R\260}\300B\300a\330\030\034\230C\230q\240\n\250!\2503\250b\260\001\340\030\034\230B\230b\240\001\330\034 \240\002\240\"\240N\260\"\260A\330\034 \240\t\250\022\2501\330\034 \240\t\250\022\250=\270\002\270!\360\006\000\035'\240n\260B\260g\270Q\330\034\"\240#\240Q\240f\250A\250T\260\021\260!\2602\260R\260y\300\001\330\034%\240S\250\001\250\025\250a\330 $\240B\240g\250R\250s\260\"\260I\270Q\340\034*\250'\260\022\2601\360\006\000\035\"\240\025\240e\2501\250D\260\002\260!\330\034,\250C\250q\260\014\270B\270a\360\006\000\035'\240m\2602\260W\270A\330\034#\2403\240a\240v\250Q\250d\260!\2601\260I\270R\270y\310\001\330\034$\240C\240q\250\005\250Q\250d\260!\330!'\240r\250\032\2602\260Y\270a\340\034)\250\026\250r\260\021\360\006\000\035)\250\005\250U\260!\2605\270\002\270!\330\034+\2503\250a\250{\270\"\270A\360\006\000\035'\240g\250[\270\001\330 &\240e\250<\260q\360\020\000\035 \230t\2406\250\032\2604\260t\2701\330 !\330$%\240Z\250q\260\002\260\"\260D\270\002\270$\270k\310\022\3101\340 $\240M\260\022\2601\330$'\240{\260\"\260A\340$.\250b\260\n\270&\300\001\330()\330)7\260q\340$&\240j\260\004\260A\330()\330(+\2503\250d\260!\2609\270A\330()\360\006\000%/\250b\260\n\270&\300\001\330(*\250*\260D\270\001\330,5\260S\270\003\2704\270q\300\t\310\021\340)7\260q\360\006\000!+\250\"\250J\260f\270A\330$%\330%3\2601\360\010\000\035!\240\005\240U\250!\2501\330 '\240y\260\002\260#\260Q\330 #\2402\240S\250\003\2501\250E\260\021\330$*\320*<\270A\330()\330)*\330)*\330*-\250S\260\003\2601\340$*\250,\260a\330(5\260Q\260c\270\021\270%\270q\360\006\000\t\r\210E\220\025\220a\220q\330\014\024\220M\240\021\240!\360\006\000\r\021\220\005\220U\230!\2303\230a\230w\240b\250\004\250D\260\001\330\020\026\220e\2301\230A\330\020\023\2203\220a\330\024\026\220e\2305\240\001\240\024\320%""<\270C\270q\340\024\030\320\030,\250E\260\022\2603\260a\320\004\027\220q\340\027\030\330\032\037\230z\250\021\330\010\014\210J\220a\330\010\014\210I\220Q\330\010\014\210L\230\001\320\004\025\220[\240\t\250\021\340\010\017\210t\2208\2302\230S\240\001\200\001\330\004\007\200v\210Y\220c\230\026\230q\330\010\017\210q\360\006\000\t\036\230Q\230g\240Q\340\010\025\220Q\330\010\025\220Q\360\n\000\005\t\210\005\210U\220!\2206\230\031\240\"\240A\330\010\017\210v\220U\230!\2301\330\010\013\2102\210S\220\006\220i\230s\240*\250A\250W\260F\270\"\270A\330\014\022\220!\330\014\r\340\004\007\200t\2102\210V\2201\330\010\014\210E\220\025\220a\220v\230Z\240v\250Q\330\014\022\220%\220q\230\005\230V\2405\250\001\250\022\2502\250Q\340\004\n\210%\210q\220\007\220q\330\004\n\210,\220a\360\014\000\005\t\210\005\210U\220!\2203\220f\230A\330\010\017\210v\220U\230!\2301\330\010\022\220&\230\005\230Q\230d\240!\330\010\013\2108\2203\220d\230(\240\"\240A\330\014\022\220%\220q\230\004\230H\240C\240q\250\004\250A\330\020\021\330\020\024\220A\360\006\000\r\024\2201\330\014\022\220%\220q\230\007\230q\340\004\n\210+\220T\230\022\2301\340\004\013\2101";
     PyObject *data = NULL;
     CYTHON_UNUSED_VAR(__Pyx_DecompressString);
     #endif
     PyObject **stringtab = __pyx_mstate->__pyx_string_tab;
     Py_ssize_t pos = 0;
-    for (int i = 0; i < 253; i++) {
+    for (int i = 0; i < 255; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyUnicode_DecodeUTF8(bytes + pos, bytes_length, NULL);
       if (likely(string) && i >= 16) PyUnicode_InternInPlace(&string);
@@ -22431,7 +22522,7 @@ const char* const bytes = ";Note that Cython is deliberately stricter than PEP-4
       stringtab[i] = string;
       pos += bytes_length;
     }
-    for (int i = 253; i < 313; i++) {
+    for (int i = 255; i < 315; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyBytes_FromStringAndSize(bytes + pos, bytes_length);
       stringtab[i] = string;
@@ -22442,14 +22533,14 @@ const char* const bytes = ";Note that Cython is deliberately stricter than PEP-4
       }
     }
     Py_XDECREF(data);
-    for (Py_ssize_t i = 0; i < 313; i++) {
+    for (Py_ssize_t i = 0; i < 315; i++) {
       if (unlikely(PyObject_Hash(stringtab[i]) == -1)) {
         __PYX_ERR(0, 1, __pyx_L1_error)
       }
     }
     #if CYTHON_IMMORTAL_CONSTANTS
     {
-      PyObject **table = stringtab + 253;
+      PyObject **table = stringtab + 255;
       for (Py_ssize_t i=0; i<60; ++i) {
         #if CYTHON_COMPILING_IN_CPYTHON_FREETHREADING
         Py_SET_REFCNT(table[i], _Py_IMMORTAL_REFCNT_LOCAL);
@@ -22817,12 +22908,12 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
     __pyx_mstate_global->__pyx_codeobj_tab[59] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_camera_pyx, __pyx_mstate->__pyx_n_u_render_walls_and_entities, __pyx_mstate->__pyx_kp_b_iso88591_q_T_aB_fBa_7_A_7_E_aq_Rr_2WF_A, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[59])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {4, 0, 0, 6, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 1094};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_width, __pyx_mstate->__pyx_n_u_height, __pyx_mstate->__pyx_n_u_surf, __pyx_mstate->__pyx_n_u_weapon_surf_2, __pyx_mstate->__pyx_n_u_pos_2};
-    __pyx_mstate_global->__pyx_codeobj_tab[60] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_camera_pyx, __pyx_mstate->__pyx_n_u_render_weapon, __pyx_mstate->__pyx_kp_b_iso88591_XQ_t8_6as_A_1_t8_6as_A_E_q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[60])) goto bad;
+    const __Pyx_PyCode_New_function_description descr = {4, 0, 0, 8, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 1094};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_width, __pyx_mstate->__pyx_n_u_height, __pyx_mstate->__pyx_n_u_surf, __pyx_mstate->__pyx_n_u_weapon_surf_2, __pyx_mstate->__pyx_n_u_weapon_surf_width, __pyx_mstate->__pyx_n_u_weapon_surf_height, __pyx_mstate->__pyx_n_u_pos_2};
+    __pyx_mstate_global->__pyx_codeobj_tab[60] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_camera_pyx, __pyx_mstate->__pyx_n_u_render_weapon, __pyx_mstate->__pyx_kp_b_iso88591_XQ_Kwb_A_a_t8_6as_A_1_t8_6as_A, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[60])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 7, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 1104};
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 7, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 1109};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_surf, __pyx_mstate->__pyx_n_u_width, __pyx_mstate->__pyx_n_u_height, __pyx_mstate->__pyx_n_u_horizon, __pyx_mstate->__pyx_n_u_floor_and_ceiling, __pyx_mstate->__pyx_n_u_walls_and_entities_2};
     __pyx_mstate_global->__pyx_codeobj_tab[61] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_camera_pyx, __pyx_mstate->__pyx_n_u_render, __pyx_mstate->__pyx_kp_b_iso88591_A_Q_Qd_Ba_HD_b_A_E_3c_L_Ja_2XRw, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[61])) goto bad;
   }

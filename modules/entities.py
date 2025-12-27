@@ -442,6 +442,14 @@ class Player(Entity):
     def weapon(self: Self, value: Optional[Weapon]) -> None:
         self._weapon = value
 
+    @property
+    def foa(self: Self) -> Real:
+        return self._foa
+
+    @foa.setter
+    def foa(self: Self, value: Real) -> None:
+        self._foa = value
+
     def update(self: Self,
                rel_game_speed: Real,
                level_timer: Real,
@@ -530,7 +538,7 @@ class Player(Entity):
                     self._elevation_velocity = 0
         
         # climbing animation / headbob
-        mag = self._velocity2.magnitude()
+        factor = min(self._velocity2.magnitude() * 20, 2)
         elevation = self._elevation + self._camera_offset
         if self._climbing:
             difference = elevation - self._render_elevation
@@ -545,7 +553,7 @@ class Player(Entity):
                 self._render_elevation += (
                     math.sin(level_timer * self._settings['headbob_frequency'])
                     * self._settings['headbob_strength']
-                    * min(mag * 20, 2)
+                    * factor
                 )
         # Weapon update
         if self._weapon is not None:
@@ -557,14 +565,14 @@ class Player(Entity):
                             level_timer * self._settings['weaponbob_frequency']
                         )
                         * self._settings['weaponbob_strength']
-                        * min(mag * 20, 2)
+                        * factor
                     ),
                     self._settings['weapon_pos'][1] + abs(
                         math.cos(
                             level_timer * self._settings['weaponbob_frequency']
                         )
                         * self._settings['weaponbob_strength']
-                        * min(mag * 20, 2) / 2
+                        * factor / 2
                     ),
                 ]
             if self._weapon_attacking:

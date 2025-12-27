@@ -1094,11 +1094,16 @@ cdef class Camera:
     def _render_weapon(self: Self, int width, int height, surf: pg.Surface):
         cdef:
             object weapon_surf = self._player._weapon_surf
+            int weapon_surf_width = weapon_surf.width * self._weapon_scale
+            int weapon_surf_height = weapon_surf.height * self._weapon_scale
             float[2] pos = (
                 <float>self._player._render_weapon_pos[0] * width
-                - <int>weapon_surf.width / 2,
+                - <int>weapon_surf_width / 2,
                 <float>self._player._render_weapon_pos[1] * height,
             )
+        weapon_surf = pg.transform.scale(
+            weapon_surf, (weapon_surf_width, weapon_surf_height),
+        )
         surf.blit(weapon_surf, pos)
 
     def render(self: Self, surf: pg.Surface) -> None:

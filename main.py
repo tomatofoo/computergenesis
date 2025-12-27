@@ -132,7 +132,7 @@ class Game(object):
         for surf in textures:
             surf.set_colorkey((255, 0, 255))
         shotgun = HitscanWeapon(
-            damage=50,
+            damage=100,
             attack_range=20,
             cooldown=60,
             capacity=25,
@@ -204,7 +204,7 @@ class Game(object):
                     self._player.yaw += rel[0] * 0.2
                     #self._camera.horizon -= rel[1] * 0.0025
                 elif event.type == pg.MOUSEBUTTONDOWN:
-                    if self._player.attack():
+                    if self._player.attack() > -1:
                         shotgun.play()
                 elif event.type == second:
                     fps = mean(frames)

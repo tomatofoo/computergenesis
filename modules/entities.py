@@ -363,11 +363,6 @@ class Entity(object):
                     self._elevation_velocity = 0
 
 
-class Attacker(Entity):
-    def __init__(self: Self) -> None:
-        NotImplemented
-
-
 class Player(Entity):
     def __init__(self: Self,
                  pos: Point=(0, 0),
@@ -604,52 +599,58 @@ class Player(Entity):
                 dex %= length
                 self._weapon_surf = self._weapon._textures['hold'][dex]
 
-    def attack(self: Self) -> bool:
+    def attack(self: Self) -> int:
+        # return values
+        # -1: can't attack
+        # 0: can attack but can't hit
+        # 1: can attack and did hit
+
         if self._weapon is None:
-            return False
+            return -1
         elif self._weapon_cooldown_time > 0:
-            return False
+            return -1
         elif isinstance(self._weapon, AmmoWeapon) and self._weapon._ammo <= 0:
-            return False
+            return -1
         else:
             self._weapon_attacking = 1
             self._weapon_cooldown_time = self._weapon._cooldown
             if isinstance(self._weapon, MeleeWeapon):
-                self.melee_attack(
+                if self.melee_attack(
                     damage=self._weapon._damage,
                     attack_range=self._wepaon._range,
                     foa=self._foa,
-                )
-                self._weapon._durability -= 1
+                ):
+                    self._weapon._durability -= 1
+                    return 1
+                else:
+                    return 0
             elif isinstance(self._weapon, HitscanWeapon):
-                self.hitscan_attack(
+                self._weapon._ammo -= 1
+                return self.hitscan_attack(
                     damage=self._weapon._damage,
                     attack_range=self._weapon._range,
                     foa=self._foa,
                 )
-                self._weapon._ammo -= 1
             elif isinstance(self._weapon, MissileWeapon):
-                self.missile_attack(
+                self._weapon._ammo -= 1
+                return self.missile_attack(
                     damage=self._weapon._damage,
                     attack_range=self._wepaon._range,
                     foa=self._foa,
                 )
-                self._weapon._ammo -= 1
-
-            return True
 
     def melee_attack(self: Self,
                      damage: Real,
                      attack_range: Real,
                      foa: Real,
-                     precision: int=2) -> None:
-        pass
+                     precision: int=2) -> bool:
+        return False
         
     def hitscan_attack(self: Self,
                        damage: Real,
                        attack_range: Real,
                        foa: Real,
-                       precision: int=2) -> None:
+                       precision: int=2) -> bool:
 
         # Hitscan gunshot
 
@@ -776,13 +777,16 @@ class Player(Entity):
         if entity is not None:
             entity.hitscan_damage(damage)
             entity.textures = [FALLBACK_SURF]
+            return True
+        else:
+            return False
 
     def missile_attack(self: Self,
                        damage: Real,
                        attack_range: Real,
                        foa: Real,
                        precision: int=2) -> None:
-        pass
+        return False
 
 
 class EntityManager(object):

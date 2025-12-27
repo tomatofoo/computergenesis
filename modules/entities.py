@@ -402,7 +402,7 @@ class Player(Entity):
         self._weapon_surf = pg.Surface((0, 0))
         self._weapon_attacking = 0
         self._weapon_attack_time = 0
-        self._weapon_cooldown_time = 0 # time since last shot
+        self._weapon_cooldown_time = 0 # time until next available shot
         self._render_weapon_pos = list(self._settings['weapon_pos'])
         
         # delete variables we don't need from entity init
@@ -549,7 +549,7 @@ class Player(Entity):
                 )
         # Weapon update
         if self._weapon is not None:
-            self._weapon_cooldown_time += rel_game_speed
+            self._weapon_cooldown_time -= rel_game_speed
             if bob_update:
                 self._render_weapon_pos = [
                     self._settings['weapon_pos'][0] + (
@@ -590,11 +590,10 @@ class Player(Entity):
                 dex %= length
                 self._weapon_surf = self._weapon._textures['hold'][dex]
 
-    def attack(self: Self) -> None:
-        if (self._weapon is not None
-            and self._weapon_cooldown_time > self._weapon._cooldown):
+    def attack(self: Self) -> bool:
+        if self._weapon is not None and self._weapon_cooldown_time <= 0:
             self._weapon_attacking = 1
-            self._weapon_cooldown_time = 0
+            self._weapon_cooldown_time = self._weapon._cooldown
             if isinstance(self._weapon, MeleeWeapon):
                 self.melee_attack(
                     damage=self._weapon._damage,
@@ -607,12 +606,16 @@ class Player(Entity):
                     attack_range=self._weapon._range,
                     foa=self._foa,
                 )
+                self._weapon._ammo -= 1
             elif isinstance(self._weapon, MissileWeapon):
                 self.missile_attack(
                     damage=self._weapon._damage,
                     attack_range=self._wepaon._range,
                     foa=self._foa,
                 )
+                self._weapon._ammo -= 1
+            return True
+        return False
 
     def melee_attack(self: Self,
                      damage: Real,

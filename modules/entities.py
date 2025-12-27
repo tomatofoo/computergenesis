@@ -8,6 +8,7 @@ import pygame as pg
 from pygame.typing import Point
 
 from modules.weapons import Weapon
+from modules.weapons import AmmoWeapon
 from modules.weapons import MeleeWeapon
 from modules.weapons import HitscanWeapon
 from modules.weapons import MissileWeapon
@@ -362,6 +363,11 @@ class Entity(object):
                     self._elevation_velocity = 0
 
 
+class Attacker(Entity):
+    def __init__(self: Self) -> None:
+        NotImplemented
+
+
 class Player(Entity):
     def __init__(self: Self,
                  pos: Point=(0, 0),
@@ -599,7 +605,13 @@ class Player(Entity):
                 self._weapon_surf = self._weapon._textures['hold'][dex]
 
     def attack(self: Self) -> bool:
-        if self._weapon is not None and self._weapon_cooldown_time <= 0:
+        if self._weapon is None:
+            return False
+        elif self._weapon_cooldown_time > 0:
+            return False
+        elif isinstance(self._weapon, AmmoWeapon) and self._weapon._ammo <= 0:
+            return False
+        else:
             self._weapon_attacking = 1
             self._weapon_cooldown_time = self._weapon._cooldown
             if isinstance(self._weapon, MeleeWeapon):
@@ -608,6 +620,7 @@ class Player(Entity):
                     attack_range=self._wepaon._range,
                     foa=self._foa,
                 )
+                self._weapon._durability -= 1
             elif isinstance(self._weapon, HitscanWeapon):
                 self.hitscan_attack(
                     damage=self._weapon._damage,
@@ -622,8 +635,8 @@ class Player(Entity):
                     foa=self._foa,
                 )
                 self._weapon._ammo -= 1
+
             return True
-        return False
 
     def melee_attack(self: Self,
                      damage: Real,

@@ -113,6 +113,7 @@ class MeleeWeapon(Weapon):
                  damage: Real,
                  attack_range: Real,
                  cooldown: Real,
+                 durability: int,
                  ground_textures: list[pg.Surface],
                  hold_textures: list[pg.Surface],
                  attack_textures: list[pg.Surface],
@@ -130,6 +131,15 @@ class MeleeWeapon(Weapon):
             hold_animation_time=hold_animation_time,
             attack_animation_time=attack_animation_time,
         )
+        self._durability = durability
+
+    @property
+    def durability(self: Self) -> int:
+        return self._durability
+
+    @durability.setter
+    def durability(self: Self, value: int) -> None:
+        self._durability = durability
 
 
 class HitscanWeapon(AmmoWeapon):

@@ -149,6 +149,7 @@ class Game(object):
             hold_animation_time=30,
             attack_animation_time=50,
         )
+        shotgun.ammo = math.inf
         self._player.weapon = shotgun
 
     def move_tiles(self: Self) -> None:

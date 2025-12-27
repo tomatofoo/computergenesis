@@ -17,6 +17,7 @@ class Weapon(object):
     def __init__(self: Self,
                  damage: Real,
                  attack_range: Real,
+                 cooldown: Real,
                  ground_textures: list[pg.Surface],
                  hold_textures: list[pg.Surface],
                  attack_textures: list[pg.Surface],
@@ -25,6 +26,7 @@ class Weapon(object):
                  attack_animation_time: Real=1) -> None:
         self._range = attack_range
         self._damage = damage
+        self._cooldown = cooldown
         
         self._textures = {
             'ground': ground_textures,
@@ -41,15 +43,32 @@ class Weapon(object):
     def damage(self: Self) -> Real:
         return self._damage
 
+    @damage.setter
+    def damage(self: Self, value: Real) -> None:
+        self._damage = value
+
     @property
     def attack_range(self: Self) -> Real:
         return self._attack_range
+
+    @attack_range.setter
+    def attack_range(self: Self, value: Real) -> None:
+        self._attack_range = value
+
+    @property
+    def cooldown(self: Self) -> Real:
+        return self._cooldown
+
+    @cooldown.setter
+    def cooldown(self: Self, value: Real) -> None:
+        self._cooldown = value
 
 
 class AmmoWeapon(Weapon):
     def __init__(self: Self,
                  damage: Real,
                  attack_range: Real,
+                 cooldown: Real,
                  capacity: int,
                  ground_textures: list[pg.Surface],
                  hold_textures: list[pg.Surface],
@@ -61,6 +80,7 @@ class AmmoWeapon(Weapon):
         super().__init__(
             damage=damage,
             attack_range=attack_range,
+            cooldown=cooldown,
             ground_textures=ground_textures,
             hold_textures=hold_textures,
             attack_textures=attack_textures,
@@ -92,6 +112,7 @@ class MeleeWeapon(Weapon):
     def __init__(self: Self,
                  damage: Real,
                  attack_range: Real,
+                 cooldown: Real,
                  ground_textures: list[pg.Surface],
                  hold_textures: list[pg.Surface],
                  attack_textures: list[pg.Surface],
@@ -101,6 +122,7 @@ class MeleeWeapon(Weapon):
         super().__init__(
             damage=damage,
             attack_range=attack_range,
+            cooldown=cooldown,
             ground_textures=ground_textures,
             hold_textures=hold_textures,
             attack_textures=attack_textures,
@@ -114,6 +136,7 @@ class HitscanWeapon(AmmoWeapon):
     def __init__(self: Self,
                  damage: Real,
                  attack_range: Real,
+                 cooldown: Real,
                  capacity: int,
                  ground_textures: list[pg.Surface],
                  hold_textures: list[pg.Surface],
@@ -125,6 +148,7 @@ class HitscanWeapon(AmmoWeapon):
         super().__init__(
             damage=damage,
             attack_range=attack_range,
+            cooldown=cooldown,
             capacity=capacity,
             ground_textures=ground_textures,
             hold_textures=hold_textures,
@@ -140,6 +164,7 @@ class MissileWeapon(AmmoWeapon):
                  damage: Real,
                  attack_range: Real,
                  capacity: int,
+                 cooldown: Real,
                  missile: Missile,
                  ground_textures: list[pg.Surface],
                  hold_textures: list[pg.Surface],
@@ -151,6 +176,7 @@ class MissileWeapon(AmmoWeapon):
         super().__init__(
             damage=damage,
             attack_range=attack_range,
+            cooldown=cooldown,
             capacity=capacity,
             ground_textures=ground_textures,
             hold_textures=hold_textures,

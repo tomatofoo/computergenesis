@@ -150,7 +150,7 @@ class Walls(object):
             'rect': rect,
         }
 
-    def remove_tile(self: Self, pos: Point):
+    def pop_tile(self: Self, pos: Point):
         return self._walls.pop(f'{pos[0]};{pos[1]}')
 
     @property

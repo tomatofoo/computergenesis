@@ -221,6 +221,12 @@ class Box(object): # 3D Box
 def gen_tile_key(obj: Point):
     return f'{int(math.floor(obj[0]))};{int(math.floor(obj[1]))}'
 
+def gen_img_path(path: str):
+    return f'data/images/{path}'
+
+def gen_snd_path(path: str):
+    return f'data/sounds/{path}'
+
 
 class Pathfinder(object): # 4-path pathfinder using A*
 

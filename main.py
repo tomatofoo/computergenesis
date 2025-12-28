@@ -26,6 +26,8 @@ from modules.entities import EntityManager
 from modules.inventory import Collectible
 from modules.inventory import Inventory
 from modules.weapons import HitscanWeapon
+from modules.utils import gen_img_path
+from modules.utils import gen_snd_path
 
 
 class Game(object):
@@ -106,7 +108,13 @@ class Game(object):
         )
         self._camera.horizon = 0.5
         self._entities = EntityManager(self._player, entities)
-        self._sounds = SoundManager()
+        self._sounds = SoundManager(
+            sounds2d={
+                'shotgun': Sound2D(gen_snd_path('shotgun.mp3')),
+            },
+            sounds3d={
+            },
+        )
 
         with open('data/map.json', 'r') as file:
             walls = json.loads(file.read())
@@ -184,8 +192,6 @@ class Game(object):
         second = pg.event.custom_type()
         pg.time.set_timer(second, 1000)
         
-        shotgun = mx.Sound('data/sounds/shotgun.mp3')
-
         while self._running:
             # Time
             delta_time = time.time() - start_time
@@ -203,7 +209,7 @@ class Game(object):
                     #self._camera.horizon -= rel[1] * 0.0025
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     if self._player.attack():
-                        shotgun.play()
+                        self._sounds.sound2d('shotgun').play()
                 elif event.type == second:
                     fps = mean(frames)
                     pg.display.set_caption(str(int(fps)))

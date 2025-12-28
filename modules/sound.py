@@ -1,4 +1,5 @@
 from typing import Self
+from typing import Optional
 
 import openal as oal
 from openal import AL_PLAYING
@@ -93,8 +94,8 @@ class Sound3D(object):
 
 class SoundManager(object):
     def __init__(self: Self,
-                 sounds2d: list[Sound2D]=[],
-                 sounds3d: list[Sound3D]=[],
+                 sounds2d: dict[object, Sound2D]={},
+                 sounds3d: dict[object, Sound3D]={},
                  volume: Real=1) -> None:
 
         if not oalGetInit():
@@ -102,8 +103,10 @@ class SoundManager(object):
         self._listener = oalGetListener()
         self._listener.set_gain(volume)
         self._volume = volume
-        self._sounds2d = sounds2d
-        self._sounds3d = sounds3d
+        self._sounds2d = {}
+        self._sounds3d = {}
+        self.sounds2d = sounds2d
+        self.sounds3d = sounds3d
         self._level = None
 
     @property
@@ -112,7 +115,12 @@ class SoundManager(object):
 
     @sounds2d.setter
     def sounds2d(self: Self, value: Sound2D) -> None:
+        for sound in self._sounds2d.values():
+            sound._manager = None
         self._sounds2d = value
+        for sound in value.values():
+            sound._manager = self
+            sound._update()
 
     @property
     def sounds3d(self: Self) -> list[Sound3D]:
@@ -120,7 +128,11 @@ class SoundManager(object):
 
     @sounds3d.setter
     def sounds3d(self: Self, value: Sound3D) -> None:
+        for sound in self._sounds3d.values():
+            sound._manager = None
         self._sounds3d = value
+        for sound in value.values():
+            sound._manager = self
 
     @property
     def volume(self: Self) -> Real:
@@ -130,6 +142,36 @@ class SoundManager(object):
     def volume(self: Self, value: Real) -> None:
         self._volume = value
         self._listener.set_gain(value)
+        for sound in self._sounds2d.values():
+            sound._update()
+
+    def sound2d(self: Self, id: object) -> Optional[Sound2D]:
+        return self._sounds2d.get(id)
+
+    def sound3d(self: Self, id: object) -> Optional[Sound3D]:
+        return self._sounds3d.get(id)
+
+    def set_sound2d(self: Self, id: object, sound: Sound2D) -> None:
+        old = self._sounds2d.get(id)
+        if old is not None:
+            old._manager = None
+        self._sounds2d[id] = sound
+        sound._manaager = self
+
+    def pop_sound2d(self: Self, id: object) -> Sound2D:
+        self._sounds2d[id]._manager = None
+        return self._sounds2d.pop(id)
+
+    def set_sound3d(self: Self, id: object, sound: Sound3D) -> None:
+        old = self._sounds3d.get(id)
+        if old is not None:
+            old._manager = None
+        self._sounds3d[id] = sound
+        sound._manager = self
+
+    def pop_sound3d(self: Self, id: object) -> Sound3D:
+        self._sounds3d[id]._manager = None
+        return self._sounds3d.pop(id)
 
     def update(self: Self) -> None:
         player = self._level._entities._player

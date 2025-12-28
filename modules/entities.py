@@ -790,9 +790,7 @@ class Player(Entity):
 
 class EntityManager(object):
     
-    def __init__(self: Self, 
-                 player: Player, 
-                 entities: set[Entity]) -> None:
+    def __init__(self: Self, player: Player, entities: set[Entity]) -> None:
         self._player = player
         player._manager = self
         self._entities = entities
@@ -804,6 +802,14 @@ class EntityManager(object):
 
         # _sets is a dictionary where each key is a tile position and the value
         # is the set of all entities in that position
+
+    @property
+    def player(self: Self) -> Player:
+        return self._player
+
+    @player.setter
+    def player(self: Self, value: Player) -> None:
+        self._player = value
 
     @property
     def entities(self: Self) -> set:
@@ -819,20 +825,6 @@ class EntityManager(object):
         for entity in value:
             self._add_to_sets(entity)
             entity._manager = self
-
-    @property
-    def player(self: Self) -> Player:
-        return self._player
-
-    @player.setter
-    def player(self: Self, value: Player) -> None:
-        self._player = value
-
-    @property
-    def level(self: Self) -> Level:
-        if self._level is None:
-            raise ValueError('Must assign level to manager')
-        return self._level
 
     def _add_to_sets(self: Self, entity: Entity) -> None:
         key = gen_tile_key(entity._pos)

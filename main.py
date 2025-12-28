@@ -17,6 +17,9 @@ from modules.level import Level
 from modules.camera import Camera
 from modules.hud import HUDElement
 from modules.hud import HUD
+from modules.sound import Sound2D
+from modules.sound import Sound3D
+from modules.sound import SoundManager
 from modules.entities import Entity 
 from modules.entities import Player
 from modules.entities import EntityManager 
@@ -98,22 +101,10 @@ class Game(object):
         for dex, entity in enumerate(entities):
             entity.glowing = 1
 
-        self._player = Player()
-        self._entities = EntityManager(self._player, entities)
-
-        self._player.pos = (6.5, 7)
+        self._player = Player((6.5, 7))
         self._player.yaw = 180
         self._player.elevation = 1
         self._player.height = 0.6
-
-        self._level = Level(
-            floor=Floor(pg.image.load('data/images/wood.png').convert()),
-            ceiling=Sky(pg.image.load('data/images/nightsky.png').convert()),
-            walls=Walls(walls, self._wall_textures),
-            entities=self._entities,
-        )
-        pg.mouse.set_relative_mode(1)
-
         self._camera = Camera(
             fov=90,
             tile_size=self._SURF_SIZE[0] / 2,
@@ -122,6 +113,18 @@ class Game(object):
             multithreaded=True,
         )
         self._camera.horizon = 0.5
+        self._entities = EntityManager(self._player, entities)
+        self._sounds = SoundManager()
+
+        self._level = Level(
+            floor=Floor(pg.image.load('data/images/wood.png').convert()),
+            ceiling=Sky(pg.image.load('data/images/nightsky.png').convert()),
+            walls=Walls(walls, self._wall_textures),
+            entities=self._entities,
+            sounds=self._sounds,
+        )
+        pg.mouse.set_relative_mode(1)
+
         self._level_timer = 0
         
         textures = [
@@ -230,7 +233,7 @@ class Game(object):
                 movement[2],
                 movement[4] if movement[4] else None,
             )
-            self._entities.update(rel_game_speed, self._level_timer)
+            self._level.update(rel_game_speed, self._level_timer)
             frames.append(1 / delta_time if delta_time else math.inf)
 
             self._camera.horizon -= movement[3] * 0.025 * rel_game_speed

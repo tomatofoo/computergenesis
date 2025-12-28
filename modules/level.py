@@ -10,6 +10,7 @@ from pygame.typing import RectLike
 from pygame.typing import ColorLike
 
 from modules.entities import EntityManager
+from modules.sound import SoundManager
 from modules.utils import FALLBACK_SURF
 from modules.utils import gen_tile_key
 
@@ -167,6 +168,7 @@ class Level(object):
                  ceiling: Optional[Union[Floor, Sky]],
                  walls: Walls,
                  entities: EntityManager,
+                 sounds: SoundManager,
                  ceiling_elevation: Real=1) -> None:
 
         self._floor = floor
@@ -176,7 +178,10 @@ class Level(object):
             self._ceiling_elevation = math.inf
         self._walls = walls
         self._entities = entities
+        self._sounds = sounds
         entities._level = self
+        sounds._level = self
+        sounds.update()
 
     @property
     def floor(self: Self) -> Optional[Union[Floor, Sky]]:
@@ -211,11 +216,19 @@ class Level(object):
         self._entities._level = None
         self._entities = value
         value._level = self
-    
-    def add_walls(self: Self, walls: Walls) -> None:
-        self._walls.append(walls)
 
-    def remove_walls(self: Self, dex: int) -> None:
-        return self._walls.pop(dex)
+    @property
+    def sounds(self: Self) -> SoundManager:
+        return self._sounds
 
+    @sounds.setter
+    def sounds(self: Self, value: SoundManager) -> None:
+        self._sounds._level = None
+        self._sounds = value
+        value._level = self
+        value.update()
+
+    def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
+        self._sounds.update()
+        self._entities.update(rel_game_speed, level_timer)
 

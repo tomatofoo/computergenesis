@@ -125,8 +125,6 @@ class Game(object):
         )
         pg.mouse.set_relative_mode(1)
 
-        self._level_timer = 0
-        
         textures = [
             pg.image.load('data/images/shotgun/1.png'),
             pg.image.load('data/images/shotgun/2.png'),
@@ -156,14 +154,14 @@ class Game(object):
         shotgun.ammo = math.inf
         self._player.weapon = shotgun
 
-    def move_tiles(self: Self) -> None:
+    def move_tiles(self: Self, level_timer: Real) -> None:
         self._level.walls.set_tile(
             pos=(8, 11),
-            elevation=math.sin(self._level_timer / 60 + math.pi) + 1,
+            elevation=math.sin(level_timer / 60 + math.pi) + 1,
         )
         self._level.walls.set_tile(
             pos=(9, 11),
-            height=math.sin(self._level_timer / 60) + 1,
+            height=math.sin(level_timer / 60) + 1,
         )
         self._level.walls.set_tile(
             pos=(10, 8),
@@ -172,7 +170,7 @@ class Game(object):
             texture=0,
             semitile={
                 'axis': 1,
-                'pos': (0.2, self._level_timer / 60 % 2 - 1),
+                'pos': (0.2, level_timer / 60 % 2 - 1),
                 'width': 1,
             },
             rect=(0.2, 0, 0.0001, 1),
@@ -181,9 +179,8 @@ class Game(object):
     def run(self: Self) -> None:
         self._running = 1
         start_time = time.time()
+        level_timer = 0
         
-        gun = pg.image.load('data/images/gun.png')
-
         from statistics import mean
         frames = []
         fps = 0
@@ -198,7 +195,7 @@ class Game(object):
 
             rel_game_speed = delta_time * self._GAME_SPEED
 
-            self._level_timer += rel_game_speed
+            level_timer += rel_game_speed
 
             for event in pg.event.get():
                 if event.type == pg.QUIT:
@@ -216,7 +213,7 @@ class Game(object):
                     frames = []
             
             # Update
-            self.move_tiles()
+            self.move_tiles(level_timer)
             keys = pg.key.get_pressed()
             movement = (
                 (keys[pg.K_w] - keys[pg.K_s]) * 0.05,
@@ -227,13 +224,13 @@ class Game(object):
             )
             self._player.update(
                 rel_game_speed,
-                self._level_timer,
+                level_timer,
                 movement[0],
                 movement[1],
                 movement[2],
                 movement[4] if movement[4] else None,
             )
-            self._level.update(rel_game_speed, self._level_timer)
+            self._level.update(rel_game_speed, level_timer)
             frames.append(1 / delta_time if delta_time else math.inf)
 
             self._camera.horizon -= movement[3] * 0.025 * rel_game_speed

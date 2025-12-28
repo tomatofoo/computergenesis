@@ -77,8 +77,6 @@ class Game(object):
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     self._running = 0
-                
-
                 elif event.type == pg.KEYDOWN:
                     if event.key == pg.K_z:
                         self._zoom += self._zoom_step

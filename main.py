@@ -190,13 +190,13 @@ class Game(object):
         shotgun = mx.Sound('data/sounds/shotgun.mp3')
 
         while self._running:
+            # Time
             delta_time = time.time() - start_time
             start_time = time.time()
-
             rel_game_speed = delta_time * self._GAME_SPEED
-
             level_timer += rel_game_speed
-
+            
+            # Events
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     self._running = 0
@@ -230,19 +230,18 @@ class Game(object):
                 movement[2],
                 movement[4] if movement[4] else None,
             )
+            self._camera.horizon -= movement[3] * 0.025 * rel_game_speed
             self._level.update(rel_game_speed, level_timer)
             frames.append(1 / delta_time if delta_time else math.inf)
 
-            self._camera.horizon -= movement[3] * 0.025 * rel_game_speed
-            
             # Render
             self._camera.render(self._surface)
-
+            # self._hud.render(self._surface)
             resized_surf = pg.transform.scale(self._surface, self._SCREEN_SIZE)
             self._screen.blit(resized_surf, (0, 0))
-
             pg.display.flip()
-
+        
+        self._sounds.quit()
         pg.quit()
 
 if __name__ == '__main__':

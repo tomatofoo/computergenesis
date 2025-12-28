@@ -11,27 +11,7 @@ from openal import oalOpen
 from pygame import mixer as mx
 
 
-# Interface for sounds
-class _Sound(object):
-    def __init__(self: Self, path: str, volume: Real=1) -> None:
-        pass
-
-    @property
-    def volume(self: Self) -> Real:
-        pass
-
-    @volume.setter
-    def volume(self: Self, value: Real) -> None:
-        pass
-
-    def play(self: Self) -> None:
-        pass
-
-    def stop(self: Self) -> None:
-        pass
-
-
-class Sound2D(_Sound):
+class Sound2D(object):
     def __init__(self: Self, path: str, volume: Real=1) -> None:
         self._sound = mx.Sound(path)
         self._sound.set_volume(volume)
@@ -57,18 +37,48 @@ class Sound2D(_Sound):
         self._sound.stop()
 
 
-class Sound3D(_Sound):
-    def __init__(self: Self, path: str) -> None:
-        self._sources = [oalOpen(path)]
+class Sound3D(object):
+    def __init__(self: Self, path: str, volume: Real=1) -> None:
+        self._path = path
+        self._volume = volume
+        self._sources = []
         self._manager = None
 
-    def play(self: Self, vector: pg.Vector3, direction: pg.Vector3) -> None:
+    @property
+    def volume(self: Self) -> Real:
+        return self._volume
+
+    @volume.setter
+    def volume(self: Self, value: Real) -> None:
+        self._volume = value
+
+    def _play(self: Self,
+              source: oal.Source,
+              pos: pg.Vector3,
+              direction: pg.Vector3) -> None:
+        source.set_position(pos)
+        source.set_direction(direction)
+        source.set_gain(self._volume)
+        source.play()
+
+    def play(self: Self, pos: pg.Vector3, direction: pg.Vector3) -> None:
         for source in self._sources:
-            if source.get_state() == AL_PLAYING:
-                pass
+            if source.get_state() != AL_PLAYING:
+                self._play(source, pos, direction)
+                break
+        else:
+            source = oalOpen(self._path)
+            self._sources._append(source)
+            self._play(source, pos, direction)
 
     def stop(self: Self) -> None:
-        pass
+        for source in self._sources:
+            source.stop()
+
+    def reset(self: Self) -> None:
+        for source in self._sources:
+            source.destroy()
+            del source
 
 
 class SoundManager(object):
@@ -82,7 +92,25 @@ class SoundManager(object):
         self._listener = oalGetListener()
         self._listener.set_gain(volume)
         self._volume = volume
+        self._sounds2d = sounds2d
+        self._sounds3d = sounds3d
         self._level = None
+
+    @property
+    def sounds2d(self: Self) -> list[Sound2D]:
+        return self._sounds2d
+
+    @sounds2d.setter
+    def sounds2d(self: Self, value: Sound2D) -> None:
+        self._sounds2d = value
+
+    @property
+    def sounds3d(self: Self) -> list[Sound3D]:
+        return self._sounds3d
+
+    @sounds3d.setter
+    def sounds3d(self: Self, value: Sound3D) -> None:
+        self._sounds3d = value
 
     @property
     def volume(self: Self) -> Real:
@@ -103,4 +131,11 @@ class SoundManager(object):
 
     def quit(self: Self) -> None:
         oalQuit()
+
+    def reset(self: Self) -> None:
+        self.quit()
+        if not oalGetInit():
+            oalInit()
+        for sound in self._sounds3d:
+            sound._sources = []
 

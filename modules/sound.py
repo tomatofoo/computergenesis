@@ -41,6 +41,7 @@ class Sound3D(object):
     def __init__(self: Self, path: str, volume: Real=1) -> None:
         self._path = path
         self._volume = volume
+        self._looping = False
         self._sources = []
         self._manager = None
 
@@ -52,6 +53,14 @@ class Sound3D(object):
     def volume(self: Self, value: Real) -> None:
         self._volume = value
 
+    @property
+    def looping(self: Self) -> bool:
+        return self._looping
+
+    @looping.setter
+    def looping(self: Self, value: bool) -> None:
+        self._looping = value
+
     def _play(self: Self,
               source: oal.Source,
               pos: pg.Vector3,
@@ -59,6 +68,7 @@ class Sound3D(object):
         source.set_position(pos)
         source.set_direction(direction)
         source.set_gain(self._volume)
+        source.set_looping(self._looping)
         source.play()
 
     def play(self: Self, pos: pg.Vector3, direction: pg.Vector3) -> None:

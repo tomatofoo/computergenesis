@@ -50,18 +50,10 @@ class Game(object):
             flags=self._SCREEN_FLAGS,
             vsync=self._settings['vsync']
         )
-        pg.display.set_caption('Pygame Raycaster')
+        pg.display.set_caption('Computergenesis')
         self._surface = pg.Surface(self._SURF_SIZE)
         self._running = 0
         
-        with open('data/map.json', 'r') as file:
-            walls = json.loads(file.read())
-            
-        self._wall_textures = (
-            ColumnTexture(pg.image.load('data/images/redbrick.png').convert()),
-        )
-
-        #temp
         entities = {
             Entity(
                 pos=(6.5, 6),
@@ -116,10 +108,15 @@ class Game(object):
         self._entities = EntityManager(self._player, entities)
         self._sounds = SoundManager()
 
+        with open('data/map.json', 'r') as file:
+            walls = json.loads(file.read())
+        wall_textures = (
+            ColumnTexture(pg.image.load('data/images/redbrick.png').convert()),
+        )
         self._level = Level(
             floor=Floor(pg.image.load('data/images/wood.png').convert()),
             ceiling=Sky(pg.image.load('data/images/nightsky.png').convert()),
-            walls=Walls(walls, self._wall_textures),
+            walls=Walls(walls, wall_textures),
             entities=self._entities,
             sounds=self._sounds,
         )

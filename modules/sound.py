@@ -78,7 +78,7 @@ class Sound3D(object):
     def reset(self: Self) -> None:
         for source in self._sources:
             source.destroy()
-            del source
+        self._sources = []
 
 
 class SoundManager(object):
@@ -133,9 +133,9 @@ class SoundManager(object):
         oalQuit()
 
     def reset(self: Self) -> None:
+        for sound in self._sounds3d:
+            sound.reset()
         self.quit()
         if not oalGetInit():
             oalInit()
-        for sound in self._sounds3d:
-            sound._sources = []
 

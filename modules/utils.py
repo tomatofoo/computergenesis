@@ -224,8 +224,11 @@ def gen_tile_key(obj: Point):
 def gen_img_path(path: str):
     return f'data/images/{path}'
 
-def gen_snd_path(path: str):
-    return f'data/sounds/{path}'
+def gen_sfx_path(path: str):
+    return f'data/audio/sfx/{path}'
+
+def gen_mus_path(path: str):
+    return f'data/audio/music/{path}'
 
 
 class Pathfinder(object): # 4-path pathfinder using A*

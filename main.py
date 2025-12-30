@@ -17,8 +17,8 @@ from modules.level import Level
 from modules.camera import Camera
 from modules.hud import HUDElement
 from modules.hud import HUD
-from modules.sound import Sound2D
-from modules.sound import Sound3D
+from modules.sound import patch_surround
+from modules.sound import Sound
 from modules.sound import SoundManager
 from modules.entities import Entity 
 from modules.entities import Player
@@ -27,7 +27,8 @@ from modules.inventory import Collectible
 from modules.inventory import Inventory
 from modules.weapons import HitscanWeapon
 from modules.utils import gen_img_path
-from modules.utils import gen_snd_path
+from modules.utils import gen_sfx_path
+from modules.utils import gen_mus_path
 
 
 class Game(object):
@@ -108,11 +109,12 @@ class Game(object):
         )
         self._camera.horizon = 0.5
         self._entities = EntityManager(self._player, entities)
+
+        # Sound
+        patch_surround()
         self._sounds = SoundManager(
-            sounds2d={
-                'shotgun': Sound2D(gen_snd_path('shotgun.mp3')),
-            },
-            sounds3d={
+            sounds={
+                'shotgun': Sound(gen_sfx_path('shotgun.mp3')),
             },
         )
 
@@ -209,7 +211,7 @@ class Game(object):
                     #self._camera.horizon -= rel[1] * 0.0025
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     if self._player.attack():
-                        self._sounds.sound2d('shotgun').play()
+                        self._sounds['shotgun'].play(pos=(6, 1, 6))
                 elif event.type == second:
                     fps = mean(frames)
                     pg.display.set_caption(str(int(fps)))
@@ -244,7 +246,6 @@ class Game(object):
             self._screen.blit(resized_surf, (0, 0))
             pg.display.flip()
         
-        self._sounds.quit()
         pg.quit()
 
 if __name__ == '__main__':

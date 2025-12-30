@@ -116,6 +116,7 @@ class Game(object):
             sounds={
                 'shotgun': Sound(gen_sfx_path('shotgun.mp3')),
             },
+            volume=0.5,
         )
 
         with open('data/map.json', 'r') as file:

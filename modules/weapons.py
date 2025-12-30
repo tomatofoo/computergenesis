@@ -2,8 +2,11 @@ from __future__ import annotations
 
 from numbers import Real
 from typing import Self
+from typing import Optional
 
 import pygame as pg
+
+from modules.sound import Sound
 
 # Avoid circular import
 from typing import TYPE_CHECKING
@@ -18,16 +21,17 @@ class Weapon(object):
                  damage: Real,
                  attack_range: Real,
                  cooldown: Real,
-                 ground_textures: list[pg.Surface],
-                 hold_textures: list[pg.Surface],
-                 attack_textures: list[pg.Surface],
+                 ground_textures: Optional[list[pg.Surface]]=None,
+                 hold_textures: Optional[list[pg.Surface]]=None,
+                 attack_textures: Optional[list[pg.Surface]]=None,
                  ground_animation_time: Real=1,
                  hold_animation_time: Real=1,
-                 attack_animation_time: Real=1) -> None:
+                 attack_animation_time: Real=1,
+                 attack_sound: Optional[Sound]=None) -> None:
         self._range = attack_range
         self._damage = damage
         self._cooldown = cooldown
-        
+
         self._textures = {
             'ground': ground_textures,
             'hold': hold_textures,
@@ -37,6 +41,9 @@ class Weapon(object):
             'ground': ground_animation_time,
             'hold': hold_animation_time,
             'attack': attack_animation_time,
+        }
+        self._sounds = {
+            'attack': attack_sound,
         }
 
     @property
@@ -70,12 +77,13 @@ class AmmoWeapon(Weapon):
                  attack_range: Real,
                  cooldown: Real,
                  capacity: int,
-                 ground_textures: list[pg.Surface],
-                 hold_textures: list[pg.Surface],
-                 attack_textures: list[pg.Surface],
+                 ground_textures: Optional[list[pg.Surface]]=None,
+                 hold_textures: Optional[list[pg.Surface]]=None,
+                 attack_textures: Optional[list[pg.Surface]]=None,
                  ground_animation_time=1,
                  hold_animation_time=1,
-                 attack_animation_time=1) -> None:
+                 attack_animation_time=1,
+                 attack_sound: Optional[Sound]=None) -> None:
 
         super().__init__(
             damage=damage,
@@ -87,6 +95,7 @@ class AmmoWeapon(Weapon):
             ground_animation_time=ground_animation_time,
             hold_animation_time=hold_animation_time,
             attack_animation_time=attack_animation_time,
+            attack_sound=attack_sound,
         )
 
         self._ammo = 0
@@ -114,12 +123,13 @@ class MeleeWeapon(Weapon):
                  attack_range: Real,
                  cooldown: Real,
                  durability: int,
-                 ground_textures: list[pg.Surface],
-                 hold_textures: list[pg.Surface],
-                 attack_textures: list[pg.Surface],
+                 ground_textures: Optional[list[pg.Surface]]=None,
+                 hold_textures: Optional[list[pg.Surface]]=None,
+                 attack_textures: Optional[list[pg.Surface]]=None,
                  ground_animation_time=1,
                  hold_animation_time=1,
-                 attack_animation_time=1) -> None:
+                 attack_animation_time=1,
+                 attack_sound: Optional[Sound]=None) -> None:
         super().__init__(
             damage=damage,
             attack_range=attack_range,
@@ -130,6 +140,7 @@ class MeleeWeapon(Weapon):
             ground_animation_time=ground_animation_time,
             hold_animation_time=hold_animation_time,
             attack_animation_time=attack_animation_time,
+            attack_sound=attack_sound,
         )
         self._durability = durability
 
@@ -148,12 +159,13 @@ class HitscanWeapon(AmmoWeapon):
                  attack_range: Real,
                  cooldown: Real,
                  capacity: int,
-                 ground_textures: list[pg.Surface],
-                 hold_textures: list[pg.Surface],
-                 attack_textures: list[pg.Surface],
+                 ground_textures: Optional[list[pg.Surface]]=None,
+                 hold_textures: Optional[list[pg.Surface]]=None,
+                 attack_textures: Optional[list[pg.Surface]]=None,
                  ground_animation_time=1,
                  hold_animation_time=1,
-                 attack_animation_time=1) -> None:
+                 attack_animation_time=1,
+                 attack_sound: Optional[Sound]=None) -> None:
 
         super().__init__(
             damage=damage,
@@ -166,6 +178,7 @@ class HitscanWeapon(AmmoWeapon):
             ground_animation_time=ground_animation_time,
             hold_animation_time=hold_animation_time,
             attack_animation_time=attack_animation_time,
+            attack_sound=attack_sound,
         )
 
 
@@ -176,12 +189,13 @@ class MissileWeapon(AmmoWeapon):
                  capacity: int,
                  cooldown: Real,
                  missile: Missile,
-                 ground_textures: list[pg.Surface],
-                 hold_textures: list[pg.Surface],
-                 attack_textures: list[pg.Surface],
+                 ground_textures: Optional[list[pg.Surface]]=None,
+                 hold_textures: Optional[list[pg.Surface]]=None,
+                 attack_textures: Optional[list[pg.Surface]]=None,
                  ground_animation_time=1,
                  hold_animation_time=1,
-                 attack_animation_time=1) -> None:
+                 attack_animation_time=1,
+                 attack_sound: Optional[Sound]=None) -> None:
 
         super().__init__(
             damage=damage,
@@ -194,6 +208,7 @@ class MissileWeapon(AmmoWeapon):
             ground_animation_time=ground_animation_time,
             hold_animation_time=hold_animation_time,
             attack_animation_time=attack_animation_time,
+            attack_sound=attack_sound,
         )
 
 

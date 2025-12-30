@@ -116,7 +116,6 @@ class Game(object):
             sounds={
                 'shotgun': Sound(gen_sfx_path('shotgun.mp3')),
             },
-            volume=0.5,
         )
 
         with open('data/map.json', 'r') as file:
@@ -158,6 +157,7 @@ class Game(object):
             ground_animation_time=1,
             hold_animation_time=30,
             attack_animation_time=50,
+            attack_sound=self._sounds['shotgun'],
         )
         shotgun.ammo = math.inf
         self._player.weapon = shotgun
@@ -211,8 +211,7 @@ class Game(object):
                     self._player.yaw += rel[0] * 0.2
                     #self._camera.horizon -= rel[1] * 0.0025
                 elif event.type == pg.MOUSEBUTTONDOWN:
-                    if self._player.attack():
-                        self._sounds['shotgun'].play(pos=(6, 1, 6))
+                    self._player.attack()
                 elif event.type == second:
                     fps = mean(frames)
                     pg.display.set_caption(str(int(fps)))

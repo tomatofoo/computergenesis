@@ -611,6 +611,9 @@ class Player(Entity):
         elif isinstance(self._weapon, AmmoWeapon) and self._weapon._ammo <= 0:
             return 0
         else:
+            sound = self._weapon._sounds['attack']
+            if sound is not None:
+                sound.play()
             self._weapon_attacking = 1
             self._weapon_cooldown_time = self._weapon._cooldown
             if isinstance(self._weapon, MeleeWeapon):

@@ -38,6 +38,7 @@ class Sound(object):
              pos: Optional[pg.Vector3]=None) -> None:
 
         channel = mx.find_channel(force=1)
+        channel.set_volume(self._manager._volume)
         if pos is not None:
             player = self._manager._level._entities._player
             angle = (

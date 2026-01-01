@@ -917,8 +917,6 @@ class Player(Entity):
         if entity is not None:
             entity.melee_damage(damage)
             entity.textures = [FALLBACK_SURF]
-            if isinstance(entity, EntityEx):
-                entity.state_object.textures = [[FALLBACK_SURF]]
             return True
         else:
             return False

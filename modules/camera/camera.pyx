@@ -629,8 +629,7 @@ cdef class Camera:
             list[width] render_buffer = []
             # colors of each tile (top/bottom rendering)
             dict colors = {} 
-        
-        
+
         # level manager stuff
         textures = manager._level._walls._textures
         
@@ -682,9 +681,10 @@ cdef class Camera:
             while dist < self._wall_render_distance:
                 # Tile Rendering
                 searched_tiles.add(tile_key)
-                searched_tiles.add( # avoid entity disappearing at left edge
-                    f'{<int>ceilf(end_pos[0])};{<int>ceilf(end_pos[1])}',
-                )
+                if x == 0 or x == width - 1:
+                    searched_tiles.add( # avoid entity disappearing at edge
+                        f'{<int>ceilf(end_pos[0])};{<int>ceilf(end_pos[1])}',
+                    )
 
                 # no nested if statement on purpose
                 if render_back and rel_depth: # top/bottom of wall rendering

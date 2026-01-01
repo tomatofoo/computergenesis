@@ -384,6 +384,22 @@ class EntityExState(object):
         self._length = len(textures[0])
         self._animation_time = animation_time
         self._animation_timer = 0
+    @property
+    def textures(self: Self) -> list[list[pg.Surface]]:
+        return self._textures
+
+    @textures.setter
+    def textures(self: Self, value: list[list[pg.Surface]]) -> None:
+        self._textures = value
+        self._length = len(value[0])
+
+    @property
+    def animation_time(self: Self) -> Real:
+        return self._animation_time
+
+    @animation_time.setter
+    def animation_time(self: Self, value: Real) -> None:
+        self._animation_time = value
 
     @property
     def trigger(self: Self) -> bool:
@@ -391,7 +407,7 @@ class EntityExState(object):
 
     @trigger.setter
     def trigger(self: Self, value: bool) -> None:
-        self._trigger = value
+        self._trigger = valueA
 
     def reset(self: Self) -> None:
         self._animation_timer = 0
@@ -462,6 +478,10 @@ class EntityEx(Entity):
         self._states = value
 
     @property
+    def state_object(self: Self) -> EntityExState:
+        return self._states[self._state]
+
+    @property
     def texture(self: Self) -> pg.Surface:
         state = self._states[self._state]
         texture_angle = 360 / len(state._textures)
@@ -522,8 +542,8 @@ class Player(Entity):
         self._weapon = weapon
         self._weapon_surf = pg.Surface((0, 0))
         self._weapon_attacking = 0
-        self._weapon_attack_time = 0
-        self._weapon_cooldown_time = 0 # time until next available shot
+        self._weapon_attack_timer = 0
+        self._weapon_cooldown_timer = 0 # time until next available shot
         self._render_weapon_pos = list(self._settings['weapon_pos'])
         
         # delete variables we don't need from entity init
@@ -563,7 +583,7 @@ class Player(Entity):
     def weapon(self: Self, value: Optional[Weapon]) -> None:
         self._weapon = value
         self._weapon_attacking = 0
-        self._weapon_attack_time = 0
+        self._weapon_attack_timer = 0
 
     @property
     def foa(self: Self) -> Real:
@@ -680,7 +700,7 @@ class Player(Entity):
                 )
         # Weapon update
         if self._weapon is not None:
-            self._weapon_cooldown_time -= rel_game_speed
+            self._weapon_cooldown_timer -= rel_game_speed
             if bob_update:
                 self._render_weapon_pos = [
                     self._settings['weapon_pos'][0] + (
@@ -700,17 +720,17 @@ class Player(Entity):
                 ]
             if self._weapon_attacking:
                 animation_time = self._weapon._animation_times['attack']
-                self._weapon_attack_time += rel_game_speed
+                self._weapon_attack_timer += rel_game_speed
                 dex = math.floor(
-                    self._weapon_attack_time
+                    self._weapon_attack_timer
                     / animation_time
                     * len(self._weapon._textures['attack'])
                 )
-                if self._weapon_attack_time < animation_time:
+                if self._weapon_attack_timer < animation_time:
                     self._weapon_surf = self._weapon._textures['attack'][dex]
                 else:
                     self._weapon_attacking = 0
-                    self._weapon_attack_time = 0
+                    self._weapon_attack_timer = 0
             else:
                 length = len(self._weapon._textures['hold'])
                 dex = math.floor(
@@ -728,7 +748,7 @@ class Player(Entity):
 
         if self._weapon is None:
             return 0
-        elif self._weapon_cooldown_time > 0:
+        elif self._weapon_cooldown_timer > 0:
             return 0
         elif isinstance(self._weapon, AmmoWeapon) and self._weapon._ammo <= 0:
             return 0
@@ -737,7 +757,7 @@ class Player(Entity):
             if sound is not None:
                 sound.play()
             self._weapon_attacking = 1
-            self._weapon_cooldown_time = self._weapon._cooldown
+            self._weapon_cooldown_timer = self._weapon._cooldown
             if isinstance(self._weapon, MeleeWeapon):
                 if self.melee_attack(
                     damage=self._weapon._damage,
@@ -897,6 +917,8 @@ class Player(Entity):
         if entity is not None:
             entity.melee_damage(damage)
             entity.textures = [FALLBACK_SURF]
+            if isinstance(entity, EntityEx):
+                entity.state_object.textures = [[FALLBACK_SURF]]
             return True
         else:
             return False
@@ -910,6 +932,8 @@ class Player(Entity):
         if entity is not None:
             entity.hitscan_damage(damage)
             entity.textures = [FALLBACK_SURF]
+            if isinstance(entity, EntityEx):
+                entity.state_object.textures = [[FALLBACK_SURF]]
             return True
         else:
             return False

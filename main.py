@@ -20,7 +20,9 @@ from modules.hud import HUD
 from modules.sound import patch_surround
 from modules.sound import Sound
 from modules.sound import SoundManager
-from modules.entities import Entity 
+from modules.entities import Entity
+from modules.entities import EntityExState
+from modules.entities import EntityEx
 from modules.entities import Player
 from modules.entities import EntityManager 
 from modules.inventory import Collectible
@@ -48,7 +50,7 @@ class Game(object):
         pg.init()
 
         self._settings = {
-            'vsync': 1,
+            'vsync': 0,
         }
         self._screen = pg.display.set_mode(
             self._SCREEN_SIZE,
@@ -59,21 +61,81 @@ class Game(object):
         self._surface = pg.Surface(self._SURF_SIZE)
         self._running = 0
         
+        textures = [
+            [pg.image.load(gen_img_path('cacodemon/1/1.png')),
+             pg.image.load(gen_img_path('cacodemon/1/2.png')),
+             pg.image.load(gen_img_path('cacodemon/1/3.png')),
+             pg.image.load(gen_img_path('cacodemon/1/4.png')),
+             pg.image.load(gen_img_path('cacodemon/1/5.png')),
+             pg.image.load(gen_img_path('cacodemon/1/6.png'))],
+            [pg.image.load(gen_img_path('cacodemon/2/1.png')),
+             pg.image.load(gen_img_path('cacodemon/2/2.png')),
+             pg.image.load(gen_img_path('cacodemon/2/3.png')),
+             pg.image.load(gen_img_path('cacodemon/2/4.png')),
+             pg.image.load(gen_img_path('cacodemon/2/5.png')),
+             pg.image.load(gen_img_path('cacodemon/2/6.png'))],
+            [pg.image.load(gen_img_path('cacodemon/3/1.png')),
+             pg.image.load(gen_img_path('cacodemon/3/2.png')),
+             pg.image.load(gen_img_path('cacodemon/3/3.png')),
+             pg.image.load(gen_img_path('cacodemon/3/4.png')),
+             pg.image.load(gen_img_path('cacodemon/3/5.png')),
+             pg.image.load(gen_img_path('cacodemon/3/6.png'))],
+            [pg.image.load(gen_img_path('cacodemon/4/1.png')),
+             pg.image.load(gen_img_path('cacodemon/4/2.png')),
+             pg.image.load(gen_img_path('cacodemon/4/3.png')),
+             pg.image.load(gen_img_path('cacodemon/4/4.png')),
+             pg.image.load(gen_img_path('cacodemon/4/5.png')),
+             pg.image.load(gen_img_path('cacodemon/4/6.png'))],
+            [pg.image.load(gen_img_path('cacodemon/5/1.png')),
+             pg.image.load(gen_img_path('cacodemon/5/2.png')),
+             pg.image.load(gen_img_path('cacodemon/5/3.png')),
+             pg.image.load(gen_img_path('cacodemon/5/4.png')),
+             pg.image.load(gen_img_path('cacodemon/5/5.png')),
+             pg.image.load(gen_img_path('cacodemon/5/6.png'))],
+            [pg.image.load(gen_img_path('cacodemon/6/1.png')),
+             pg.image.load(gen_img_path('cacodemon/6/2.png')),
+             pg.image.load(gen_img_path('cacodemon/6/3.png')),
+             pg.image.load(gen_img_path('cacodemon/6/4.png')),
+             pg.image.load(gen_img_path('cacodemon/6/5.png')),
+             pg.image.load(gen_img_path('cacodemon/6/6.png'))],
+            [pg.image.load(gen_img_path('cacodemon/7/1.png')),
+             pg.image.load(gen_img_path('cacodemon/7/2.png')),
+             pg.image.load(gen_img_path('cacodemon/7/3.png')),
+             pg.image.load(gen_img_path('cacodemon/7/4.png')),
+             pg.image.load(gen_img_path('cacodemon/7/5.png')),
+             pg.image.load(gen_img_path('cacodemon/7/6.png'))],
+            [pg.image.load(gen_img_path('cacodemon/8/1.png')),
+             pg.image.load(gen_img_path('cacodemon/8/2.png')),
+             pg.image.load(gen_img_path('cacodemon/8/3.png')),
+             pg.image.load(gen_img_path('cacodemon/8/4.png')),
+             pg.image.load(gen_img_path('cacodemon/8/5.png')),
+             pg.image.load(gen_img_path('cacodemon/8/6.png'))],
+        ]
+        for animation in textures:
+            for surf in animation:
+                surf.set_colorkey((255, 0, 255))
+
         entities = {
+            EntityEx(
+                pos=(9, 9),
+                height=1,
+                width=1,
+                states={'default': EntityExState(textures, 60)},
+            ),
             Entity(
                 pos=(6.5, 6),
                 height=0.6,
                 width=0.5,
                 render_width=0.5,
                 textures=[
-                    pg.image.load('data/images/vassago/1.png'),
-                    pg.image.load('data/images/vassago/2.png'),
-                    pg.image.load('data/images/vassago/3.png'),
-                    pg.image.load('data/images/vassago/4.png'),
-                    pg.image.load('data/images/vassago/5.png'),
-                    pg.image.load('data/images/vassago/6.png'),
-                    pg.image.load('data/images/vassago/7.png'),
-                    pg.image.load('data/images/vassago/8.png'),
+                    pg.image.load(gen_img_path('vassago/1.png')),
+                    pg.image.load(gen_img_path('vassago/2.png')),
+                    pg.image.load(gen_img_path('vassago/3.png')),
+                    pg.image.load(gen_img_path('vassago/4.png')),
+                    pg.image.load(gen_img_path('vassago/5.png')),
+                    pg.image.load(gen_img_path('vassago/6.png')),
+                    pg.image.load(gen_img_path('vassago/7.png')),
+                    pg.image.load(gen_img_path('vassago/8.png')),
                 ]
             ),
             Entity(
@@ -81,28 +143,28 @@ class Game(object):
                 height=0.6,
                 width=0.5,
                 render_width=0.5,
-                textures=[pg.image.load('data/images/GrenadeZombie.png')],
+                textures=[pg.image.load(gen_img_path('GrenadeZombie.png'))],
             ),
             Entity(
                 pos=(6.5, 4),
                 height=0.6,
                 width=0.5,
                 render_width=0.5,
-                textures=[pg.image.load('data/images/GrenadeZombie.png')],
+                textures=[pg.image.load(gen_img_path('GrenadeZombie.png'))],
             ),
             Entity(
                 pos=(6.5, 3),
                 height=0.6,
                 width=0.5,
                 render_width=0.5,
-                textures=[pg.image.load('data/images/GrenadeZombie.png')],
+                textures=[pg.image.load(gen_img_path('GrenadeZombie.png'))],
             ),
             Entity(
                 pos=(6.5, 2),
                 height=0.6,
                 width=0.5,
                 render_width=0.5,
-                textures=[pg.image.load('data/images/GrenadeZombie.png')],
+                textures=[pg.image.load(gen_img_path('GrenadeZombie.png'))],
             ),
         }
         for dex, entity in enumerate(entities):
@@ -133,11 +195,11 @@ class Game(object):
         with open('data/map.json', 'r') as file:
             walls = json.loads(file.read())
         wall_textures = (
-            ColumnTexture(pg.image.load('data/images/redbrick.png').convert()),
+            ColumnTexture(pg.image.load(gen_img_path('redbrick.png')).convert()),
         )
         self._level = Level(
-            floor=Floor(pg.image.load('data/images/wood.png').convert()),
-            ceiling=Sky(pg.image.load('data/images/nightsky.png').convert()),
+            floor=Floor(pg.image.load(gen_img_path('wood.png')).convert()),
+            ceiling=Sky(pg.image.load(gen_img_path('nightsky.png')).convert()),
             walls=Walls(walls, wall_textures),
             entities=self._entities,
             sounds=self._sounds,
@@ -145,10 +207,10 @@ class Game(object):
         pg.mouse.set_relative_mode(1)
 
         textures = [
-            pg.image.load('data/images/shotgun/1.png'),
-            pg.image.load('data/images/shotgun/2.png'),
-            pg.image.load('data/images/shotgun/3.png'),
-            pg.image.load('data/images/shotgun/4.png'),
+            pg.image.load(gen_img_path('shotgun/1.png')),
+            pg.image.load(gen_img_path('shotgun/2.png')),
+            pg.image.load(gen_img_path('shotgun/3.png')),
+            pg.image.load(gen_img_path('shotgun/4.png')),
         ]
         for surf in textures:
             surf.set_colorkey((255, 0, 255))
@@ -173,17 +235,17 @@ class Game(object):
         )
         self._shotgun.ammo = math.inf
         textures = [
-            pg.image.load('data/images/fist/1.png'),
-            pg.image.load('data/images/fist/2.png'),
-            pg.image.load('data/images/fist/3.png'),
-            pg.image.load('data/images/fist/4.png'),
+            pg.image.load(gen_img_path('fist/1.png')),
+            pg.image.load(gen_img_path('fist/2.png')),
+            pg.image.load(gen_img_path('fist/3.png')),
+            pg.image.load(gen_img_path('fist/4.png')),
         ]
         for surf in textures:
             surf.set_colorkey((255, 0, 255))
         self._fist = MeleeWeapon(
             damage=100,
             attack_range=0.2,
-            cooldown=60,
+            cooldown=35,
             durability=math.inf,
             ground_textures=None,
             hold_textures=[textures[0]],
@@ -196,7 +258,7 @@ class Game(object):
             ],
             ground_animation_time=1,
             hold_animation_time=30,
-            attack_animation_time=50,
+            attack_animation_time=30,
         )
         self._player.weapon = self._fist
 

@@ -11,7 +11,7 @@ from modules.sound import Sound
 # Avoid circular import
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from modules.entities import Missile
+    from modules.entities import Entity
 
 
 # This is a very weird file but it creates an abstraction layer

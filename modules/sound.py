@@ -57,7 +57,7 @@ class Sound(object):
 
 class SoundManager(object):
     def __init__(self: Self,
-                 sounds: dict[object, Sound3D]={},
+                 sounds: dict[str, Sound3D]={},
                  volume: Real=1,
                  channels: int=64,
                  dist_factor: Real=15) -> None:
@@ -72,11 +72,11 @@ class SoundManager(object):
         self.volume = volume
         mx.set_num_channels(channels)
 
-    def __getitem__(self: Self, id: object) -> Sound:
+    def __getitem__(self: Self, id: str) -> Sound:
         return self._sounds[id]
 
     @property
-    def sounds(self: Self) -> dict[object, Sound]:
+    def sounds(self: Self) -> dict[str, Sound]:
         return self._sounds
 
     @sounds.setter
@@ -105,14 +105,14 @@ class SoundManager(object):
     def dist_factor(self: Self, value: Real) -> None:
         self._dist_factor = value
 
-    def set_sound(self: Self, id: object, sound: Sound) -> None:
+    def set_sound(self: Self, id: str, sound: Sound) -> None:
         old = self._sounds.get(id)
         if old is not None:
             old._manager = None
         self._sounds[id] = sound
         sound._manaager = self
 
-    def pop_sound(self: Self, id: object) -> Sound:
+    def pop_sound(self: Self, id: str) -> Sound:
         self._sounds[id]._manager = None
         return self._sounds.pop(id)
 

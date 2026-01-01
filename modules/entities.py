@@ -3,6 +3,7 @@ import bisect
 from numbers import Real
 from typing import Self
 from typing import Optional
+from enum import Enum
 
 import pygame as pg
 from pygame.typing import Point
@@ -26,6 +27,7 @@ class Entity(object):
 
     def __init__(self: Self,
                  pos: Point=(0, 0),
+                 elevation: Real=0,
                  width: Real=0.5,
                  height: Real=1,
                  health: Real=100,
@@ -37,7 +39,7 @@ class Entity(object):
 
         self.yaw = 0
         self.velocity2 = (0, 0)
-        self.elevation = 0
+        self.elevation = elevation
         self.elevation_velocity = 0
         self.yaw_velocity = 0
         self.textures = textures
@@ -368,9 +370,121 @@ class Entity(object):
                     self._elevation_velocity = 0
 
 
+class EntityExState(object):
+    def __init__(self: Self,
+                 textures: list[list[pg.Surface]]=[[FALLBACK_SURF]],
+                 animation_time: Real=1,
+                 trigger: bool=0) -> None:
+        # first dimension is direction
+        # second dimension is animation
+        # trigger: animtaion starts when state is triggered
+        # if not then animation relies on level timer
+        self._textures = textures
+        self._trigger = trigger
+        self._length = len(textures[0])
+        self._animation_time = animation_time
+        self._animation_timer = 0
+
+    @property
+    def trigger(self: Self) -> bool:
+        return self._trigger
+
+    @trigger.setter
+    def trigger(self: Self, value: bool) -> None:
+        self._trigger = value
+
+    def reset(self: Self) -> None:
+        self._animation_timer = 0
+
+    def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
+        self._animation_timer = (
+            self._animation_timer + rel_game_speed
+            if self._trigger else level_timer
+        )
+
+    def texture(self: Self, direction_dex: int) -> int:
+        animation_dex = math.floor(
+            self._animation_timer
+            / self._animation_time
+            * self._length
+        ) % self._length
+
+        return self._textures[direction_dex][animation_dex]
+
+
+# Extended Entity Class (states, animations)
+class EntityEx(Entity):
+    def __init__(self: Self,
+                 pos: Point=(0, 0),
+                 elevation: Real=0,
+                 width: Real=0.5,
+                 height: Real=1,
+                 health: Real=100,
+                 climb: Real=0.2,
+                 gravity: Real=0,
+                 states: dict[str, EntityExState]={'default': EntityExState()},
+                 state: str='default',
+                 render_width: Optional[Real]=None,
+                 render_height: Optional[Real]=None) -> None:
+
+        super().__init__(
+            pos=pos,
+            elevation=elevation,
+            width=width,
+            height=height,
+            health=health,
+            climb=climb,
+            gravity=gravity,
+            render_width=render_width,
+            render_height=render_height,
+        )
+        self._state = state
+        self._states = states
+
+        del self._textures
+        del self._texture_angle
+
+    @property
+    def state(self: Self) -> str:
+        return self._state
+
+    @state.setter
+    def state(self: Self, value: str) -> None:
+        self._state = value
+        self._states[value].reset()
+
+    @property
+    def states(self: Self) -> dict[str, EntityExState]:
+        return self._states
+
+    @states.setter
+    def states(self: Self, value: dict[str, EntityExState]) -> None:
+        self._states = value
+
+    @property
+    def texture(self: Self) -> pg.Surface:
+        state = self._states[self._state]
+        texture_angle = 360 / len(state._textures)
+        dex = int(
+            # shifted by texture_angle / 2 because of segments
+            (self._yaw_value
+             - (self._manager._player._pos - self._pos).angle
+             + texture_angle / 2
+             - 90)
+            % 360
+            // texture_angle
+        )
+        return state.texture(dex)
+
+    def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
+        self._states[self._state].update(rel_game_speed, level_timer)
+        super().update(rel_game_speed, level_timer)
+
+
 class Player(Entity):
     def __init__(self: Self,
                  pos: Point=(0, 0),
+                 elevation: Real=0,
                  width: Real=0.5,
                  height: Real=1,
                  climb: Real=0.2,
@@ -380,6 +494,7 @@ class Player(Entity):
 
         super().__init__(
             pos=pos,
+            elevation=elevation,
             width=width,
             height=height,
             climb=climb,
@@ -447,6 +562,8 @@ class Player(Entity):
     @weapon.setter
     def weapon(self: Self, value: Optional[Weapon]) -> None:
         self._weapon = value
+        self._weapon_attacking = 0
+        self._weapon_attack_time = 0
 
     @property
     def foa(self: Self) -> Real:
@@ -647,7 +764,6 @@ class Player(Entity):
                 ) + 1
 
     def _hitscan(self: Self,
-                 damaage: Real,
                  attack_range: Real,
                  foa: Real,
                  precision: int=2) -> Optional[Entity]:
@@ -777,7 +893,7 @@ class Player(Entity):
                      attack_range: Real,
                      foa: Real,
                      precision: int=2) -> bool:
-        entity = self._hitscan(damage, attack_range, foa, precision)
+        entity = self._hitscan(attack_range, foa, precision)
         if entity is not None:
             entity.melee_damage(damage)
             entity.textures = [FALLBACK_SURF]
@@ -790,7 +906,7 @@ class Player(Entity):
                        attack_range: Real,
                        foa: Real,
                        precision: int=2) -> bool:
-        entity = self._hitscan(damage, attack_range, foa, precision)
+        entity = self._hitscan(attack_range, foa, precision)
         if entity is not None:
             entity.hitscan_damage(damage)
             entity.textures = [FALLBACK_SURF]
@@ -802,8 +918,16 @@ class Player(Entity):
                        damage: Real,
                        attack_range: Real,
                        foa: Real,
+                       missile: Missile,
                        precision: int=2) -> None:
-        return False
+        # unlike melee and hitscan, missile attack will return true if a hit is
+        # predicted (not guaranteed)
+        # (i.e. the monstor could move and it wouldn't hit)
+        entity = self._hitscan(attack_range, foa, precision)
+        if entity is not None:
+            return True
+        else:
+            return False
 
 
 class EntityManager(object):
@@ -868,23 +992,7 @@ class EntityManager(object):
             entity._update_manager_sets(old_key, key)
 
 
-class Missile(Entity):
-    def __init__(self: Self,
-                 width: Real=1,
-                 height: Real=0.5,
-                 textures: list[pg.Surface]=[FALLBACK_SURF],
-                 render_width: Optional[Real]=None,
-                 render_height: Optional[Real]=None) -> None:
-        super().__init__(
-            width=width,
-            height=height,
-            health=-1,
-            climb=0,
-            gravity=0,
-            textures=textures,
-            render_width=render_width,
-            render_height=render_height,
-        )
+
 
 # CUSTOM
 

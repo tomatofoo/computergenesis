@@ -412,13 +412,13 @@ class EntityExState(object):
     def reset(self: Self) -> None:
         self._animation_timer = 0
 
-    def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
+    def _update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         self._animation_timer = (
             self._animation_timer + rel_game_speed
             if self._trigger else level_timer
         )
 
-    def texture(self: Self, direction_dex: int) -> int:
+    def _texture(self: Self, direction_dex: int) -> int:
         animation_dex = math.floor(
             self._animation_timer
             / self._animation_time
@@ -494,10 +494,10 @@ class EntityEx(Entity):
             % 360
             // texture_angle
         )
-        return state.texture(dex)
+        return state._texture(dex)
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
-        self._states[self._state].update(rel_game_speed, level_timer)
+        self._states[self._state]._update(rel_game_speed, level_timer)
         super().update(rel_game_speed, level_timer)
 
 

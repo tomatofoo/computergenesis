@@ -409,9 +409,6 @@ class EntityExState(object):
     def trigger(self: Self, value: bool) -> None:
         self._trigger = valueA
 
-    def reset(self: Self) -> None:
-        self._animation_timer = 0
-
     def _update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         self._animation_timer = (
             self._animation_timer + rel_game_speed
@@ -426,6 +423,9 @@ class EntityExState(object):
         ) % self._length
 
         return self._textures[direction_dex][animation_dex]
+
+    def reset(self: Self) -> None:
+        self._animation_timer = 0
 
 
 # Extended Entity Class (states, animations)

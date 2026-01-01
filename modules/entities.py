@@ -424,7 +424,7 @@ class EntityExState(object):
 
         return self._textures[direction_dex][animation_dex]
 
-    def reset(self: Self) -> None:
+    def _reset(self: Self) -> None:
         self._animation_timer = 0
 
 
@@ -467,7 +467,7 @@ class EntityEx(Entity):
     @state.setter
     def state(self: Self, value: str) -> None:
         self._state = value
-        self._states[value].reset()
+        self._states[value]._reset()
 
     @property
     def states(self: Self) -> dict[str, EntityExState]:

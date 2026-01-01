@@ -285,6 +285,11 @@ class Entity(object):
                 self._manager._sets[key] = set()
             self._manager._sets[key].add(self)
 
+    def melee_damage(self: Self, value: Real) -> None:
+        self._health -= value
+        if self._health <= 0:
+            self.die()
+
     def hitscan_damage(self: Self, value: Real) -> None:
         self._health -= value
         if self._health <= 0:
@@ -311,7 +316,7 @@ class Entity(object):
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         if self._yaw_velocity:
             self.yaw += self._yaw_velocity * rel_game_speed
-
+        
         self._pos.x += self._velocity2.x * rel_game_speed
         entity_rect = self.rect()
         for rect, bottom, top in self._get_rects_around():
@@ -341,7 +346,7 @@ class Entity(object):
                     self._pos.y = entity_rect.centery
                 else: # climbing up
                     self.elevation = top
-        
+
         # 3D collisions
         self.elevation += self._elevation_velocity * rel_game_speed
         self._elevation_velocity -= self._gravity * rel_game_speed
@@ -619,7 +624,7 @@ class Player(Entity):
             if isinstance(self._weapon, MeleeWeapon):
                 if self.melee_attack(
                     damage=self._weapon._damage,
-                    attack_range=self._wepaon._range,
+                    attack_range=self._weapon._range,
                     foa=self._foa,
                 ):
                     self._weapon._durability -= 1
@@ -637,26 +642,16 @@ class Player(Entity):
                 self._weapon._ammo -= 1
                 return self.missile_attack(
                     damage=self._weapon._damage,
-                    attack_range=self._wepaon._range,
+                    attack_range=self._weapon._range,
                     foa=self._foa,
                 ) + 1
 
-    def melee_attack(self: Self,
-                     damage: Real,
-                     attack_range: Real,
-                     foa: Real,
-                     precision: int=2) -> bool:
-        return False
-        
-    def hitscan_attack(self: Self,
-                       damage: Real,
-                       attack_range: Real,
-                       foa: Real,
-                       precision: int=2) -> bool:
-
-        # Hitscan gunshot
-
-        # NOTE: this algorithm allows shooting through 
+    def _hitscan(self: Self,
+                 damaage: Real,
+                 attack_range: Real,
+                 foa: Real,
+                 precision: int=2) -> Optional[Entity]:
+        # NOTE: this algorithm allows attacking through 
         # vertical corners of walls
         # e.g floor and wall together create a corner
 
@@ -775,7 +770,27 @@ class Player(Entity):
             last_tile = tile_key
             last_end_pos = end_pos.copy()
         
-        entity = closest[1]
+        return closest[1]
+
+    def melee_attack(self: Self,
+                     damage: Real,
+                     attack_range: Real,
+                     foa: Real,
+                     precision: int=2) -> bool:
+        entity = self._hitscan(damage, attack_range, foa, precision)
+        if entity is not None:
+            entity.melee_damage(damage)
+            entity.textures = [FALLBACK_SURF]
+            return True
+        else:
+            return False
+        
+    def hitscan_attack(self: Self,
+                       damage: Real,
+                       attack_range: Real,
+                       foa: Real,
+                       precision: int=2) -> bool:
+        entity = self._hitscan(damage, attack_range, foa, precision)
         if entity is not None:
             entity.hitscan_damage(damage)
             entity.textures = [FALLBACK_SURF]

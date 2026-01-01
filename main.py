@@ -25,7 +25,9 @@ from modules.entities import Player
 from modules.entities import EntityManager 
 from modules.inventory import Collectible
 from modules.inventory import Inventory
+from modules.weapons import MeleeWeapon
 from modules.weapons import HitscanWeapon
+from modules.weapons import MissileWeapon
 from modules.utils import gen_img_path
 from modules.utils import gen_sfx_path
 from modules.utils import gen_mus_path
@@ -61,6 +63,8 @@ class Game(object):
             Entity(
                 pos=(6.5, 6),
                 height=0.6,
+                width=0.5,
+                render_width=0.5,
                 textures=[
                     pg.image.load('data/images/vassago/1.png'),
                     pg.image.load('data/images/vassago/2.png'),
@@ -75,21 +79,29 @@ class Game(object):
             Entity(
                 pos=(6.5, 5),
                 height=0.6,
+                width=0.5,
+                render_width=0.5,
                 textures=[pg.image.load('data/images/GrenadeZombie.png')],
             ),
             Entity(
                 pos=(6.5, 4),
                 height=0.6,
+                width=0.5,
+                render_width=0.5,
                 textures=[pg.image.load('data/images/GrenadeZombie.png')],
             ),
             Entity(
                 pos=(6.5, 3),
                 height=0.6,
+                width=0.5,
+                render_width=0.5,
                 textures=[pg.image.load('data/images/GrenadeZombie.png')],
             ),
             Entity(
                 pos=(6.5, 2),
                 height=0.6,
+                width=0.5,
+                render_width=0.5,
                 textures=[pg.image.load('data/images/GrenadeZombie.png')],
             ),
         }
@@ -140,7 +152,7 @@ class Game(object):
         ]
         for surf in textures:
             surf.set_colorkey((255, 0, 255))
-        shotgun = HitscanWeapon(
+        self._shotgun = HitscanWeapon(
             damage=100,
             attack_range=20,
             cooldown=60,
@@ -159,8 +171,34 @@ class Game(object):
             attack_animation_time=50,
             attack_sound=self._sounds['shotgun'],
         )
-        shotgun.ammo = math.inf
-        self._player.weapon = shotgun
+        self._shotgun.ammo = math.inf
+        textures = [
+            pg.image.load('data/images/fist/1.png'),
+            pg.image.load('data/images/fist/2.png'),
+            pg.image.load('data/images/fist/3.png'),
+            pg.image.load('data/images/fist/4.png'),
+        ]
+        for surf in textures:
+            surf.set_colorkey((255, 0, 255))
+        self._fist = MeleeWeapon(
+            damage=100,
+            attack_range=0.2,
+            cooldown=60,
+            durability=math.inf,
+            ground_textures=None,
+            hold_textures=[textures[0]],
+            attack_textures=[
+                textures[1],
+                textures[2],
+                textures[3],
+                textures[2],
+                textures[1],
+            ],
+            ground_animation_time=1,
+            hold_animation_time=30,
+            attack_animation_time=50,
+        )
+        self._player.weapon = self._fist
 
     def move_tiles(self: Self, level_timer: Real) -> None:
         self._level.walls.set_tile(
@@ -216,6 +254,11 @@ class Game(object):
                     fps = mean(frames)
                     pg.display.set_caption(str(int(fps)))
                     frames = []
+                elif event.type == pg.KEYDOWN:
+                    if event.key == pg.K_1:
+                        self._player.weapon = self._fist
+                    elif event.key == pg.K_2:
+                        self._player.weapon = self._shotgun
             
             # Update
             self.move_tiles(level_timer)

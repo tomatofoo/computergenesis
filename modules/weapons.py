@@ -80,9 +80,9 @@ class AmmoWeapon(Weapon):
                  ground_textures: Optional[list[pg.Surface]]=None,
                  hold_textures: Optional[list[pg.Surface]]=None,
                  attack_textures: Optional[list[pg.Surface]]=None,
-                 ground_animation_time=1,
-                 hold_animation_time=1,
-                 attack_animation_time=1,
+                 ground_animation_time: Real=1,
+                 hold_animation_time: Real=1,
+                 attack_animation_time: Real=1,
                  attack_sound: Optional[Sound]=None) -> None:
 
         super().__init__(
@@ -117,7 +117,7 @@ class AmmoWeapon(Weapon):
         self._capacity = value
 
 
-class MeleeWeapon(Weapon):
+class MeleeWeapon(Weapon): # also hitscan btw
     def __init__(self: Self,
                  damage: Real,
                  attack_range: Real,
@@ -126,9 +126,9 @@ class MeleeWeapon(Weapon):
                  ground_textures: Optional[list[pg.Surface]]=None,
                  hold_textures: Optional[list[pg.Surface]]=None,
                  attack_textures: Optional[list[pg.Surface]]=None,
-                 ground_animation_time=1,
-                 hold_animation_time=1,
-                 attack_animation_time=1,
+                 ground_animation_time: Real=1,
+                 hold_animation_time: Real=1,
+                 attack_animation_time: Real=1,
                  attack_sound: Optional[Sound]=None) -> None:
         super().__init__(
             damage=damage,
@@ -162,9 +162,9 @@ class HitscanWeapon(AmmoWeapon):
                  ground_textures: Optional[list[pg.Surface]]=None,
                  hold_textures: Optional[list[pg.Surface]]=None,
                  attack_textures: Optional[list[pg.Surface]]=None,
-                 ground_animation_time=1,
-                 hold_animation_time=1,
-                 attack_animation_time=1,
+                 ground_animation_time: Real=1,
+                 hold_animation_time: Real=1,
+                 attack_animation_time: Real=1,
                  attack_sound: Optional[Sound]=None) -> None:
 
         super().__init__(
@@ -192,9 +192,9 @@ class MissileWeapon(AmmoWeapon):
                  ground_textures: Optional[list[pg.Surface]]=None,
                  hold_textures: Optional[list[pg.Surface]]=None,
                  attack_textures: Optional[list[pg.Surface]]=None,
-                 ground_animation_time=1,
-                 hold_animation_time=1,
-                 attack_animation_time=1,
+                 ground_animation_time: Real=1,
+                 hold_animation_time: Real=1,
+                 attack_animation_time: Real=1,
                  attack_sound: Optional[Sound]=None) -> None:
 
         super().__init__(

@@ -41,11 +41,11 @@ class Sound(object):
         channel.set_volume(self._manager._volume)
         if pos is not None:
             player = self._manager._level._entities._player
-            angle = (
-                player._yaw_value
-                - ((pos[0], pos[2]) - player._pos).angle
-                - 90
-            )
+            rel_vector = (pos[0], pos[2]) - player._pos
+            if rel_vector:
+                angle = player._yaw_value - rel_vector.angle - 90
+            else:
+                angle = 0
             dist = player.vector3.distance_to(pos) * self._manager._dist_factor
             channel.set_source_location(angle, min(dist, 255))
             self._manager._channels.append((pos, channel))
@@ -120,11 +120,11 @@ class SoundManager(object):
         player = self._level._entities._player
         channels = []
         for pos, channel in self._channels:
-            angle = (
-                player._yaw_value
-                - ((pos[0], pos[2]) - player._pos).angle
-                - 90
-            )
+            rel_vector = (pos[0], pos[2]) - player._pos
+            if rel_vector:
+                angle = player._yaw_value - rel_vector.angle - 90
+            else:
+                angle = 0
             dist = player.vector3.distance_to(pos) * self._dist_factor
             channel.set_source_location(angle, min(dist, 255))
             if channel.get_busy(): # filter inactive channels

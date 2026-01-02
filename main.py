@@ -252,7 +252,7 @@ class Game(object):
             surf.set_colorkey((255, 0, 255))
         self._fist = MeleeWeapon(
             damage=100,
-            attack_range=0.2,
+            attack_range=0.25,
             cooldown=35,
             durability=math.inf,
             ground_textures=None,
@@ -319,7 +319,9 @@ class Game(object):
                     self._player.yaw += rel[0] * 0.2
                     #self._camera.horizon -= rel[1] * 0.0025
                 elif event.type == pg.MOUSEBUTTONDOWN:
+                    start = time.time()
                     self._player.attack()
+                    print(time.time() - start)
                 elif event.type == second:
                     fps = mean(frames)
                     pg.display.set_caption(str(int(fps)))

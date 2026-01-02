@@ -184,8 +184,8 @@ class Camera(object):
         step_x = (end_points_x - start_points_x) / width
         step_y = (end_points_y - start_points_y) / width
         
-        x_points = self._player._pos.x + start_points_x + step_x * x_pixels
-        y_points = self._player._pos.y + start_points_y + step_y * x_pixels
+        x_points = self._player._pos[0] + start_points_x + step_x * x_pixels
+        y_points = self._player._pos[1] + start_points_y + step_y * x_pixels
         
         # change the multiplier before the mod to change size of texture
         texture_xs = np.floor(x_points * 1 % 1 * texture.width)
@@ -353,9 +353,9 @@ class Camera(object):
             mag = ray.magnitude()
 
             end_pos = self._player._pos.copy()
-            slope = ray.y / ray.x if ray.x else math.inf
-            tile = pg.Vector2(math.floor(end_pos.x), math.floor(end_pos.y))
-            dir = (ray.x > 0, ray.y > 0)
+            slope = ray[1] / ray[0] if ray[0] else math.inf
+            tile = pg.Vector2(math.floor(end_pos[0]), math.floor(end_pos[1]))
+            dir = (ray[0] > 0, ray[1] > 0)
             rel_depth = 0 # relative to yaw magnitude
             dist = 0
             
@@ -479,24 +479,24 @@ class Camera(object):
                     empty_tiles.add(tile_key)
                 
                 # displacements until hit tile
-                disp_x = tile.x + dir[0] - end_pos.x
-                disp_y = tile.y + dir[1] - end_pos.y
+                disp_x = tile[0] + dir[0] - end_pos[0]
+                disp_y = tile[1] + dir[1] - end_pos[1]
                 # step for tile (for each displacement)
                 step_x = dir[0] * 2 - 1 # 1 if yes, -1 if no
                 step_y = dir[1] * 2 - 1 
 
-                len_x = abs(disp_x / ray.x) if ray.x else math.inf
-                len_y = abs(disp_y / ray.y) if ray.y else math.inf
+                len_x = abs(disp_x / ray[0]) if ray[0] else math.inf
+                len_y = abs(disp_y / ray[1]) if ray[1] else math.inf
                 if len_x < len_y:
-                    tile.x += step_x
-                    end_pos.x += disp_x
-                    end_pos.y += disp_x * slope
+                    tile[0] += step_x
+                    end_pos[0] += disp_x
+                    end_pos[1] += disp_x * slope
                     rel_depth += len_x
                     side = 1
                 else:
-                    tile.y += step_y
-                    end_pos.x += disp_y / slope if slope else math.inf
-                    end_pos.y += disp_y
+                    tile[1] += step_y
+                    end_pos[0] += disp_y / slope if slope else math.inf
+                    end_pos[1] += disp_y
                     rel_depth += len_y
                     side = 0
                 dist = rel_depth * mag
@@ -513,8 +513,8 @@ class Camera(object):
                     rel_vector.rotate_y_ip(self._player._yaw_value)
                     if rel_vector.z >= self._min_entity_depth:
                         ratios = (
-                            rel_vector.x / rel_vector.z,
-                            rel_vector.y / rel_vector.z,
+                            rel_vector[0] / rel_vector[2],
+                            rel_vector[1] / rel_vector[2],
                         )
                         # final projection
                         projection = pg.Vector2(
@@ -523,7 +523,7 @@ class Camera(object):
                         )
 
                         rel_depth = rel_vector.z / self._yaw_magnitude
-                        dex = int(projection.x)
+                        dex = int(projection[0])
                         scale = self._tile_size / rel_depth
                         
                         texture = entity.texture
@@ -547,7 +547,7 @@ class Camera(object):
                         for i in range(texture.width):
                             pos = (
                                 int(dex - texture.width / 2 + i),
-                                projection.y - texture.height,
+                                projection[1] - texture.height,
                             )
                             if 0 < pos[0] < width:
                                 obj = self._DepthBufferObject(

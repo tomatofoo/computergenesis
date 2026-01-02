@@ -410,8 +410,8 @@ cdef class Camera:
         step_x = (end_points_x - start_points_x) / width
         step_y = (end_points_y - start_points_y) / width
         
-        x_points = self._player._pos.x + start_points_x + step_x * x_pixels
-        y_points = self._player._pos.y + start_points_y + step_y * x_pixels
+        x_points = self._player._pos[0] + start_points_x + step_x * x_pixels
+        y_points = self._player._pos[1] + start_points_y + step_y * x_pixels
         
         # change the multiplier before the mod to change size of texture
         texture_xs = np.floor(

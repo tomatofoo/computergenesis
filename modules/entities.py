@@ -88,19 +88,19 @@ class Entity(object):
 
     @property
     def x(self: Self) -> Real:
-        return self._pos.x
+        return self._pos[0]
 
     @x.setter
     def x(self: Self, value: Real) -> None:
-        self._pos.x = value
+        self._pos[0] = value
 
     @property
     def y(self: Self) -> Real:
-        return self._pos.y
+        return self._pos[1]
 
     @y.setter
     def y(self: Self, value: Real) -> None:
-        self._pos.y = value
+        self._pos[1] = value
 
     @property
     def forward(self: Self) -> pg.Vector2:
@@ -129,7 +129,7 @@ class Entity(object):
     
     @property
     def vector3(self: Self) -> pg.Vector3:
-        return pg.Vector3(self._pos.x, self._elevation, self._pos.y)
+        return pg.Vector3(self._pos[0], self._elevation, self._pos[1])
 
     @property
     def yaw(self: Self) -> float:
@@ -139,7 +139,7 @@ class Entity(object):
     def yaw(self: Self, value: Real) -> None:
         self._yaw_value = value
         self._yaw = pg.Vector2(0, 1).rotate(value)
-        self._semiplane = pg.Vector2(-self._yaw.y, self._yaw.x)
+        self._semiplane = pg.Vector2(-self._yaw[1], self._yaw[0])
         # -1 because direction is flipped
         # the plane is for the camera but it is also the right vector
 
@@ -287,7 +287,7 @@ class Entity(object):
         return self._manager
 
     def _get_rects_around(self: Self) -> list:
-        tile = pg.Vector2(math.floor(self._pos.x), math.floor(self._pos.y))
+        tile = pg.Vector2(math.floor(self._pos[0]), math.floor(self._pos[1]))
         tiles = []
         for offset in self._TILE_OFFSETS:
             offset_tile = tile + offset
@@ -297,10 +297,10 @@ class Entity(object):
             if data is not None:
                 obj = data.get('rect')
                 if obj is None:
-                    rect = pg.Rect(offset_tile.x, offset_tile.y, 1, 1)
+                    rect = pg.Rect(offset_tile[0], offset_tile[1], 1, 1)
                 else:
                     rect = pg.FRect(
-                        (offset_tile.x + obj[0], offset_tile.y + obj[1]),
+                        offset_tile + obj,
                         (obj[2], obj[3]),
                     )
                 tiles.append((
@@ -369,33 +369,33 @@ class Entity(object):
         if self._yaw_velocity:
             self.yaw += self._yaw_velocity * rel_game_speed
         
-        self._pos.x += self._velocity2.x * rel_game_speed
+        self._pos[0] += self._velocity2[0] * rel_game_speed
         entity_rect = self.rect()
         for rect, bottom, top in self._get_rects_around():
             vertical = self._elevation < top and self.top > bottom
             horizontal = entity_rect.colliderect(rect)
             if vertical and horizontal:
                 if top - self._elevation > self._climb:
-                    if self._velocity2.x > 0:
+                    if self._velocity2[0] > 0:
                         entity_rect.right = rect.left
-                    elif self._velocity2.x < 0:
+                    elif self._velocity2[0] < 0:
                         entity_rect.left = rect.right
-                    self._pos.x = entity_rect.centerx
+                    self._pos[0] = entity_rect.centerx
                 else: # climbing up
                     self.elevation = top
 
-        self._pos.y += self._velocity2.y * rel_game_speed
+        self._pos[1] += self._velocity2[1] * rel_game_speed
         entity_rect = self.rect()
         for rect, bottom, top in self._get_rects_around():
             vertical = self._elevation < top and self.top > bottom
             horizontal = entity_rect.colliderect(rect)
             if vertical and horizontal:
                 if top - self._elevation > self._climb:
-                    if self._velocity2.y > 0:
+                    if self._velocity2[1] > 0:
                         entity_rect.bottom = rect.top
-                    elif self._velocity2.y < 0:
+                    elif self._velocity2[1]< 0:
                         entity_rect.top = rect.bottom
-                    self._pos.y = entity_rect.centery
+                    self._pos[1] = entity_rect.centery
                 else: # climbing up
                     self.elevation = top
 
@@ -633,7 +633,7 @@ class Player(Entity):
 
     @property
     def _render_vector3(self: Self) -> pg.Vector3:
-        return pg.Vector3(self._pos.x, self._render_elevation, self._pos.y)
+        return pg.Vector3(self._pos[0], self._render_elevation, self._pos[1])
 
     @property
     def velocity2(self: Self) -> pg.Vector2:
@@ -696,34 +696,34 @@ class Player(Entity):
         if self._yaw_velocity:
             self.yaw += self._yaw_velocity * rel_game_speed
 
-        self._pos.x += self._velocity2.x * rel_game_speed
+        self._pos[0] += self._velocity2[0] * rel_game_speed
         entity_rect = self.rect()
         for rect, bottom, top in self._get_rects_around():
             vertical = self._elevation < top and self.top > bottom
             horizontal = entity_rect.colliderect(rect)
             if vertical and horizontal:
                 if top - self._elevation > self._climb:
-                    if self._velocity2.x > 0:
+                    if self._velocity2[0] > 0:
                         entity_rect.right = rect.left
-                    elif self._velocity2.x < 0:
+                    elif self._velocity2[0] < 0:
                         entity_rect.left = rect.right
-                    self._pos.x = entity_rect.centerx
+                    self._pos[0] = entity_rect.centerx
                 else: # climbing up
                     self.elevation = top
                     self._climbing = 1
 
-        self._pos.y += self._velocity2.y * rel_game_speed
+        self._pos[1] += self._velocity2[1] * rel_game_speed
         entity_rect = self.rect()
         for rect, bottom, top in self._get_rects_around():
             vertical = self._elevation < top and self.top > bottom
             horizontal = entity_rect.colliderect(rect)
             if vertical and horizontal:
                 if top - self._elevation > self._climb:
-                    if self._velocity2.y > 0:
+                    if self._velocity2[1] > 0:
                         entity_rect.bottom = rect.top
-                    elif self._velocity2.y < 0:
+                    elif self._velocity2[1] < 0:
                         entity_rect.top = rect.bottom
-                    self._pos.y = entity_rect.centery
+                    self._pos[1] = entity_rect.centery
                 else: # climbing up
                     self.elevation = top
                     self._climbing = 1
@@ -861,7 +861,7 @@ class Player(Entity):
         # vertical corners of walls
         # e.g floor and wall together create a corner
 
-        ray = tuple(self._yaw.normalize())
+        ray = self._yaw.normalize()
 
         end_pos = list(self._pos)
         last_end_pos = end_pos.copy()
@@ -938,14 +938,16 @@ class Player(Entity):
                                 break
                     if dont_check:
                         continue
-
+                    
+                    if dist >= attack_range:
+                        end_pos = self._pos + ray * attack_range
                     mult = 10**precision
                     rect = entity.attack_rect()
                     rect.update(
-                        rect.x * mult,
-                        rect.y * mult,
-                        rect.w * mult,
-                        rect.h * mult,
+                        rect[0] * mult,
+                        rect[1] * mult,
+                        rect[2] * mult,
+                        rect[3] * mult,
                     )
                     if rect.clipline(
                         last_end_pos[0] * mult,

@@ -904,7 +904,7 @@ class Player(Entity):
                 dist += len_y
             
             # account for entities partially in the tile but not in set
-            # should work for entities that are at most 2 units wide
+            # i think it should work for entities that are at most 2 units wide
             # since TILE_OFFSETS is 3x3
             entities = set()
             for offset in self._TILE_OFFSETS:

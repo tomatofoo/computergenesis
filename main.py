@@ -126,7 +126,7 @@ class Game(object):
             Entity(
                 pos=(6.5, 6),
                 height=0.6,
-                width=0.5,
+                width=0.25,
                 render_width=0.5,
                 textures=[
                     pg.image.load(gen_img_path('vassago/1.png')),
@@ -142,28 +142,28 @@ class Game(object):
             Entity(
                 pos=(6.5, 5),
                 height=0.6,
-                width=0.5,
+                width=0.25,
                 render_width=0.5,
                 textures=[pg.image.load(gen_img_path('GrenadeZombie.png'))],
             ),
             Entity(
                 pos=(6.5, 4),
                 height=0.6,
-                width=0.5,
+                width=0.25,
                 render_width=0.5,
                 textures=[pg.image.load(gen_img_path('GrenadeZombie.png'))],
             ),
             Entity(
                 pos=(6.5, 3),
                 height=0.6,
-                width=0.5,
+                width=0.25,
                 render_width=0.5,
                 textures=[pg.image.load(gen_img_path('GrenadeZombie.png'))],
             ),
             Entity(
                 pos=(6.5, 2),
                 height=0.6,
-                width=0.5,
+                width=0.25,
                 render_width=0.5,
                 textures=[pg.image.load(gen_img_path('GrenadeZombie.png'))],
             ),
@@ -190,6 +190,7 @@ class Game(object):
         self._sounds = SoundManager(
             sounds={
                 'shotgun': Sound(gen_sfx_path('shotgun.mp3')),
+                'water': Sound(gen_sfx_path('water.wav')),
             },
         )
 
@@ -322,7 +323,8 @@ class Game(object):
                         self._player.weapon = self._fist
                     elif event.key == pg.K_2:
                         self._player.weapon = self._shotgun
-            
+                    elif event.key == pg.K_3:
+                        self._sounds['water'].play(pos=(9, 0.25, 9)) 
             # Update
             self.move_tiles(level_timer)
             keys = pg.key.get_pressed()

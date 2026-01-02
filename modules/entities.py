@@ -28,12 +28,14 @@ class Entity(object):
     def __init__(self: Self,
                  pos: Point=(0, 0),
                  elevation: Real=0,
-                 width: Real=0.5,
-                 height: Real=1,
+                 width: Real=0.5, # collision width
+                 height: Real=1, # collision height
                  health: Real=100,
                  climb: Real=0.2, # min distance from top to be able to climb
                  gravity: Real=0,
                  textures: list[pg.Surface]=[FALLBACK_SURF],
+                 attack_width: Optional[Real]=None,
+                 attack_height: Optional[Real]=None,
                  render_width: Optional[Real]=None,
                  render_height: Optional[Real]=None) -> None:
 
@@ -47,14 +49,20 @@ class Entity(object):
         self._pos = pg.Vector2(pos)
         self._width = width # width of rect
         self._height = height
-        self._render_width = render_width
-        self._render_height = render_height
         self._climb = climb
         self._gravity = gravity
+        self._render_width = render_width
+        self._render_height = render_height
         if render_width is None:
             self._render_width = width
         if render_height is None:
             self._render_height = height
+        self._attack_width = attack_width
+        self._attack_height = attack_height
+        if attack_width is None:
+            self._attack_width = self._render_width
+        if attack_height is None:
+            self._attack_height = self._render_height
         self._health = health
         self._manager = None
 
@@ -150,6 +158,38 @@ class Entity(object):
     @height.setter
     def height(self: Self, value: Real) -> None:
         self._height = value
+
+    @property
+    def attack_width(self: Self) -> Real:
+        return self._attack_width
+
+    @attack_width.setter
+    def attack_width(self: Self, value: Real) -> None:
+        self._attack_width = value
+
+    @property
+    def attack_height(self: Self) -> Real:
+        return self._attack_height
+
+    @attack_height.setter
+    def attack_height(self: Self, value: Real) -> None:
+        self._attack_height = value
+
+    @property
+    def render_width(self: Self) -> Real:
+        return self._render_width
+
+    @render_width.setter
+    def render_width(self: Self, value: Real) -> None:
+        self._render_width = value
+
+    @property
+    def render_height(self: Self) -> Real:
+        return self._render_height
+
+    @render_height.setter
+    def render_height(self: Self, value: Real) -> None:
+        self._render_height = value
 
     @property
     def top(self: Self) -> Real:
@@ -314,7 +354,17 @@ class Entity(object):
         rect = pg.FRect(0, 0, self._width, self._width)
         rect.center = self._pos
         return rect
-    
+
+    def attack_rect(self: Self) -> pg.Rect:
+        rect = pg.FRect(0, 0, self._attack_width, self._attack_height)
+        rect.center = self._pos
+        return rect
+
+    def render_rect(self: Self) -> pg.Rect:
+        rect = pg.FRect(0, 0, self._render_width, self._render_height)
+        rect.center = self._pos
+        return rect
+
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         if self._yaw_velocity:
             self.yaw += self._yaw_velocity * rel_game_speed
@@ -448,6 +498,8 @@ class EntityEx(Entity):
                  gravity: Real=0,
                  states: dict[str, EntityExState]={'default': EntityExState()},
                  state: str='default',
+                 attack_width: Optional[Real]=None,
+                 attack_height: Optional[Real]=None,
                  render_width: Optional[Real]=None,
                  render_height: Optional[Real]=None) -> None:
 
@@ -459,6 +511,8 @@ class EntityEx(Entity):
             health=health,
             climb=climb,
             gravity=gravity,
+            attack_width=attack_width,
+            attack_height=attack_height,
             render_width=render_width,
             render_height=render_height,
         )
@@ -515,6 +569,8 @@ class Player(Entity):
                  elevation: Real=0,
                  width: Real=0.5,
                  height: Real=1,
+                 attack_width: Optional[Real]=None,
+                 attack_height: Optional[Real]=None,
                  climb: Real=0.2,
                  gravity: Real=0.004,
                  foa: Real=60, # Field of Attack
@@ -525,6 +581,8 @@ class Player(Entity):
             elevation=elevation,
             width=width,
             height=height,
+            attack_width=attack_width,
+            attack_height=attack_height,
             climb=climb,
             gravity=gravity,
         )
@@ -867,7 +925,7 @@ class Player(Entity):
                         continue
 
                     mult = 10**precision
-                    rect = entity.rect()
+                    rect = entity.attack_rect()
                     rect.update(
                         rect.x * mult,
                         rect.y * mult,

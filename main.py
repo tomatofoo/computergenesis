@@ -7,7 +7,6 @@ import random
 from typing import Self
 
 import pygame as pg
-from pygame import mixer as mx
 
 from modules.level import ColumnTexture
 from modules.level import Walls

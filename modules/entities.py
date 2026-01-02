@@ -635,16 +635,16 @@ class Missile(EntityEx):
         self.yaw = entity._yaw_value
         self.velocity3 = velocity
 
-    def damage(self: Self, entity: Optional[Entity]=None) -> None:
-        pass
+    def attack(self: Self, entity: Optional[Entity]=None) -> None:
+        self.velocity3 = (0, 0, 0)
+        self.state = 'attack'
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         # has to be at start
         self.state_object._update(rel_game_speed, level_timer)
         
         if self.centere <= 0:
-            self.damage()
-            self._state = 'attack'
+            self.attack()
 
         if (self._pos.distance_to(self._entity_pos) > self._range
             or (self._state == 'attack' and self.state_object._ended_loop())):
@@ -653,28 +653,16 @@ class Missile(EntityEx):
         if self._state != 'attack':
             self._pos += self._velocity2 * rel_game_speed
             self._elevation += self._elevation_velocity * rel_game_speed
-            tile = pg.Vector2(
-                math.floor(self._pos[0]),
-                math.floor(self._pos[1]),
-            )
-            for offset in self._TILE_OFFSETS:
-                offset_tile = tile + offset
-                entities = self._manager._sets.get(gen_tile_key(offset_tile))
-                if entities is not None:
-                    for entity in entities:
-                        if entity is not self._entity and entity is not self:
-                            horizontal = self.attack_rect().colliderect(
-                                entity.attack_rect()
-                            )
-                            vertical = (
-                                self._elevation < entity.top
-                                and self.top > self._elevation
-                            )
-                            if horizontal and vertical:
-                                self.velocity3 = (0, 0, 0)
-                                self.state = 'attack'
-                                self.damage(entity)
-                                break
+            for rect, bottom, top, entity in self._get_rects_around():
+                if self._elevation < top and self.top > bottom:
+                    if entity is None:
+                        if self.rect().colliderect(rect):
+                            self.attack()
+                    else:
+                        if (entity is not self._entity
+                            and entity is not self
+                            and self.attack_rect().colliderect(rect)):
+                            self.attack(entity)
 
 
 class Player(Entity):
@@ -967,12 +955,15 @@ class Player(Entity):
                     missile=self._weapon._missile,
                     speed=self._weapon._speed,
                 ) + 1
-
+    
     def _hitscan(self: Self,
                  attack_range: Real,
                  foa: Real,
                  precision: int=100,
                  missile: Real=0) -> Optional[Entity]:
+        # if missile is 0 then use normal hitscanning
+        # else is missile hitscanning; missile is radius for vertical autoaim
+
         # NOTE: this algorithm allows attacking through 
         # vertical corners of walls
         # e.g floor and wall together create a corner
@@ -1001,9 +992,7 @@ class Player(Entity):
         midheight = self.centere
         vector = self.vector3
         
-        # if missile is not zero, it is the radius from entity
-        # for vertical autoaim to take effect
-        missile_has_hit = 0 # for missile only
+        missile_could_hit = 0 # for missile only
 
         # keep on changing end_pos until hitting a wall (DDA)
         while dist < attack_range and dist < closest[0]:
@@ -1077,14 +1066,14 @@ class Player(Entity):
                         end_pos[1] * precision,
                     ):
                         entity_dist = vector.distance_to(entity.vector3)
-                        if missile_has_hit:
+                        if missile_could_hit:
                             if entity_dist < closest[0]:
                                 closest = (entity_dist, entity)
                         else:
                             closest = (entity_dist, entity)
-                            missile_has_hit = bool(missile)
+                            missile_could_hit = bool(missile)
 
-                    if missile and not missile_has_hit:
+                    if missile and not missile_could_hit:
                         entity_dist = vector.distance_to(entity.vector3)
                         if (entity_dist < closest[0]
                             and entity._pos.distance_to(end_pos) < missile):
@@ -1121,7 +1110,7 @@ class Player(Entity):
             last_end_pos = end_pos.copy()
 
         if missile:
-            return (closest[1], missile_has_hit)
+            return (closest[1], missile_could_hit)
         else:
             return closest[1]
 
@@ -1165,15 +1154,15 @@ class Player(Entity):
         # unlike melee and hitscan, missile attack will return true if a hit is
         # predicted (not guaranteed)
         # (i.e. the monstor could move and it wouldn't hit)
-        entity, has_hit = self._hitscan(
+        entity, could_hit = self._hitscan(
             attack_range,
             foa,
             precision,
             missile=0.5,
         )
+        missile = copy.deepcopy(missile)
         if entity is not None:
-            missile = copy.deepcopy(missile)
-            if has_hit:
+            if could_hit:
                 vector = pg.Vector3(
                     entity._pos[0] - self._pos[0],
                     entity.centere - self.centere,
@@ -1185,22 +1174,16 @@ class Player(Entity):
                     entity.centere - self.centere,
                     self._pos.distance_to(entity._pos),
                 ).rotate_y(-self._yaw_value)
-            missile.launch(
-                self,
-                vector.normalize() * speed,
-                damage,
-                attack_range,
-            )
-            return has_hit
         else:
-            missile = copy.deepcopy(missile)
-            missile.launch(
-                self,
-                pg.Vector3(self._yaw[0], 0, self._yaw[1]).normalize() * speed,
-                damage,
-                attack_range,
-            )
-            return False
+            vector = pg.Vector3(self._yaw[0], 0, self._yaw[1])
+        missile.launch(
+            self,
+            vector.normalize() * speed,
+            damage,
+            attack_range,
+        )
+
+        return could_hit
         
 
 class EntityManager(object):

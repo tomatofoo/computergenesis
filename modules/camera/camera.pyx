@@ -160,6 +160,7 @@ cdef class Camera:
         float _horizon
         float _tile_size
         float _wall_render_distance
+        float _camera_offset
         float _headbob_strength
         float _headbob_frequency
         float _weaponbob_strength
@@ -183,6 +184,7 @@ cdef class Camera:
                  float tile_size,
                  float wall_render_distance,
                  player: Player,
+                 float camera_offset=0.5,
                  float headbob_strength=0.0375,
                  float headbob_frequency=0.1667,
                  float weaponbob_strength=0.05,
@@ -206,13 +208,23 @@ cdef class Camera:
         self._min_entity_depth = min_entity_depth
         self._darkness = darkness
         self._multithreaded = multithreaded
-
+        
+        self.camera_offset = camera_offset
         self.headbob_strength = headbob_strength
         self.headbob_frequency = headbob_frequency
         self.weaponbob_strength = weaponbob_strength
         self.weaponbob_frequency = weaponbob_frequency
         self.weapon_pos = weapon_pos
         self.climb_speed = climb_speed
+
+    @property
+    def camera_offset(self: Self):
+        return self._camera_offset
+
+    @camera_offset.setter
+    def camera_offset(self: Self, float value):
+        self._camera_offset = value
+        self._player._settings['camera_offset'] = value
 
     @property
     def headbob_strength(self: Self):

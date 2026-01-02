@@ -51,18 +51,18 @@ class Entity(object):
         self._height = height
         self._climb = climb
         self._gravity = gravity
+        self._attack_width = attack_width
+        self._attack_height = attack_height
+        if attack_width is None:
+            self._attack_width = width
+        if attack_height is None:
+            self._attack_height = height
         self._render_width = render_width
         self._render_height = render_height
         if render_width is None:
             self._render_width = width
         if render_height is None:
             self._render_height = height
-        self._attack_width = attack_width
-        self._attack_height = attack_height
-        if attack_width is None:
-            self._attack_width = self._render_width
-        if attack_height is None:
-            self._attack_height = self._render_height
         self._health = health
         self._manager = None
 
@@ -567,8 +567,8 @@ class Player(Entity):
     def __init__(self: Self,
                  pos: Point=(0, 0),
                  elevation: Real=0,
-                 width: Real=0.5,
-                 height: Real=1,
+                 width: Real=0.4,
+                 height: Real=0.75,
                  attack_width: Optional[Real]=None,
                  attack_height: Optional[Real]=None,
                  climb: Real=0.2,
@@ -591,11 +591,10 @@ class Player(Entity):
 
         self._forward_velocity = pg.Vector2(0, 0)
         self._right_velocity = pg.Vector2(0, 0)
-        # offset for camera's viewpoint
-        self._camera_offset = 0.5
-        self._render_elevation = self._elevation + self._camera_offset
         
+        # Camera settings
         self._settings = {
+            'camera_offset': 0,
             'headbob_strength': 0,
             'headbob_frequency': 0,
             'weaponbob_strength': 0,
@@ -603,6 +602,10 @@ class Player(Entity):
             'weapon_pos': (0, 0),
             'climb_speed': 0,
         }
+        self._render_elevation = (
+            self._elevation + self._settings['camera_offset']
+        )
+
         # Weapon Stuff
         self._foa = foa
         self._weapon = weapon
@@ -748,7 +751,7 @@ class Player(Entity):
         
         # climbing animation / headbob
         factor = min(self._velocity2.magnitude() * 20, 2)
-        elevation = self._elevation + self._camera_offset
+        elevation = self._elevation + self._settings['camera_offset']
         if self._climbing:
             difference = elevation - self._render_elevation
             mult = (1 - (1 - self._settings['climb_speed'])**rel_game_speed)

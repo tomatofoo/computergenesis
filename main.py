@@ -117,16 +117,19 @@ class Game(object):
         entities = {
             EntityEx(
                 pos=(9, 9),
-                height=0.65,
-                width=0.65,
+                width=0.5,
+                height=0.75,
+                attack_width=1,
+                attack_height=1,
                 render_width=1,
                 render_height=1,
                 states={'default': EntityExState(textures, 60)},
             ),
             Entity(
                 pos=(6.5, 6),
-                height=0.6,
                 width=0.25,
+                height=0.6,
+                attack_width=0.5,
                 render_width=0.5,
                 textures=[
                     pg.image.load(gen_img_path('vassago/1.png')),
@@ -141,29 +144,33 @@ class Game(object):
             ),
             Entity(
                 pos=(6.5, 5),
-                height=0.6,
                 width=0.25,
+                height=0.6,
+                attack_width=0.5,
                 render_width=0.5,
                 textures=[pg.image.load(gen_img_path('GrenadeZombie.png'))],
             ),
             Entity(
                 pos=(6.5, 4),
-                height=0.6,
                 width=0.25,
+                height=0.6,
+                attack_width=0.5,
                 render_width=0.5,
                 textures=[pg.image.load(gen_img_path('GrenadeZombie.png'))],
             ),
             Entity(
                 pos=(6.5, 3),
-                height=0.6,
                 width=0.25,
+                height=0.6,
+                attack_width=0.5,
                 render_width=0.5,
                 textures=[pg.image.load(gen_img_path('GrenadeZombie.png'))],
             ),
             Entity(
                 pos=(6.5, 2),
-                height=0.6,
                 width=0.25,
+                height=0.6,
+                attack_width=0.5,
                 render_width=0.5,
                 textures=[pg.image.load(gen_img_path('GrenadeZombie.png'))],
             ),
@@ -174,7 +181,6 @@ class Game(object):
         self._player = Player((6.5, 7))
         self._player.yaw = 180
         self._player.elevation = 1
-        self._player.height = 0.6
         self._camera = Camera(
             fov=90,
             tile_size=self._SURF_SIZE[0] / 2,

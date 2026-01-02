@@ -436,6 +436,7 @@ class EntityExState(object):
         self._length = len(textures[0])
         self._animation_time = animation_time
         self._animation_timer = 0
+        self._animation_dex = 0
 
     @property
     def textures(self: Self) -> list[list[pg.Surface]]:
@@ -472,18 +473,18 @@ class EntityExState(object):
                 self._animation_timer,
                 self._animation_time * (self._loop + 1),
             )
-
-    def _texture(self: Self, direction_dex: int) -> int:
-        animation_dex = math.floor(
+        self._animation_dex = math.floor(
             self._animation_timer
             / self._animation_time
             * self._length
         ) % self._length
 
-        return self._textures[direction_dex][animation_dex]
+    def _texture(self: Self, direction_dex: int) -> int:
+        return self._textures[direction_dex][self._animation_dex]
 
     def _reset(self: Self) -> None:
         self._animation_timer = 0
+        self._animation_dex = 0
 
 
 # Extended Entity Class (states, animations)

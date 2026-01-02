@@ -424,7 +424,7 @@ class Entity(object):
 
 class EntityExState(object):
     def __init__(self: Self,
-                 textures: list[list[pg.Surface]]=[[FALLBACK_SURF]],
+                 textures: tuple[tuple[pg.Surface]]=((FALLBACK_SURF,),),
                  animation_time: Real=1,
                  trigger: bool=0,
                  loop: Real=-1) -> None:
@@ -441,11 +441,11 @@ class EntityExState(object):
         self._animation_dex = 0
 
     @property
-    def textures(self: Self) -> list[list[pg.Surface]]:
+    def textures(self: Self) -> tuple[tuple[pg.Surface]]:
         return self._textures
 
     @textures.setter
-    def textures(self: Self, value: list[list[pg.Surface]]) -> None:
+    def textures(self: Self, value: tuple[tuple[pg.Surface]]) -> None:
         self._textures = value
         self._length = len(value[0])
 

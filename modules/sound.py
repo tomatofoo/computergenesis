@@ -60,7 +60,7 @@ class SoundManager(object):
                  sounds: dict[str, Sound3D]={},
                  volume: Real=1,
                  channels: int=64,
-                 dist_factor: Real=15) -> None:
+                 dist_factor: Real=25) -> None:
         
         # Attributes
         self._sounds = sounds

@@ -3,7 +3,7 @@ import bisect
 from numbers import Real
 from typing import Self
 from typing import Optional
-from enum import Enum
+from collections.abc import Sequence
 
 import pygame as pg
 from pygame.typing import Point
@@ -432,10 +432,9 @@ class EntityExState(object):
         # second dimension is animation
         # trigger: animtaion starts when state is triggered
         # if not then animation relies on level timer
-        self._textures = textures
+        self.textures = textures
         self._trigger = trigger
         self._loop = loop # -1 for infinite
-        self._length = len(textures[0])
         self._animation_time = animation_time
         self._animation_timer = 0
         self._animation_dex = 0

@@ -304,7 +304,7 @@ cdef class Camera:
         return self._player
 
     @player.setter
-    def player(self: Self, value: Player) -> None
+    def player(self: Self, value: Player) -> None:
         self._player._settings['camera_offset'] = 0
         self._player._settings['headbob_frequency'] = 0
         self._player._settings['headbob_strength'] = 0

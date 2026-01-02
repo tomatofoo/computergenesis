@@ -356,12 +356,12 @@ class Entity(object):
         return rect
 
     def attack_rect(self: Self) -> pg.Rect:
-        rect = pg.FRect(0, 0, self._attack_width, self._attack_height)
+        rect = pg.FRect(0, 0, self._attack_width, self._attack_width)
         rect.center = self._pos
         return rect
 
     def render_rect(self: Self) -> pg.Rect:
-        rect = pg.FRect(0, 0, self._render_width, self._render_height)
+        rect = pg.FRect(0, 0, self._render_width, self._render_width)
         rect.center = self._pos
         return rect
 
@@ -867,7 +867,7 @@ class Player(Entity):
         slope = ray[1] / ray[0] if ray[0] else math.inf
         tile = [math.floor(end_pos[0]), math.floor(end_pos[1])]
         tile_key = gen_tile_key(tile)
-        last_tile = tile_key
+        last_tile = tile
         dir = (ray[0] > 0, ray[1] > 0)
         # step for tile (for each displacement)
         step_x = dir[0] * 2 - 1 # 1 if yes, -1 if no
@@ -902,8 +902,19 @@ class Player(Entity):
                 end_pos[0] += disp_y / slope if slope else math.inf
                 end_pos[1] += disp_y
                 dist += len_y
+            
+            # account for entities partially in the tile but not in set
+            # should work for entities that are at most 2 units wide
+            # since TILE_OFFSETS is 3x3
+            entities = set()
+            for offset in self._TILE_OFFSETS:
+                tile_key = gen_tile_key(
+                    (last_tile[0] + offset[0], last_tile[1] + offset[1]),
+                )
+                tentative = self._manager._sets.get(tile_key)
+                if tentative != None:
+                    entities |= tentative
 
-            entities = self._manager._sets.get(last_tile)
             if entities:
                 for entity in entities:
                     entity_dist = self._pos.distance_to(entity._pos)
@@ -972,7 +983,7 @@ class Player(Entity):
                                 amount += 1
                         slope_ranges = arr
 
-            last_tile = tile_key
+            last_tile = tile
             last_end_pos = end_pos.copy()
         
         return closest[1]

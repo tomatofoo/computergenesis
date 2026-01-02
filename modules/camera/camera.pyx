@@ -304,13 +304,15 @@ cdef class Camera:
         return self._player
 
     @player.setter
-    def player(self: Self, value: Player) -> None:
+    def player(self: Self, value: Player) -> None
+        self._player._settings['camera_offset'] = 0
         self._player._settings['headbob_frequency'] = 0
         self._player._settings['headbob_strength'] = 0
         self._player._settings['weaponbob_frequency'] = 0
         self._player._settings['weaponbob_strength'] = 0
         self._player._settings['climb_speed'] = 0
         self._player = value
+        value._settings['camera_offset'] = self._camera_offset
         value._settings['headbob_frequency'] = self._headbob_frequency
         value._settings['headbob_strength'] = self._headbob_strength
         value._settings['weaponbob_frequency'] = self._weaponbob_frequency

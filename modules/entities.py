@@ -300,8 +300,10 @@ class Entity(object):
                     rect = pg.Rect(offset_tile[0], offset_tile[1], 1, 1)
                 else:
                     rect = pg.FRect(
-                        offset_tile + obj,
-                        (obj[2], obj[3]),
+                        offset_tile[0] + obj[0],
+                        offset_tile[1] + obj[1],
+                        obj[2],
+                        obj[3],
                     )
                 tiles.append((
                     rect,

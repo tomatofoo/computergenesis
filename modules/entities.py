@@ -858,7 +858,7 @@ class Player(Entity):
     def _hitscan(self: Self,
                  attack_range: Real,
                  foa: Real,
-                 precision: int=2) -> Optional[Entity]:
+                 precision: int=100) -> Optional[Entity]:
         # NOTE: this algorithm allows attacking through 
         # vertical corners of walls
         # e.g floor and wall together create a corner
@@ -943,19 +943,18 @@ class Player(Entity):
                     
                     if dist >= attack_range:
                         end_pos = self._pos + ray * attack_range
-                    mult = 10**precision
                     rect = entity.attack_rect()
                     rect.update(
-                        rect[0] * mult,
-                        rect[1] * mult,
-                        rect[2] * mult,
-                        rect[3] * mult,
+                        rect[0] * precision,
+                        rect[1] * precision,
+                        rect[2] * precision,
+                        rect[3] * precision,
                     )
                     if rect.clipline(
-                        last_end_pos[0] * mult,
-                        last_end_pos[1] * mult,
-                        end_pos[0] * mult,
-                        end_pos[1] * mult,
+                        last_end_pos[0] * precision,
+                        last_end_pos[1] * precision,
+                        end_pos[0] * precision,
+                        end_pos[1] * precision,
                     ):
                         entity_dist = vector.distance_to(entity.vector3)
                         if entity_dist < closest[0]:
@@ -997,7 +996,7 @@ class Player(Entity):
                      damage: Real,
                      attack_range: Real,
                      foa: Real,
-                     precision: int=2) -> bool:
+                     precision: int=100) -> bool:
         entity = self._hitscan(attack_range, foa, precision)
         if entity is not None:
             entity.melee_damage(damage)
@@ -1010,7 +1009,7 @@ class Player(Entity):
                        damage: Real,
                        attack_range: Real,
                        foa: Real,
-                       precision: int=2) -> bool:
+                       precision: int=100) -> bool:
         entity = self._hitscan(attack_range, foa, precision)
         if entity is not None:
             entity.hitscan_damage(damage)
@@ -1026,7 +1025,7 @@ class Player(Entity):
                        attack_range: Real,
                        foa: Real,
                        missile: Missile,
-                       precision: int=2) -> None:
+                       precision: int=100) -> None:
         # unlike melee and hitscan, missile attack will return true if a hit is
         # predicted (not guaranteed)
         # (i.e. the monstor could move and it wouldn't hit)
@@ -1097,8 +1096,6 @@ class EntityManager(object):
             entity.update(rel_game_speed, level_timer)
             key = gen_tile_key(entity._pos)
             entity._update_manager_sets(old_key, key)
-
-
 
 
 # CUSTOM

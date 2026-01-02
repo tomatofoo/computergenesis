@@ -638,6 +638,9 @@ class Missile(EntityEx):
     def attack(self: Self, entity: Optional[Entity]=None) -> None:
         self.velocity3 = (0, 0, 0)
         self.state = 'attack'
+        if entity is not None:
+            if entity._health > 0:
+                pass
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         # has to be at start

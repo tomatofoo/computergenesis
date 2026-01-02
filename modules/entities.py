@@ -375,7 +375,7 @@ class EntityExState(object):
                  textures: list[list[pg.Surface]]=[[FALLBACK_SURF]],
                  animation_time: Real=1,
                  trigger: bool=0,
-                 loop: int=-1) -> None:
+                 loop: Real=-1) -> None:
         # first dimension is direction
         # second dimension is animation
         # trigger: animtaion starts when state is triggered
@@ -386,6 +386,7 @@ class EntityExState(object):
         self._length = len(textures[0])
         self._animation_time = animation_time
         self._animation_timer = 0
+
     @property
     def textures(self: Self) -> list[list[pg.Surface]]:
         return self._textures

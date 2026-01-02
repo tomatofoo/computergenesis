@@ -127,7 +127,7 @@ class Game(object):
             Entity(
                 pos=(6.5, 6),
                 height=0.6,
-                width=0.35,
+                width=0.5,
                 render_width=0.5,
                 textures=[
                     pg.image.load(gen_img_path('vassago/1.png')),
@@ -143,28 +143,28 @@ class Game(object):
             Entity(
                 pos=(6.5, 5),
                 height=0.6,
-                width=0.35,
+                width=0.5,
                 render_width=0.5,
                 textures=[pg.image.load(gen_img_path('GrenadeZombie.png'))],
             ),
             Entity(
                 pos=(6.5, 4),
                 height=0.6,
-                width=0.35,
+                width=0.5,
                 render_width=0.5,
                 textures=[pg.image.load(gen_img_path('GrenadeZombie.png'))],
             ),
             Entity(
                 pos=(6.5, 3),
                 height=0.6,
-                width=0.35,
+                width=0.5,
                 render_width=0.5,
                 textures=[pg.image.load(gen_img_path('GrenadeZombie.png'))],
             ),
             Entity(
                 pos=(6.5, 2),
                 height=0.6,
-                width=0.35,
+                width=0.5,
                 render_width=0.5,
                 textures=[pg.image.load(gen_img_path('GrenadeZombie.png'))],
             ),

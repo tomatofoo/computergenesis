@@ -374,13 +374,15 @@ class EntityExState(object):
     def __init__(self: Self,
                  textures: list[list[pg.Surface]]=[[FALLBACK_SURF]],
                  animation_time: Real=1,
-                 trigger: bool=0) -> None:
+                 trigger: bool=0,
+                 loop: int=-1) -> None:
         # first dimension is direction
         # second dimension is animation
         # trigger: animtaion starts when state is triggered
         # if not then animation relies on level timer
         self._textures = textures
         self._trigger = trigger
+        self._loop = loop # -1 for infinite
         self._length = len(textures[0])
         self._animation_time = animation_time
         self._animation_timer = 0
@@ -414,6 +416,11 @@ class EntityExState(object):
             self._animation_timer + rel_game_speed
             if self._trigger else level_timer
         )
+        if self._loop > -1:
+            self._animation_timer = min(
+                self._animation_timer,
+                self._animation_time * (self._loop + 1),
+            )
 
     def _texture(self: Self, direction_dex: int) -> int:
         animation_dex = math.floor(

@@ -1161,7 +1161,9 @@ class Player(Entity):
             missile=0.5,
         )
         missile = copy.deepcopy(missile)
-        if entity is not None:
+        if entity is None:
+            vector = pg.Vector3(self._yaw[0], 0, self._yaw[1])
+        else:
             if could_hit:
                 vector = pg.Vector3(
                     entity._pos[0] - self._pos[0],
@@ -1174,15 +1176,13 @@ class Player(Entity):
                     entity.centere - self.centere,
                     self._pos.distance_to(entity._pos),
                 ).rotate_y(-self._yaw_value)
-        else:
-            vector = pg.Vector3(self._yaw[0], 0, self._yaw[1])
+
         missile.launch(
             self,
             vector.normalize() * speed,
             damage,
             attack_range,
         )
-
         return could_hit
         
 

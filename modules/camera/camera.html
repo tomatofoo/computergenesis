@@ -3908,10 +3908,10 @@ static int __pyx_pf_6camera_6Camera_13multithreaded_2__set__(struct __pyx_obj_6c
   __pyx_v_step_y = __pyx_t_2;
   __pyx_t_2 = 0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0412</span>: </pre>
-<pre class="cython line score-23" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0413</span>:         x_points = self._player._pos.x + start_points_x + step_x * x_pixels</pre>
+<pre class="cython line score-23" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0413</span>:         x_points = self._player._pos[0] + start_points_x + step_x * x_pixels</pre>
 <pre class='cython code score-23 '>  __pyx_t_2 = <span class='pyx_c_api'>__Pyx_PyObject_GetAttrStr</span>(__pyx_v_self-&gt;_player, __pyx_mstate_global-&gt;__pyx_n_u_pos);<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 413, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_2);
-  __pyx_t_1 = <span class='pyx_c_api'>__Pyx_PyObject_GetAttrStr</span>(__pyx_t_2, __pyx_mstate_global-&gt;__pyx_n_u_x);<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 413, __pyx_L1_error)</span>
+  __pyx_t_1 = <span class='pyx_c_api'>__Pyx_GetItemInt</span>(__pyx_t_2, 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_OwnStrongReference);<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 413, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = <span class='py_c_api'>PyNumber_Add</span>(__pyx_t_1, __pyx_v_start_points_x);<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 413, __pyx_L1_error)</span>
@@ -3925,10 +3925,10 @@ static int __pyx_pf_6camera_6Camera_13multithreaded_2__set__(struct __pyx_obj_6c
   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_x_points = __pyx_t_3;
   __pyx_t_3 = 0;
-</pre><pre class="cython line score-23" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0414</span>:         y_points = self._player._pos.y + start_points_y + step_y * x_pixels</pre>
+</pre><pre class="cython line score-23" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0414</span>:         y_points = self._player._pos[1] + start_points_y + step_y * x_pixels</pre>
 <pre class='cython code score-23 '>  __pyx_t_3 = <span class='pyx_c_api'>__Pyx_PyObject_GetAttrStr</span>(__pyx_v_self-&gt;_player, __pyx_mstate_global-&gt;__pyx_n_u_pos);<span class='error_goto'> if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 414, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_3);
-  __pyx_t_1 = <span class='pyx_c_api'>__Pyx_PyObject_GetAttrStr</span>(__pyx_t_3, __pyx_mstate_global-&gt;__pyx_n_u_y);<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 414, __pyx_L1_error)</span>
+  __pyx_t_1 = <span class='pyx_c_api'>__Pyx_GetItemInt</span>(__pyx_t_3, 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_OwnStrongReference);<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 414, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_3 = <span class='py_c_api'>PyNumber_Add</span>(__pyx_t_1, __pyx_v_start_points_y);<span class='error_goto'> if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 414, __pyx_L1_error)</span>
@@ -4105,7 +4105,7 @@ static int __pyx_pf_6camera_6Camera_13multithreaded_2__set__(struct __pyx_obj_6c
   if (!(likely(((__pyx_t_1) == Py_None) || likely(<span class='pyx_c_api'>__Pyx_TypeTest</span>(__pyx_t_1, __pyx_mstate_global-&gt;__pyx_ptype_5numpy_ndarray))))) <span class='error_goto'>__PYX_ERR(0, 424, __pyx_L1_error)</span>
   __pyx_r = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
-  <span class='trace'>__Pyx_TraceReturnValue</span>((PyObject *)__pyx_r, 107, 0, <span class='error_goto'>__PYX_ERR(0, 424, __pyx_L1_error)</span>);
+  <span class='trace'>__Pyx_TraceReturnValue</span>((PyObject *)__pyx_r, 109, 0, <span class='error_goto'>__PYX_ERR(0, 424, __pyx_L1_error)</span>);
   goto __pyx_L0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0425</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">0426</span>: </pre>

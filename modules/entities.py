@@ -395,7 +395,7 @@ class Entity(object):
                 if top - self._elevation > self._climb:
                     if self._velocity2[1] > 0:
                         entity_rect.bottom = rect.top
-                    elif self._velocity2[1]< 0:
+                    elif self._velocity2[1] < 0:
                         entity_rect.top = rect.bottom
                     self._pos[1] = entity_rect.centery
                 else: # climbing up

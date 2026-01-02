@@ -327,6 +327,7 @@ class Entity(object):
                     rect,
                     data['elevation'],
                     data['elevation'] + data['height'],
+                    None,
                 ))
             entities = self._manager._sets.get(tile_key)
             if entities:
@@ -337,6 +338,7 @@ class Entity(object):
                             entity.rect(),
                             entity._elevation,
                             entity.top,
+                            entity,
                         ))
         return tiles
 
@@ -393,7 +395,7 @@ class Entity(object):
         
         self._pos[0] += self._velocity2[0] * rel_game_speed
         entity_rect = self.rect()
-        for rect, bottom, top in self._get_rects_around():
+        for rect, bottom, top, entity in self._get_rects_around():
             vertical = self._elevation < top and self.top > bottom
             horizontal = entity_rect.colliderect(rect)
             if vertical and horizontal:
@@ -408,7 +410,7 @@ class Entity(object):
 
         self._pos[1] += self._velocity2[1] * rel_game_speed
         entity_rect = self.rect()
-        for rect, bottom, top in self._get_rects_around():
+        for rect, bottom, top, entity in self._get_rects_around():
             vertical = self._elevation < top and self.top > bottom
             horizontal = entity_rect.colliderect(rect)
             if vertical and horizontal:
@@ -430,7 +432,7 @@ class Entity(object):
             self.top = self._manager._level._ceiling_elevation
             self._elevation_velocity = 0
         entity_rect = self.rect()
-        for rect, bottom, top in self._get_rects_around():
+        for rect, bottom, top, entity in self._get_rects_around():
             vertical = self._elevation < top and self.top > bottom
             horizontal = entity_rect.colliderect(rect)
             if vertical and horizontal:
@@ -633,7 +635,7 @@ class Missile(EntityEx):
         self.yaw = entity._yaw_value
         self.velocity3 = velocity
 
-    def damage(self: Self):
+    def damage(self: Self, entity: Optional[Entity]=None) -> None:
         pass
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
@@ -641,6 +643,7 @@ class Missile(EntityEx):
         self.state_object._update(rel_game_speed, level_timer)
         
         if self.centere <= 0:
+            self.damage()
             self._state = 'attack'
 
         if (self._pos.distance_to(self._entity_pos) > self._range
@@ -670,7 +673,7 @@ class Missile(EntityEx):
                             if horizontal and vertical:
                                 self.velocity3 = (0, 0, 0)
                                 self.state = 'attack'
-                                entity.missile_damage(self._damage)
+                                self.damage(entity)
                                 break
 
 
@@ -808,7 +811,7 @@ class Player(Entity):
 
         self._pos[0] += self._velocity2[0] * rel_game_speed
         entity_rect = self.rect()
-        for rect, bottom, top in self._get_rects_around():
+        for rect, bottom, top, entity in self._get_rects_around():
             vertical = self._elevation < top and self.top > bottom
             horizontal = entity_rect.colliderect(rect)
             if vertical and horizontal:
@@ -824,7 +827,7 @@ class Player(Entity):
 
         self._pos[1] += self._velocity2[1] * rel_game_speed
         entity_rect = self.rect()
-        for rect, bottom, top in self._get_rects_around():
+        for rect, bottom, top, entity in self._get_rects_around():
             vertical = self._elevation < top and self.top > bottom
             horizontal = entity_rect.colliderect(rect)
             if vertical and horizontal:
@@ -849,7 +852,7 @@ class Player(Entity):
             self.top = self._manager._level._ceiling_elevation
             self._elevation_velocity = 0
         entity_rect = self.rect()
-        for rect, bottom, top in self._get_rects_around():
+        for rect, bottom, top, entity in self._get_rects_around():
             vertical = self._elevation < top and self.top > bottom
             horizontal = entity_rect.colliderect(rect)
             if vertical and horizontal:
@@ -969,7 +972,7 @@ class Player(Entity):
                  attack_range: Real,
                  foa: Real,
                  precision: int=100,
-                 missile: bool=0) -> Optional[Entity]:
+                 missile: Real=0) -> Optional[Entity]:
         # NOTE: this algorithm allows attacking through 
         # vertical corners of walls
         # e.g floor and wall together create a corner
@@ -997,7 +1000,9 @@ class Player(Entity):
         amount = 0
         midheight = self.centere
         vector = self.vector3
-
+        
+        # if missile is not zero, it is the radius from entity
+        # for vertical autoaim to take effect
         missile_has_hit = 0 # for missile only
 
         # keep on changing end_pos until hitting a wall (DDA)
@@ -1034,7 +1039,9 @@ class Player(Entity):
             if entities:
                 for entity in entities:
                     entity_dist = self._pos.distance_to(entity._pos)
-                    if entity._health <= 0 or not entity_dist:
+                    if (entity._health <= 0
+                        or not entity_dist
+                        or isinstance(entity, Missile)):
                         continue
                     
                     # checks if entity is outside foa and checks (somewhat 
@@ -1075,11 +1082,12 @@ class Player(Entity):
                                 closest = (entity_dist, entity)
                         else:
                             closest = (entity_dist, entity)
-                        missile_has_hit = missile
+                            missile_has_hit = bool(missile)
 
                     if missile and not missile_has_hit:
                         entity_dist = vector.distance_to(entity.vector3)
-                        if entity_dist < closest[0]:
+                        if (entity_dist < closest[0]
+                            and entity._pos.distance_to(end_pos) < missile):
                             closest = (entity_dist, entity)
 
             tile_key = gen_tile_key(tile)
@@ -1161,7 +1169,7 @@ class Player(Entity):
             attack_range,
             foa,
             precision,
-            missile=1,
+            missile=0.5,
         )
         if entity is not None:
             missile = copy.deepcopy(missile)

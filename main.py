@@ -289,7 +289,7 @@ class Game(object):
             attack_range=10,
             cooldown=25,
             capacity=25,
-            speed=0.03,
+            speed=0.075,
             missile=missile,
             ground_textures=None,
             hold_textures=[textures[0]],

@@ -1,7 +1,6 @@
 import math
 from numbers import Real
 from typing import Self
-from typing import Union
 from typing import Optional
 
 import pygame as pg
@@ -164,8 +163,8 @@ class Walls(object):
 
 class Level(object):
     def __init__(self: Self,
-                 floor: Optional[Union[Floor, Sky]],
-                 ceiling: Optional[Union[Floor, Sky]],
+                 floor: Optional[Floor | Sky],
+                 ceiling: Optional[Floor | Sky],
                  walls: Walls,
                  entities: EntityManager,
                  sounds: SoundManager,
@@ -184,19 +183,19 @@ class Level(object):
         sounds.update()
 
     @property
-    def floor(self: Self) -> Optional[Union[Floor, Sky]]:
+    def floor(self: Self) -> Optional[Floor | Sky]:
         return self._floor
 
     @floor.setter
-    def floor(self: Self, value: Optional[Union[Floor, Sky]]) -> None:
+    def floor(self: Self, value: Optional[Floor | Sky]) -> None:
         self._floor = value
 
     @property
-    def ceiling(self: Self) -> Optional[Union[Floor, Sky]]:
+    def ceiling(self: Self) -> Optional[Floor | Sky]:
         return self._ceiling
 
     @ceiling.setter
-    def ceiling(self: Self, value: Optional[Union[Floor, Sky]]) -> None:
+    def ceiling(self: Self, value: Optional[Floor | Sky]) -> None:
         self._ceiling = value
 
     @property

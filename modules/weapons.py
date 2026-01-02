@@ -189,6 +189,7 @@ class MissileWeapon(AmmoWeapon):
                  capacity: int,
                  cooldown: Real,
                  missile: Missile,
+                 speed: Real,
                  ground_textures: Optional[list[pg.Surface]]=None,
                  hold_textures: Optional[list[pg.Surface]]=None,
                  attack_textures: Optional[list[pg.Surface]]=None,
@@ -210,6 +211,25 @@ class MissileWeapon(AmmoWeapon):
             attack_animation_time=attack_animation_time,
             attack_sound=attack_sound,
         )
+
+        self._missile = missile
+        self._speed = speed
+
+    @property
+    def missile(self: Self) -> Missile:
+        return self._missile
+
+    @missile.setter
+    def missile(self: Self, value: Missile) -> None:
+        self._missile = value
+
+    @property
+    def speed(self: Self) -> Real:
+        return self._speed
+
+    @speed.setter
+    def speed(self: Self, value: Real) -> None:
+        self._speed = value
 
 
 # CUSTOM

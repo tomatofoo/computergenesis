@@ -22,6 +22,7 @@ from modules.sound import SoundManager
 from modules.entities import Entity
 from modules.entities import EntityExState
 from modules.entities import EntityEx
+from modules.entities import Missile
 from modules.entities import Player
 from modules.entities import EntityManager 
 from modules.inventory import Collectible
@@ -113,6 +114,15 @@ class Game(object):
         for animation in textures:
             for surf in animation:
                 surf.set_colorkey((255, 0, 255))
+
+        missile = Missile(
+            width=0.25,
+            height=0.25,
+            states={
+                'default': EntityExState(textures, 30),
+                'attack': EntityExState(animation_time=120),
+            }
+        )
 
         entities = {
             EntityEx(
@@ -268,7 +278,30 @@ class Game(object):
             hold_animation_time=30,
             attack_animation_time=30,
         )
-        self._player.weapon = self._fist
+        textures = [
+            pg.image.load(gen_img_path('missile_launcher/1.png')),
+            pg.image.load(gen_img_path('missile_launcher/2.png')),
+        ]
+        for surf in textures:
+            surf.set_colorkey((255, 0, 255))
+        self._missile_launcher = MissileWeapon(
+            damage=100,
+            attack_range=10,
+            cooldown=25,
+            capacity=25,
+            speed=0.03,
+            missile=missile,
+            ground_textures=None,
+            hold_textures=[textures[0]],
+            attack_textures=[
+                textures[1],
+            ],
+            ground_animation_time=1,
+            hold_animation_time=30,
+            attack_animation_time=10,
+        )
+        self._missile_launcher.ammo = math.inf
+        self._player.weapon = self._missile_launcher
 
     def move_tiles(self: Self, level_timer: Real) -> None:
         self._level.walls.set_tile(
@@ -330,6 +363,8 @@ class Game(object):
                     elif event.key == pg.K_2:
                         self._player.weapon = self._shotgun
                     elif event.key == pg.K_3:
+                        self._player.weapon = self._missile_launcher
+                    elif event.key == pg.K_0:
                         self._sounds['water'].play(pos=(9, 0.25, 9)) 
             # Update
             self.move_tiles(level_timer)

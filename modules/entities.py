@@ -1,4 +1,5 @@
 import math
+import copy
 import bisect
 from numbers import Real
 from typing import Self
@@ -65,7 +66,9 @@ class Entity(object):
             self._render_height = height
         self._health = health
         self._manager = None
-
+        self._remove = 0 # internal for when entity wants removal
+        self._dont_collide = set() # internal for no collision
+       
     @property
     def glowing(self: Self) -> int:
         return self._glowing
@@ -124,12 +127,14 @@ class Entity(object):
                 int(math.floor(self._pos[1])))
 
     @property
-    def vector2(self: Self) -> pg.Vector2:
-        return self._pos
-    
-    @property
     def vector3(self: Self) -> pg.Vector3:
         return pg.Vector3(self._pos[0], self._elevation, self._pos[1])
+
+    @vector3.setter
+    def vector3(self: Self, value: pg.Vector3) -> None:
+        self._pos[0] += value[0]
+        self._elevation += value[1]
+        self._pos[1] += value[2]
 
     @property
     def yaw(self: Self) -> float:
@@ -248,6 +253,19 @@ class Entity(object):
         self._elevation_velocity = value
 
     @property
+    def velocity3(self: Self) -> pg.Vector3:
+        return pg.Vector3(
+            self._velocity2[0],
+            self._elevation_velocity,
+            self._velocity2[1],
+        )
+
+    @velocity3.setter
+    def velocity3(self: Self, value: pg.Vector3) -> None:
+        self._velocity2 = pg.Vector2(value[0], value[2])
+        self._elevation_velocity = value[1]
+
+    @property
     def yaw_velocity(self: Self) -> Real:
         return self._yaw_velocity
 
@@ -313,11 +331,13 @@ class Entity(object):
             entities = self._manager._sets.get(tile_key)
             if entities:
                 for entity in entities:
-                    tiles.append((
-                        entity.rect(),
-                        entity._elevation,
-                        entity.top,
-                    ))
+                    if (entity not in self._dont_collide
+                        and self not in entity._dont_collide):
+                        tiles.append((
+                            entity.rect(),
+                            entity._elevation,
+                            entity.top,
+                        ))
         return tiles
 
     def _update_manager_sets(self: Self, old_key: str, key: str) -> None:
@@ -462,7 +482,10 @@ class EntityExState(object):
 
     @trigger.setter
     def trigger(self: Self, value: bool) -> None:
-        self._trigger = valueA
+        self._trigger = value
+
+    def _ended_loop(self: Self) -> bool:
+        return self._animation_timer >= self._animation_time * (self._loop + 1)
 
     def _update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         self._animation_timer = (
@@ -561,8 +584,94 @@ class EntityEx(Entity):
         return state._texture(dex)
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
-        self._states[self._state]._update(rel_game_speed, level_timer)
+        self.state_object._update(rel_game_speed, level_timer)
         super().update(rel_game_speed, level_timer)
+
+
+class Missile(EntityEx):
+    def __init__(self: Self,
+                 width: Real=0.5,
+                 height: Real=0.25,
+                 states: dict[str, EntityExState]={
+                     'default': EntityExState(),
+                     'attack': EntityExState(),
+                 },
+                 state: str='default',
+                 attack_width: Optional[Real]=None,
+                 attack_height: Optional[Real]=None,
+                 render_width: Optional[Real]=None,
+                 render_height: Optional[Real]=None) -> None:
+        super().__init__(
+            width=width,
+            height=height,
+            states=states,
+            state=state,
+            attack_width=attack_width,
+            attack_height=attack_height,
+            render_width=render_width,
+            render_height=render_height,
+        )
+        self._entity = None
+        self._entity_pos = (0, 0)
+        self._damage = 0
+
+    def launch(self: Self,
+               entity: Optional[Entity],
+               velocity: pg.Vector3,
+               damage: Real,
+               attack_range: Real) -> None:
+        
+        self._state = 'default'
+        self._entity = entity
+        self._dont_collide = {entity}
+        self._entity_pos = entity._pos.copy()
+        self._pos = entity._pos.copy()
+        self.centere = entity.centere
+        entity._manager.add_entity(self)
+        self._range = attack_range
+        self._damage = damage
+        self.yaw = entity._yaw_value
+        self.velocity3 = velocity
+
+    def damage(self: Self):
+        pass
+
+    def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
+        # has to be at start
+        self.state_object._update(rel_game_speed, level_timer)
+        
+        if self.centere <= 0:
+            self._state = 'attack'
+
+        if (self._pos.distance_to(self._entity_pos) > self._range
+            or (self._state == 'attack' and self.state_object._ended_loop())):
+            self._remove = 1
+        
+        if self._state != 'attack':
+            self._pos += self._velocity2 * rel_game_speed
+            self._elevation += self._elevation_velocity * rel_game_speed
+            tile = pg.Vector2(
+                math.floor(self._pos[0]),
+                math.floor(self._pos[1]),
+            )
+            for offset in self._TILE_OFFSETS:
+                offset_tile = tile + offset
+                entities = self._manager._sets.get(gen_tile_key(offset_tile))
+                if entities is not None:
+                    for entity in entities:
+                        if entity is not self._entity and entity is not self:
+                            horizontal = self.attack_rect().colliderect(
+                                entity.attack_rect()
+                            )
+                            vertical = (
+                                self._elevation < entity.top
+                                and self.top > self._elevation
+                            )
+                            if horizontal and vertical:
+                                self.velocity3 = (0, 0, 0)
+                                self.state = 'attack'
+                                entity.missile_damage(self._damage)
+                                break
 
 
 class Player(Entity):
@@ -852,12 +961,15 @@ class Player(Entity):
                     damage=self._weapon._damage,
                     attack_range=self._weapon._range,
                     foa=self._foa,
+                    missile=self._weapon._missile,
+                    speed=self._weapon._speed,
                 ) + 1
 
     def _hitscan(self: Self,
                  attack_range: Real,
                  foa: Real,
-                 precision: int=100) -> Optional[Entity]:
+                 precision: int=100,
+                 missile: bool=0) -> Optional[Entity]:
         # NOTE: this algorithm allows attacking through 
         # vertical corners of walls
         # e.g floor and wall together create a corner
@@ -885,6 +997,8 @@ class Player(Entity):
         amount = 0
         midheight = self.centere
         vector = self.vector3
+
+        missile_has_hit = 0 # for missile only
 
         # keep on changing end_pos until hitting a wall (DDA)
         while dist < attack_range and dist < closest[0]:
@@ -956,6 +1070,15 @@ class Player(Entity):
                         end_pos[1] * precision,
                     ):
                         entity_dist = vector.distance_to(entity.vector3)
+                        if missile_has_hit:
+                            if entity_dist < closest[0]:
+                                closest = (entity_dist, entity)
+                        else:
+                            closest = (entity_dist, entity)
+                        missile_has_hit = missile
+
+                    if missile and not missile_has_hit:
+                        entity_dist = vector.distance_to(entity.vector3)
                         if entity_dist < closest[0]:
                             closest = (entity_dist, entity)
 
@@ -988,8 +1111,11 @@ class Player(Entity):
 
             last_tile = tile
             last_end_pos = end_pos.copy()
-        
-        return closest[1]
+
+        if missile:
+            return (closest[1], missile_has_hit)
+        else:
+            return closest[1]
 
     def melee_attack(self: Self,
                      damage: Real,
@@ -1000,6 +1126,8 @@ class Player(Entity):
         if entity is not None:
             entity.melee_damage(damage)
             entity.textures = [FALLBACK_SURF]
+            if isinstance(entity, EntityEx):
+                entity.state_object.textures = [[FALLBACK_SURF]]
             return True
         else:
             return False
@@ -1024,16 +1152,48 @@ class Player(Entity):
                        attack_range: Real,
                        foa: Real,
                        missile: Missile,
+                       speed: Real,
                        precision: int=100) -> None:
         # unlike melee and hitscan, missile attack will return true if a hit is
         # predicted (not guaranteed)
         # (i.e. the monstor could move and it wouldn't hit)
-        entity = self._hitscan(attack_range, foa, precision)
+        entity, has_hit = self._hitscan(
+            attack_range,
+            foa,
+            precision,
+            missile=1,
+        )
         if entity is not None:
-            return True
+            missile = copy.deepcopy(missile)
+            if has_hit:
+                vector = pg.Vector3(
+                    entity._pos[0] - self._pos[0],
+                    entity.centere - self.centere,
+                    entity._pos[1] - self._pos[1],
+                )
+            else:
+                vector = pg.Vector3(
+                    0,
+                    entity.centere - self.centere,
+                    self._pos.distance_to(entity._pos),
+                ).rotate_y(-self._yaw_value)
+            missile.launch(
+                self,
+                vector.normalize() * speed,
+                damage,
+                attack_range,
+            )
+            return has_hit
         else:
+            missile = copy.deepcopy(missile)
+            missile.launch(
+                self,
+                pg.Vector3(self._yaw[0], 0, self._yaw[1]).normalize() * speed,
+                damage,
+                attack_range,
+            )
             return False
-
+        
 
 class EntityManager(object):
     
@@ -1082,6 +1242,7 @@ class EntityManager(object):
     def add_entity(self: Self, entity: Entity) -> None:
         self._entities.add(entity)
         self._add_to_sets(entity)
+        entity._manager = self
 
     def remove_entity(self: Self, entity: Entity) -> None:
         key = gen_tile_key(entity._pos)
@@ -1090,11 +1251,16 @@ class EntityManager(object):
         self._entities.remove(entity)
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
+        remove = set()
         for entity in self._entities:
             old_key = gen_tile_key(entity._pos)
             entity.update(rel_game_speed, level_timer)
             key = gen_tile_key(entity._pos)
             entity._update_manager_sets(old_key, key)
+            if entity._remove:
+                remove.add(entity)
+        for entity in remove:
+            self.remove_entity(entity)
 
 
 # CUSTOM

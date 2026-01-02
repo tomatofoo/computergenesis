@@ -230,12 +230,11 @@ def gen_sfx_path(path: str):
 def gen_mus_path(path: str):
     return f'data/audio/music/{path}'
 
-def gen_inanimate_textures( # for EntityExState
+def gen_inanimate_textures( # for entityexstate
     textures: tuple[pg.Surface]
 ) -> tuple[tuple[pg.Surface]]:
     return tuple((surf,) for surf in textures)
     
-
 
 class Pathfinder(object): # 4-path pathfinder using A*
 

@@ -127,6 +127,7 @@ class Game(object):
         entities = {
             EntityEx(
                 pos=(9, 9),
+                elevation=3,
                 width=0.5,
                 height=0.75,
                 attack_width=0.8,

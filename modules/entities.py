@@ -955,6 +955,7 @@ class Player(Entity):
                     damage=self._weapon._damage,
                     attack_range=self._weapon._range,
                     foa=self._foa,
+                    roa=0.75,
                     missile=self._weapon._missile,
                     speed=self._weapon._speed,
                 ) + 1
@@ -963,9 +964,9 @@ class Player(Entity):
                  attack_range: Real,
                  foa: Real,
                  precision: int=100,
-                 missile: Real=0) -> Optional[Entity]:
-        # if missile is 0 then use normal hitscanning
-        # else is missile hitscanning; missile is radius for vertical autoaim
+                 roa: Real=0) -> Optional[Entity]:
+        # if roa is 0 then use normal hitscanning
+        # else is missile hitscanning; roa is radius for vertical autoaim
 
         # NOTE: this algorithm allows attacking through 
         # vertical corners of walls
@@ -995,7 +996,7 @@ class Player(Entity):
         midheight = self.centere
         vector = self.vector3
         
-        missile_could_hit = 0 # for missile only
+        could_hit = 0 # when roa is supplied
 
         # keep on changing end_pos until hitting a wall (DDA)
         while dist < attack_range and dist < closest[0]:
@@ -1069,17 +1070,17 @@ class Player(Entity):
                         end_pos[1] * precision,
                     ):
                         entity_dist = vector.distance_to(entity.vector3)
-                        if missile_could_hit:
+                        if not roa or could_hit:
                             if entity_dist < closest[0]:
                                 closest = (entity_dist, entity)
                         else:
                             closest = (entity_dist, entity)
-                            missile_could_hit = bool(missile)
+                            could_hit = 1
 
-                    if missile and not missile_could_hit:
+                    if roa and not could_hit:
                         entity_dist = vector.distance_to(entity.vector3)
                         if (entity_dist < closest[0]
-                            and entity._pos.distance_to(end_pos) < missile):
+                            and entity._pos.distance_to(end_pos) < roa):
                             closest = (entity_dist, entity)
 
             tile_key = gen_tile_key(tile)
@@ -1112,10 +1113,7 @@ class Player(Entity):
             last_tile = tile
             last_end_pos = end_pos.copy()
 
-        if missile:
-            return (closest[1], missile_could_hit)
-        else:
-            return closest[1]
+        return (closest[1], could_hit) if roa else closest[1]
 
     def melee_attack(self: Self,
                      damage: Real,
@@ -1151,6 +1149,7 @@ class Player(Entity):
                        damage: Real,
                        attack_range: Real,
                        foa: Real,
+                       roa: Real, # radius of autoaim
                        missile: Missile,
                        speed: Real,
                        precision: int=100) -> None:
@@ -1161,7 +1160,7 @@ class Player(Entity):
             attack_range,
             foa,
             precision,
-            missile=0.5,
+            roa,
         )
         missile = copy.deepcopy(missile)
         if entity is None:

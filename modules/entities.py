@@ -679,6 +679,7 @@ class Player(Entity):
                  climb: Real=0.2,
                  gravity: Real=0.004,
                  foa: Real=60, # Field of Attack
+                 roa: Real=0.5, # Radius of Autoaim (for missiles)
                  weapon: Optional[Weapon]=None) -> None:
 
         super().__init__(
@@ -713,6 +714,7 @@ class Player(Entity):
 
         # Weapon Stuff
         self._foa = foa
+        self._roa = roa
         self._weapon = weapon
         self._weapon_surf = pg.Surface((0, 0))
         self._weapon_attacking = 0
@@ -766,6 +768,14 @@ class Player(Entity):
     @foa.setter
     def foa(self: Self, value: Real) -> None:
         self._foa = value
+
+    @property
+    def roa(self: Self) -> Real:
+        return self._roa
+
+    @roa.setter
+    def roa(self: Self, value: Real) -> None:
+        self._roa = value
 
     def update(self: Self,
                rel_game_speed: Real,
@@ -955,7 +965,7 @@ class Player(Entity):
                     damage=self._weapon._damage,
                     attack_range=self._weapon._range,
                     foa=self._foa,
-                    roa=0.75,
+                    roa=self._roa,
                     missile=self._weapon._missile,
                     speed=self._weapon._speed,
                 ) + 1

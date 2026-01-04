@@ -1,5 +1,7 @@
 from typing import Self
 
+import pygame as pg
+
 from modules.weapons import Weapon
 
 

@@ -1,3 +1,4 @@
+from numbers import Real
 from typing import Self
 from typing import Optional
 
@@ -57,7 +58,7 @@ class Sound(object):
 
 class SoundManager(object):
     def __init__(self: Self,
-                 sounds: dict[str, Sound3D]={},
+                 sounds: dict[str, Sound]={},
                  volume: Real=1,
                  channels: int=64,
                  dist_factor: Real=25) -> None:

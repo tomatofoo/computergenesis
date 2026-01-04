@@ -594,6 +594,7 @@ class EntityEx(Entity):
 
 class Missile(EntityEx):
     def __init__(self: Self,
+                 damage: Real,
                  width: Real=0.5,
                  height: Real=0.25,
                  states: dict[str, EntityExState]={
@@ -615,14 +616,22 @@ class Missile(EntityEx):
             render_width=render_width,
             render_height=render_height,
         )
+        self._damage = damage
         self._entity = None
         self._entity_pos = (0, 0)
         self._damage = 0
 
+    @property
+    def damage(self: Self) -> Real:
+        return self._damage
+
+    @damage.setter
+    def damage(self: Self, value: Real) -> None:
+        self._damage = value
+
     def launch(self: Self,
                entity: Optional[Entity],
                velocity: pg.Vector3,
-               damage: Real,
                attack_range: Real) -> None:
         
         self._state = 'default'
@@ -633,7 +642,6 @@ class Missile(EntityEx):
         self.centere = entity.centere
         entity._manager.add_entity(self)
         self._range = attack_range
-        self._damage = damage
         self.yaw = entity._yaw_value
         self.velocity3 = velocity
 
@@ -681,7 +689,7 @@ class Player(Entity):
                  climb: Real=0.2,
                  gravity: Real=0.004,
                  foa: Real=60, # Field of Attack
-                 roa: Real=0.5, # Radius of Autoaim (for missiles)
+                 roa: Real=0.75, # Radius of Autoaim (for missiles)
                  weapon: Optional[Weapon]=None) -> None:
 
         super().__init__(
@@ -964,11 +972,10 @@ class Player(Entity):
             elif isinstance(self._weapon, MissileWeapon):
                 self._weapon._ammo -= 1
                 return self.missile_attack(
-                    damage=self._weapon._damage,
+                    missile=self._weapon._missile,
                     attack_range=self._weapon._range,
                     foa=self._foa,
                     roa=self._roa,
-                    missile=self._weapon._missile,
                     speed=self._weapon._speed,
                 ) + 1
     
@@ -1158,11 +1165,10 @@ class Player(Entity):
             return False
 
     def missile_attack(self: Self,
-                       damage: Real,
+                       missile: Missile,
                        attack_range: Real,
                        foa: Real,
                        roa: Real, # radius of autoaim
-                       missile: Missile,
                        speed: Real,
                        precision: int=100) -> None:
         # unlike melee and hitscan, missile attack will return true if a hit is
@@ -1178,23 +1184,14 @@ class Player(Entity):
         if entity is None:
             vector = pg.Vector3(self._yaw[0], 0, self._yaw[1])
         else:
-            if could_hit:
-                vector = pg.Vector3(
-                    entity._pos[0] - self._pos[0],
-                    entity.centere - self.centere,
-                    entity._pos[1] - self._pos[1],
-                )
-            else:
-                vector = pg.Vector3(
-                    0,
-                    entity.centere - self.centere,
-                    self._pos.distance_to(entity._pos),
-                ).rotate_y(-self._yaw_value)
-
+            vector = pg.Vector3(
+                0,
+                entity.centere - self.centere,
+                self._pos.distance_to(entity._pos),
+            ).rotate_y(-self._yaw_value)
         missile.launch(
             self,
             vector.normalize() * speed,
-            damage,
             attack_range,
         )
         return could_hit

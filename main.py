@@ -116,6 +116,7 @@ class Game(object):
                 surf.set_colorkey((255, 0, 255))
 
         missile = Missile(
+            damage=100,
             width=0.25,
             height=0.25,
             states={
@@ -286,7 +287,6 @@ class Game(object):
         for surf in textures:
             surf.set_colorkey((255, 0, 255))
         self._missile_launcher = MissileWeapon(
-            damage=100,
             attack_range=10,
             cooldown=25,
             capacity=25,

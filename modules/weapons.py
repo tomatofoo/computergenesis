@@ -184,11 +184,10 @@ class HitscanWeapon(AmmoWeapon):
 
 class MissileWeapon(AmmoWeapon):
     def __init__(self: Self,
-                 damage: Real,
+                 missile: Missile,
                  attack_range: Real,
                  capacity: int,
                  cooldown: Real,
-                 missile: Missile,
                  speed: Real,
                  ground_textures: Optional[list[pg.Surface]]=None,
                  hold_textures: Optional[list[pg.Surface]]=None,
@@ -199,7 +198,7 @@ class MissileWeapon(AmmoWeapon):
                  attack_sound: Optional[Sound]=None) -> None:
 
         super().__init__(
-            damage=damage,
+            damage=missile._damage,
             attack_range=attack_range,
             cooldown=cooldown,
             capacity=capacity,
@@ -222,6 +221,15 @@ class MissileWeapon(AmmoWeapon):
     @missile.setter
     def missile(self: Self, value: Missile) -> None:
         self._missile = value
+        self._damage = value._damage
+    
+    @property
+    def damage(self: Self) -> Real:
+        return self._missile._damage
+
+    @damage.setter
+    def damage(self: Self, value: Real) -> None:
+        self._missile._damage = value
 
     @property
     def speed(self: Self) -> Real:

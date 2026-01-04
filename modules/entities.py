@@ -1106,8 +1106,9 @@ class Player(Entity):
             data = tilemap.get(tile_key)
             # allows shooting through semitiles
             if data is not None and data.get('semitile') is None:
-                center = (tile[0] + 0.5, tile[1] + 0.5)
-                center_dist = self._pos.distance_to(center)
+                center_dist = self._pos.distance_to(
+                    (tile[0] + 0.5, tile[1] + 0.5),
+                )
                 if center_dist:
                     bottom = data['elevation']
                     top = bottom + data['height']

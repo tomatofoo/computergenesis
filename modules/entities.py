@@ -374,7 +374,9 @@ class Entity(object):
             self.die()
 
     def die(self: Self) -> None:
-        pass
+        self.textures = [FALLBACK_SURF]
+        if isinstance(self, EntityEx):
+            self.state_object.textures = [[FALLBACK_SURF]]
 
     def rect(self: Self) -> pg.Rect:
         rect = pg.FRect(0, 0, self._width, self._width)
@@ -623,7 +625,6 @@ class Missile(EntityEx):
         self._blast_radius = blast_radius
         self._entity = None
         self._entity_pos = (0, 0)
-        self._damage = 0
 
     @property
     def damage(self: Self) -> Real:

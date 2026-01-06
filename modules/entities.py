@@ -374,9 +374,11 @@ class Entity(object):
             self.die()
 
     def die(self: Self) -> None:
-        self.textures = [FALLBACK_SURF]
+        # TEMP TEMP TEMP TEMP
         if isinstance(self, EntityEx):
             self.state_object.textures = [[FALLBACK_SURF]]
+        else:
+            self.textures = [FALLBACK_SURF]
 
     def rect(self: Self) -> pg.Rect:
         rect = pg.FRect(0, 0, self._width, self._width)

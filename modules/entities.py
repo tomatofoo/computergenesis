@@ -665,6 +665,7 @@ class Missile(EntityEx):
         self.velocity3 = (0, 0, 0)
         self.state = 'attack'
         if entity is not None and entity._health > 0:
+            self._dont_collide.add(entity)
             entity.missile_damage(self._damage)
 
         tile = pg.Vector2(math.floor(self._pos[0]), math.floor(self._pos[1]))
@@ -681,13 +682,10 @@ class Missile(EntityEx):
         # has to be at start
         self.state_object._update(rel_game_speed, level_timer)
         
-        if self.centere <= 0:
-            self.attack()
-
         if ((self._state == 'attack' and self.state_object.ended_loop())
             or self._pos.distance_to(self._entity_pos) > self._range):
             self._remove = 1
-        
+
         if self._state != 'attack':
             self._pos += self._velocity2 * rel_game_speed
             self._elevation += self._elevation_velocity * rel_game_speed
@@ -701,6 +699,8 @@ class Missile(EntityEx):
                             and entity is not self
                             and self.attack_rect().colliderect(rect)):
                             self.attack(entity)
+            if self._elevation <= 0: # has to be in != attack block
+                self.attack()
 
 
 class Player(Entity):

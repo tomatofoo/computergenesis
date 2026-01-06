@@ -491,11 +491,7 @@ class EntityExState(object):
     def ended_loop(self: Self) -> bool:
         if self._loop < 0:
             return False
-        else:
-            return (
-                self._animation_timer
-                >= self._animation_time * (self._loop + 1)
-            )
+        return self._animation_timer >= self._animation_time * (self._loop + 1)
 
     def _update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         self._animation_timer = (
@@ -985,8 +981,7 @@ class Player(Entity):
                 ):
                     self._weapon._durability -= 1
                     return 2
-                else:
-                    return 1
+                return 1
             elif isinstance(self._weapon, HitscanWeapon):
                 self._weapon._ammo -= 1
                 return self.hitscan_attack(
@@ -1184,12 +1179,8 @@ class Player(Entity):
         entity = self._hitscan(attack_range, foa, precision)
         if entity is not None:
             entity.melee_damage(damage)
-            entity.textures = [FALLBACK_SURF]
-            if isinstance(entity, EntityEx):
-                entity.state_object.textures = [[FALLBACK_SURF]]
             return True
-        else:
-            return False
+        return False
         
     def hitscan_attack(self: Self,
                        damage: Real,
@@ -1199,12 +1190,8 @@ class Player(Entity):
         entity = self._hitscan(attack_range, foa, precision)
         if entity is not None:
             entity.hitscan_damage(damage)
-            entity.textures = [FALLBACK_SURF]
-            if isinstance(entity, EntityEx):
-                entity.state_object.textures = [[FALLBACK_SURF]]
             return True
-        else:
-            return False
+        return False
 
     def missile_attack(self: Self,
                        missile: Missile,

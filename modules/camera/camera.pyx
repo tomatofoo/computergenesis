@@ -54,8 +54,7 @@ cdef int _limit_cmp(_Limit limit1, _Limit limit2):
             return -1
         elif limit1._end == limit2._end:
             return 0
-        else:
-            return 1
+        return 1
     return -1 if limit1._start < limit2._start else 1
 
 cdef _Limits _limits_new(size_t capacity):

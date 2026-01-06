@@ -114,14 +114,25 @@ class Game(object):
         for animation in textures:
             for surf in animation:
                 surf.set_colorkey((255, 0, 255))
-
+        
+        d = [[
+            pg.image.load(gen_img_path('cacodemon/d/1.png')),
+            pg.image.load(gen_img_path('cacodemon/d/2.png')),
+            pg.image.load(gen_img_path('cacodemon/d/3.png')),
+            pg.image.load(gen_img_path('cacodemon/d/4.png')),
+            pg.image.load(gen_img_path('cacodemon/d/5.png')),
+            pg.image.load(gen_img_path('cacodemon/d/6.png'))
+        ]]
+        for animation in d:
+            for surf in animation:
+                surf.set_colorkey((255, 0, 255))
         missile = Missile(
             damage=100,
             width=0.25,
             height=0.25,
             states={
                 'default': EntityExState(textures, 30),
-                'attack': EntityExState(animation_time=120),
+                'attack': EntityExState(d, 30, loop=0, trigger=1),
             }
         )
 

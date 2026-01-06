@@ -488,8 +488,14 @@ class EntityExState(object):
     def trigger(self: Self, value: bool) -> None:
         self._trigger = value
 
-    def _ended_loop(self: Self) -> bool:
-        return self._animation_timer >= self._animation_time * (self._loop + 1)
+    def ended_loop(self: Self) -> bool:
+        if self._loop < 0:
+            return False
+        else:
+            return (
+                self._animation_timer
+                >= self._animation_time * (self._loop + 1)
+            )
 
     def _update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         self._animation_timer = (
@@ -644,7 +650,7 @@ class Missile(EntityEx):
                velocity: pg.Vector3,
                attack_range: Real) -> None:
         
-        self._state = 'default'
+        self.state = 'default'
         self._entity = entity
         self._dont_collide = {entity}
         self._entity_pos = entity._pos.copy()
@@ -678,8 +684,8 @@ class Missile(EntityEx):
         if self.centere <= 0:
             self.attack()
 
-        if (self._pos.distance_to(self._entity_pos) > self._range
-            or (self._state == 'attack' and self.state_object._ended_loop())):
+        if ((self._state == 'attack' and self.state_object.ended_loop())
+            or self._pos.distance_to(self._entity_pos) > self._range):
             self._remove = 1
         
         if self._state != 'attack':
@@ -1163,6 +1169,7 @@ class Player(Entity):
                     slope_range[1] = min(
                         (top - midheight) / dist, tangent,
                     )
+                # you either use the back or front of the tile for the slope
 
             last_tile = tile
             last_end_pos = end_pos.copy()

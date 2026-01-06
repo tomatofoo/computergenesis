@@ -124,7 +124,7 @@ class Entity(object):
         self._elevation = max(value, 0)
 
     @property
-    def tile(self: Self) -> None:
+    def tile(self: Self) -> tuple[int]:
         return (int(math.floor(self._pos[0])),
                 int(math.floor(self._pos[1])))
 
@@ -595,6 +595,7 @@ class EntityEx(Entity):
 class Missile(EntityEx):
     def __init__(self: Self,
                  damage: Real,
+                 blast_radius: Real=0.5,
                  width: Real=0.5,
                  height: Real=0.25,
                  states: dict[str, EntityExState]={
@@ -617,6 +618,7 @@ class Missile(EntityEx):
             render_height=render_height,
         )
         self._damage = damage
+        self._blast_radius = blast_radius
         self._entity = None
         self._entity_pos = (0, 0)
         self._damage = 0
@@ -628,6 +630,14 @@ class Missile(EntityEx):
     @damage.setter
     def damage(self: Self, value: Real) -> None:
         self._damage = value
+
+    @property
+    def blast_radius(self: Self) -> Real:
+        return self._blast_radius
+
+    @blast_radius.setter
+    def blast_radius(self: Self, value: Real) -> None:
+        self._blast_radius = value
 
     def launch(self: Self,
                entity: Optional[Entity],
@@ -648,9 +658,18 @@ class Missile(EntityEx):
     def attack(self: Self, entity: Optional[Entity]=None) -> None:
         self.velocity3 = (0, 0, 0)
         self.state = 'attack'
-        if entity is not None:
-            if entity._health > 0:
-                pass
+        if entity is not None and entity._health > 0:
+            entity.missile_damage(self._damage)
+
+        tile = pg.Vector2(math.floor(self._pos[0]), math.floor(self._pos[1]))
+        for offset in self._TILE_OFFSETS:
+            offset_tile = tile + offset
+            entities = self._manager._sets.get(gen_tile_key(offset_tile))
+            if entities is not None:
+                for entity in entities:
+                    if entity._pos.distance_to(entity._pos) <= self._blast_radius:
+                        entity.splash_damage(self._damage / 2)
+
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         # has to be at start
@@ -978,7 +997,7 @@ class Player(Entity):
                     roa=self._roa,
                     speed=self._weapon._speed,
                 ) + 1
-    
+
     def _hitscan(self: Self,
                  attack_range: Real,
                  foa: Real,
@@ -1010,6 +1029,7 @@ class Player(Entity):
         # ranges of slopes of walls relative to player
         # this determines if a shot will hit a wall
         tangent = math.tan(math.radians(foa) / 2)
+        slope_range = 0
         slope_ranges = []
         amount = 0
         midheight = self.centere
@@ -1035,6 +1055,30 @@ class Player(Entity):
                 end_pos[0] += disp_y / slope if slope else math.inf
                 end_pos[1] += disp_y
                 dist += len_y
+            
+            if slope_range:
+                if back[0]:
+                    slope_range[0] = max(
+                        (bottom - midheight) / dist, -tangent,
+                    )
+                if back[1]:
+                    slope_range[1] = min(
+                        (top - midheight) / dist, tangent,
+                    )
+                # ^ less lines than putting inside function
+                if slope_range[0] < slope_range[1]:
+                    bisect.insort_left(slope_ranges, slope_range)
+                    amount = 0
+                    arr = []
+                    # condense range of slopes
+                    # https://stackoverflow.com/a/15273749
+                    for start, end in slope_ranges:
+                        if arr and arr[-1][1] >= start:
+                            arr[-1][1] = max(arr[-1][1], end)
+                        else:
+                            arr.append([start, end])
+                            amount += 1
+                    slope_ranges = arr
             
             # account for entities partially in the tile but not in set
             # i think it should work for entities that are at most 2 units wide
@@ -1106,29 +1150,19 @@ class Player(Entity):
             data = tilemap.get(tile_key)
             # allows shooting through semitiles
             if data is not None and data.get('semitile') is None:
-                center_dist = self._pos.distance_to(
-                    (tile[0] + 0.5, tile[1] + 0.5),
-                )
-                if center_dist:
-                    bottom = data['elevation']
-                    top = bottom + data['height']
-                    slope_range = [
-                        max((bottom - midheight) / center_dist, -tangent),
-                        min((top - midheight) / center_dist, tangent),
-                    ]
-                    if slope_range[0] < slope_range[1]:
-                        bisect.insort_left(slope_ranges, slope_range)
-                        amount = 0
-                        arr = []
-                        # condense range of slopes
-                        # https://stackoverflow.com/a/15273749
-                        for start, end in slope_ranges:
-                            if arr and arr[-1][1] >= start:
-                                arr[-1][1] = max(arr[-1][1], end)
-                            else:
-                                arr.append([start, end])
-                                amount += 1
-                        slope_ranges = arr
+                bottom = data['elevation']
+                top = bottom + data['height']
+                back = [midheight < bottom, midheight > top]
+                # ^ use back of tile for slope rather than front (bottom, top)
+                slope_range = [None, None]
+                if not back[0]:
+                    slope_range[0] = max(
+                        (bottom - midheight) / dist, -tangent,
+                    )
+                if not back[1]:
+                    slope_range[1] = min(
+                        (top - midheight) / dist, tangent,
+                    )
 
             last_tile = tile
             last_end_pos = end_pos.copy()

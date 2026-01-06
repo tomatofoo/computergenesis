@@ -696,7 +696,7 @@ class Missile(EntityEx):
                     if entity is None:
                         if self.rect().colliderect(rect):
                             self.attack()
-                    else:
+                    elif not isinstance(entity, Missile):
                         if (entity is not self._entity
                             and entity is not self
                             and self.attack_rect().colliderect(rect)):

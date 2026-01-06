@@ -673,8 +673,11 @@ class Missile(EntityEx):
             entities = self._manager._sets.get(gen_tile_key(offset_tile))
             if entities is not None:
                 for entity in entities:
-                    if entity._pos.distance_to(entity._pos) <= self._blast_radius:
-                        entity.splash_damage(self._damage / 2)
+                    dist = entity._pos.distance_to(entity._pos)
+                    if dist < self._blast_radius:
+                        entity.splash_damage(
+                            dist / self._blast_radius * self._damage / 2
+                        )
 
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:

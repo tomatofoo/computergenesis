@@ -334,8 +334,10 @@ class Entity(object):
             entities = self._manager._sets.get(tile_key)
             if entities:
                 for entity in entities:
+                    # referencing Missile before declaration works somehow
                     if (entity not in self._dont_collide
-                        and self not in entity._dont_collide):
+                        and self not in entity._dont_collide
+                        and not isinstance(entity, Missile)):
                         tiles.append((
                             entity.rect(),
                             entity._elevation,
@@ -651,7 +653,6 @@ class Missile(EntityEx):
         
         self.state = 'default'
         self._entity = entity
-        self._dont_collide = {entity}
         self._entity_pos = entity._pos.copy()
         self._pos = entity._pos.copy()
         self.centere = entity.centere
@@ -664,7 +665,6 @@ class Missile(EntityEx):
         self.velocity3 = (0, 0, 0)
         self.state = 'attack'
         if entity is not None and entity._health > 0:
-            self._dont_collide.add(entity)
             entity.missile_damage(self._damage)
 
         tile = pg.Vector2(math.floor(self._pos[0]), math.floor(self._pos[1]))

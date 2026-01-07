@@ -312,8 +312,7 @@ class Entity(object):
         for offset in self._TILE_OFFSETS:
             offset_tile = tile + offset
             tile_key = gen_tile_key(offset_tile)
-            walls = self._manager._level._walls
-            data = walls._tilemap.get(tile_key)
+            data = self._manager._level._walls._dynamic_tilemap.get(tile_key)
             if data is not None:
                 obj = data.get('rect')
                 if obj is None:

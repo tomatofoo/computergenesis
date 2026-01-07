@@ -102,8 +102,9 @@ class Walls(object):
                  textures: list[ColumnTexture]) -> None:
         
         self._tilemap = tilemap
-        # the one that's rendered, uses special tiles
+        # ^ the original one / master copy
         self._dynamic_tilemap = tilemap.copy()
+        # the in-game one ^
         self._textures = textures
 
     def set_tile(self: Self,
@@ -180,15 +181,28 @@ class Walls(object):
 
 class Special(object):
     def __init__(self: Self, key: str) -> None:
-        self._key = key
+        self.key = key # it assumes key is in tilemap
         self._manager = None
 
     @property
     def manager(self: Self) -> SpecialManager:
         return self._manager
 
+    @property
+    def key(self: Self) -> str:
+        return self._key
+
+    @key.setter
+    def key(self: Self, value: str) -> None:
+        self._key = value
+        self._data = self._manager._level._walls._tilemap[key]
+
+    @property
+    def data(self: Self) -> dict:
+        return self._data
+
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
-        pass
+        self._manager._level._walls._dynamic_tilemap[self._key] = self._data
 
 
 class SpecialManager(object):
@@ -208,6 +222,15 @@ class SpecialManager(object):
         self._specials = value
         for special in value:
             special._manager = self
+
+    def add_special(self: Self, special: Special) -> None:
+        self._specials.add(special)
+        special._manager = self
+
+    def remove_special(self: Self, special: Special) -> None:
+        self._specials.remove(special)
+        special._manager = None
+        # ^ should be after so that if not in set it won't trigger
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         for special in self._specials:

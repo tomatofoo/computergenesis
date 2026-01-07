@@ -212,6 +212,7 @@ class Game(object):
             multithreaded=True,
         )
         self._camera.horizon = 0.5
+        self._camera.weapon_scale = 1
         self._entities = EntityManager(self._player, entities)
 
         # Sound

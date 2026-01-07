@@ -507,14 +507,14 @@ class EntityExState(object):
                 self._animation_timer,
                 self._animation_time * (self._loop + 1),
             )
-        self._animation_dex = math.floor(
+
+    def _texture(self: Self, direction_dex: int) -> int:
+        animation_dex = math.floor(
             self._animation_timer
             / self._animation_time
             * self._length
         ) % self._length
-
-    def _texture(self: Self, direction_dex: int) -> int:
-        return self._textures[direction_dex][self._animation_dex]
+        return self._textures[direction_dex][animation_dex]
 
     def _reset(self: Self) -> None:
         self._animation_timer = 0

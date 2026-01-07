@@ -901,9 +901,8 @@ cdef class Camera:
                                     start = limits._arr[i]._start
                                 else:
                                     start = height
-
                                 if y < start and render_end > end:
-                                    render_y = max(end, y)
+                                    render_y = max(end, y) # cython optimizes this
                                     rect = (
                                         0,
                                         render_y - y,
@@ -912,7 +911,6 @@ cdef class Camera:
                                         # helps w/ pixel glitches
                                         start - render_y + 1,
                                     )
-                                    
                                     obj = _DepthBufferObject(
                                         final_rel_depth, (line, (x, render_y), rect),
                                     )

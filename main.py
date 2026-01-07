@@ -34,7 +34,7 @@ from modules.utils import gen_img_path
 from modules.utils import gen_sfx_path
 from modules.utils import gen_mus_path
 
-
+# TODO: INVENTORY, SPECIAL TILES, MENUS, LEVEL EDITOR, data/level.py, LEVELS
 class Game(object):
 
     _SCREEN_SIZE = (960, 720)
@@ -227,10 +227,16 @@ class Game(object):
         with open('data/map.json', 'r') as file:
             walls = json.loads(file.read())
         wall_textures = (
-            ColumnTexture(pg.image.load(gen_img_path('redbrick.png')).convert()),
+            ColumnTexture(
+                pg.image.load(
+                    gen_img_path('tilesets/all/redbrick.png'),
+                ).convert(),
+            ),
         )
         self._level = Level(
-            floor=Floor(pg.image.load(gen_img_path('wood.png')).convert()),
+            floor=Floor(
+                pg.image.load(gen_img_path('tilesets/all/wood.png')).convert(),
+            ),
             ceiling=Sky(pg.image.load(gen_img_path('nightsky.png')).convert()),
             walls=Walls(walls, wall_textures),
             entities=self._entities,

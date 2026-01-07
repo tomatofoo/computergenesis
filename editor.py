@@ -36,13 +36,15 @@ class Game(object):
             'top': (0, 0, 0),
             'bottom': (0, 0, 0),
         }
-
+        
+        # zoom
         self._zoom_step = 2
         self._min_zoom = 8 # anything below tanks performance
         self._zoom = 16
         
         # Settings for current tile
         self._tile = {
+            'texture': 0,
             'elevation': 0,
             'height': 1,
             'top': self._colors['top'],
@@ -78,6 +80,7 @@ class Game(object):
                 if event.type == pg.QUIT:
                     self._running = 0
                 elif event.type == pg.KEYDOWN:
+                    # Zoom
                     if event.key == pg.K_z:
                         self._zoom += self._zoom_step
                     elif event.key == pg.K_x:
@@ -85,6 +88,10 @@ class Game(object):
                             self._zoom - self._zoom_step,
                             self._min_zoom,
                         )
+                # Editing
+                elif event.type == pg.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        pass
 
             mouse = pg.mouse.get_pressed()
             if mouse[1]:

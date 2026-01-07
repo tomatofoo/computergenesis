@@ -161,6 +161,16 @@ class Walls(object):
         return self._textures
 
 
+class Special(object):
+    def __init__(self: Self) -> None:
+        pass
+
+
+class SpecialManager(object):
+    def __init__(self: Self) -> None:
+        pass
+
+
 class Level(object):
     def __init__(self: Self,
                  floor: Optional[Floor | Sky],

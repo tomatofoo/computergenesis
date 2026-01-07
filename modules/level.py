@@ -202,7 +202,7 @@ class Special(object):
         return self._data
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
-        self._manager._level._walls._dynamic_tilemap[self._key] = self._data
+        pass
 
 
 class SpecialManager(object):
@@ -235,6 +235,7 @@ class SpecialManager(object):
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         for special in self._specials:
             special.update(rel_game_speed, level_timer)
+            self._level._walls._dynamic_tilemap[self._key] = self._data
 
 
 class Level(object):

@@ -630,7 +630,7 @@ cdef class Camera:
             str tile_key
             str side_key
             dict data
-            dict tilemap = manager._level._walls._tilemap
+            dict tilemap = manager._level._walls._dynamic_tilemap
             tuple center
             _Limits limits = _limits_new(height / 2)
             # len_x and len_y are not one here because they do python interaction

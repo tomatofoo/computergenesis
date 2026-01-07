@@ -4,6 +4,7 @@ import time
 import math
 import json
 import random
+from numbers import Real
 from typing import Self
 
 import pygame as pg
@@ -12,6 +13,8 @@ from modules.level import ColumnTexture
 from modules.level import Walls
 from modules.level import Floor
 from modules.level import Sky 
+from modules.level import Special
+from modules.level import SpecialManager
 from modules.level import Level
 from modules.camera import Camera
 from modules.hud import HUDElement
@@ -34,7 +37,7 @@ from modules.utils import gen_img_path
 from modules.utils import gen_sfx_path
 from modules.utils import gen_mus_path
 
-# TODO: INVENTORY, SPECIAL TILES, MENUS, LEVEL EDITOR, data/level.py, LEVELS
+# TODO: INVENTORY, SPECIAL TILES, HUD, MENUS, LEVEL EDITOR, data/level.py, LEVELS
 class Game(object):
 
     _SCREEN_SIZE = (960, 720)
@@ -233,12 +236,14 @@ class Game(object):
                 ).convert(),
             ),
         )
+        self._specials = SpecialManager()
         self._level = Level(
             floor=Floor(
                 pg.image.load(gen_img_path('tilesets/all/wood.png')).convert(),
             ),
             ceiling=Sky(pg.image.load(gen_img_path('nightsky.png')).convert()),
             walls=Walls(walls, wall_textures),
+            specials=self._specials,
             entities=self._entities,
             sounds=self._sounds,
         )

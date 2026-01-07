@@ -5293,13 +5293,13 @@ static int __pyx_pf_6camera_6Camera_13multithreaded_2__set__(struct __pyx_obj_6c
 <pre class="cython line score-0">&#xA0;<span class="">0630</span>:             str tile_key</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0631</span>:             str side_key</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0632</span>:             dict data</pre>
-<pre class="cython line score-15" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0633</span>:             dict tilemap = manager._level._walls._tilemap</pre>
+<pre class="cython line score-15" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0633</span>:             dict tilemap = manager._level._walls._dynamic_tilemap</pre>
 <pre class='cython code score-15 '>  __pyx_t_1 = <span class='pyx_c_api'>__Pyx_PyObject_GetAttrStr</span>(__pyx_v_manager, __pyx_mstate_global-&gt;__pyx_n_u_level);<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 633, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
   __pyx_t_2 = <span class='pyx_c_api'>__Pyx_PyObject_GetAttrStr</span>(__pyx_t_1, __pyx_mstate_global-&gt;__pyx_n_u_walls);<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 633, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_2);
   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = <span class='pyx_c_api'>__Pyx_PyObject_GetAttrStr</span>(__pyx_t_2, __pyx_mstate_global-&gt;__pyx_n_u_tilemap);<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 633, __pyx_L1_error)</span>
+  __pyx_t_1 = <span class='pyx_c_api'>__Pyx_PyObject_GetAttrStr</span>(__pyx_t_2, __pyx_mstate_global-&gt;__pyx_n_u_dynamic_tilemap);<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 633, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
   if (!(likely(<span class='py_c_api'>PyDict_CheckExact</span>(__pyx_t_1))||((__pyx_t_1) == Py_None) || <span class='pyx_c_api'>__Pyx_RaiseUnexpectedTypeError</span>("dict", __pyx_t_1))) <span class='error_goto'>__PYX_ERR(0, 633, __pyx_L1_error)</span>

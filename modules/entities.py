@@ -1230,7 +1230,7 @@ class Player(Entity):
 
 class EntityManager(object):
     
-    def __init__(self: Self, player: Player, entities: set[Entity]) -> None:
+    def __init__(self: Self, player: Player, entities: set[Entity]=set()) -> None:
         self._player = player
         player._manager = self
         self._entities = entities

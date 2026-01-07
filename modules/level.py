@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import math
 from numbers import Real
 from typing import Self
@@ -98,8 +100,10 @@ class Walls(object):
     def __init__(self: Self,
                  tilemap: dict,
                  textures: list[ColumnTexture]) -> None:
-
+        
         self._tilemap = tilemap
+        # the one that's rendered, uses special tiles
+        self._dynamic_tilemap = tilemap.copy()
         self._textures = textures
 
     def set_tile(self: Self,
@@ -110,7 +114,12 @@ class Walls(object):
                  semitile: Optional[dict]=None,
                  rect: Optional[list]=None,
                  top: Optional[ColorLike]=None,
-                 bottom: Optional[ColorLike]=None):
+                 bottom: Optional[ColorLike]=None,
+                 change: int=2):
+        # change dictates which tilemaps to change
+        # 0 = static only
+        # 1 = dynamic only
+        # 2 = both
         
         # Default Values
         tile_key = gen_tile_key(pos)
@@ -139,7 +148,7 @@ class Walls(object):
             bottom = (0, 0, 0)
         
         # Set
-        self._tilemap[tile_key] = {
+        data = {
             'elevation': elevation,
             'height': height,
             'texture': texture,
@@ -148,6 +157,10 @@ class Walls(object):
             'bottom': bottom,
             'rect': rect,
         }
+        if change != 1:
+            self._tilemap[tile_key] = data
+        if change:
+            self._dynamic_tilemap[tile_key] = data
 
     def pop_tile(self: Self, pos: Point):
         return self._walls.pop(f'{pos[0]};{pos[1]}')
@@ -157,18 +170,48 @@ class Walls(object):
         return self._tilemap
 
     @property
+    def dynamic_tilemap(self: Self) -> dict:
+        return self._dynamic_tilemap
+
+    @property
     def textures(self: Self) -> tuple:
         return self._textures
 
 
 class Special(object):
-    def __init__(self: Self) -> None:
+    def __init__(self: Self, key: str) -> None:
+        self._key = key
+        self._manager = None
+
+    @property
+    def manager(self: Self) -> SpecialManager:
+        return self._manager
+
+    def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         pass
 
 
 class SpecialManager(object):
-    def __init__(self: Self) -> None:
-        pass
+    def __init__(self: Self, specials: set[Special]=set()) -> None:
+        self._specials = set()
+        self.specials = specials
+        self._level = None
+
+    @property
+    def specials(self: Self) -> set[Special]:
+        return self._specials
+
+    @specials.setter
+    def specials(self: Self, value: set[Special]) -> None:
+        for special in self._specials:
+            special._manager = None
+        self._specials = value
+        for special in value:
+            special._manager = self
+
+    def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
+        for special in self._specials:
+            special.update(rel_game_speed, level_timer)
 
 
 class Level(object):
@@ -176,6 +219,7 @@ class Level(object):
                  floor: Optional[Floor | Sky],
                  ceiling: Optional[Floor | Sky],
                  walls: Walls,
+                 specials: SpecialManager,
                  entities: EntityManager,
                  sounds: SoundManager,
                  ceiling_elevation: Real=1) -> None:
@@ -186,8 +230,10 @@ class Level(object):
         if not isinstance(ceiling, Floor):
             self._ceiling_elevation = math.inf
         self._walls = walls
+        self._specials = specials
         self._entities = entities
         self._sounds = sounds
+        specials._level = self
         entities._level = self
         sounds._level = self
         sounds.update()
@@ -217,6 +263,16 @@ class Level(object):
         self._walls = value
 
     @property
+    def specials(self: Self) -> Optional[SpecialManager]:
+        return self._specials
+    
+    @specials.setter
+    def specials(self: Self, value: Optional[SpecialManager]) -> None:
+        self._specials._level = None
+        self._specials = value
+        value._level = self
+
+    @property
     def entities(self: Self) -> EntityManager:
         return self._entities
 
@@ -240,4 +296,5 @@ class Level(object):
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         self._sounds.update()
         self._entities.update(rel_game_speed, level_timer)
+        self._specials.update(rel_game_speed, level_timer)
 

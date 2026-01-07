@@ -1143,7 +1143,6 @@ class Player(Entity):
                         else:
                             closest = (entity_dist, entity)
                             could_hit = 1
-
                     if roa and not could_hit:
                         entity_dist = vector.distance_to(entity.vector3)
                         if (entity_dist < closest[0]

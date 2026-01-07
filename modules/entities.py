@@ -16,6 +16,8 @@ from modules.weapons import AmmoWeapon
 from modules.weapons import MeleeWeapon
 from modules.weapons import HitscanWeapon
 from modules.weapons import MissileWeapon
+from modules.inventory import Collectible
+from modules.inventory import Inventory 
 from modules.utils import FALLBACK_SURF
 from modules.utils import gen_tile_key
 

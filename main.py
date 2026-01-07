@@ -37,7 +37,8 @@ from modules.utils import gen_img_path
 from modules.utils import gen_sfx_path
 from modules.utils import gen_mus_path
 
-# TODO: INVENTORY, SPECIAL TILES, HUD, MENUS, LEVEL EDITOR, data/level.py, LEVELS
+
+# TODO: INVENTORY, *SPECIAL TILES, HUD, MENUS, LEVEL EDITOR, data/level.py, GAMEPLAY / LEVELS
 class Game(object):
 
     _SCREEN_SIZE = (960, 720)

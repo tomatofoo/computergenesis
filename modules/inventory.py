@@ -6,8 +6,11 @@ from modules.weapons import Weapon
 
 
 class Collectible(object):
-    def __init__(self: Self, textures: list[pg.Surface]) -> None:
+    def __init__(self: Self,
+                 textures: list[pg.Surface],
+                 animation_time: Real) -> None:
         self._textures = textures
+        self._animation_time = animation_time
 
 
 class Inventory(object):

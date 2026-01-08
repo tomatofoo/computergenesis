@@ -1016,11 +1016,13 @@ class Player(Entity):
                 end_pos[0] += disp_x
                 end_pos[1] += disp_x * slope
                 dist += len_x
+                side = 1
             else:
                 tile[1] += step_y
                 end_pos[0] += disp_y / slope if slope else math.inf
                 end_pos[1] += disp_y
                 dist += len_y
+                side = 0
             
             # account for entities partially in the tile but not in set
             # i think it should work for entities that are at most 2 units wide
@@ -1072,7 +1074,8 @@ class Player(Entity):
                     (data['height'] + data['elevation'] - midheight) / dist
                 )
                 if bottom_slope >= -tangent and top_slope <= tangent:
-                    special.interaction(self)
+                    # kinda slick boolean operation to determine side
+                    special.interaction(self, side + (not dir[not side]) * 2)
                     return True
             last_tile = tile
             last_end_pos = end_pos.copy()

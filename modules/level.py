@@ -196,18 +196,6 @@ class Special(object):
     def data(self: Self) -> dict:
         return self._data
 
-    def melee_damage(self: Self, value: Real) -> None:
-        pass
-
-    def hitscan_damage(self: Self, value: Real) -> None:
-        pass
-
-    def missile_damage(self: Self, value: Real) -> None:
-        pass
-
-    def splash_damage(self: Self, value: Real) -> None:
-        pass
-
     def interaction(self: Self, entity: Entity) -> None:
         pass
 

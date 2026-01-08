@@ -403,6 +403,9 @@ class Game(object):
                         self._player.weapon = self._missile_launcher
                     elif event.key == pg.K_0:
                         self._sounds['water'].play(pos=(9, 0.25, 9)) 
+                    elif event.key == pg.K_e:
+                        self._player.interact()
+
             # Update
             self.move_tiles(level_timer)
             keys = pg.key.get_pressed()

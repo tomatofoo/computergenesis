@@ -384,7 +384,7 @@ class Entity(object):
             self.textures = [FALLBACK_SURF]
 
     def interaction(self: Self, entity: Self) -> None:
-        pass
+        print('INTERACTION')
 
     def rect(self: Self) -> pg.Rect:
         rect = pg.FRect(0, 0, self._width, self._width)
@@ -716,7 +716,8 @@ class Player(Entity):
                  attack_height: Optional[Real]=None,
                  climb: Real=0.2,
                  gravity: Real=0.004,
-                 roi: Real=0.1, # Range of Interaction
+                 foi: Real=60, # Field of Interaction
+                 roi: Real=0.25, # Range of Interaction
                  foa: Real=60, # Field of Attack
                  roa: Real=0.75, # Radius of Autoaim (for missiles)
                  weapon: Optional[Weapon]=None) -> None:
@@ -752,6 +753,7 @@ class Player(Entity):
         )
         
         # Interaction Stuff
+        self._foi = foi
         self._roi = roi # Range of Interaction
 
         # Weapon Stuff
@@ -803,6 +805,14 @@ class Player(Entity):
         self._weapon_attacking = 0
         self._weapon_attack_timer = 0
     
+    @property
+    def foi(self: Self) -> Real:
+        return self._foi
+
+    @foi.setter
+    def foi(self: Self, value: Real) -> None:
+        self._foi = value
+
     @property
     def roi(self: Self) -> Real:
         return self._roi
@@ -974,7 +984,8 @@ class Player(Entity):
                 ) % length
                 self._weapon_surf = self._weapon._textures['hold'][dex]
 
-    def interact(self: Self) -> bool: # returns if interacted with something
+    def interact(self: Self, precision: int=100) -> bool:
+        # returns true if interacted with something
         ray = self._yaw.normalize()
 
         end_pos = list(self._pos)
@@ -989,6 +1000,11 @@ class Player(Entity):
         step_y = dir[1] * 2 - 1 
         dist = 0 # equals depth when ray is in perfet center
         tilemap = self._manager._level._walls._tilemap
+
+        closest = (math.inf, None)
+        tangent = math.tan(math.radians(self._foi) / 2)
+        midheight = self.centere
+        vector = self.vector3
 
         while dist < self._roi:
             # displacements until hit tile
@@ -1025,6 +1041,12 @@ class Player(Entity):
                 if dist >= self._roi:
                     end_pos = self._pos + ray * self._roi
                 for entity in entities:
+                    entity_slope = (
+                        (entity.centere - midheight)
+                        / self._pos.distance_to(entity._pos)
+                    )
+                    if entity_slope < -tangent or entity_slope > tangent:
+                        continue
                     rect = entity.rect()
                     rect.update(
                         rect[0] * precision,
@@ -1038,16 +1060,29 @@ class Player(Entity):
                         end_pos[0] * precision,
                         end_pos[1] * precision,
                     ):
-                        entity.interaction(self)
+                        entity_dist = vector.distance_to(entity.vector3)
+                        if entity_dist < closest[0]:
+                            closest = (entity_dist, entity)
 
             tile_key = gen_tile_key(tile)
             special = self._manager._level._specials.get(tile_key)
             # allows shooting through semitiles
             if special is not None:
-                special.interaction(self)
-
+                data = tilemap[tile_key]
+                bottom_slope = (data['height'] - midheight) / dist
+                top_slope = (
+                    (data['height'] + data['elevation'] - midheight) / dist
+                )
+                if bottom_slope >= -tangent and top_slope <= tangent:
+                    special.interaction(self)
+                    return True
             last_tile = tile
             last_end_pos = end_pos.copy()
+
+        if closest[1] is not None:
+            closest[1].interaction(self)
+            return True
+        return False
 
     def attack(self: Self) -> int:
         # return values

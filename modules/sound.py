@@ -76,6 +76,9 @@ class SoundManager(object):
     def __getitem__(self: Self, id: str) -> Sound:
         return self._sounds[id]
 
+    def get(self: Self, id: str) -> Optional[Sound]:
+        return self._sounds.get(id)
+
     @property
     def sounds(self: Self) -> dict[str, Sound]:
         return self._sounds

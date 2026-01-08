@@ -383,7 +383,7 @@ class Entity(object):
         else:
             self.textures = [FALLBACK_SURF]
 
-    def interact(self: Self, entity: Self) -> None:
+    def interaction(self: Self, entity: Self) -> None:
         pass
 
     def rect(self: Self) -> pg.Rect:
@@ -716,6 +716,7 @@ class Player(Entity):
                  attack_height: Optional[Real]=None,
                  climb: Real=0.2,
                  gravity: Real=0.004,
+                 roi: Real=0.1, # Range of Interaction
                  foa: Real=60, # Field of Attack
                  roa: Real=0.75, # Radius of Autoaim (for missiles)
                  weapon: Optional[Weapon]=None) -> None:
@@ -749,6 +750,9 @@ class Player(Entity):
         self._render_elevation = (
             self._elevation + self._settings['camera_offset']
         )
+        
+        # Interaction Stuff
+        self._roi = roi # Range of Interaction
 
         # Weapon Stuff
         self._foa = foa
@@ -798,6 +802,14 @@ class Player(Entity):
         self._weapon = value
         self._weapon_attacking = 0
         self._weapon_attack_timer = 0
+    
+    @property
+    def roi(self: Self) -> Real:
+        return self._roi
+
+    @roi.setter
+    def roi(self: Self, value: Real) -> None:
+        self._roi = value
 
     @property
     def foa(self: Self) -> Real:
@@ -962,6 +974,81 @@ class Player(Entity):
                 ) % length
                 self._weapon_surf = self._weapon._textures['hold'][dex]
 
+    def interact(self: Self) -> bool: # returns if interacted with something
+        ray = self._yaw.normalize()
+
+        end_pos = list(self._pos)
+        last_end_pos = end_pos.copy()
+        slope = ray[1] / ray[0] if ray[0] else math.inf
+        tile = [math.floor(end_pos[0]), math.floor(end_pos[1])]
+        tile_key = gen_tile_key(tile)
+        last_tile = tile
+        dir = (ray[0] > 0, ray[1] > 0)
+        # step for tile (for each displacement)
+        step_x = dir[0] * 2 - 1 # 1 if yes, -1 if no
+        step_y = dir[1] * 2 - 1 
+        dist = 0 # equals depth when ray is in perfet center
+        tilemap = self._manager._level._walls._tilemap
+
+        while dist < self._roi:
+            # displacements until hit tile
+            disp_x = tile[0] + dir[0] - end_pos[0]
+            disp_y = tile[1] + dir[1] - end_pos[1]
+
+            len_x = abs(disp_x / ray[0]) if ray[0] else math.inf
+            len_y = abs(disp_y / ray[1]) if ray[1] else math.inf
+            if len_x < len_y:
+                tile[0] += step_x
+                end_pos[0] += disp_x
+                end_pos[1] += disp_x * slope
+                dist += len_x
+            else:
+                tile[1] += step_y
+                end_pos[0] += disp_y / slope if slope else math.inf
+                end_pos[1] += disp_y
+                dist += len_y
+            
+            # account for entities partially in the tile but not in set
+            # i think it should work for entities that are at most 2 units wide
+            # since TILE_OFFSETS is 3x3
+            entities = set()
+            for offset in self._TILE_OFFSETS:
+                tile_key = gen_tile_key(
+                    (last_tile[0] + offset[0], last_tile[1] + offset[1]),
+                )
+                tentative = self._manager._sets.get(tile_key)
+                if tentative != None:
+                    entities |= tentative
+                
+            if entities:
+                # makes sure it doesn't go past range
+                if dist >= self._roi:
+                    end_pos = self._pos + ray * self._roi
+                for entity in entities:
+                    rect = entity.rect()
+                    rect.update(
+                        rect[0] * precision,
+                        rect[1] * precision,
+                        rect[2] * precision,
+                        rect[3] * precision,
+                    )
+                    if rect.clipline(
+                        last_end_pos[0] * precision,
+                        last_end_pos[1] * precision,
+                        end_pos[0] * precision,
+                        end_pos[1] * precision,
+                    ):
+                        entity.interaction(self)
+
+            tile_key = gen_tile_key(tile)
+            special = self._manager._level._specials.get(tile_key)
+            # allows shooting through semitiles
+            if special is not None:
+                special.interaction(self)
+
+            last_tile = tile
+            last_end_pos = end_pos.copy()
+
     def attack(self: Self) -> int:
         # return values
         # -1: can't attack
@@ -1064,6 +1151,7 @@ class Player(Entity):
                 end_pos[1] += disp_y
                 dist += len_y
             
+            # for accurate slope ranges
             if slope_range:
                 if back[0]:
                     slope_range[0] = max(
@@ -1125,6 +1213,7 @@ class Player(Entity):
                     if dont_check:
                         continue
                     
+                    # makes sure it doesn't go past range
                     if dist >= attack_range:
                         end_pos = self._pos + ray * attack_range
                     rect = entity.attack_rect()

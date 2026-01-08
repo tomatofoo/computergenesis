@@ -50,7 +50,7 @@ class Floor(object):
         self.scale = scale
         self._array = pg.surfarray.array3d(surf)
     
-    def __getitem__(self: Self, dex: object):
+    def __getitem__(self: Self, dex: tuple):
         return self._array[dex]
 
     @property
@@ -202,7 +202,7 @@ class Special(object):
     def data(self: Self) -> dict:
         return self._data
 
-    def interact(self: Self, entity: Entity) -> None:
+    def interaction(self: Self, entity: Entity) -> None:
         pass
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
@@ -210,36 +210,44 @@ class Special(object):
 
 
 class SpecialManager(object):
-    def __init__(self: Self, specials: set[Special]=set()) -> None:
-        self._specials = set()
+    # yes I know that using a dict with key is a little redundant given that 
+    # the special has it as an attribute but I don't know a better way
+    def __init__(self: Self, specials: dict[str, Special]={}) -> None:
+        self._specials = {}
         self.specials = specials
         self._level = None
 
+    def __getitem__(self: Self, key: str) -> Special:
+        return self._specials[key]
+    
+    def get(self: Self, key: str) -> Optional[Special]:
+        return self._specials.get(key)
+
     @property
-    def specials(self: Self) -> set[Special]:
+    def specials(self: Self) -> dict[str, Special]:
         return self._specials
 
     @specials.setter
-    def specials(self: Self, value: set[Special]) -> None:
-        for special in self._specials:
+    def specials(self: Self, value: dict[str, Special]) -> None:
+        for special in self._specials.values():
             special._manager = None
         self._specials = value
-        for special in value:
+        for special in value.values():
             special._manager = self
 
-    def add_special(self: Self, special: Special) -> None:
-        self._specials.add(special)
+    def set_special(self: Self, key: str, special: Special) -> None:
+        self._specials[key] = special
         special._manager = self
 
-    def remove_special(self: Self, special: Special) -> None:
-        self._specials.remove(special)
+    def pop_special(self: Self, key: str) -> Special:
+        special = self._specials[key]
         special._manager = None
-        # ^ should be after so that if not in set it won't trigger
+        return self._specials.pop(special)
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
-        for special in self._specials:
+        for key, special in self._specials.items():
             special.update(rel_game_speed, level_timer)
-            self._level._walls._dynamic_tilemap[self._key] = self._data
+            self._level._walls._dynamic_tilemap[key] = special._data
 
 
 class Level(object):

@@ -195,8 +195,12 @@ class Special(object):
     @property
     def data(self: Self) -> dict:
         return self._data
-
-    def interaction(self: Self, entity: Entity) -> None:
+    
+    def interaction(self: Self, entity: Entity, side: int=0) -> None:
+        # side 0 = perpendicular to x-axis; lesser x value
+        # side 1 = perpendicular to y-axis; lesser y valuw
+        # side 2 = perpendicular to x-axis; greater x value
+        # side 3 = perpendicular to y-axis; greater y value
         pass
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:

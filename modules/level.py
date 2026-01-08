@@ -10,6 +10,7 @@ from pygame.typing import Point
 from pygame.typing import RectLike
 from pygame.typing import ColorLike
 
+from modules.entities import Entity
 from modules.entities import EntityManager
 from modules.sound import SoundManager
 from modules.utils import FALLBACK_SURF
@@ -200,6 +201,9 @@ class Special(object):
     @property
     def data(self: Self) -> dict:
         return self._data
+
+    def interact(self: Self, entity: Entity) -> None:
+        pass
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         pass

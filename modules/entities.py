@@ -383,6 +383,9 @@ class Entity(object):
         else:
             self.textures = [FALLBACK_SURF]
 
+    def interact(self: Self, entity: Self) -> None:
+        pass
+
     def rect(self: Self) -> pg.Rect:
         rect = pg.FRect(0, 0, self._width, self._width)
         rect.center = self._pos

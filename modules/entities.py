@@ -303,9 +303,7 @@ class Entity(object):
         return self._textures[dex]
 
     @property
-    def manager(self: Self) -> EntityManager:
-        if self._manager is None:
-            raise ValueError('Must assign manager to this entity')
+    def manager(self: Self) -> Optional[EntityManager]:
         return self._manager
 
     def _get_rects_around(self: Self) -> list:
@@ -384,7 +382,7 @@ class Entity(object):
             self.textures = [FALLBACK_SURF]
 
     def interaction(self: Self, entity: Self) -> None:
-        print('INTERACTION')
+        pass
 
     def rect(self: Self) -> pg.Rect:
         rect = pg.FRect(0, 0, self._width, self._width)

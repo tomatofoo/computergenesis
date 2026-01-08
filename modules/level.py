@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import math
 from numbers import Real
 from typing import Self
@@ -184,10 +182,6 @@ class Special(object):
     def __init__(self: Self, key: str) -> None:
         self.key = key # it assumes key is in tilemap
         self._manager = None
-
-    @property
-    def manager(self: Self) -> SpecialManager:
-        return self._manager
 
     @property
     def key(self: Self) -> str:

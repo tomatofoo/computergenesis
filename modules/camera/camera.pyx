@@ -75,7 +75,7 @@ cdef void _limits_reset(_Limits *limits):
     memset(limits._arr, 0, limits._capacity * sizeof(_Limit))
     limits._amount = 0
 
-cdef bool _limits_add(_Limits* limits, int start, int end): # bool
+cdef bint _limits_add(_Limits* limits, int start, int end): # bool
     if limits._amount >= limits._capacity:
         return False
 
@@ -121,7 +121,7 @@ cdef bool _limits_add(_Limits* limits, int start, int end): # bool
 
     return True
 
-cdef bool _limits_full(_Limits *limits, int start, int end): # bool
+cdef bint _limits_full(_Limits *limits, int start, int end): # bool
     cdef:
         _Limit item
         size_t i
@@ -135,17 +135,17 @@ cdef bool _limits_full(_Limits *limits, int start, int end): # bool
 cdef class _DepthBufferObject:
     cdef public float _depth
     cdef public tuple _args
-    cdef public int _is_rect
+    cdef public bint _is_rect
 
     def __init__(self: Self,
                  float depth,
                  args: tuple,
-                 is_rect: bool=False) -> None:
+                 bint is_rect=False) -> None:
         self._depth = depth
         self._args = args # blit args
         self._is_rect = is_rect
 
-    def __lt__(self: Self, obj: Self) -> bool:
+    def __lt__(self: Self, obj: Self) -> bint:
         # so objects are rendered farthest to last
         return self._depth < obj._depth
 
@@ -176,7 +176,7 @@ cdef class Camera:
         object _walls_and_entities
         object _weapon
         object _weapon_pos # uv coords, python obj on purpose
-        bool _multithreaded
+        bint _multithreaded
 
     def __init__(self: Self,
                  float fov,
@@ -193,7 +193,7 @@ cdef class Camera:
                  float darkness=1,
                  float max_line_height=50,
                  float min_entity_depth=0.05,
-                 bool multithreaded=False) -> None:
+                 bint multithreaded=False) -> None:
         
         self._yaw_magnitude = 1 / tan(radians(fov) / 2)
         # already sets yaw V
@@ -370,11 +370,11 @@ cdef class Camera:
         self._min_entity_depth = value
 
     @property
-    def multithreaded(self: Self) -> bool:
+    def multithreaded(self: Self) -> bint:
         return self._multithreaded
 
     @multithreaded.setter
-    def multithreaded(self: Self, bool value) -> None:
+    def multithreaded(self: Self, bint value) -> None:
         self._multithreaded = value
     
     # array multiplication to render floor

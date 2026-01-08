@@ -694,15 +694,15 @@ body.cython { font-family: courier; font-size: 12; }
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0076</span>:     limits._amount = 0</pre>
 <pre class='cython code score-0 '>  __pyx_v_limits-&gt;_amount = 0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0077</span>: </pre>
-<pre class="cython line score-4" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0078</span>: cdef bool _limits_add(_Limits* limits, int start, int end): # bool</pre>
-<pre class='cython code score-4 '>static PyObject *__pyx_f_6camera__limits_add(struct __pyx_t_6camera__Limits *__pyx_v_limits, int __pyx_v_start, int __pyx_v_end) {
+<pre class="cython line score-4" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0078</span>: cdef bint _limits_add(_Limits* limits, int start, int end): # bool</pre>
+<pre class='cython code score-4 '>static int __pyx_f_6camera__limits_add(struct __pyx_t_6camera__Limits *__pyx_v_limits, int __pyx_v_start, int __pyx_v_end) {
   struct __pyx_t_6camera__Limit __pyx_v_limit;
   struct __pyx_t_6camera__Limit __pyx_v_item;
   size_t __pyx_v_dex;
   size_t __pyx_v_cur;
   size_t __pyx_v_i;
   int __pyx_v_cur_end;
-  PyObject *__pyx_r = NULL;
+  int __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[13]))
   <span class='trace'>__Pyx_TraceStartFunc</span>("_limits_add", __pyx_f[0], 78, 0, 0, 0, <span class='error_goto'>__PYX_ERR(0, 78, __pyx_L1_error)</span>);
@@ -716,11 +716,9 @@ body.cython { font-family: courier; font-size: 12; }
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 78, __pyx_L1_error)</span>);
   #endif
   <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera._limits_add", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
+  __pyx_r = -1;
   __pyx_L0:;
-  <span class='refnanny'>__Pyx_XGIVEREF</span>(__pyx_r);
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
-  <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0079</span>:     if limits._amount &gt;= limits._capacity:</pre>
@@ -728,11 +726,9 @@ body.cython { font-family: courier; font-size: 12; }
   if (__pyx_t_1) {
 /* … */
   }
-</pre><pre class="cython line score-2" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0080</span>:         return False</pre>
-<pre class='cython code score-2 '>    <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_r);
-    <span class='pyx_macro_api'>__Pyx_INCREF</span>(Py_False);
-    __pyx_r = Py_False;
-    <span class='trace'>__Pyx_TraceReturnValue</span>(__pyx_r, 7, 0, <span class='error_goto'>__PYX_ERR(0, 80, __pyx_L1_error)</span>);
+</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0080</span>:         return False</pre>
+<pre class='cython code score-0 '>    __pyx_r = 0;
+    <span class='trace'>__Pyx_TraceReturnCValue</span>(__pyx_r, __Pyx_PyBool_FromLong, 8, 0, <span class='error_goto'>__PYX_ERR(0, 80, __pyx_L1_error)</span>);
     goto __pyx_L0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0081</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">0082</span>:     cdef:</pre>
@@ -834,18 +830,16 @@ body.cython { font-family: courier; font-size: 12; }
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0120</span>:     limits._amount = cur + 1</pre>
 <pre class='cython code score-0 '>  __pyx_v_limits-&gt;_amount = (__pyx_v_cur + 1);
 </pre><pre class="cython line score-0">&#xA0;<span class="">0121</span>: </pre>
-<pre class="cython line score-2" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0122</span>:     return True</pre>
-<pre class='cython code score-2 '>  <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_r);
-  <span class='pyx_macro_api'>__Pyx_INCREF</span>(Py_True);
-  __pyx_r = Py_True;
-  <span class='trace'>__Pyx_TraceReturnValue</span>(__pyx_r, 125, 0, <span class='error_goto'>__PYX_ERR(0, 122, __pyx_L1_error)</span>);
+<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0122</span>:     return True</pre>
+<pre class='cython code score-0 '>  __pyx_r = 1;
+  <span class='trace'>__Pyx_TraceReturnCValue</span>(__pyx_r, __Pyx_PyBool_FromLong, 126, 0, <span class='error_goto'>__PYX_ERR(0, 122, __pyx_L1_error)</span>);
   goto __pyx_L0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0123</span>: </pre>
-<pre class="cython line score-4" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0124</span>: cdef bool _limits_full(_Limits *limits, int start, int end): # bool</pre>
-<pre class='cython code score-4 '>static PyObject *__pyx_f_6camera__limits_full(struct __pyx_t_6camera__Limits *__pyx_v_limits, int __pyx_v_start, int __pyx_v_end) {
+<pre class="cython line score-4" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0124</span>: cdef bint _limits_full(_Limits *limits, int start, int end): # bool</pre>
+<pre class='cython code score-4 '>static int __pyx_f_6camera__limits_full(struct __pyx_t_6camera__Limits *__pyx_v_limits, int __pyx_v_start, int __pyx_v_end) {
   struct __pyx_t_6camera__Limit __pyx_v_item;
   size_t __pyx_v_i;
-  PyObject *__pyx_r = NULL;
+  int __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[14]))
   <span class='trace'>__Pyx_TraceStartFunc</span>("_limits_full", __pyx_f[0], 124, 0, 0, 0, <span class='error_goto'>__PYX_ERR(0, 124, __pyx_L1_error)</span>);
@@ -859,11 +853,9 @@ body.cython { font-family: courier; font-size: 12; }
   <span class='trace'>__Pyx_TraceReturnValue</span>(NULL, 0, 0, <span class='error_goto'>__PYX_ERR(0, 124, __pyx_L1_error)</span>);
   #endif
   <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera._limits_full", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
+  __pyx_r = -1;
   __pyx_L0:;
-  <span class='refnanny'>__Pyx_XGIVEREF</span>(__pyx_r);
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
-  <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 </pre><pre class="cython line score-0">&#xA0;<span class="">0125</span>:     cdef:</pre>
@@ -890,17 +882,13 @@ body.cython { font-family: courier; font-size: 12; }
 /* … */
     }
   }
-</pre><pre class="cython line score-2" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0131</span>:             return True</pre>
-<pre class='cython code score-2 '>      <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_r);
-      <span class='pyx_macro_api'>__Pyx_INCREF</span>(Py_True);
-      __pyx_r = Py_True;
-      <span class='trace'>__Pyx_TraceReturnValue</span>(__pyx_r, 22, 0, <span class='error_goto'>__PYX_ERR(0, 131, __pyx_L1_error)</span>);
+</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0131</span>:             return True</pre>
+<pre class='cython code score-0 '>      __pyx_r = 1;
+      <span class='trace'>__Pyx_TraceReturnCValue</span>(__pyx_r, __Pyx_PyBool_FromLong, 23, 0, <span class='error_goto'>__PYX_ERR(0, 131, __pyx_L1_error)</span>);
       goto __pyx_L0;
-</pre><pre class="cython line score-2" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0132</span>:     return False</pre>
-<pre class='cython code score-2 '>  <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_r);
-  <span class='pyx_macro_api'>__Pyx_INCREF</span>(Py_False);
-  __pyx_r = Py_False;
-  <span class='trace'>__Pyx_TraceReturnValue</span>(__pyx_r, 24, 0, <span class='error_goto'>__PYX_ERR(0, 132, __pyx_L1_error)</span>);
+</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0132</span>:     return False</pre>
+<pre class='cython code score-0 '>  __pyx_r = 0;
+  <span class='trace'>__Pyx_TraceReturnCValue</span>(__pyx_r, __Pyx_PyBool_FromLong, 25, 0, <span class='error_goto'>__PYX_ERR(0, 132, __pyx_L1_error)</span>);
   goto __pyx_L0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0133</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">0134</span>: </pre>
@@ -1136,7 +1124,7 @@ static int __pyx_pf_6camera_18_DepthBufferObject_5_args_4__del__(struct __pyx_ob
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
-</pre><pre class="cython line score-23" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0138</span>:     cdef public int _is_rect</pre>
+</pre><pre class="cython line score-23" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0138</span>:     cdef public bint _is_rect</pre>
 <pre class='cython code score-23 '>/* Python wrapper */
 static PyObject *__pyx_pw_6camera_18_DepthBufferObject_8_is_rect_1__get__(PyObject *__pyx_v_self); /*proto*/
 static PyObject *__pyx_pw_6camera_18_DepthBufferObject_8_is_rect_1__get__(PyObject *__pyx_v_self) {
@@ -1158,7 +1146,7 @@ static PyObject *__pyx_pf_6camera_18_DepthBufferObject_8_is_rect___get__(struct 
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[22]))
   <span class='trace'>__Pyx_TraceStartFunc</span>("__get__", __pyx_f[0], 138, 0, 0, 0, <span class='error_goto'>__PYX_ERR(0, 138, __pyx_L1_error)</span>);
   <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_r);
-  __pyx_t_1 = <span class='pyx_c_api'>__Pyx_PyLong_From_int</span>(__pyx_v_self-&gt;_is_rect);<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 138, __pyx_L1_error)</span>
+  __pyx_t_1 = <span class='pyx_c_api'>__Pyx_PyBool_FromLong</span>(__pyx_v_self-&gt;_is_rect);<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 138, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -1203,7 +1191,7 @@ static int __pyx_pf_6camera_18_DepthBufferObject_8_is_rect_2__set__(struct __pyx
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[23]))
   <span class='trace'>__Pyx_TraceStartFunc</span>("__set__", __pyx_f[0], 138, 0, 0, 0, <span class='error_goto'>__PYX_ERR(0, 138, __pyx_L1_error)</span>);
-  __pyx_t_1 = <span class='pyx_c_api'>__Pyx_PyLong_As_int</span>(__pyx_v_value); if (unlikely((__pyx_t_1 == (int)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 138, __pyx_L1_error)</span>
+  __pyx_t_1 = <span class='pyx_c_api'>__Pyx_PyObject_IsTrue</span>(__pyx_v_value); if (unlikely((__pyx_t_1 == (int)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 138, __pyx_L1_error)</span>
   __pyx_v_self-&gt;_is_rect = __pyx_t_1;
 
   /* function exit code */
@@ -1333,7 +1321,7 @@ static int __pyx_pf_6camera_18_DepthBufferObject___init__(struct __pyx_obj_6came
 }
 </pre><pre class="cython line score-0">&#xA0;<span class="">0141</span>:                  float depth,</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0142</span>:                  args: tuple,</pre>
-<pre class="cython line score-6" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0143</span>:                  is_rect: bool=False) -&gt; None:</pre>
+<pre class="cython line score-6" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0143</span>:                  bint is_rect=False) -&gt; None:</pre>
 <pre class='cython code score-6 '>      __pyx_v_is_rect = ((int)0);
     }
   }
@@ -1363,7 +1351,7 @@ static int __pyx_pf_6camera_18_DepthBufferObject___init__(struct __pyx_obj_6came
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0146</span>:         self._is_rect = is_rect</pre>
 <pre class='cython code score-0 '>  __pyx_v_self-&gt;_is_rect = __pyx_v_is_rect;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0147</span>: </pre>
-<pre class="cython line score-9" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0148</span>:     def __lt__(self: Self, obj: Self) -&gt; bool:</pre>
+<pre class="cython line score-9" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0148</span>:     def __lt__(self: Self, obj: Self) -&gt; bint:</pre>
 <pre class='cython code score-9 '>/* Python wrapper */
 static PyObject *__pyx_pw_6camera_18_DepthBufferObject_3__lt__(PyObject *__pyx_v_self, PyObject *__pyx_v_obj); /*proto*/
 static PyObject *__pyx_pw_6camera_18_DepthBufferObject_3__lt__(PyObject *__pyx_v_self, PyObject *__pyx_v_obj) {
@@ -1447,7 +1435,7 @@ static PyObject *__pyx_pf_6camera_18_DepthBufferObject_2__lt__(struct __pyx_obj_
   PyObject *_walls_and_entities;
   PyObject *_weapon;
   PyObject *_weapon_pos;
-  PyObject *_multithreaded;
+  int _multithreaded;
 };
 /* … */
 struct __pyx_vtabstruct_6camera_Camera {
@@ -1482,7 +1470,7 @@ static struct __pyx_vtabstruct_6camera_Camera *__pyx_vtabptr_6camera_Camera;
 <pre class="cython line score-0">&#xA0;<span class="">0176</span>:         object _walls_and_entities</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0177</span>:         object _weapon</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0178</span>:         object _weapon_pos # uv coords, python obj on purpose</pre>
-<pre class="cython line score-0">&#xA0;<span class="">0179</span>:         bool _multithreaded</pre>
+<pre class="cython line score-0">&#xA0;<span class="">0179</span>:         bint _multithreaded</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0180</span>: </pre>
 <pre class="cython line score-47" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0181</span>:     def __init__(self: Self,</pre>
 <pre class='cython code score-47 '>/* Python wrapper */
@@ -1502,7 +1490,7 @@ static int __pyx_pw_6camera_6Camera_1__init__(PyObject *__pyx_v_self, PyObject *
   float __pyx_v_darkness;
   float __pyx_v_max_line_height;
   float __pyx_v_min_entity_depth;
-  PyObject *__pyx_v_multithreaded = 0;
+  int __pyx_v_multithreaded;
   CYTHON_UNUSED Py_ssize_t __pyx_nargs;
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   int __pyx_r;
@@ -1588,23 +1576,14 @@ static int __pyx_pw_6camera_6Camera_1__init__(PyObject *__pyx_v_self, PyObject *
       if (<span class='pyx_c_api'>__Pyx_ParseKeywords</span>(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "__init__", 0) &lt; (0)) <span class='error_goto'>__PYX_ERR(0, 181, __pyx_L3_error)</span>
 /* … */
   /* function exit code */
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __pyx_r = -1;
   for (Py_ssize_t __pyx_temp=0; __pyx_temp &lt; (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
     Py_XDECREF(values[__pyx_temp]);
   }
-  goto __pyx_L7_cleaned_up;
-  __pyx_L0:;
-  for (Py_ssize_t __pyx_temp=0; __pyx_temp &lt; (Py_ssize_t)(sizeof(values)/sizeof(values[0])); ++__pyx_temp) {
-    Py_XDECREF(values[__pyx_temp]);
-  }
-  __pyx_L7_cleaned_up:;
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 
-static int __pyx_pf_6camera_6Camera___init__(struct __pyx_obj_6camera_Camera *__pyx_v_self, float __pyx_v_fov, float __pyx_v_tile_size, float __pyx_v_wall_render_distance, PyObject *__pyx_v_player, float __pyx_v_camera_offset, float __pyx_v_headbob_strength, float __pyx_v_headbob_frequency, float __pyx_v_weaponbob_strength, float __pyx_v_weaponbob_frequency, PyObject *__pyx_v_weapon_pos, float __pyx_v_climb_speed, float __pyx_v_darkness, float __pyx_v_max_line_height, float __pyx_v_min_entity_depth, PyObject *__pyx_v_multithreaded) {
+static int __pyx_pf_6camera_6Camera___init__(struct __pyx_obj_6camera_Camera *__pyx_v_self, float __pyx_v_fov, float __pyx_v_tile_size, float __pyx_v_wall_render_distance, PyObject *__pyx_v_player, float __pyx_v_camera_offset, float __pyx_v_headbob_strength, float __pyx_v_headbob_frequency, float __pyx_v_weaponbob_strength, float __pyx_v_weaponbob_frequency, PyObject *__pyx_v_weapon_pos, float __pyx_v_climb_speed, float __pyx_v_darkness, float __pyx_v_max_line_height, float __pyx_v_min_entity_depth, int __pyx_v_multithreaded) {
   int __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[26]))
@@ -1638,20 +1617,8 @@ static int __pyx_pf_6camera_6Camera___init__(struct __pyx_obj_6camera_Camera *__
 <pre class="cython line score-0">&#xA0;<span class="">0188</span>:                  float headbob_frequency=0.1667,</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0189</span>:                  float weaponbob_strength=0.05,</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0190</span>:                  float weaponbob_frequency=0.08335,</pre>
-<pre class="cython line score-9" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0191</span>:                  weapon_pos: Point=(0.5, 0.35),</pre>
-<pre class='cython code score-9 '>      if (!values[9]) values[9] = <span class='pyx_c_api'>__Pyx_NewRef</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_tuple[1]));
-/* … */
-      if (!values[9]) values[9] = <span class='pyx_c_api'>__Pyx_NewRef</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_tuple[1]));
-/* … */
-  __pyx_mstate_global-&gt;__pyx_tuple[1] = <span class='py_c_api'>PyTuple_Pack</span>(2, __pyx_mstate_global-&gt;__pyx_float_0_5, __pyx_mstate_global-&gt;__pyx_float_0_35); if (unlikely(!__pyx_mstate_global-&gt;__pyx_tuple[1])) <span class='error_goto'>__PYX_ERR(0, 191, __pyx_L1_error)</span>
-  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_mstate_global-&gt;__pyx_tuple[1]);
-  <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_mstate_global-&gt;__pyx_tuple[1]);
-</pre><pre class="cython line score-0">&#xA0;<span class="">0192</span>:                  float climb_speed=0.15,</pre>
-<pre class="cython line score-0">&#xA0;<span class="">0193</span>:                  float darkness=1,</pre>
-<pre class="cython line score-0">&#xA0;<span class="">0194</span>:                  float max_line_height=50,</pre>
-<pre class="cython line score-0">&#xA0;<span class="">0195</span>:                  float min_entity_depth=0.05,</pre>
-<pre class="cython line score-126" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0196</span>:                  bool multithreaded=False) -&gt; None:</pre>
-<pre class='cython code score-126 '>      if (!values[14]) values[14] = <span class='pyx_c_api'>__Pyx_NewRef</span>(((PyObject*)Py_False));
+<pre class="cython line score-132" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0191</span>:                  weapon_pos: Point=(0.5, 0.35),</pre>
+<pre class='cython code score-132 '>      if (!values[9]) values[9] = <span class='pyx_c_api'>__Pyx_NewRef</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_tuple[1]));
       for (Py_ssize_t i = __pyx_nargs; i &lt; 4; i++) {
         if (unlikely(!values[i])) { <span class='pyx_c_api'>__Pyx_RaiseArgtupleInvalid</span>("__init__", 0, 4, 15, i); <span class='error_goto'>__PYX_ERR(0, 181, __pyx_L3_error)</span> }
       }
@@ -1713,8 +1680,7 @@ static int __pyx_pf_6camera_6Camera___init__(struct __pyx_obj_6camera_Camera *__
         break;
         default: goto __pyx_L5_argtuple_error;
       }
-/* … */
-      if (!values[14]) values[14] = <span class='pyx_c_api'>__Pyx_NewRef</span>(((PyObject*)Py_False));
+      if (!values[9]) values[9] = <span class='pyx_c_api'>__Pyx_NewRef</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_tuple[1]));
     }
     __pyx_v_fov = <span class='pyx_c_api'>__Pyx_PyFloat_AsFloat</span>(values[0]); if (unlikely((__pyx_v_fov == (float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 182, __pyx_L3_error)</span>
     __pyx_v_tile_size = <span class='pyx_c_api'>__Pyx_PyFloat_AsFloat</span>(values[1]); if (unlikely((__pyx_v_tile_size == (float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 183, __pyx_L3_error)</span>
@@ -1766,7 +1732,20 @@ static int __pyx_pf_6camera_6Camera___init__(struct __pyx_obj_6camera_Camera *__
     } else {
       __pyx_v_min_entity_depth = ((float)0.05);
     }
-    __pyx_v_multithreaded = ((PyObject*)values[14]);
+    if (values[14]) {
+      __pyx_v_multithreaded = <span class='pyx_c_api'>__Pyx_PyObject_IsTrue</span>(values[14]); if (unlikely((__pyx_v_multithreaded == (int)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 196, __pyx_L3_error)</span>
+    } else {
+/* … */
+  __pyx_mstate_global-&gt;__pyx_tuple[1] = <span class='py_c_api'>PyTuple_Pack</span>(2, __pyx_mstate_global-&gt;__pyx_float_0_5, __pyx_mstate_global-&gt;__pyx_float_0_35); if (unlikely(!__pyx_mstate_global-&gt;__pyx_tuple[1])) <span class='error_goto'>__PYX_ERR(0, 191, __pyx_L1_error)</span>
+  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_mstate_global-&gt;__pyx_tuple[1]);
+  <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_mstate_global-&gt;__pyx_tuple[1]);
+</pre><pre class="cython line score-0">&#xA0;<span class="">0192</span>:                  float climb_speed=0.15,</pre>
+<pre class="cython line score-0">&#xA0;<span class="">0193</span>:                  float darkness=1,</pre>
+<pre class="cython line score-0">&#xA0;<span class="">0194</span>:                  float max_line_height=50,</pre>
+<pre class="cython line score-0">&#xA0;<span class="">0195</span>:                  float min_entity_depth=0.05,</pre>
+<pre class="cython line score-4" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0196</span>:                  bint multithreaded=False) -&gt; None:</pre>
+<pre class='cython code score-4 '>      __pyx_v_multithreaded = ((int)0);
+    }
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
@@ -1781,7 +1760,6 @@ static int __pyx_pf_6camera_6Camera___init__(struct __pyx_obj_6camera_Camera *__
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!<span class='pyx_c_api'>__Pyx_ArgTypeTest</span>(((PyObject *)__pyx_v_multithreaded), (&amp;PyBool_Type), 1, "multithreaded", 1))) <span class='error_goto'>__PYX_ERR(0, 196, __pyx_L1_error)</span>
   __pyx_r = __pyx_pf_6camera_6Camera___init__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self), __pyx_v_fov, __pyx_v_tile_size, __pyx_v_wall_render_distance, __pyx_v_player, __pyx_v_camera_offset, __pyx_v_headbob_strength, __pyx_v_headbob_frequency, __pyx_v_weaponbob_strength, __pyx_v_weaponbob_frequency, __pyx_v_weapon_pos, __pyx_v_climb_speed, __pyx_v_darkness, __pyx_v_max_line_height, __pyx_v_min_entity_depth, __pyx_v_multithreaded);
 </pre><pre class="cython line score-0">&#xA0;<span class="">0197</span>: </pre>
 <pre class="cython line score-5" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0198</span>:         self._yaw_magnitude = 1 / tan(radians(fov) / 2)</pre>
@@ -1813,12 +1791,8 @@ static int __pyx_pf_6camera_6Camera___init__(struct __pyx_obj_6camera_Camera *__
 <pre class='cython code score-0 '>  __pyx_v_self-&gt;_min_entity_depth = __pyx_v_min_entity_depth;
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0208</span>:         self._darkness = darkness</pre>
 <pre class='cython code score-0 '>  __pyx_v_self-&gt;_darkness = __pyx_v_darkness;
-</pre><pre class="cython line score-2" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0209</span>:         self._multithreaded = multithreaded</pre>
-<pre class='cython code score-2 '>  <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_v_multithreaded);
-  <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_v_multithreaded);
-  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_v_self-&gt;_multithreaded);
-  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_v_self-&gt;_multithreaded);
-  __pyx_v_self-&gt;_multithreaded = __pyx_v_multithreaded;
+</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0209</span>:         self._multithreaded = multithreaded</pre>
+<pre class='cython code score-0 '>  __pyx_v_self-&gt;_multithreaded = __pyx_v_multithreaded;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0210</span>: </pre>
 <pre class="cython line score-8" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0211</span>:         self.camera_offset = camera_offset</pre>
 <pre class='cython code score-8 '>  __pyx_t_2 = <span class='py_c_api'>PyFloat_FromDouble</span>(__pyx_v_camera_offset);<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 211, __pyx_L1_error)</span>
@@ -3626,8 +3600,8 @@ static int __pyx_pf_6camera_6Camera_16min_entity_depth_2__set__(struct __pyx_obj
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0370</span>:         self._min_entity_depth = value</pre>
 <pre class='cython code score-0 '>  __pyx_v_self-&gt;_min_entity_depth = __pyx_v_value;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0371</span>: </pre>
-<pre class="cython line score-6" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0372</span>:     @property</pre>
-<pre class='cython code score-6 '>/* Python wrapper */
+<pre class="cython line score-7" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0372</span>:     @property</pre>
+<pre class='cython code score-7 '>/* Python wrapper */
 static PyObject *__pyx_pw_6camera_6Camera_13multithreaded_1__get__(PyObject *__pyx_v_self); /*proto*/
 static PyObject *__pyx_pw_6camera_6Camera_13multithreaded_1__get__(PyObject *__pyx_v_self) {
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
@@ -3650,6 +3624,7 @@ static PyObject *__pyx_pf_6camera_6Camera_13multithreaded___get__(struct __pyx_o
 /* … */
   /* function exit code */
   __pyx_L1_error:;
+  <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_1);
   <span class='trace'>__Pyx_TraceException</span>(__pyx_lineno, 0, 0);
   #if CYTHON_USE_SYS_MONITORING
   <span class='trace'>__Pyx_TraceExceptionUnwind</span>(0, 0);
@@ -3664,41 +3639,46 @@ static PyObject *__pyx_pf_6camera_6Camera_13multithreaded___get__(struct __pyx_o
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
-</pre><pre class="cython line score-0">&#xA0;<span class="">0373</span>:     def multithreaded(self: Self) -&gt; bool:</pre>
-<pre class="cython line score-2" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0374</span>:         return self._multithreaded</pre>
-<pre class='cython code score-2 '>  <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_r);
-  <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_v_self-&gt;_multithreaded);
-  __pyx_r = __pyx_v_self-&gt;_multithreaded;
+</pre><pre class="cython line score-0">&#xA0;<span class="">0373</span>:     def multithreaded(self: Self) -&gt; bint:</pre>
+<pre class="cython line score-3" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0374</span>:         return self._multithreaded</pre>
+<pre class='cython code score-3 '>  <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_r);
+  __pyx_t_1 = <span class='pyx_c_api'>__Pyx_PyBool_FromLong</span>(__pyx_v_self-&gt;_multithreaded);<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 374, __pyx_L1_error)</span>
+  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
   <span class='trace'>__Pyx_TraceReturnValue</span>(__pyx_r, 3, 0, <span class='error_goto'>__PYX_ERR(0, 374, __pyx_L1_error)</span>);
   goto __pyx_L0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0375</span>: </pre>
-<pre class="cython line score-8" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0376</span>:     @multithreaded.setter</pre>
-<pre class='cython code score-8 '>/* Python wrapper */
-static int __pyx_pw_6camera_6Camera_13multithreaded_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value); /*proto*/
-static int __pyx_pw_6camera_6Camera_13multithreaded_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_v_value) {
+<pre class="cython line score-15" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0376</span>:     @multithreaded.setter</pre>
+<pre class='cython code score-15 '>/* Python wrapper */
+static int __pyx_pw_6camera_6Camera_13multithreaded_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value); /*proto*/
+static int __pyx_pw_6camera_6Camera_13multithreaded_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value) {
+  int __pyx_v_value;
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
   int __pyx_r;
   <span class='refnanny'>__Pyx_RefNannyDeclarations</span>
   <span class='refnanny'>__Pyx_RefNannySetupContext</span>("__set__ (wrapper)", 0);
   __pyx_kwvalues = <span class='pyx_c_api'>__Pyx_KwValues_VARARGS</span>(__pyx_args, __pyx_nargs);
-  if (unlikely(!<span class='pyx_c_api'>__Pyx_ArgTypeTest</span>(((PyObject *)__pyx_v_value), (&amp;PyBool_Type), 1, "value", 1))) <span class='error_goto'>__PYX_ERR(0, 377, __pyx_L1_error)</span>
-  __pyx_r = __pyx_pf_6camera_6Camera_13multithreaded_2__set__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self), ((PyObject*)__pyx_v_value));
+  assert(__pyx_arg_value); {
+    __pyx_v_value = <span class='pyx_c_api'>__Pyx_PyObject_IsTrue</span>(__pyx_arg_value); if (unlikely((__pyx_v_value == (int)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 377, __pyx_L3_error)</span>
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  <span class='pyx_c_api'>__Pyx_AddTraceback</span>("camera.Camera.multithreaded.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
+  return -1;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_6camera_6Camera_13multithreaded_2__set__(((struct __pyx_obj_6camera_Camera *)__pyx_v_self), ((int)__pyx_v_value));
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
   /* function exit code */
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __pyx_r = -1;
-  goto __pyx_L5_cleaned_up;
-  __pyx_L0:;
-  __pyx_L5_cleaned_up:;
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
 
-static int __pyx_pf_6camera_6Camera_13multithreaded_2__set__(struct __pyx_obj_6camera_Camera *__pyx_v_self, PyObject *__pyx_v_value) {
+static int __pyx_pf_6camera_6Camera_13multithreaded_2__set__(struct __pyx_obj_6camera_Camera *__pyx_v_self, int __pyx_v_value) {
   int __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[58]))
@@ -3719,16 +3699,11 @@ static int __pyx_pf_6camera_6Camera_13multithreaded_2__set__(struct __pyx_obj_6c
   __pyx_r = -1;
   __pyx_L0:;
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
-  <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
 }
-</pre><pre class="cython line score-0">&#xA0;<span class="">0377</span>:     def multithreaded(self: Self, bool value) -&gt; None:</pre>
-<pre class="cython line score-2" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0378</span>:         self._multithreaded = value</pre>
-<pre class='cython code score-2 '>  <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_v_value);
-  <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_v_value);
-  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_v_self-&gt;_multithreaded);
-  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_v_self-&gt;_multithreaded);
-  __pyx_v_self-&gt;_multithreaded = __pyx_v_value;
+</pre><pre class="cython line score-0">&#xA0;<span class="">0377</span>:     def multithreaded(self: Self, bint value) -&gt; None:</pre>
+<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0378</span>:         self._multithreaded = value</pre>
+<pre class='cython code score-0 '>  __pyx_v_self-&gt;_multithreaded = __pyx_v_value;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0379</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">0380</span>:     # array multiplication to render floor</pre>
 <pre class="cython line score-41" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0381</span>:     cdef cnp.ndarray[char, ndim=3] _generate_array(</pre>
@@ -5698,11 +5673,8 @@ static int __pyx_pf_6camera_6Camera_13multithreaded_2__set__(struct __pyx_obj_6c
           __pyx_t_16 = __pyx_t_13;
           goto __pyx_L17_bool_binop_done;
         }
-</pre><pre class="cython line score-3" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0727</span>:                         and not _limits_full(&amp;limits, y, render_end)):</pre>
-<pre class='cython code score-3 '>        __pyx_t_2 = __pyx_f_6camera__limits_full((&amp;__pyx_v_limits), __pyx_v_y, __pyx_v_render_end);<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 727, __pyx_L1_error)</span>
-        <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_2);
-        __pyx_t_13 = <span class='pyx_c_api'>__Pyx_PyObject_IsTrue</span>(__pyx_t_2); if (unlikely((__pyx_t_13 &lt; 0))) <span class='error_goto'>__PYX_ERR(0, 727, __pyx_L1_error)</span>
-        <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
+</pre><pre class="cython line score-5" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0727</span>:                         and not _limits_full(&amp;limits, y, render_end)):</pre>
+<pre class='cython code score-5 '>        __pyx_t_13 = __pyx_f_6camera__limits_full((&amp;__pyx_v_limits), __pyx_v_y, __pyx_v_render_end); if (unlikely(__pyx_t_13 == ((int)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 727, __pyx_L1_error)</span>
         __pyx_t_22 = (!__pyx_t_13);
         __pyx_t_16 = __pyx_t_22;
         __pyx_L17_bool_binop_done:;
@@ -5868,10 +5840,8 @@ static int __pyx_pf_6camera_6Camera_13multithreaded_2__set__(struct __pyx_obj_6c
 <pre class="cython line score-4" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0747</span>:                         render_buffer[x].append(obj)</pre>
 <pre class='cython code score-4 '>          __pyx_t_7 = <span class='pyx_c_api'>__Pyx_PyObject_Append</span>(<span class='pyx_c_api'>__Pyx_PyList_GET_ITEM</span>(__pyx_v_render_buffer, __pyx_v_x), __pyx_v_obj);<span class='error_goto'> if (unlikely(__pyx_t_7 == ((int)-1))) __PYX_ERR(0, 747, __pyx_L1_error)</span>
 </pre><pre class="cython line score-0">&#xA0;<span class="">0748</span>: </pre>
-<pre class="cython line score-1" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0749</span>:                         _limits_add(&amp;limits, render_y, render_end)</pre>
-<pre class='cython code score-1 '>          __pyx_t_2 = __pyx_f_6camera__limits_add((&amp;__pyx_v_limits), __pyx_v_render_y, __pyx_v_render_end);<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 749, __pyx_L1_error)</span>
-          <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_2);
-          <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
+<pre class="cython line score-5" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0749</span>:                         _limits_add(&amp;limits, render_y, render_end)</pre>
+<pre class='cython code score-5 '>          __pyx_t_22 = __pyx_f_6camera__limits_add((&amp;__pyx_v_limits), __pyx_v_render_y, __pyx_v_render_end); if (unlikely(__pyx_t_22 == ((int)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 749, __pyx_L1_error)</span>
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0750</span>:                     render_back = 0</pre>
 <pre class='cython code score-0 '>        __pyx_v_render_back = 0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0751</span>: </pre>
@@ -6243,11 +6213,8 @@ static int __pyx_pf_6camera_6Camera_13multithreaded_2__set__(struct __pyx_obj_6c
           __pyx_t_22 = __pyx_t_16;
           goto __pyx_L37_bool_binop_done;
         }
-</pre><pre class="cython line score-3" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0863</span>:                         and not _limits_full(&amp;limits, y, render_end)):</pre>
-<pre class='cython code score-3 '>        __pyx_t_25 = __pyx_f_6camera__limits_full((&amp;__pyx_v_limits), __pyx_v_y, __pyx_v_render_end);<span class='error_goto'> if (unlikely(!__pyx_t_25)) __PYX_ERR(0, 863, __pyx_L1_error)</span>
-        <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_25);
-        __pyx_t_16 = <span class='pyx_c_api'>__Pyx_PyObject_IsTrue</span>(__pyx_t_25); if (unlikely((__pyx_t_16 &lt; 0))) <span class='error_goto'>__PYX_ERR(0, 863, __pyx_L1_error)</span>
-        <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_25); __pyx_t_25 = 0;
+</pre><pre class="cython line score-5" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0863</span>:                         and not _limits_full(&amp;limits, y, render_end)):</pre>
+<pre class='cython code score-5 '>        __pyx_t_16 = __pyx_f_6camera__limits_full((&amp;__pyx_v_limits), __pyx_v_y, __pyx_v_render_end); if (unlikely(__pyx_t_16 == ((int)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 863, __pyx_L1_error)</span>
         __pyx_t_13 = (!__pyx_t_16);
         __pyx_t_22 = __pyx_t_13;
         __pyx_L37_bool_binop_done:;
@@ -6518,10 +6485,8 @@ static int __pyx_pf_6camera_6Camera_13multithreaded_2__set__(struct __pyx_obj_6c
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0920</span>:                                         break</pre>
 <pre class='cython code score-0 '>                  goto __pyx_L44_break;
 </pre><pre class="cython line score-0">&#xA0;<span class="">0921</span>:                             # old variables because of the full check</pre>
-<pre class="cython line score-1" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0922</span>:                             _limits_add(&amp;limits, old_y, old_render_end)</pre>
-<pre class='cython code score-1 '>            __pyx_t_24 = __pyx_f_6camera__limits_add((&amp;__pyx_v_limits), __pyx_v_old_y, __pyx_v_old_render_end);<span class='error_goto'> if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 922, __pyx_L1_error)</span>
-            <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_24);
-            <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_24); __pyx_t_24 = 0;
+<pre class="cython line score-5" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0922</span>:                             _limits_add(&amp;limits, old_y, old_render_end)</pre>
+<pre class='cython code score-5 '>            __pyx_t_22 = __pyx_f_6camera__limits_add((&amp;__pyx_v_limits), __pyx_v_old_y, __pyx_v_old_render_end); if (unlikely(__pyx_t_22 == ((int)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 922, __pyx_L1_error)</span>
 </pre><pre class="cython line score-0">&#xA0;<span class="">0923</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">0924</span>:                         else: # transparent semitiles</pre>
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0925</span>:                             obj = _DepthBufferObject(</pre>
@@ -7695,9 +7660,9 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
   <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_6);
   <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_7);
   <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_8);
-  <span class='pyx_macro_api'>__Pyx_XDECREF</span>((PyObject *)__pyx_t_10);
+  <span class='pyx_macro_api'>__Pyx_XDECREF</span>((PyObject *)__pyx_t_9);
+  <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_10);
   <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_11);
-  <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_12);
   <span class='trace'>__Pyx_TraceException</span>(__pyx_lineno, 0, 0);
   #if CYTHON_USE_SYS_MONITORING
   <span class='trace'>__Pyx_TraceExceptionUnwind</span>(0, 0);
@@ -7864,9 +7829,8 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
   __pyx_v_self-&gt;_weapon = Py_None;
 </pre><pre class="cython line score-0">&#xA0;<span class="">1150</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">1151</span>:         # Rendering</pre>
-<pre class="cython line score-2" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">1152</span>:         if self._multithreaded:</pre>
-<pre class='cython code score-2 '>  __pyx_t_9 = <span class='pyx_c_api'>__Pyx_PyObject_IsTrue</span>(__pyx_v_self-&gt;_multithreaded); if (unlikely((__pyx_t_9 &lt; 0))) <span class='error_goto'>__PYX_ERR(0, 1152, __pyx_L1_error)</span>
-  if (__pyx_t_9) {
+<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">1152</span>:         if self._multithreaded:</pre>
+<pre class='cython code score-0 '>  if (__pyx_v_self-&gt;_multithreaded) {
 /* … */
     goto __pyx_L3;
   }
@@ -7876,34 +7840,34 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
 </pre><pre class="cython line score-5" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">1154</span>:                 target=self._render_floor_and_ceiling,</pre>
 <pre class='cython code score-5 '>    <span class='pyx_macro_api'>__Pyx_INCREF</span>((PyObject *)__pyx_v_self);
-    __pyx_t_10 = __pyx_v_self;
-    __pyx_t_8 = __Pyx_CFunc_2711fe__6camera_6Camera_void__lParenCamera__comma_int___etc_to_py_4self_5width_6height_7horizon(((struct __pyx_vtabstruct_6camera_Camera *)__pyx_t_10-&gt;__pyx_vtab)-&gt;_render_floor_and_ceiling);<span class='error_goto'> if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1154, __pyx_L1_error)</span>
+    __pyx_t_9 = __pyx_v_self;
+    __pyx_t_8 = __Pyx_CFunc_2711fe__6camera_6Camera_void__lParenCamera__comma_int___etc_to_py_4self_5width_6height_7horizon(((struct __pyx_vtabstruct_6camera_Camera *)__pyx_t_9-&gt;__pyx_vtab)-&gt;_render_floor_and_ceiling);<span class='error_goto'> if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1154, __pyx_L1_error)</span>
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_8);
-    __pyx_t_3 = ((PyObject *)__pyx_t_10);
+    __pyx_t_3 = ((PyObject *)__pyx_t_9);
     <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_3);
     __pyx_t_7 = __Pyx_PyMethod_New2Arg(__pyx_t_8, __pyx_t_3);<span class='error_goto'> if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1154, __pyx_L1_error)</span>
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_7);
     <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_8); __pyx_t_8 = 0;
     <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_3); __pyx_t_3 = 0;
-    <span class='pyx_macro_api'>__Pyx_DECREF</span>((PyObject *)__pyx_t_10); __pyx_t_10 = 0;
+    <span class='pyx_macro_api'>__Pyx_DECREF</span>((PyObject *)__pyx_t_9); __pyx_t_9 = 0;
 </pre><pre class="cython line score-40" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">1155</span>:                 args=(width, height, horizon),</pre>
 <pre class='cython code score-40 '>    __pyx_t_3 = <span class='pyx_c_api'>__Pyx_PyLong_From_int</span>(__pyx_v_width);<span class='error_goto'> if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1155, __pyx_L1_error)</span>
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_3);
     __pyx_t_8 = <span class='pyx_c_api'>__Pyx_PyLong_From_int</span>(__pyx_v_height);<span class='error_goto'> if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1155, __pyx_L1_error)</span>
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_8);
-    __pyx_t_11 = <span class='pyx_c_api'>__Pyx_PyLong_From_int</span>(__pyx_v_horizon);<span class='error_goto'> if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1155, __pyx_L1_error)</span>
+    __pyx_t_10 = <span class='pyx_c_api'>__Pyx_PyLong_From_int</span>(__pyx_v_horizon);<span class='error_goto'> if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1155, __pyx_L1_error)</span>
+    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_10);
+    __pyx_t_11 = <span class='py_c_api'>PyTuple_New</span>(3);<span class='error_goto'> if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1155, __pyx_L1_error)</span>
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_11);
-    __pyx_t_12 = <span class='py_c_api'>PyTuple_New</span>(3);<span class='error_goto'> if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1155, __pyx_L1_error)</span>
-    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_12);
     <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_t_3);
-    if (<span class='pyx_c_api'>__Pyx_PyTuple_SET_ITEM</span>(__pyx_t_12, 0, __pyx_t_3) != (0)) <span class='error_goto'>__PYX_ERR(0, 1155, __pyx_L1_error)</span>;
+    if (<span class='pyx_c_api'>__Pyx_PyTuple_SET_ITEM</span>(__pyx_t_11, 0, __pyx_t_3) != (0)) <span class='error_goto'>__PYX_ERR(0, 1155, __pyx_L1_error)</span>;
     <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_t_8);
-    if (<span class='pyx_c_api'>__Pyx_PyTuple_SET_ITEM</span>(__pyx_t_12, 1, __pyx_t_8) != (0)) <span class='error_goto'>__PYX_ERR(0, 1155, __pyx_L1_error)</span>;
-    <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_t_11);
-    if (<span class='pyx_c_api'>__Pyx_PyTuple_SET_ITEM</span>(__pyx_t_12, 2, __pyx_t_11) != (0)) <span class='error_goto'>__PYX_ERR(0, 1155, __pyx_L1_error)</span>;
+    if (<span class='pyx_c_api'>__Pyx_PyTuple_SET_ITEM</span>(__pyx_t_11, 1, __pyx_t_8) != (0)) <span class='error_goto'>__PYX_ERR(0, 1155, __pyx_L1_error)</span>;
+    <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_t_10);
+    if (<span class='pyx_c_api'>__Pyx_PyTuple_SET_ITEM</span>(__pyx_t_11, 2, __pyx_t_10) != (0)) <span class='error_goto'>__PYX_ERR(0, 1155, __pyx_L1_error)</span>;
     __pyx_t_3 = 0;
     __pyx_t_8 = 0;
-    __pyx_t_11 = 0;
+    __pyx_t_10 = 0;
     __pyx_t_5 = 1;
     #if CYTHON_UNPACK_METHODS
     if (unlikely(<span class='py_c_api'>PyMethod_Check</span>(__pyx_t_1))) {
@@ -7918,15 +7882,15 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
     #endif
     {
       PyObject *__pyx_callargs[2 + ((CYTHON_VECTORCALL) ? 2 : 0)] = {__pyx_t_6, NULL};
-      __pyx_t_11 = <span class='pyx_c_api'>__Pyx_MakeVectorcallBuilderKwds</span>(2);<span class='error_goto'> if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1153, __pyx_L1_error)</span>
-      <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_11);
-      if (<span class='pyx_c_api'>__Pyx_VectorcallBuilder_AddArg</span>(__pyx_mstate_global-&gt;__pyx_n_u_target, __pyx_t_7, __pyx_t_11, __pyx_callargs+1, 0) &lt; (0)) <span class='error_goto'>__PYX_ERR(0, 1153, __pyx_L1_error)</span>
-      if (<span class='pyx_c_api'>__Pyx_VectorcallBuilder_AddArg</span>(__pyx_mstate_global-&gt;__pyx_n_u_args, __pyx_t_12, __pyx_t_11, __pyx_callargs+1, 1) &lt; (0)) <span class='error_goto'>__PYX_ERR(0, 1153, __pyx_L1_error)</span>
-      __pyx_t_4 = <span class='pyx_c_api'>__Pyx_Object_Vectorcall_CallFromBuilder</span>((PyObject*)__pyx_t_1, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_11);
+      __pyx_t_10 = <span class='pyx_c_api'>__Pyx_MakeVectorcallBuilderKwds</span>(2);<span class='error_goto'> if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1153, __pyx_L1_error)</span>
+      <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_10);
+      if (<span class='pyx_c_api'>__Pyx_VectorcallBuilder_AddArg</span>(__pyx_mstate_global-&gt;__pyx_n_u_target, __pyx_t_7, __pyx_t_10, __pyx_callargs+1, 0) &lt; (0)) <span class='error_goto'>__PYX_ERR(0, 1153, __pyx_L1_error)</span>
+      if (<span class='pyx_c_api'>__Pyx_VectorcallBuilder_AddArg</span>(__pyx_mstate_global-&gt;__pyx_n_u_args, __pyx_t_11, __pyx_t_10, __pyx_callargs+1, 1) &lt; (0)) <span class='error_goto'>__PYX_ERR(0, 1153, __pyx_L1_error)</span>
+      __pyx_t_4 = <span class='pyx_c_api'>__Pyx_Object_Vectorcall_CallFromBuilder</span>((PyObject*)__pyx_t_1, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_10);
       <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_6); __pyx_t_6 = 0;
       <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_7); __pyx_t_7 = 0;
-      <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_12); __pyx_t_12 = 0;
       <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_11); __pyx_t_11 = 0;
+      <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_10); __pyx_t_10 = 0;
       <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
       if (unlikely(!__pyx_t_4)) <span class='error_goto'>__PYX_ERR(0, 1153, __pyx_L1_error)</span>
       <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
@@ -7936,47 +7900,47 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
 </pre><pre class="cython line score-0">&#xA0;<span class="">1156</span>:             )</pre>
 <pre class="cython line score-2" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">1157</span>:             walls_and_entities = Thread(</pre>
 <pre class='cython code score-2 '>    __pyx_t_1 = NULL;
-    <span class='pyx_c_api'>__Pyx_GetModuleGlobalName</span>(__pyx_t_11, __pyx_mstate_global-&gt;__pyx_n_u_Thread);<span class='error_goto'> if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1157, __pyx_L1_error)</span>
-    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_11);
+    <span class='pyx_c_api'>__Pyx_GetModuleGlobalName</span>(__pyx_t_10, __pyx_mstate_global-&gt;__pyx_n_u_Thread);<span class='error_goto'> if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1157, __pyx_L1_error)</span>
+    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_10);
 </pre><pre class="cython line score-5" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">1158</span>:                 target=self._render_walls_and_entities,</pre>
 <pre class='cython code score-5 '>    <span class='pyx_macro_api'>__Pyx_INCREF</span>((PyObject *)__pyx_v_self);
-    __pyx_t_10 = __pyx_v_self;
-    __pyx_t_12 = __Pyx_CFunc_2711fe__6camera_6Camera_void__lParenCamera__comma_int___etc_to_py_4self_5width_6height_7horizon(((struct __pyx_vtabstruct_6camera_Camera *)__pyx_t_10-&gt;__pyx_vtab)-&gt;_render_walls_and_entities);<span class='error_goto'> if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1158, __pyx_L1_error)</span>
-    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_12);
-    __pyx_t_7 = ((PyObject *)__pyx_t_10);
+    __pyx_t_9 = __pyx_v_self;
+    __pyx_t_11 = __Pyx_CFunc_2711fe__6camera_6Camera_void__lParenCamera__comma_int___etc_to_py_4self_5width_6height_7horizon(((struct __pyx_vtabstruct_6camera_Camera *)__pyx_t_9-&gt;__pyx_vtab)-&gt;_render_walls_and_entities);<span class='error_goto'> if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1158, __pyx_L1_error)</span>
+    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_11);
+    __pyx_t_7 = ((PyObject *)__pyx_t_9);
     <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_7);
-    __pyx_t_6 = __Pyx_PyMethod_New2Arg(__pyx_t_12, __pyx_t_7);<span class='error_goto'> if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1158, __pyx_L1_error)</span>
+    __pyx_t_6 = __Pyx_PyMethod_New2Arg(__pyx_t_11, __pyx_t_7);<span class='error_goto'> if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1158, __pyx_L1_error)</span>
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_6);
-    <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_12); __pyx_t_12 = 0;
+    <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_11); __pyx_t_11 = 0;
     <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_7); __pyx_t_7 = 0;
-    <span class='pyx_macro_api'>__Pyx_DECREF</span>((PyObject *)__pyx_t_10); __pyx_t_10 = 0;
+    <span class='pyx_macro_api'>__Pyx_DECREF</span>((PyObject *)__pyx_t_9); __pyx_t_9 = 0;
 </pre><pre class="cython line score-40" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">1159</span>:                 args=(width, height, horizon),</pre>
 <pre class='cython code score-40 '>    __pyx_t_7 = <span class='pyx_c_api'>__Pyx_PyLong_From_int</span>(__pyx_v_width);<span class='error_goto'> if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1159, __pyx_L1_error)</span>
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_7);
-    __pyx_t_12 = <span class='pyx_c_api'>__Pyx_PyLong_From_int</span>(__pyx_v_height);<span class='error_goto'> if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1159, __pyx_L1_error)</span>
-    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_12);
+    __pyx_t_11 = <span class='pyx_c_api'>__Pyx_PyLong_From_int</span>(__pyx_v_height);<span class='error_goto'> if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1159, __pyx_L1_error)</span>
+    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_11);
     __pyx_t_8 = <span class='pyx_c_api'>__Pyx_PyLong_From_int</span>(__pyx_v_horizon);<span class='error_goto'> if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1159, __pyx_L1_error)</span>
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_8);
     __pyx_t_3 = <span class='py_c_api'>PyTuple_New</span>(3);<span class='error_goto'> if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1159, __pyx_L1_error)</span>
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_3);
     <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_t_7);
     if (<span class='pyx_c_api'>__Pyx_PyTuple_SET_ITEM</span>(__pyx_t_3, 0, __pyx_t_7) != (0)) <span class='error_goto'>__PYX_ERR(0, 1159, __pyx_L1_error)</span>;
-    <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_t_12);
-    if (<span class='pyx_c_api'>__Pyx_PyTuple_SET_ITEM</span>(__pyx_t_3, 1, __pyx_t_12) != (0)) <span class='error_goto'>__PYX_ERR(0, 1159, __pyx_L1_error)</span>;
+    <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_t_11);
+    if (<span class='pyx_c_api'>__Pyx_PyTuple_SET_ITEM</span>(__pyx_t_3, 1, __pyx_t_11) != (0)) <span class='error_goto'>__PYX_ERR(0, 1159, __pyx_L1_error)</span>;
     <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_t_8);
     if (<span class='pyx_c_api'>__Pyx_PyTuple_SET_ITEM</span>(__pyx_t_3, 2, __pyx_t_8) != (0)) <span class='error_goto'>__PYX_ERR(0, 1159, __pyx_L1_error)</span>;
     __pyx_t_7 = 0;
-    __pyx_t_12 = 0;
+    __pyx_t_11 = 0;
     __pyx_t_8 = 0;
     __pyx_t_5 = 1;
     #if CYTHON_UNPACK_METHODS
-    if (unlikely(<span class='py_c_api'>PyMethod_Check</span>(__pyx_t_11))) {
-      __pyx_t_1 = <span class='py_macro_api'>PyMethod_GET_SELF</span>(__pyx_t_11);
+    if (unlikely(<span class='py_c_api'>PyMethod_Check</span>(__pyx_t_10))) {
+      __pyx_t_1 = <span class='py_macro_api'>PyMethod_GET_SELF</span>(__pyx_t_10);
       assert(__pyx_t_1);
-      PyObject* __pyx__function = <span class='py_macro_api'>PyMethod_GET_FUNCTION</span>(__pyx_t_11);
+      PyObject* __pyx__function = <span class='py_macro_api'>PyMethod_GET_FUNCTION</span>(__pyx_t_10);
       <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_1);
       <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx__function);
-      <span class='pyx_macro_api'>__Pyx_DECREF_SET</span>(__pyx_t_11, __pyx__function);
+      <span class='pyx_macro_api'>__Pyx_DECREF_SET</span>(__pyx_t_10, __pyx__function);
       __pyx_t_5 = 0;
     }
     #endif
@@ -7986,12 +7950,12 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
       <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_8);
       if (<span class='pyx_c_api'>__Pyx_VectorcallBuilder_AddArg</span>(__pyx_mstate_global-&gt;__pyx_n_u_target, __pyx_t_6, __pyx_t_8, __pyx_callargs+1, 0) &lt; (0)) <span class='error_goto'>__PYX_ERR(0, 1157, __pyx_L1_error)</span>
       if (<span class='pyx_c_api'>__Pyx_VectorcallBuilder_AddArg</span>(__pyx_mstate_global-&gt;__pyx_n_u_args, __pyx_t_3, __pyx_t_8, __pyx_callargs+1, 1) &lt; (0)) <span class='error_goto'>__PYX_ERR(0, 1157, __pyx_L1_error)</span>
-      __pyx_t_4 = <span class='pyx_c_api'>__Pyx_Object_Vectorcall_CallFromBuilder</span>((PyObject*)__pyx_t_11, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_8);
+      __pyx_t_4 = <span class='pyx_c_api'>__Pyx_Object_Vectorcall_CallFromBuilder</span>((PyObject*)__pyx_t_10, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_8);
       <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
       <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_6); __pyx_t_6 = 0;
       <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_3); __pyx_t_3 = 0;
       <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_8); __pyx_t_8 = 0;
-      <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_11); __pyx_t_11 = 0;
+      <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_10); __pyx_t_10 = 0;
       if (unlikely(!__pyx_t_4)) <span class='error_goto'>__PYX_ERR(0, 1157, __pyx_L1_error)</span>
       <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
     }
@@ -8000,49 +7964,49 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
 </pre><pre class="cython line score-0">&#xA0;<span class="">1160</span>:             )</pre>
 <pre class="cython line score-0">&#xA0;<span class="">1161</span>: </pre>
 <pre class="cython line score-5" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">1162</span>:             floor_and_ceiling.start()</pre>
-<pre class='cython code score-5 '>    __pyx_t_11 = __pyx_v_floor_and_ceiling;
-    <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_11);
+<pre class='cython code score-5 '>    __pyx_t_10 = __pyx_v_floor_and_ceiling;
+    <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_10);
     __pyx_t_5 = 0;
     {
-      PyObject *__pyx_callargs[2] = {__pyx_t_11, NULL};
+      PyObject *__pyx_callargs[2] = {__pyx_t_10, NULL};
       __pyx_t_4 = <span class='pyx_c_api'>__Pyx_PyObject_FastCallMethod</span>((PyObject*)__pyx_mstate_global-&gt;__pyx_n_u_start_2, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-      <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_11); __pyx_t_11 = 0;
+      <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_10); __pyx_t_10 = 0;
       if (unlikely(!__pyx_t_4)) <span class='error_goto'>__PYX_ERR(0, 1162, __pyx_L1_error)</span>
       <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
     }
     <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_4); __pyx_t_4 = 0;
 </pre><pre class="cython line score-5" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">1163</span>:             walls_and_entities.start()</pre>
-<pre class='cython code score-5 '>    __pyx_t_11 = __pyx_v_walls_and_entities;
-    <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_11);
+<pre class='cython code score-5 '>    __pyx_t_10 = __pyx_v_walls_and_entities;
+    <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_10);
     __pyx_t_5 = 0;
     {
-      PyObject *__pyx_callargs[2] = {__pyx_t_11, NULL};
+      PyObject *__pyx_callargs[2] = {__pyx_t_10, NULL};
       __pyx_t_4 = <span class='pyx_c_api'>__Pyx_PyObject_FastCallMethod</span>((PyObject*)__pyx_mstate_global-&gt;__pyx_n_u_start_2, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-      <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_11); __pyx_t_11 = 0;
+      <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_10); __pyx_t_10 = 0;
       if (unlikely(!__pyx_t_4)) <span class='error_goto'>__PYX_ERR(0, 1163, __pyx_L1_error)</span>
       <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
     }
     <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_4); __pyx_t_4 = 0;
 </pre><pre class="cython line score-5" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">1164</span>:             floor_and_ceiling.join()</pre>
-<pre class='cython code score-5 '>    __pyx_t_11 = __pyx_v_floor_and_ceiling;
-    <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_11);
+<pre class='cython code score-5 '>    __pyx_t_10 = __pyx_v_floor_and_ceiling;
+    <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_10);
     __pyx_t_5 = 0;
     {
-      PyObject *__pyx_callargs[2] = {__pyx_t_11, NULL};
+      PyObject *__pyx_callargs[2] = {__pyx_t_10, NULL};
       __pyx_t_4 = <span class='pyx_c_api'>__Pyx_PyObject_FastCallMethod</span>((PyObject*)__pyx_mstate_global-&gt;__pyx_n_u_join, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-      <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_11); __pyx_t_11 = 0;
+      <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_10); __pyx_t_10 = 0;
       if (unlikely(!__pyx_t_4)) <span class='error_goto'>__PYX_ERR(0, 1164, __pyx_L1_error)</span>
       <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
     }
     <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_4); __pyx_t_4 = 0;
 </pre><pre class="cython line score-5" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">1165</span>:             walls_and_entities.join()</pre>
-<pre class='cython code score-5 '>    __pyx_t_11 = __pyx_v_walls_and_entities;
-    <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_11);
+<pre class='cython code score-5 '>    __pyx_t_10 = __pyx_v_walls_and_entities;
+    <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_10);
     __pyx_t_5 = 0;
     {
-      PyObject *__pyx_callargs[2] = {__pyx_t_11, NULL};
+      PyObject *__pyx_callargs[2] = {__pyx_t_10, NULL};
       __pyx_t_4 = <span class='pyx_c_api'>__Pyx_PyObject_FastCallMethod</span>((PyObject*)__pyx_mstate_global-&gt;__pyx_n_u_join, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-      <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_11); __pyx_t_11 = 0;
+      <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_10); __pyx_t_10 = 0;
       if (unlikely(!__pyx_t_4)) <span class='error_goto'>__PYX_ERR(0, 1165, __pyx_L1_error)</span>
       <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
     }
@@ -8058,13 +8022,13 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
 </pre><pre class="cython line score-0">&#xA0;<span class="">1169</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">1170</span>:         # Blits</pre>
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">1171</span>:         if self._floor is not None:</pre>
-<pre class='cython code score-0 '>  __pyx_t_9 = (__pyx_v_self-&gt;_floor != Py_None);
-  if (__pyx_t_9) {
+<pre class='cython code score-0 '>  __pyx_t_12 = (__pyx_v_self-&gt;_floor != Py_None);
+  if (__pyx_t_12) {
 /* … */
   }
 </pre><pre class="cython line score-18" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">1172</span>:             surf.blit(self._floor, (0, horizon))</pre>
-<pre class='cython code score-18 '>    __pyx_t_11 = __pyx_v_surf;
-    <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_11);
+<pre class='cython code score-18 '>    __pyx_t_10 = __pyx_v_surf;
+    <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_10);
     __pyx_t_8 = <span class='pyx_c_api'>__Pyx_PyLong_From_int</span>(__pyx_v_horizon);<span class='error_goto'> if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1172, __pyx_L1_error)</span>
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_8);
     __pyx_t_3 = <span class='py_c_api'>PyTuple_New</span>(2);<span class='error_goto'> if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1172, __pyx_L1_error)</span>
@@ -8077,17 +8041,17 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
     __pyx_t_8 = 0;
     __pyx_t_5 = 0;
     {
-      PyObject *__pyx_callargs[3] = {__pyx_t_11, __pyx_v_self-&gt;_floor, __pyx_t_3};
+      PyObject *__pyx_callargs[3] = {__pyx_t_10, __pyx_v_self-&gt;_floor, __pyx_t_3};
       __pyx_t_4 = <span class='pyx_c_api'>__Pyx_PyObject_FastCallMethod</span>((PyObject*)__pyx_mstate_global-&gt;__pyx_n_u_blit, __pyx_callargs+__pyx_t_5, (3-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
-      <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_11); __pyx_t_11 = 0;
+      <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_10); __pyx_t_10 = 0;
       <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_3); __pyx_t_3 = 0;
       if (unlikely(!__pyx_t_4)) <span class='error_goto'>__PYX_ERR(0, 1172, __pyx_L1_error)</span>
       <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
     }
     <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_4); __pyx_t_4 = 0;
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">1173</span>:         if self._ceiling is not None:</pre>
-<pre class='cython code score-0 '>  __pyx_t_9 = (__pyx_v_self-&gt;_ceiling != Py_None);
-  if (__pyx_t_9) {
+<pre class='cython code score-0 '>  __pyx_t_12 = (__pyx_v_self-&gt;_ceiling != Py_None);
+  if (__pyx_t_12) {
 /* … */
   }
 </pre><pre class="cython line score-5" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">1174</span>:             surf.blit(self._ceiling, (0, 0))</pre>
@@ -8117,16 +8081,16 @@ static PyObject *__pyx_pf_6camera_6Camera_4render(struct __pyx_obj_6camera_Camer
 </pre><pre class="cython line score-11" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">1176</span>:         self._render_weapon(width, height, surf)</pre>
 <pre class='cython code score-11 '>  __pyx_t_3 = ((PyObject *)__pyx_v_self);
   <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_3);
-  __pyx_t_11 = <span class='pyx_c_api'>__Pyx_PyLong_From_int</span>(__pyx_v_width);<span class='error_goto'> if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1176, __pyx_L1_error)</span>
-  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_11);
+  __pyx_t_10 = <span class='pyx_c_api'>__Pyx_PyLong_From_int</span>(__pyx_v_width);<span class='error_goto'> if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1176, __pyx_L1_error)</span>
+  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_10);
   __pyx_t_8 = <span class='pyx_c_api'>__Pyx_PyLong_From_int</span>(__pyx_v_height);<span class='error_goto'> if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1176, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_8);
   __pyx_t_5 = 0;
   {
-    PyObject *__pyx_callargs[4] = {__pyx_t_3, __pyx_t_11, __pyx_t_8, __pyx_v_surf};
+    PyObject *__pyx_callargs[4] = {__pyx_t_3, __pyx_t_10, __pyx_t_8, __pyx_v_surf};
     __pyx_t_4 = <span class='pyx_c_api'>__Pyx_PyObject_FastCallMethod</span>((PyObject*)__pyx_mstate_global-&gt;__pyx_n_u_render_weapon, __pyx_callargs+__pyx_t_5, (4-__pyx_t_5) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_3); __pyx_t_3 = 0;
-    <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_11); __pyx_t_11 = 0;
+    <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_10); __pyx_t_10 = 0;
     <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_8); __pyx_t_8 = 0;
     if (unlikely(!__pyx_t_4)) <span class='error_goto'>__PYX_ERR(0, 1176, __pyx_L1_error)</span>
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);

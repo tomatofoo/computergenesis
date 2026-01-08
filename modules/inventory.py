@@ -1,3 +1,4 @@
+from numbers import Real
 from typing import Self
 
 import pygame as pg

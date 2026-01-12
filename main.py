@@ -228,8 +228,6 @@ class Game(object):
             },
         )
 
-        with open('data/map.json', 'r') as file:
-            walls = json.loads(file.read())
         wall_textures = (
             ColumnTexture(
                 pg.image.load(
@@ -243,7 +241,7 @@ class Game(object):
                 pg.image.load(gen_img_path('tilesets/all/wood.png')).convert(),
             ),
             ceiling=Sky(pg.image.load(gen_img_path('nightsky.png')).convert()),
-            walls=Walls(walls, wall_textures),
+            walls=Walls.load('data/map.json', wall_textures),
             specials=self._specials,
             entities=self._entities,
             sounds=self._sounds,

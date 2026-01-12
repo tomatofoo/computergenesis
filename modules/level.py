@@ -1,4 +1,5 @@
 import math
+import json
 from numbers import Real
 from typing import Self
 from typing import Optional
@@ -105,6 +106,12 @@ class Walls(object):
         self._dynamic_tilemap = tilemap.copy()
         # the in-game one ^
         self._textures = textures
+
+    @classmethod
+    def load(cls: type, path: str, textures: list[ColumnTexture]) -> Self:
+        with open(path, 'r') as file:
+            tilemap = json.loads(file.read())['tilemap']
+        return Walls(tilemap, textures)
 
     def set_tile(self: Self,
                  pos: Point,
@@ -271,10 +278,6 @@ class Level(object):
         entities._level = self
         sounds._level = self
         sounds.update()
-
-    @classmethod
-    def load(cls: type, path: str) -> Self:
-        NotImplemented
 
     @property
     def floor(self: Self) -> Optional[Floor | Sky]:

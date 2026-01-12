@@ -668,7 +668,7 @@ class Missile(EntityEx):
         self.state = 'attack'
         if entity is not None and entity._health > 0:
             entity.missile_damage(self._damage)
-
+        
         tile = pg.Vector2(math.floor(self._pos[0]), math.floor(self._pos[1]))
         for offset in self._TILE_OFFSETS:
             offset_tile = tile + offset

@@ -52,6 +52,9 @@ class Game(object):
         }
 
         self._pos = pg.Vector2(0, 0)
+        self._wall_textures = []
+        self._floor = None
+        self._ceiling = None
         self._tilemap = {}
 
     def _get_screen_pos(self: Self, x: int, y: int) -> None:
@@ -79,10 +82,12 @@ class Game(object):
                     surf = pg.Surface((self._zoom, self._zoom))
                     semizoom = self._zoom / 2
                     quarterzoom = self._zoom / 4
+                    # Colors
                     rect = (semizoom, 0, semizoom, quarterzoom)
                     pg.draw.rect(surf, data['top'], rect)
                     rect = (semizoom, quarterzoom, semizoom, quarterzoom)
                     pg.draw.rect(surf, data['bottom'], rect)
+                    # Draw
                     self._screen.blit(surf, self._get_screen_pos(x, y))
 
     def run(self: Self) -> None:

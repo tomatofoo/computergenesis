@@ -272,6 +272,10 @@ class Level(object):
         sounds._level = self
         sounds.update()
 
+    @classmethod
+    def load(cls: type, path: str) -> Self:
+        NotImplemented
+
     @property
     def floor(self: Self) -> Optional[Floor | Sky]:
         return self._floor

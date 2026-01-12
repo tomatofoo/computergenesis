@@ -33,8 +33,8 @@ class Game(object):
         self._colors = {
             'fill': (0, 0, 0),
             'grid': (255, 255, 255),
-            'top': (0, 0, 0),
-            'bottom': (0, 0, 0),
+            'top': (0, 0, 255),
+            'bottom': (255, 0, 0),
         }
         
         # Zoom
@@ -56,26 +56,33 @@ class Game(object):
 
     def _get_screen_pos(self: Self, x: int, y: int) -> None:
         return (
-            self._pos[0] * self._zoom % self._zoom + x * self._zoom,
-            self._pos[1] * self._zoom % self._zoom + y * self._zoom,
+            (math.floor(self._pos[0]) + x - self._pos[0]) * self._zoom,
+            (math.floor(self._pos[1]) + y - self._pos[1]) * self._zoom,
         )
 
     def _draw_grid(self: Self) -> None:
-        for y in range(self._screen.height // self._zoom):
-            for x in range(self._screen.width // self._zoom):
+        for y in range(self._SCREEN_SIZE[1] // self._zoom + 1):
+            for x in range(self._SCREEN_SIZE[0] // self._zoom + 1):
                 self._screen.set_at(
                     self._get_screen_pos(x, y),
                     self._colors['grid'],
                 )
 
     def _draw_tiles(self: Self) -> None:
-        for y in range(self._screen.height // self._zoom):
-            for x in range(self._screen.width // self._zoom):
-                tile = (self._pos[0] + x, self._pos[1] + y)
+        for y in range(self._SCREEN_SIZE[1] // self._zoom + 1):
+            for x in range(self._SCREEN_SIZE[0] // self._zoom + 1):
+                tile = (math.floor(self._pos[0]) + x,
+                        math.floor(self._pos[1]) + y)
                 tile_key = gen_tile_key(tile)
                 data = self._tilemap.get(tile_key)
                 if data is not None:
                     surf = pg.Surface((self._zoom, self._zoom))
+                    semizoom = self._zoom / 2
+                    quarterzoom = self._zoom / 4
+                    rect = (semizoom, 0, semizoom, quarterzoom)
+                    pg.draw.rect(surf, data['top'], rect)
+                    rect = (semizoom, quarterzoom, semizoom, quarterzoom)
+                    pg.draw.rect(surf, data['bottom'], rect)
                     self._screen.blit(surf, self._get_screen_pos(x, y))
 
     def run(self: Self) -> None:
@@ -106,20 +113,23 @@ class Game(object):
                         pass
 
             mouse = pg.mouse.get_pressed()
-            if mouse[1]:
-                pos = (
-                    self._pos[0] + event.pos[0] / self._zoom,
-                    self._pos[1] + event.pos[1] / self._zoom,
-                )
-                tile_key = gen_tile_key(pos)
+            mouse_pos = pg.mouse.get_pos()
+            pos = (
+                self._pos[0] + mouse_pos[0] / self._zoom,
+                self._pos[1] + mouse_pos[1] / self._zoom,
+            )
+            tile_key = gen_tile_key(pos)
+            if mouse[0]:
                 self._tilemap[tile_key] = self._data.copy()
+            if mouse[2]:
+                self._tilemap.pop(tile_key)
 
             keys = pg.key.get_pressed()
             movement = pg.Vector2(
                 keys[pg.K_d] - keys[pg.K_a],
                 keys[pg.K_s] - keys[pg.K_w],
             )
-            self._pos += movement * 0.05
+            self._pos += movement * 0.05 * (keys[pg.K_LSHIFT] + 1)
             
             self._screen.fill(self._colors['fill'])
             self._draw_grid()

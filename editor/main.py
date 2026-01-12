@@ -24,7 +24,7 @@ class Game(object):
             flags=self._SCREEN_FLAGS,
             vsync=self._settings['vsync']
         )
-        pg.display.set_caption('Computergenesis Level Editor')
+        pg.display.set_caption('Level Editor')
         self._running = 0
 
         # Editor Variables
@@ -37,13 +37,13 @@ class Game(object):
             'bottom': (0, 0, 0),
         }
         
-        # zoom
+        # Zoom
         self._zoom_step = 2
         self._min_zoom = 8 # anything below tanks performance
-        self._zoom = 16
+        self._zoom = 16 # tile size
         
         # Settings for current tile
-        self._tile = {
+        self._data = {
             'texture': 0,
             'elevation': 0,
             'height': 1,
@@ -54,17 +54,29 @@ class Game(object):
         self._pos = pg.Vector2(0, 0)
         self._tilemap = {}
 
+    def _get_screen_pos(self: Self, x: int, y: int) -> None:
+        return (
+            self._pos[0] * self._zoom % self._zoom + x * self._zoom,
+            self._pos[1] * self._zoom % self._zoom + y * self._zoom,
+        )
+
     def _draw_grid(self: Self) -> None:
         for y in range(self._screen.height // self._zoom):
             for x in range(self._screen.width // self._zoom):
-                pos = (
-                    self._pos[0] * self._zoom % self._zoom + x * self._zoom,
-                    self._pos[1] * self._zoom % self._zoom + y * self._zoom,
+                self._screen.set_at(
+                    self._get_screen_pos(x, y),
+                    self._colors['grid'],
                 )
-                self._screen.set_at(pos, self._colors['grid'])
 
     def _draw_tiles(self: Self) -> None:
-        NotImplemented
+        for y in range(self._screen.height // self._zoom):
+            for x in range(self._screen.width // self._zoom):
+                tile = (self._pos[0] + x, self._pos[1] + y)
+                tile_key = gen_tile_key(tile)
+                data = self._tilemap.get(tile_key)
+                if data is not None:
+                    surf = pg.Surface((self._zoom, self._zoom))
+                    self._screen.blit(surf, self._get_screen_pos(x, y))
 
     def run(self: Self) -> None:
         self._running = 1
@@ -100,7 +112,7 @@ class Game(object):
                     self._pos[1] + event.pos[1] / self._zoom,
                 )
                 tile_key = gen_tile_key(pos)
-                self._tilemap[tile_key] = self._tile.copy()
+                self._tilemap[tile_key] = self._data.copy()
 
             keys = pg.key.get_pressed()
             movement = pg.Vector2(
@@ -111,7 +123,7 @@ class Game(object):
             
             self._screen.fill(self._colors['fill'])
             self._draw_grid()
-            pg.display.set_caption(str(1 / delta_time))
+            self._draw_tiles()
 
             pg.display.update()
 

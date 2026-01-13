@@ -1,17 +1,25 @@
+import os
+import sys
 import time
 import math
 from typing import Self
 
 import pygame as pg
 
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from data.levels import LEVELS
 from modules.utils import FALLBACK_SURF
 from modules.utils import gen_tile_key
+
+from panel import Button
+from panel import Input
+from panel import Panel
 
 
 class Game(object):
 
     _SCREEN_SIZE = (960, 720)
+    _EDITOR_WIDTH = 720
     _SCREEN_FLAGS = pg.RESIZABLE | pg.SCALED
     _GAME_SPEED = 60
 
@@ -51,7 +59,15 @@ class Game(object):
             'place': pg.K_b,
             'remove': pg.K_e,
         }
-        
+
+        # Panel
+        self._panel = Panel(
+            widgets={
+                Button((self._EDITOR_WIDTH + 10, 10), 'Button', lambda: 1),
+            },
+            min_scroll=-self._SCREEN_SIZE[1],
+        )
+
         # tools
         self._tool = 'place' # place, remove
         self._place_alpha = 128 # alpha of 'ghost' tile when placing
@@ -60,7 +76,7 @@ class Game(object):
         # Zoom
         self._zoom_step = 2
         self._min_zoom = 8 # anything below tanks performance
-        self._zoom = 16 # tile size
+        self._zoom = 32 # tile size
        
         # Settings for current tile
         self._data = {
@@ -133,7 +149,11 @@ class Game(object):
                     self._draw_tile(None, data, self._get_screen_pos(x, y)) 
 
     def _draw_panel(self: Self) -> None:
-        pass
+        surf = pg.Surface(
+            (self._SCREEN_SIZE[0] - self._EDITOR_WIDTH, self._SCREEN_SIZE[1]),
+        )
+        self._screen.blit(surf, (self._EDITOR_WIDTH, 0))
+        self._panel.render(self._screen)
 
     def _draw_tool(self: Self, mouse_pos: tuple) -> None:
         x = self._zoom * (
@@ -168,6 +188,7 @@ class Game(object):
             mod = any(keys[key] for key in self._keys['mod'])
             mod2 = any(keys[key] for key in self._keys['mod2'])
             for event in pg.event.get():
+                self._panel.handle_event(event)
                 if event.type == pg.QUIT:
                     self._running = 0
                 elif event.type == pg.KEYDOWN:
@@ -232,42 +253,44 @@ class Game(object):
                         self._change = len(self._history)
                         self._history.append({})
             
-            mouse = pg.mouse.get_pressed()
             mouse_pos = pg.mouse.get_pos()
-            pos = (
-                self._pos[0] + mouse_pos[0] / self._zoom,
-                self._pos[1] + mouse_pos[1] / self._zoom,
-            )
-            tile_key = gen_tile_key(pos)
-            # set
-            tile_data = self._tilemap.get(tile_key)
-            if mouse[0]:
-                if self._tool == 'place':
-                    if tile_data != self._data:
-                        data = self._data.copy()
-                        self._history[-1][tile_key] = (tile_data, data)
-                        self._tilemap[tile_key] = data
-                # remove
-                elif self._tool == 'remove' and tile_data is not None:
-                    self._history[-1][tile_key] = (
-                        self._tilemap.pop(tile_key),
-                        None,
-                    )
+            mouse = pg.mouse.get_pressed()
+            if mouse_pos[0] < self._EDITOR_WIDTH:
+                pos = (
+                    self._pos[0] + mouse_pos[0] / self._zoom,
+                    self._pos[1] + mouse_pos[1] / self._zoom,
+                )
+                tile_key = gen_tile_key(pos)
+                # set
+                tile_data = self._tilemap.get(tile_key)
+                if mouse[0]:
+                    if self._tool == 'place':
+                        if tile_data != self._data:
+                            data = self._data.copy()
+                            self._history[-1][tile_key] = (tile_data, data)
+                            self._tilemap[tile_key] = data
+                    # remove
+                    elif self._tool == 'remove' and tile_data is not None:
+                        self._history[-1][tile_key] = (
+                            self._tilemap.pop(tile_key),
+                            None,
+                        )
             movement = pg.Vector2(
                 keys[pg.K_d] - keys[pg.K_a],
                 keys[pg.K_s] - keys[pg.K_w],
             )
             if mod:
-                self._pos += movement * 0.125
+                self._pos += movement * 0.125 * rel_game_speed
             else:
-                self._pos += movement * 0.05
+                self._pos += movement * 0.05 * rel_game_speed
 
+            self._panel.update(mouse_pos, mouse)
             
             self._screen.fill(self._colors['fill'])
             self._draw_grid()
             self._draw_tiles()
-            self._draw_panel()
             self._draw_tool(mouse_pos)
+            self._draw_panel()
 
             pg.display.update()
 

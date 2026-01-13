@@ -24,9 +24,9 @@ import numpy as np
 import pygame as pg
 from pygame.typing import Point
 
-from modules.level import Floor
-from modules.level import Sky
-from modules.entities import Player
+from .level import Floor
+from .level import Sky
+from .entities import Player
 
 
 # is getting called a lot so not using python implementation

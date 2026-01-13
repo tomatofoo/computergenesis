@@ -11,15 +11,15 @@ from collections.abc import Sequence
 import pygame as pg
 from pygame.typing import Point
 
-from modules.weapons import Weapon
-from modules.weapons import AmmoWeapon
-from modules.weapons import MeleeWeapon
-from modules.weapons import HitscanWeapon
-from modules.weapons import MissileWeapon
-from modules.inventory import Collectible
-from modules.inventory import Inventory 
-from modules.utils import FALLBACK_SURF
-from modules.utils import gen_tile_key
+from .weapons import Weapon
+from .weapons import AmmoWeapon
+from .weapons import MeleeWeapon
+from .weapons import HitscanWeapon
+from .weapons import MissileWeapon
+from .inventory import Collectible
+from .inventory import Inventory 
+from .utils import FALLBACK_SURF
+from .utils import gen_tile_key
 
 
 class Entity(object):

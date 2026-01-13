@@ -9,11 +9,11 @@ from pygame.typing import Point
 from pygame.typing import RectLike
 from pygame.typing import ColorLike
 
-from modules.entities import Entity
-from modules.entities import EntityManager
-from modules.sound import SoundManager
-from modules.utils import FALLBACK_SURF
-from modules.utils import gen_tile_key
+from .entities import Entity
+from .entities import EntityManager
+from .sound import SoundManager
+from .utils import FALLBACK_SURF
+from .utils import gen_tile_key
 
 
 class ColumnTexture(object):

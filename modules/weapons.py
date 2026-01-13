@@ -6,12 +6,12 @@ from typing import Optional
 
 import pygame as pg
 
-from modules.sound import Sound
+from .sound import Sound
 
 # Avoid circular import
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from modules.entities import Entity
+    from .entities import Entity
 
 
 # This is a very weird file but it creates an abstraction layer

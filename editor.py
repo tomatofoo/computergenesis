@@ -38,7 +38,6 @@ class Game(object):
             'top': (0, 0, 255), # default top
             'bottom': (255, 0, 0), # default bottom
             'remove': (255, 0, 0), # remove tool
-            'select': (0, 255, 0), # select tool
         }
 
         self._keys = {
@@ -51,14 +50,12 @@ class Game(object):
             'do': pg.K_z, # undo redo
             'place': pg.K_b,
             'remove': pg.K_e,
-            'select': pg.K_v,
         }
         
         # tools
-        self._tool = 'place' # place, remove, select
+        self._tool = 'place' # place, remove
         self._place_alpha = 128 # alpha of 'ghost' tile when placing
         self._remove_width = 1
-        self._select_pos = (0, 0) # original tile pos for selection
 
         # Zoom
         self._zoom_step = 2
@@ -156,8 +153,6 @@ class Game(object):
                 (x, y, self._zoom, self._zoom),
                 width=self._remove_width,
             )
-        elif self._tool == 'select':
-            pass
 
     def run(self: Self) -> None:
         self._running = 1
@@ -190,8 +185,6 @@ class Game(object):
                                 self._tool = 'place'
                             elif event.key == self._keys['remove']:
                                 self._tool = 'remove'
-                            elif event.key == self._keys['select']:
-                                self._tool = 'select'
                         # Height / Elevation
                         if event.key == self._keys['vertical_increase']:
                             if mod:

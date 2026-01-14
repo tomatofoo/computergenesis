@@ -19,6 +19,7 @@ from panel import Input
 from panel import Panel
 
 
+# The code is a bit sloppy but it works
 class Game(object):
 
     _SCREEN_SIZE = (960, 720)
@@ -506,7 +507,7 @@ class Game(object):
 
     def _load_level(self: Self) -> None:
         try:
-            self._level = LEVELS[self._widgets['level'].text]
+            self._level = LEVELS[int(self._widgets['level'].text)]
             self._tilemap = self._level._walls._tilemap
             self._wall_textures = self._level._walls._textures
         except:

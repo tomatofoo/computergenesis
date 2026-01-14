@@ -7,6 +7,8 @@ from pygame.typing import Point
 from pygame.typing import ColorLike
 
 
+# If _rect is set by child class, child class should make sure
+# it takes scroll into account
 class _Widget(object):
     def __init__(self: Self, pos: Point, size: Point=(0, 0)) -> None:
         self._surf = pg.Surface(size)
@@ -159,6 +161,7 @@ class Input(_Widget): # Text Input
 
         self._focused = 0
         self._cursor_pos = 0
+        self._rect = pg.Rect(self._pos, (self._width, self._height))
         self.text = ''
 
     @property
@@ -178,8 +181,6 @@ class Input(_Widget): # Text Input
         self._text = value[:self._max_chars]
         self._cursor_pos = min(self._cursor_pos, len(value))
         text = self._font.render(self._text, 1, (255, 255, 255))
-        self._rect = pg.Rect(self._pos, (self._width, self._height))
-        self._rect.y = self._pos[1] + self._scroll
         self._surf = pg.Surface((self._width, self._height))
         self._surf.blit(text, (0, 0))
         pg.draw.rect(

@@ -38,41 +38,81 @@ class _Widget(object):
         pass
 
 
+class Surface(_Widget):
+    def __init__(self: Self, pos: Point, surf: pg.Surface) -> None:
+        super().__init__(pos)
+        self._surf = surf
+
+    @property
+    def surf(self: Self) -> pg.Surface:
+        return self._surf
+
+    @surf.setter
+    def surf(self: Self, value: pg.Surface) -> None:
+        self._surf = value
+
+
+class Label(_Widget):
+    def __init__(self: Self, pos: Point, text: str, font: pg.Font) -> None:
+        super().__init__(pos)
+        self._font = font
+        self.text = text
+
+    @property
+    def text(self: Self) -> str:
+        return self._text
+
+    @text.setter
+    def text(self: Self, value: str) -> None:
+        self._text = value
+        self._surf = self._font.render(value, 1, (255, 255, 255))
+
+
+
 class Button(_Widget): # Text Button
     # COLORS
-    # red default
-    # green hover
-    # blue click
+    # default: red
+    # hover: blue
+    # click: outline blue
 
     def __init__(self: Self,
                  pos: Point,
                  text: str,
                  func: Callable,
-                 font_size: int=14) -> None:
+                 font: pg.Font) -> None:
 
         super().__init__(pos)
         self._func = func
-        self._font = pg.font.SysFont('Arial', font_size)
-        text = self._font.render(text, 1, (255, 255, 255))
-        self._rect = pg.Rect(pos, text.size)
+        self._font = font
+        self.text = text
+        self._surf = self._surfs[0]
+
+    @property
+    def text(self: Self) -> str:
+        return self._text
+
+    @text.setter
+    def text(self: Self, value: str) -> None:
+        self._text = value
+        text = self._font.render(value, 1, (255, 255, 255))
+        self._rect = pg.Rect(self._pos, text.size)
         
         # Surfs
         default = pg.Surface(text.size)
-        default.fill((255, 0, 0))
+        default.fill((0, 0, 255))
         hover = pg.Surface(text.size)
-        hover.fill((0, 0, 255))
+        hover.fill((255, 0, 0))
         click = pg.Surface(text.size)
         pg.draw.rect(
             click,
-            (0, 0, 255),
+            (255, 0, 0),
             (0, 0, text.width, text.height),
             width=2,
         )
 
-        self._surfs = [default, hover, click]
+        self._surfs = (default, hover, click)
         for surf in self._surfs:
             surf.blit(text, (0, 0))
-        self._surf = self._surfs[0]
 
     def handle_event(self: Self, event: pg.Event) -> None:
         if (event.type == pg.MOUSEBUTTONDOWN
@@ -90,11 +130,103 @@ class Button(_Widget): # Text Button
 
 
 class Input(_Widget): # Text Input
-    def __init__(self: Self, pos: Point, font_size: int=12) -> None:
-        pass
+    def __init__(self: Self,
+                 pos: Point,
+                 width: int,
+                 max_chars: int,
+                 font: pg.Font) -> None:
+
+        super().__init__(pos)
+        self._width = width
+        self._height = font.get_height()
+        self._font = font
+        self._max_chars = max_chars
+
+        self._focused = 0
+        self._cursor_pos = 0
+        self.text = ''
+
+    @property
+    def surf(self: Self) -> None:
+        surf = self._surf.copy()
+        if self._focused:
+            width = self._font.size(self._text[:self._cursor_pos])[0]
+            pg.draw.rect(surf, (255, 255, 255), (width, 0, 1, self._height))
+        return surf
+
+    @property
+    def text(self: Self) -> str:
+        return self._text
+
+    @text.setter
+    def text(self: Self, value: str) -> None:
+        self._text = value[:self._max_chars]
+        self._cursor_pos = min(self._cursor_pos, len(value))
+        text = self._font.render(self._text, 1, (255, 255, 255))
+        self._rect = pg.Rect(self._pos, (self._width, self._height))
+        self._surf = pg.Surface((self._width, self._height))
+        self._surf.blit(text, (0, 0))
+        pg.draw.rect(
+            self._surf,
+            (0, 0, 255),
+            (0, 0, self._width, self._height),
+            width=1,
+        )
+
+    @property
+    def focused(self: Self) -> bool:
+        return self._focused
+
+    @focused.setter
+    def focused(self: Self, value: bool) -> None:
+        self._focused = value
+
+    @property
+    def cursor_pos(self: Self) -> int:
+        return self._cursor_pos
+
+    @cursor_pos.setter
+    def cursor_pos(self: Self, value: int) -> None:
+        self._cursor_pos = pg.math.clamp(self._cursor_pos, 0, len(self._text))
 
     def handle_event(self: Self, event: pg.Event) -> None:
-        pass
+        length = len(self._text)
+        if event.type == pg.MOUSEBUTTONDOWN:
+            collision = self._rect.collidepoint(event.pos)
+            if collision:
+                self._cursor_pos = length
+            self._focused = collision
+        if self._focused:
+            if event.type == pg.TEXTINPUT:
+                text = self._text[:self._cursor_pos] + event.text
+                if self._cursor_pos < length:
+                    text += self._text[self._cursor_pos:]
+                self.text = text
+                self._cursor_pos = min(self._cursor_pos + 1, self._max_chars)
+            elif event.type == pg.KEYDOWN:
+                ctrl = event.mod & pg.KMOD_CTRL
+                # Terminal Keybindings
+                if ((event.key == pg.K_h and ctrl)
+                    or event.key == pg.K_BACKSPACE):
+                    text = self._text[:self._cursor_pos - 1]
+                    if self._cursor_pos < length:
+                        text += self._text[self._cursor_pos:]
+                        self._cursor_pos = max(self._cursor_pos - 1, 0)
+                    self.text = text
+                elif event.key == pg.K_u and event.mod & pg.KMOD_CTRL:
+                    text = self._text[self._cursor_pos:]
+                    self.text = text
+                    self._cursor_pos = 0
+                elif ((event.key == pg.K_b and ctrl)
+                      or event.key == pg.K_LEFT):
+                    self._cursor_pos = max(self._cursor_pos - 1, 0)
+                elif ((event.key == pg.K_f and ctrl)
+                      or event.key == pg.K_RIGHT):
+                    self._cursor_pos = min(self._cursor_pos + 1, length)
+                elif event.key == pg.K_a and ctrl:
+                    self._cursor_pos = 0
+                elif event.key == pg.K_e and ctrl:
+                    self._cursor_pos = len(self._text)
 
     def update(self: Self,
                mouse_pos: Point,
@@ -107,6 +239,14 @@ class Panel(object):
         self._widgets = widgets
         self._scroll = 0
         self._min_scroll = min_scroll
+
+    @property
+    def focused(self: Self) -> bool:
+        return any(
+            isinstance(widget, Input)
+            and widget._focused
+            for widget in self._widgets
+        )
 
     @property
     def widgets(self: Self) -> set[_Widget]:

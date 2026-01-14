@@ -11,6 +11,8 @@ from data.levels import LEVELS
 from modules.utils import FALLBACK_SURF
 from modules.utils import gen_tile_key
 
+from panel import Surface
+from panel import Label
 from panel import Button
 from panel import Input
 from panel import Panel
@@ -38,15 +40,16 @@ class Game(object):
         self._running = 0
 
         # Editor Variables
-        pg.key.set_repeat(300, 100)
+        pg.key.set_repeat(300, 75)
 
         self._colors = {
             'fill': (0, 0, 0),
             'grid': (255, 255, 255),
-            'top': (0, 0, 255), # default top
-            'bottom': (255, 0, 0), # default bottom
+            'top': (0, 0, 0), # default top
+            'bottom': (0, 0, 0), # default bottom
             'remove': (255, 0, 0), # remove tool
-        }
+            'rect': (255, 255, 0),
+       }
 
         self._keys = {
             'mod': (pg.K_LSHIFT, pg.K_RSHIFT),
@@ -61,9 +64,27 @@ class Game(object):
         }
 
         # Panel
+        self._font = pg.font.SysFont('Arial', 16)
         self._panel = Panel(
             widgets={
-                Button((self._EDITOR_WIDTH + 10, 10), 'Button', lambda: 1),
+                Button(
+                    (self._EDITOR_WIDTH + 10, 50),
+                    'Prev',
+                    lambda: 1,
+                    self._font,
+                ),
+                Button(
+                    (self._EDITOR_WIDTH + 50, 50),
+                    'Next',
+                    lambda: 1,
+                    self._font,
+                ),
+                Input(
+                    (self._EDITOR_WIDTH + 10, 100),
+                    100,
+                    10,
+                    self._font,
+                )
             },
             min_scroll=-self._SCREEN_SIZE[1],
         )
@@ -126,14 +147,21 @@ class Game(object):
         except:
             texture = FALLBACK_SURF
         surf.blit(
-            pg.transform.scale(texture, (semizoom, semizoom)),
+            pg.transform.scale(texture, (self._zoom, self._zoom)),
             (0, 0),
         )
-        # Colors
-        rect = (semizoom, 0, semizoom, quarterzoom)
-        pg.draw.rect(surf, data['top'], rect)
-        rect = (semizoom, quarterzoom, semizoom, quarterzoom)
-        pg.draw.rect(surf, data['bottom'], rect)
+        # Rect
+        rect = data.get('rect')
+        if rect is None:
+            rect = (0, 0, self._zoom, self._zoom)
+        else:
+            rect = (
+                rect[0] * self._zoom,
+                rect[1] * self._zoom,
+                rect[2] * self._zoom,
+                rect[3] * self._zoom,
+            )
+        pg.draw.rect(surf, self._colors['rect'], rect, width=1)
         # Draw
         surf.set_alpha(alpha)
         self._screen.blit(surf, pos)
@@ -191,98 +219,101 @@ class Game(object):
                 self._panel.handle_event(event)
                 if event.type == pg.QUIT:
                     self._running = 0
-                elif event.type == pg.KEYDOWN:
-                    if not mod2:
-                        if not mod:
-                            # zoom
-                            if event.key == self._keys['zoom_in']:
-                                self._zoom += self._zoom_step
-                            elif event.key == self._keys['zoom_out']:
-                                self._zoom = max(
-                                    self._zoom - self._zoom_step,
-                                    self._min_zoom,
-                                )
-                            elif event.key == self._keys['place']:
-                                self._tool = 'place'
-                            elif event.key == self._keys['remove']:
-                                self._tool = 'remove'
-                        # Height / Elevation
-                        if event.key == self._keys['vertical_increase']:
+                if not self._panel.focused:
+                    if event.type == pg.KEYDOWN:
+                        if not mod2:
+                            if not mod:
+                                # zoom
+                                if event.key == self._keys['zoom_in']:
+                                    self._zoom += self._zoom_step
+                                elif event.key == self._keys['zoom_out']:
+                                    self._zoom = max(
+                                        self._zoom - self._zoom_step,
+                                        self._min_zoom,
+                                    )
+                                elif event.key == self._keys['place']:
+                                    self._tool = 'place'
+                                elif event.key == self._keys['remove']:
+                                    self._tool = 'remove'
+                            # Height / Elevation
+                            if event.key == self._keys['vertical_increase']:
+                                if mod:
+                                    self._data['elevation'] += 0.05
+                                else:
+                                    self._data['height'] += 0.05
+                            elif event.key == self._keys['vertical_decrease']:
+                                if mod:
+                                    self._data['elevation'] -= 0.05
+                                else:
+                                    self._data['height'] -= 0.05
+                        # History
+                        if mod2 and event.key == self._keys['do']:
+                            # redo
                             if mod:
-                                self._data['elevation'] += 0.05
-                            else:
-                                self._data['height'] += 0.05
-                        elif event.key == self._keys['vertical_decrease']:
-                            if mod:
-                                self._data['elevation'] -= 0.05
-                            else:
-                                self._data['height'] -= 0.05
-                    # History
-                    if mod2 and event.key == self._keys['do']:
-                        # redo
-                        if mod:
-                            if self._change < len(self._history) - 1:
+                                if self._change < len(self._history) - 1:
+                                    change = self._history[self._change]
+                                    for key, value in change.items():
+                                        if value[1] is None:
+                                            data = self._tilemap.get(key)
+                                            if data is not None:
+                                                self._tilemap.pop(key)
+                                        else:
+                                            self._tilemap[key] = value[1]
+                                    self._change += 1
+                            # undo
+                            elif self._change > 0:
+                                self._change -= 1
                                 change = self._history[self._change]
                                 for key, value in change.items():
-                                    if value[1] is None:
+                                    if value[0] is None:
                                         if self._tilemap.get(key) is not None:
                                             self._tilemap.pop(key)
                                     else:
-                                        self._tilemap[key] = value[1]
-                                self._change += 1
-                        # undo
-                        elif self._change > 0:
-                            self._change -= 1
-                            change = self._history[self._change]
-                            for key, value in change.items():
-                                if value[0] is None:
-                                    if self._tilemap.get(key) is not None:
-                                        self._tilemap.pop(key)
-                                else:
-                                    self._tilemap[key] = value[0]
+                                        self._tilemap[key] = value[0]
 
-                # Editing
-                elif event.type == pg.MOUSEBUTTONUP: # history
-                    if self._history[-1]:
-                        if self._change < len(self._history) - 1:
-                            # cut off tree after user makse a change
-                            self._history = [
-                                *(self._history[:self._change]),
-                                self._history[-1],
-                            ]
-                        self._change = len(self._history)
-                        self._history.append({})
+                    # Editing
+                    elif event.type == pg.MOUSEBUTTONUP: # history
+                        if self._history[-1]:
+                            if self._change < len(self._history) - 1:
+                                # cut off tree after user makse a change
+                                self._history = [
+                                    *(self._history[:self._change]),
+                                    self._history[-1],
+                                ]
+                            self._change = len(self._history)
+                            self._history.append({})
             
-            mouse_pos = pg.mouse.get_pos()
-            mouse = pg.mouse.get_pressed()
-            if mouse_pos[0] < self._EDITOR_WIDTH:
-                pos = (
-                    self._pos[0] + mouse_pos[0] / self._zoom,
-                    self._pos[1] + mouse_pos[1] / self._zoom,
+            if not self._panel.focused:
+                mouse_pos = pg.mouse.get_pos()
+                mouse = pg.mouse.get_pressed()
+                if mouse_pos[0] < self._EDITOR_WIDTH:
+                    pos = (
+                        self._pos[0] + mouse_pos[0] / self._zoom,
+                        self._pos[1] + mouse_pos[1] / self._zoom,
+                    )
+                    tile_key = gen_tile_key(pos)
+                    # set
+                    tile_data = self._tilemap.get(tile_key)
+                    if mouse[0]:
+                        if self._tool == 'place':
+                            if tile_data != self._data:
+                                data = self._data.copy()
+                                self._history[-1][tile_key] = (tile_data, data)
+                                self._tilemap[tile_key] = data
+                        # remove
+                        elif self._tool == 'remove' and tile_data is not None:
+                            self._history[-1][tile_key] = (
+                                self._tilemap.pop(tile_key),
+                                None,
+                            )
+                movement = pg.Vector2(
+                    keys[pg.K_d] - keys[pg.K_a],
+                    keys[pg.K_s] - keys[pg.K_w],
                 )
-                tile_key = gen_tile_key(pos)
-                # set
-                tile_data = self._tilemap.get(tile_key)
-                if mouse[0]:
-                    if self._tool == 'place':
-                        if tile_data != self._data:
-                            data = self._data.copy()
-                            self._history[-1][tile_key] = (tile_data, data)
-                            self._tilemap[tile_key] = data
-                    # remove
-                    elif self._tool == 'remove' and tile_data is not None:
-                        self._history[-1][tile_key] = (
-                            self._tilemap.pop(tile_key),
-                            None,
-                        )
-            movement = pg.Vector2(
-                keys[pg.K_d] - keys[pg.K_a],
-                keys[pg.K_s] - keys[pg.K_w],
-            )
-            if mod:
-                self._pos += movement * 0.125 * rel_game_speed
-            else:
-                self._pos += movement * 0.05 * rel_game_speed
+                if mod:
+                    self._pos += movement * 0.125 * rel_game_speed
+                else:
+                    self._pos += movement * 0.05 * rel_game_speed
 
             self._panel.update(mouse_pos, mouse)
             

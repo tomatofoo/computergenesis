@@ -3,6 +3,7 @@ import sys
 import time
 import math
 import json
+import copy
 from typing import Self
 
 import pygame as pg
@@ -79,6 +80,7 @@ class Game(object):
             'mark': (pg.K_m, ), # mark tool
             # actual mark
             'marks': (pg.K_0, pg.K_1, pg.K_2, pg.K_3, pg.K_4, pg.K_5, pg.K_6),
+            'clear': (pg.K_c, ),
         }
         
         # Data
@@ -117,7 +119,9 @@ class Game(object):
         self._pos = pg.Vector2(0, 0)
 
         # History
-        self._history = [{'tilemap': {}, 'marks': {}}] # pos: (prev, new)
+        self._default_change = {'tilemap': {}, 'marks': {}}
+        # pos: (prev, new)
+        self._history = [copy.deepcopy(self._default_change)]
         self._change = 0
 
     def _initialize_panel(self: Self) -> None:
@@ -519,6 +523,25 @@ class Game(object):
             min_scroll=-self._SCREEN_SIZE[1],
         ) 
 
+    def _make_change(self: Self) -> None:
+        if self._history[-1] != self._default_change:
+            if self._change < len(self._history) - 1:
+                # cut off tree after user makse a change
+                self._history = [
+                    *(self._history[:self._change]),
+                    self._history[-1],
+                ]
+            self._change = len(self._history)
+            self._history.append(copy.deepcopy(self._default_change))
+
+    def _clear(self: Self, map_key: str) -> None:
+        self._make_change()
+        for key in self._dict[map_key].copy():
+            self._history[-1][map_key][key] = (
+                self._dict[map_key].pop(key), None,
+            )
+        self._make_change()
+
     def _save(self: Self) -> None:
         with open(self._widgets['path'].text, 'w') as file:
             json.dump(self._dict, file)
@@ -535,7 +558,7 @@ class Game(object):
             self._level = LEVELS[int(self._widgets['level'].text)]
             self._dict['tilemap'] = self._level._walls._tilemap
             self._dict['marks'] = {}
-            self._wall_textures = self._level._walls._textures
+            self._wall_textures = self._evel._walls._textures
         except:
             self._level = None
 
@@ -901,22 +924,22 @@ class Game(object):
                         # History
                         if mod2 and event.key in self._keys['do']:
                             # redo
-                            if mod:
-                                if self._change < len(self._history) - 1:
-                                    change = self._history[self._change]
-                                    # map key determines if place or mark tool
-                                    # was used
-                                    for map_key, data in change.items():
-                                        for key, value in data.items():
-                                            if value[1] is None:
-                                                data = self._dict[map_key].get(key)
-                                                if data is not None:
-                                                    self._dict[map_key].pop(key)
-                                            else:
-                                                self._dict[map_key][key] = value[1]
-                                    self._change += 1
+                            if mod and self._change < len(self._history) - 1:
+                                change = self._history[self._change]
+                                # map key determines if place or mark tool
+                                # was used
+                                for map_key, data in change.items():
+                                    for key, value in data.items():
+                                        if value[1] is None:
+                                            data = self._dict[map_key].get(key)
+                                            if data is not None:
+                                                self._dict[map_key].pop(key)
+                                        else:
+                                            self._dict[map_key][key] = value[1]
+                                self._change += 1
                             # undo
-                            elif self._change > 0:
+                            # i don't want excessive nesting
+                            elif not mod and self._change > 0:
                                 self._change -= 1
                                 change = self._history[self._change]
                                 # map key determines if place or mark tool
@@ -930,17 +953,15 @@ class Game(object):
                                         else:
                                             self._dict[map_key][key] = value[0]
 
+                        if event.key in self._keys['clear']:
+                            if mod:
+                                self._clear('marks')
+                            if mod2:
+                                self._clear('tilemap')
+
                     # Editing
                     elif event.type == pg.MOUSEBUTTONUP: # history
-                        if self._history[-1]:
-                            if self._change < len(self._history) - 1:
-                                # cut off tree after user makse a change
-                                self._history = [
-                                    *(self._history[:self._change]),
-                                    self._history[-1],
-                                ]
-                            self._change = len(self._history)
-                            self._history.append({'tilemap': {}, 'marks': {}})
+                        self._make_change()
                 self._update_widgets()
             
             if not self._panel.focused:

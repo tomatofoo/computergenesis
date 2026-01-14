@@ -110,6 +110,7 @@ class Button(_Widget): # Text Button
         self._text = value
         text = self._font.render(value, 1, (255, 255, 255))
         self._rect = pg.Rect(self._pos, text.size)
+        self._rect.y = self._pos[1] + self._scroll
         
         # Surfs
         default = pg.Surface(text.size)
@@ -178,6 +179,7 @@ class Input(_Widget): # Text Input
         self._cursor_pos = min(self._cursor_pos, len(value))
         text = self._font.render(self._text, 1, (255, 255, 255))
         self._rect = pg.Rect(self._pos, (self._width, self._height))
+        self._rect.y = self._pos[1] + self._scroll
         self._surf = pg.Surface((self._width, self._height))
         self._surf.blit(text, (0, 0))
         pg.draw.rect(

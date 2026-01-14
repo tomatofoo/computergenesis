@@ -534,7 +534,7 @@ class Game(object):
         try:
             self._level = LEVELS[int(self._widgets['level'].text)]
             self._dict['tilemap'] = self._level._walls._tilemap
-            self._data['marks'] = {}
+            self._dict['marks'] = {}
             self._wall_textures = self._level._walls._textures
         except:
             self._level = None

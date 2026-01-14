@@ -54,39 +54,117 @@ class Game(object):
         self._keys = {
             'mod': (pg.K_LSHIFT, pg.K_RSHIFT),
             'mod2': (pg.K_LCTRL, pg.K_RCTRL),
-            'zoom_in': pg.K_z,
-            'zoom_out': pg.K_x,
-            'vertical_increase': pg.K_UP,
-            'vertical_decrease': pg.K_DOWN,
-            'do': pg.K_z, # undo redo
-            'place': pg.K_b,
-            'remove': pg.K_e,
+            'zoom_in': (pg.K_z, ),
+            'zoom_out': (pg.K_x, ),
+            'vertical_increase': (pg.K_UP, pg.K_k),
+            'vertical_decrease': (pg.K_DOWN, pg.K_j),
+            'do': (pg.K_z, ), # undo redo
+            'place': (pg.K_b, ),
+            'remove': (pg.K_e, ),
         }
 
+        # Settings for current tile
+        self._data = {
+            'texture': 0,
+            'elevation': 0,
+            'height': 1,
+            'top': self._colors['top'],
+            'bottom': self._colors['bottom'],
+        }
+
+        self._level = None
+        self._wall_textures = []
+        self._tilemap = {}
+        
         # Panel
-        self._font = pg.font.SysFont('Arial', 16)
-        self._path = Input(
-            (self._EDITOR_WIDTH + 10, 100),
-            width=220,
-            max_chars=25,
-            font=self._font,
-        )
-        self._path.text = "data/maps/0.json"
+        self._fonts = {
+            'title': pg.font.SysFont('Andale Mono', 16),
+            'main': pg.font.SysFont('Andale Mono', 16),
+        }
+        self._fonts['title'].underline = 1
+
+        self._widgets = {
+            'path': Input(
+                (self._EDITOR_WIDTH + 10, 30),
+                width=220,
+                max_chars=25,
+                font=self._fonts['main'],
+            ),
+            'level': Input(
+                (self._EDITOR_WIDTH + 10, 110),
+                width=220,
+                max_chars=25,
+                font=self._fonts['main'],
+            ),
+            'current': {
+                'elevation': Input(
+                    (self._EDITOR_WIDTH + 60, 230),
+                    width=170,
+                    max_chars=25,
+                    font=self._fonts['main'],
+                ),
+                'height': Input(
+                    (self._EDITOR_WIDTH + 60, 250),
+                    width=170,
+                    max_chars=25,
+                    font=self._fonts['main'],
+                ),
+            },
+        }
+        self._widgets['path'].text = 'data/maps/0.json'
+        self._widgets['level'].text = '0'
+        current = self._widgets['current']
+        current['elevation'].text = str(self._data['elevation'])
+        current['height'].text = str(self._data['height'])
+
         self._panel = Panel(
             widgets={
+                Label(
+                    (self._EDITOR_WIDTH + 10, 10),
+                    text='File Path',
+                    font=self._fonts['title'],
+                ),
+                self._widgets['path'],
                 Button(
                     (self._EDITOR_WIDTH + 10, 50),
-                    text='Prev',
-                    func=lambda: 1,
-                    font=self._font,
+                    text='Save',
+                    func=self._save,
+                    font=self._fonts['main'],
                 ),
                 Button(
-                    (self._EDITOR_WIDTH + 50, 50),
-                    text='Next',
-                    func=lambda: 1,
-                    font=self._font,
+                    (self._EDITOR_WIDTH + 60, 50),
+                    text='Load',
+                    func=self._load,
+                    font=self._fonts['main'],
                 ),
-                self._path,
+                Label(
+                    (self._EDITOR_WIDTH + 10, 90),
+                    text='Level Index',
+                    font=self._fonts['title'],
+                ),
+                self._widgets['level'],
+                Button(
+                    (self._EDITOR_WIDTH + 10, 130),
+                    text='Load',
+                    func=self._load_level,
+                    font=self._fonts['main'],
+                ),
+                Label(
+                    (self._EDITOR_WIDTH + 10, 170),
+                    'Tile',
+                    self._fonts['title'],
+                ),
+                Label(
+                    (self._EDITOR_WIDTH + 10, 230),
+                    text='Elev',
+                    font=self._fonts['main'],
+                ),
+                Label(
+                    (self._EDITOR_WIDTH + 10, 250),
+                    text='High',
+                    font=self._fonts['main'],
+                ),
+                *self._widgets['current'].values(),
             },
             min_scroll=-self._SCREEN_SIZE[1],
         )
@@ -101,25 +179,21 @@ class Game(object):
         self._min_zoom = 8 # anything below tanks performance
         self._zoom = 32 # tile size
        
-        # Settings for current tile
-        self._data = {
-            'texture': 0,
-            'elevation': 0,
-            'height': 1,
-            'top': self._colors['top'],
-            'bottom': self._colors['bottom'],
-        }
-
-        self._level = None
-        self._wall_textures = []
-        self._tilemap = {}
-        
         # Pos for top left
         self._pos = pg.Vector2(0, 0)
 
         # History
         self._history = [{}] # pos: (prev, new)
         self._change = 0
+
+    def _save(self: Self) -> None:
+        pass
+
+    def _load(self: Self) -> None:
+        pass
+
+    def _load_level(self: Self) -> None:
+        pass
 
     def _get_screen_pos(self: Self, x: int, y: int) -> None:
         return (
@@ -179,16 +253,15 @@ class Game(object):
                     self._draw_tile(None, data, self._get_screen_pos(x, y)) 
 
     def _draw_panel(self: Self) -> None:
-        width = self._SCREEN_SIZE[0] - self._EDITOR_WIDTH
-        surf = pg.Surface((width, self._SCREEN_SIZE[1]))
-        pg.draw.rect( # outline
-            surf,
-            (255, 255, 255),
-            (0, 0, width, self._SCREEN_SIZE[1]),
-            width=1,
+        rect = (
+            self._EDITOR_WIDTH,
+            0,
+            self._SCREEN_SIZE[0] - self._EDITOR_WIDTH,
+            self._SCREEN_SIZE[1],
         )
-        self._screen.blit(surf, (self._EDITOR_WIDTH, 0))
+        pg.draw.rect(self._screen, (0, 0, 0), rect)
         self._panel.render(self._screen)
+        pg.draw.rect(self._screen, (255, 255, 255), rect, width=1)
 
     def _draw_tool(self: Self, mouse_pos: tuple) -> None:
         x = self._zoom * (
@@ -228,32 +301,32 @@ class Game(object):
                     self._running = 0
                 if not self._panel.focused:
                     if event.type == pg.KEYDOWN:
-                        if not mod2 and not mod:
+                        if not mod and not mod2:
                             # zoom
-                            if event.key == self._keys['zoom_in']:
+                            if event.key in self._keys['zoom_in']:
                                 self._zoom += self._zoom_step
-                            elif event.key == self._keys['zoom_out']:
+                            elif event.key in self._keys['zoom_out']:
                                 self._zoom = max(
                                     self._zoom - self._zoom_step,
                                     self._min_zoom,
                                 )
-                            elif event.key == self._keys['place']:
+                            elif event.key in self._keys['place']:
                                 self._tool = 'place'
-                            elif event.key == self._keys['remove']:
+                            elif event.key in self._keys['remove']:
                                 self._tool = 'remove'
                         # Height / Elevation
-                        if event.key == self._keys['vertical_increase']:
+                        if event.key in self._keys['vertical_increase']:
                             if mod:
                                 self._data['elevation'] += 0.05
                             else:
                                 self._data['height'] += 0.05
-                        elif event.key == self._keys['vertical_decrease']:
+                        elif event.key in self._keys['vertical_decrease']:
                             if mod:
                                 self._data['elevation'] -= 0.05
                             else:
                                 self._data['height'] -= 0.05
                         # History
-                        if mod2 and event.key == self._keys['do']:
+                        if mod2 and event.key in self._keys['do']:
                             # redo
                             if mod:
                                 if self._change < len(self._history) - 1:
@@ -317,9 +390,9 @@ class Game(object):
                     keys[pg.K_s] - keys[pg.K_w],
                 )
                 if mod:
-                    self._pos += movement * 0.125 * rel_game_speed
+                    self._pos += movement * 5 / self._zoom * rel_game_speed
                 else:
-                    self._pos += movement * 0.05 * rel_game_speed
+                    self._pos += movement * 2 / self._zoom * rel_game_speed
 
             self._panel.update(mouse_pos, mouse)
             

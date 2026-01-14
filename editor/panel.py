@@ -1,8 +1,10 @@
 from typing import Self
+from typing import Optional
 from typing import Callable
 
 import pygame as pg
 from pygame.typing import Point
+from pygame.typing import ColorLike
 
 
 class _Widget(object):
@@ -53,8 +55,15 @@ class Surface(_Widget):
 
 
 class Label(_Widget):
-    def __init__(self: Self, pos: Point, text: str, font: pg.Font) -> None:
+    def __init__(self: Self,
+                 pos: Point,
+                 text: str,
+                 font: pg.Font,
+                 bgcolor: Optional[ColorLike]=None,
+                 wraplength: int=0) -> None:
         super().__init__(pos)
+        self._bgcolor = bgcolor
+        self._wraplength = wraplength
         self._font = font
         self.text = text
 
@@ -65,7 +74,13 @@ class Label(_Widget):
     @text.setter
     def text(self: Self, value: str) -> None:
         self._text = value
-        self._surf = self._font.render(value, 1, (255, 255, 255))
+        self._surf = self._font.render(
+            value,
+            1,
+            (255, 255, 255),
+            bgcolor=self._bgcolor,
+            wraplength=self._wraplength,
+        )
 
 
 

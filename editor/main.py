@@ -639,6 +639,9 @@ class Game(object):
             semitile['width'].text = str(data_semitile['width'])
         else:
             semitile['axis'].text = '0'
+            semitile['x'].text = ''
+            semitile['y'].text = ''
+            semitile['width'].text = ''
 
     def _update_hover(self: Self) -> None:
         data = self._hover_data
@@ -919,9 +922,10 @@ class Game(object):
                                 None,
                             )
                         elif self._tool == 'eyedropper':
-                            self._data = tile_data
                             if tile_data is None:
                                 self._data = self._default_data.copy()
+                            else:
+                                self._data = tile_data.copy()
                             self._current_from_data(self._data)
                             self._update_surfaces()
 

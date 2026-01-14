@@ -243,7 +243,7 @@ class Game(object):
                 pg.image.load(gen_img_path('tilesets/all/wood.png')).convert(),
             ),
             ceiling=Sky(pg.image.load(gen_img_path('nightsky.png')).convert()),
-            walls=Walls.load('data/maps/1.json', wall_textures),
+            walls=Walls.load('data/maps/0.json', wall_textures),
             specials=self._specials,
             entities=self._entities,
             sounds=self._sounds,

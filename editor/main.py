@@ -85,6 +85,10 @@ class Game(object):
         self._level = None
         self._wall_textures = []
         self._tilemap = {}
+        # self._dict = {}
+        # TODO: MOVE TILEMAP TO DICT
+        # TODO: ADD MARKERS
+        # TODO: ADD THAT TO HISTORY
         
         # tools
         self._tool = 'place' # place, remove, eyedropper

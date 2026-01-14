@@ -77,6 +77,7 @@ class Game(object):
             'rect': None,
         }
         self._data = self._default_data.copy()
+        self._hover_key = 'N/A'
         self._hover_data = None
         
         # Level Stuff
@@ -247,39 +248,27 @@ class Game(object):
                     (self._EDITOR_WIDTH + 10, 510),
                     surf=pg.Surface((0, 0)),
                 ),
-                'texture': Label(
+                'key': Label(
                     (self._EDITOR_WIDTH + 60, 550),
                     text='N/A',
                     font=self._fonts['main'],
                 ),
-                'elevation': Label(
+                'texture': Label(
                     (self._EDITOR_WIDTH + 60, 570),
                     text='N/A',
                     font=self._fonts['main'],
                 ),
-                'height': Label(
+                'elevation': Label(
                     (self._EDITOR_WIDTH + 60, 590),
                     text='N/A',
                     font=self._fonts['main'],
                 ),
+                'height': Label(
+                    (self._EDITOR_WIDTH + 60, 610),
+                    text='N/A',
+                    font=self._fonts['main'],
+                ),
                 'top': {
-                    'r': Label(
-                        (self._EDITOR_WIDTH + 60, 610),
-                        text='N/A',
-                        font=self._fonts['main'],
-                    ),
-                    'g': Label(
-                        (self._EDITOR_WIDTH + 110, 610),
-                        text='N/A',
-                        font=self._fonts['main'],
-                    ),
-                    'b': Label(
-                        (self._EDITOR_WIDTH + 160, 610),
-                        text='N/A',
-                        font=self._fonts['main'],
-                    ),
-                },
-                'bottom': {
                     'r': Label(
                         (self._EDITOR_WIDTH + 60, 630),
                         text='N/A',
@@ -296,46 +285,63 @@ class Game(object):
                         font=self._fonts['main'],
                     ),
                 },
-                'rect': {
-                    'left': Label(
+                'bottom': {
+                    'r': Label(
                         (self._EDITOR_WIDTH + 60, 650),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
-                    'top': Label(
+                    'g': Label(
+                        (self._EDITOR_WIDTH + 110, 650),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                    'b': Label(
+                        (self._EDITOR_WIDTH + 160, 650),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                },
+                'rect': {
+                    'left': Label(
                         (self._EDITOR_WIDTH + 60, 670),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
-                    'width': Label(
+                    'top': Label(
                         (self._EDITOR_WIDTH + 60, 690),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
-                    'height': Label(
+                    'width': Label(
                         (self._EDITOR_WIDTH + 60, 710),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                    'height': Label(
+                        (self._EDITOR_WIDTH + 60, 730),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
                 },
                 'semitile': {
                     'axis': Label(
-                        (self._EDITOR_WIDTH + 60, 730),
-                        text='N/A',
-                        font=self._fonts['main'],
-                    ),
-                    'x': Label(
                         (self._EDITOR_WIDTH + 60, 750),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
+                    'x': Label(
+                        (self._EDITOR_WIDTH + 60, 770),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
                     'y': Label(
-                        (self._EDITOR_WIDTH + 145, 750),
+                        (self._EDITOR_WIDTH + 145, 770),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
                     'width': Label(
-                        (self._EDITOR_WIDTH + 60, 770),
+                        (self._EDITOR_WIDTH + 60, 790),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
@@ -436,39 +442,45 @@ class Game(object):
                 ),
                 Label(
                     (self._EDITOR_WIDTH + 10, 550),
-                    text='Text',
+                    text='Key',
                     font=self._fonts['main'],
                 ),
                 Label(
                     (self._EDITOR_WIDTH + 10, 570),
-                    text='Elev',
+                    text='Text',
                     font=self._fonts['main'],
                 ),
                 Label(
                     (self._EDITOR_WIDTH + 10, 590),
-                    text='Hieg',
+                    text='Elev',
                     font=self._fonts['main'],
                 ),
                 Label(
                     (self._EDITOR_WIDTH + 10, 610),
-                    text='Top',
+                    text='Hieg',
                     font=self._fonts['main'],
                 ),
                 Label(
                     (self._EDITOR_WIDTH + 10, 630),
-                    text='Bott',
+                    text='Top',
                     font=self._fonts['main'],
                 ),
                 Label(
                     (self._EDITOR_WIDTH + 10, 650),
+                    text='Bott',
+                    font=self._fonts['main'],
+                ),
+                Label(
+                    (self._EDITOR_WIDTH + 10, 670),
                     text='Rect',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 730),
+                    (self._EDITOR_WIDTH + 10, 750),
                     text='Semi',
                     font=self._fonts['main'],
                 ),
+                hover['key'],
                 hover['surface'],
                 hover['texture'],
                 hover['elevation'],
@@ -645,6 +657,7 @@ class Game(object):
                 }
             }
         hover = self._widgets['hover']
+        hover['key'].text = self._hover_key
         hover['texture'].text = str(data['texture'])
         hover['elevation'].text = str(data['elevation'])
         hover['height'].text = str(data['height'])
@@ -891,6 +904,7 @@ class Game(object):
                     tile_key = gen_tile_key(pos)
                     # set
                     tile_data = self._tilemap.get(tile_key)
+                    self._hover_key = tile_key
                     self._hover_data = tile_data
                     if mouse[0]:
                         if self._tool == 'place':

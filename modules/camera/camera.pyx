@@ -782,6 +782,10 @@ cdef class Camera:
                                 back_edge = render_end
                             final_rel_depth = rel_depth
                             part = end_pos[side] % 1
+                            # C uses different modulo operation 
+                            # which can return negative numbers
+                            if part < 0:
+                                part += 1
                         else:
                             render_end = -1 # so it doesn't get rendered
 

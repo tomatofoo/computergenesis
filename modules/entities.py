@@ -610,7 +610,7 @@ class Missile(EntityEx):
                  height: Real=0.25,
                  states: dict[str, EntityExState]={
                      'default': EntityExState(),
-                     'attack': EntityExState(),
+                     'attack': EntityExState(loop=0, trigger=1),
                  },
                  state: str='default',
                  attack_width: Optional[Real]=None,

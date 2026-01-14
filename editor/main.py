@@ -86,13 +86,12 @@ class Game(object):
         self._wall_textures = []
         self._tilemap = {}
         
+        # tools
+        self._tool = 'place' # place, remove, eyedropper
+        self._place_alpha = 128 # alpha of 'ghost' tile when placing
+        
         # Panel
         self._initialize_panel()
-
-        # tools
-        self._tool = 'place' # place, remove, 'eyedropper'
-        self._place_alpha = 128 # alpha of 'ghost' tile when placing
-        self._remove_width = 1
 
         # Zoom
         self._zoom_step = 2
@@ -128,44 +127,49 @@ class Game(object):
                 max_chars=25,
                 font=self._fonts['main'],
             ),
+            'tool': Label(
+                (self._EDITOR_WIDTH + 10, 190),
+                text=self._tool,
+                font=self._fonts['main'],
+            ),
             'current': {
                 'surface': Surface(
-                    (self._EDITOR_WIDTH + 10, 190),
+                    (self._EDITOR_WIDTH + 10, 250),
                     surf=pg.Surface((0, 0)),
                 ),
                 'texture': Input(
-                    (self._EDITOR_WIDTH + 60, 230),
+                    (self._EDITOR_WIDTH + 60, 290),
                     width=170,
                     max_chars=25,
                     font=self._fonts['main'],
                 ),
                 'elevation': Input(
-                    (self._EDITOR_WIDTH + 60, 250),
+                    (self._EDITOR_WIDTH + 60, 310),
                     width=170,
                     max_chars=25,
                     font=self._fonts['main'],
                 ),
                 'height': Input(
-                    (self._EDITOR_WIDTH + 60, 270),
+                    (self._EDITOR_WIDTH + 60, 330),
                     width=170,
                     max_chars=25,
                     font=self._fonts['main'],
                 ),
                 'top': {
                     'r': Input(
-                        (self._EDITOR_WIDTH + 60, 290),
+                        (self._EDITOR_WIDTH + 60, 350),
                         width=40,
                         max_chars=25,
                         font=self._fonts['main'],
                     ),
                     'g': Input(
-                        (self._EDITOR_WIDTH + 110, 290),
+                        (self._EDITOR_WIDTH + 110, 350),
                         width=40,
                         max_chars=25,
                         font=self._fonts['main'],
                     ),
                     'b': Input(
-                        (self._EDITOR_WIDTH + 160, 290),
+                        (self._EDITOR_WIDTH + 160, 350),
                         width=40,
                         max_chars=25,
                         font=self._fonts['main'],
@@ -173,19 +177,19 @@ class Game(object):
                 },
                 'bottom': {
                     'r': Input(
-                        (self._EDITOR_WIDTH + 60, 310),
+                        (self._EDITOR_WIDTH + 60, 370),
                         width=40,
                         max_chars=25,
                         font=self._fonts['main'],
                     ),
                     'g': Input(
-                        (self._EDITOR_WIDTH + 110, 310),
+                        (self._EDITOR_WIDTH + 110, 370),
                         width=40,
                         max_chars=25,
                         font=self._fonts['main'],
                     ),
                     'b': Input(
-                        (self._EDITOR_WIDTH + 160, 310),
+                        (self._EDITOR_WIDTH + 160, 370),
                         width=40,
                         max_chars=25,
                         font=self._fonts['main'],
@@ -193,25 +197,25 @@ class Game(object):
                 },
                 'rect': {
                     'left': Input(
-                        (self._EDITOR_WIDTH + 60, 330),
+                        (self._EDITOR_WIDTH + 60, 390),
                         width=170,
                         max_chars=25,
                         font=self._fonts['main'],
                     ),
                     'top': Input(
-                        (self._EDITOR_WIDTH + 60, 350),
+                        (self._EDITOR_WIDTH + 60, 410),
                         width=170,
                         max_chars=25,
                         font=self._fonts['main'],
                     ),
                     'width': Input(
-                        (self._EDITOR_WIDTH + 60, 370),
+                        (self._EDITOR_WIDTH + 60, 430),
                         width=170,
                         max_chars=25,
                         font=self._fonts['main'],
                     ),
                     'height': Input(
-                        (self._EDITOR_WIDTH + 60, 390),
+                        (self._EDITOR_WIDTH + 60, 450),
                         width=170,
                         max_chars=25,
                         font=self._fonts['main'],
@@ -219,25 +223,25 @@ class Game(object):
                 },
                 'semitile': {
                     'axis': Input(
-                        (self._EDITOR_WIDTH + 60, 410),
+                        (self._EDITOR_WIDTH + 60, 470),
                         width=170,
                         max_chars=25,
                         font=self._fonts['main'],
                     ),
                     'x': Input(
-                        (self._EDITOR_WIDTH + 60, 430),
+                        (self._EDITOR_WIDTH + 60, 490),
                         width=75,
                         max_chars=25,
                         font=self._fonts['main'],
                     ),
                     'y': Input(
-                        (self._EDITOR_WIDTH + 145, 430),
+                        (self._EDITOR_WIDTH + 145, 490),
                         width=75,
                         max_chars=25,
                         font=self._fonts['main'],
                     ),
                     'width': Input(
-                        (self._EDITOR_WIDTH + 60, 450),
+                        (self._EDITOR_WIDTH + 60, 510),
                         width=170,
                         max_chars=25,
                         font=self._fonts['main'],
@@ -246,103 +250,103 @@ class Game(object):
             },
             'hover': {
                 'surface': Surface(
-                    (self._EDITOR_WIDTH + 10, 510),
+                    (self._EDITOR_WIDTH + 10, 570),
                     surf=pg.Surface((0, 0)),
                 ),
                 'key': Label(
-                    (self._EDITOR_WIDTH + 60, 550),
+                    (self._EDITOR_WIDTH + 60, 610),
                     text='N/A',
                     font=self._fonts['main'],
                 ),
                 'texture': Label(
-                    (self._EDITOR_WIDTH + 60, 570),
+                    (self._EDITOR_WIDTH + 60, 630),
                     text='N/A',
                     font=self._fonts['main'],
                 ),
                 'elevation': Label(
-                    (self._EDITOR_WIDTH + 60, 590),
+                    (self._EDITOR_WIDTH + 60, 650),
                     text='N/A',
                     font=self._fonts['main'],
                 ),
                 'height': Label(
-                    (self._EDITOR_WIDTH + 60, 610),
+                    (self._EDITOR_WIDTH + 60, 670),
                     text='N/A',
                     font=self._fonts['main'],
                 ),
                 'top': {
                     'r': Label(
-                        (self._EDITOR_WIDTH + 60, 630),
+                        (self._EDITOR_WIDTH + 60, 690),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
                     'g': Label(
-                        (self._EDITOR_WIDTH + 110, 630),
+                        (self._EDITOR_WIDTH + 110, 690),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
                     'b': Label(
-                        (self._EDITOR_WIDTH + 160, 630),
+                        (self._EDITOR_WIDTH + 160, 690),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
                 },
                 'bottom': {
                     'r': Label(
-                        (self._EDITOR_WIDTH + 60, 650),
+                        (self._EDITOR_WIDTH + 60, 710),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
                     'g': Label(
-                        (self._EDITOR_WIDTH + 110, 650),
+                        (self._EDITOR_WIDTH + 110, 710),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
                     'b': Label(
-                        (self._EDITOR_WIDTH + 160, 650),
+                        (self._EDITOR_WIDTH + 160, 710),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
                 },
                 'rect': {
                     'left': Label(
-                        (self._EDITOR_WIDTH + 60, 670),
+                        (self._EDITOR_WIDTH + 60, 730),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
                     'top': Label(
-                        (self._EDITOR_WIDTH + 60, 690),
+                        (self._EDITOR_WIDTH + 60, 750),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
                     'width': Label(
-                        (self._EDITOR_WIDTH + 60, 710),
+                        (self._EDITOR_WIDTH + 60, 770),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
                     'height': Label(
-                        (self._EDITOR_WIDTH + 60, 730),
+                        (self._EDITOR_WIDTH + 60, 790),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
                 },
                 'semitile': {
                     'axis': Label(
-                        (self._EDITOR_WIDTH + 60, 750),
+                        (self._EDITOR_WIDTH + 60, 810),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
                     'x': Label(
-                        (self._EDITOR_WIDTH + 60, 770),
+                        (self._EDITOR_WIDTH + 60, 830),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
                     'y': Label(
-                        (self._EDITOR_WIDTH + 145, 770),
+                        (self._EDITOR_WIDTH + 145, 830),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
                     'width': Label(
-                        (self._EDITOR_WIDTH + 60, 790),
+                        (self._EDITOR_WIDTH + 60, 850),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
@@ -390,41 +394,47 @@ class Game(object):
                 ),
                 Label(
                     (self._EDITOR_WIDTH + 10, 170),
-                    'Tile',
-                    self._fonts['title'],
+                    text='Tool',
+                    font=self._fonts['title'],
                 ),
+                self._widgets['tool'],
                 Label(
                     (self._EDITOR_WIDTH + 10, 230),
+                    text='Tile',
+                    font=self._fonts['title'],
+                ),
+                Label(
+                    (self._EDITOR_WIDTH + 10, 270),
                     text='Text',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 250),
+                    (self._EDITOR_WIDTH + 10, 290),
                     text='Elev',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 270),
+                    (self._EDITOR_WIDTH + 10, 310),
                     text='Hieg',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 290),
+                    (self._EDITOR_WIDTH + 10, 330),
                     text='Top',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 310),
+                    (self._EDITOR_WIDTH + 10, 350),
                     text='Bott',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 330),
+                    (self._EDITOR_WIDTH + 10, 370),
                     text='Rect',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 410),
+                    (self._EDITOR_WIDTH + 10, 450),
                     text='Semi',
                     font=self._fonts['main'],
                 ),
@@ -437,47 +447,47 @@ class Game(object):
                 *current['rect'].values(),
                 *current['semitile'].values(),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 490),
+                    (self._EDITOR_WIDTH + 10, 550),
                     'Hover',
                     self._fonts['title'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 550),
+                    (self._EDITOR_WIDTH + 10, 610),
                     text='Key',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 570),
+                    (self._EDITOR_WIDTH + 10, 630),
                     text='Text',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 590),
+                    (self._EDITOR_WIDTH + 10, 650),
                     text='Elev',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 610),
+                    (self._EDITOR_WIDTH + 10, 670),
                     text='Hieg',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 630),
+                    (self._EDITOR_WIDTH + 10, 690),
                     text='Top',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 650),
+                    (self._EDITOR_WIDTH + 10, 710),
                     text='Bott',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 670),
+                    (self._EDITOR_WIDTH + 10, 730),
                     text='Rect',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 750),
+                    (self._EDITOR_WIDTH + 10, 810),
                     text='Semi',
                     font=self._fonts['main'],
                 ),
@@ -501,7 +511,8 @@ class Game(object):
     def _load(self: Self) -> None:
         try:
             with open(self._widgets['path'].text, 'r') as file:
-                self._tilemap = json.loads(file.read())['tilemap']
+                data = json.loads(file.read())
+                self._tilemap = data['tilemap']
         except:
             pass
 
@@ -694,6 +705,7 @@ class Game(object):
             semitile['width'].text = str(data_semitile['width'])
 
     def _update_widgets(self: Self) -> None:
+        self._widgets['tool'].text = self._tool
         self._update_current()
         self._update_hover()
         self._update_surfaces()
@@ -797,12 +809,12 @@ class Game(object):
         )
         if self._tool == 'place':
             self._draw_tile(self._place_alpha, self._data, (x, y))
-        else:
+        elif self._tool in ('remove, eyedropper'):
             pg.draw.rect(
                 self._screen,
                 self._colors[self._tool],
                 (x, y, self._zoom, self._zoom),
-                width=self._remove_width,
+                width=1,
             )
 
     def run(self: Self) -> None:
@@ -840,6 +852,7 @@ class Game(object):
                                 self._tool = 'remove'
                             elif event.key in self._keys['eyedropper']:
                                 self._tool = 'eyedropper'
+
                         # Height / Elevation
                         if event.key in self._keys['vertical_increase']:
                             if mod:

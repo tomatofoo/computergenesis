@@ -65,26 +65,28 @@ class Game(object):
 
         # Panel
         self._font = pg.font.SysFont('Arial', 16)
+        self._path = Input(
+            (self._EDITOR_WIDTH + 10, 100),
+            width=220,
+            max_chars=25,
+            font=self._font,
+        )
+        self._path.text = "data/maps/0.json"
         self._panel = Panel(
             widgets={
                 Button(
                     (self._EDITOR_WIDTH + 10, 50),
-                    'Prev',
-                    lambda: 1,
-                    self._font,
+                    text='Prev',
+                    func=lambda: 1,
+                    font=self._font,
                 ),
                 Button(
                     (self._EDITOR_WIDTH + 50, 50),
-                    'Next',
-                    lambda: 1,
-                    self._font,
+                    text='Next',
+                    func=lambda: 1,
+                    font=self._font,
                 ),
-                Input(
-                    (self._EDITOR_WIDTH + 10, 100),
-                    100,
-                    10,
-                    self._font,
-                )
+                self._path,
             },
             min_scroll=-self._SCREEN_SIZE[1],
         )
@@ -177,8 +179,13 @@ class Game(object):
                     self._draw_tile(None, data, self._get_screen_pos(x, y)) 
 
     def _draw_panel(self: Self) -> None:
-        surf = pg.Surface(
-            (self._SCREEN_SIZE[0] - self._EDITOR_WIDTH, self._SCREEN_SIZE[1]),
+        width = self._SCREEN_SIZE[0] - self._EDITOR_WIDTH
+        surf = pg.Surface((width, self._SCREEN_SIZE[1]))
+        pg.draw.rect( # outline
+            surf,
+            (255, 255, 255),
+            (0, 0, width, self._SCREEN_SIZE[1]),
+            width=1,
         )
         self._screen.blit(surf, (self._EDITOR_WIDTH, 0))
         self._panel.render(self._screen)
@@ -221,31 +228,30 @@ class Game(object):
                     self._running = 0
                 if not self._panel.focused:
                     if event.type == pg.KEYDOWN:
-                        if not mod2:
-                            if not mod:
-                                # zoom
-                                if event.key == self._keys['zoom_in']:
-                                    self._zoom += self._zoom_step
-                                elif event.key == self._keys['zoom_out']:
-                                    self._zoom = max(
-                                        self._zoom - self._zoom_step,
-                                        self._min_zoom,
-                                    )
-                                elif event.key == self._keys['place']:
-                                    self._tool = 'place'
-                                elif event.key == self._keys['remove']:
-                                    self._tool = 'remove'
-                            # Height / Elevation
-                            if event.key == self._keys['vertical_increase']:
-                                if mod:
-                                    self._data['elevation'] += 0.05
-                                else:
-                                    self._data['height'] += 0.05
-                            elif event.key == self._keys['vertical_decrease']:
-                                if mod:
-                                    self._data['elevation'] -= 0.05
-                                else:
-                                    self._data['height'] -= 0.05
+                        if not mod2 and not mod:
+                            # zoom
+                            if event.key == self._keys['zoom_in']:
+                                self._zoom += self._zoom_step
+                            elif event.key == self._keys['zoom_out']:
+                                self._zoom = max(
+                                    self._zoom - self._zoom_step,
+                                    self._min_zoom,
+                                )
+                            elif event.key == self._keys['place']:
+                                self._tool = 'place'
+                            elif event.key == self._keys['remove']:
+                                self._tool = 'remove'
+                        # Height / Elevation
+                        if event.key == self._keys['vertical_increase']:
+                            if mod:
+                                self._data['elevation'] += 0.05
+                            else:
+                                self._data['height'] += 0.05
+                        elif event.key == self._keys['vertical_decrease']:
+                            if mod:
+                                self._data['elevation'] -= 0.05
+                            else:
+                                self._data['height'] -= 0.05
                         # History
                         if mod2 and event.key == self._keys['do']:
                             # redo

@@ -193,8 +193,19 @@ class Input(_Widget): # Text Input
         length = len(self._text)
         if event.type == pg.MOUSEBUTTONDOWN:
             collision = self._rect.collidepoint(event.pos)
-            if collision:
-                self._cursor_pos = length
+            if collision: # calculate cursor pos
+                x = event.pos[0] - self._pos[0]
+                old = 0 # last width calculated
+                for dex in range(len(self._text) + 1):
+                    width = self._font.size(self._text[:dex])[0]
+                    if old <= x < width:
+                        # past middle it will go to dex
+                        # before middile it will go to dex - 1
+                        self._cursor_pos = dex - (x < (width + old) / 2)
+                        break
+                    old = width
+                else:
+                    self._cursor_pos = len(self._text)
             self._focused = collision
         if self._focused:
             if event.type == pg.TEXTINPUT:
@@ -227,11 +238,6 @@ class Input(_Widget): # Text Input
                     self._cursor_pos = 0
                 elif event.key == pg.K_e and ctrl:
                     self._cursor_pos = len(self._text)
-
-    def update(self: Self,
-               mouse_pos: Point,
-               mouse_pressed: tuple[bool]) -> None:
-        pass
 
 
 class Panel(object):

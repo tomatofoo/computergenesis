@@ -92,7 +92,8 @@ class Game(object):
             'bottom': self._colors['bottom'],
             'rect': None,
         }
-        self._data = self._default_data.copy()
+        # Deepcopying in case of semitile
+        self._data = copy.deepcopy(self._default_data)
         self._hover_key = 'N/A'
         self._hover_data = None
         
@@ -121,6 +122,9 @@ class Game(object):
         # History
         self._default_change = {'tilemap': {}, 'marks': {}}
         # pos: (prev, new)
+        # I think deepcopy is recursive
+        # (i think it copies the dicts more than 1 layer deep)
+        # idk though but it works 
         self._history = [copy.deepcopy(self._default_change)]
         self._change = 0
 
@@ -534,11 +538,25 @@ class Game(object):
             self._change = len(self._history)
             self._history.append(copy.deepcopy(self._default_change))
 
+    # reads from self._dict directly at once to history
+    # (as opposed to adding changes over time)
+    def _load_change(self: Self, old: dict) -> None:
+        self._make_change()
+        for map_key in self._dict:
+            for key, value in old[map_key].items():
+                self._history[-1][map_key][key] = (value, None)
+            for key, value in self._dict[map_key].items():
+                self._history[-1][map_key][key] = (
+                    old[map_key].get(key), value,
+                )
+        self._make_change()
+
     def _clear(self: Self, map_key: str) -> None:
         self._make_change()
-        for key in self._dict[map_key].copy():
-            self._history[-1][map_key][key] = (
-                self._dict[map_key].pop(key), None,
+        # copying so that we can remove while iterating
+        for tile_key in self._dict[map_key].copy():
+            self._history[-1][map_key][tile_key] = (
+                self._dict[map_key].pop(tile_key), None,
             )
         self._make_change()
 
@@ -549,15 +567,22 @@ class Game(object):
     def _load(self: Self) -> None:
         try:
             with open(self._widgets['path'].text, 'r') as file:
+                old = self._dict # don't need copy becuase using = 
                 self._dict = json.loads(file.read())
+                self._load_change(old)
         except:
             pass
 
     def _load_level(self: Self) -> None:
         try:
             self._level = LEVELS[int(self._widgets['level'].text)]
-            self._dict['tilemap'] = self._level._walls._tilemap
-            self._dict['marks'] = {}
+            old = self._dict # don't need copy because using =
+            # deepcopy seems to copy more than 1 layer deep so this should work
+            self._dict = {
+                'tilemap': copy.deepcopy(self._level._walls._tilemap),
+                'marks': {},
+            }
+            self._load_change(old)
             self._wall_textures = self._level._walls._textures
         except:
             self._level = None
@@ -980,7 +1005,7 @@ class Game(object):
                     if mouse[0]:
                         if self._tool == 'place':
                             if tile_data != self._data:
-                                data = self._data.copy()
+                                data = copy.deepcopy(self._data) # in case of semitiles
                                 self._history[-1]['tilemap'][tile_key] = (
                                     tile_data, data,
                                 )
@@ -998,9 +1023,9 @@ class Game(object):
                                 )
                         elif self._tool == 'eyedropper':
                             if tile_data is None:
-                                self._data = self._default_data.copy()
+                                self._data = copy.deepcopy(self._default_data)
                             else:
-                                self._data = tile_data.copy()
+                                self._data = copy.deepcopy(tile_data)
                             self._current_from_data(self._data)
                             self._update_surfaces()
                         elif self._tool == 'mark':

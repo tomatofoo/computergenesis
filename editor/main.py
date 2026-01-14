@@ -966,9 +966,11 @@ class Game(object):
                                 self._dict['tilemap'][tile_key] = data
                         # remove
                         elif self._tool == 'remove':
-                            map_key = 'marks' if mod else 'tilemap'
-                            # I know it regets tilemap data if not mod
-                            data = self._dict[map_key].get(tile_key)
+                            map_key = 'tilemap'
+                            data = tile_data
+                            if mod:
+                                map_key = 'marks'
+                                data = self._dict['marks'].get(tile_key)
                             if data is not None:
                                 self._history[-1][map_key][tile_key] = (
                                     self._dict[map_key].pop(tile_key), None,

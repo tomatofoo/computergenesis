@@ -51,6 +51,16 @@ class Game(object):
             'bottom': (0, 0, 0), # default bottom
             'remove': (255, 0, 0), # remove tool
             'eyedropper': (0, 255, 0), # eyedropper
+            'mark': (0, 255, 255), # mark tool
+            'marks': ( # actual mark
+                (255, 0, 0),
+                (0, 255, 0),
+                (0, 0, 255),
+                (255, 255, 0),
+                (255, 0, 255),
+                (0, 255, 255),
+                (255, 255, 255),
+            ),
             'rect': (255, 255, 0),
             'semitile': (0, 255, 0),
        }
@@ -66,6 +76,9 @@ class Game(object):
             'place': (pg.K_b, ),
             'remove': (pg.K_e, ),
             'eyedropper': (pg.K_i, ),
+            'mark': (pg.K_m, ), # mark tool
+            # actual mark
+            'marks': (pg.K_0, pg.K_1, pg.K_2, pg.K_3, pg.K_4, pg.K_5, pg.K_6),
         }
         
         # Data
@@ -84,14 +97,12 @@ class Game(object):
         # Level Stuff
         self._level = None
         self._wall_textures = []
-        self._tilemap = {}
-        # self._dict = {}
-        # TODO: MOVE TILEMAP TO DICT
+        self._dict = {'tilemap': {}, 'marks': {}}
         # TODO: ADD MARKERS
         # TODO: ADD THAT TO HISTORY
         
         # tools
-        self._tool = 'place' # place, remove, eyedropper
+        self._tool = 'place' # place, remove, eyedropper, mark
         self._place_alpha = 128 # alpha of 'ghost' tile when placing
         
         # Panel
@@ -106,7 +117,7 @@ class Game(object):
         self._pos = pg.Vector2(0, 0)
 
         # History
-        self._history = [{}] # pos: (prev, new)
+        self._history = [{'tilemap': {}, 'marks': {}}] # pos: (prev, new)
         self._change = 0
 
     def _initialize_panel(self: Self) -> None:
@@ -510,20 +521,20 @@ class Game(object):
 
     def _save(self: Self) -> None:
         with open(self._widgets['path'].text, 'w') as file:
-            json.dump({'tilemap': self._tilemap}, file)
+            json.dump(self._dict, file)
 
     def _load(self: Self) -> None:
         try:
             with open(self._widgets['path'].text, 'r') as file:
-                data = json.loads(file.read())
-                self._tilemap = data['tilemap']
+                self._dict = json.loads(file.read())
         except:
             pass
 
     def _load_level(self: Self) -> None:
         try:
             self._level = LEVELS[int(self._widgets['level'].text)]
-            self._tilemap = self._level._walls._tilemap
+            self._dict['tilemap'] = self._level._walls._tilemap
+            self._data['marks'] = {}
             self._wall_textures = self._level._walls._textures
         except:
             self._level = None
@@ -781,15 +792,25 @@ class Game(object):
         surface.set_alpha(alpha)
         surf.blit(surface, pos)
 
-    def _draw_tiles(self: Self) -> None:
+    def _draw_tiles_and_marks(self: Self) -> None:
         for y in range(math.ceil(self._SCREEN_SIZE[1] / self._zoom) + 1):
             for x in range(math.ceil(self._SCREEN_SIZE[0] / self._zoom) + 1):
+                pos = self._get_screen_pos(x, y)
                 tile = (math.floor(self._pos[0]) + x,
                         math.floor(self._pos[1]) + y)
                 tile_key = gen_tile_key(tile)
-                data = self._tilemap.get(tile_key)
+                data = self._dict['tilemap'].get(tile_key)
                 if data is not None:
-                    self._draw_tile(None, data, self._get_screen_pos(x, y)) 
+                    self._draw_tile(None, data, pos)
+                data = self._dict['marks'].get(tile_key)
+                if data is not None:
+                    semizoom = self._zoom / 2
+                    pg.draw.circle(
+                        self._screen,
+                        self._colors['marks'][data],
+                        (pos[0] + semizoom, pos[1] + semizoom),
+                        self._zoom / 4,
+                    )
 
     def _draw_panel(self: Self) -> None:
         rect = (
@@ -856,7 +877,8 @@ class Game(object):
                                 self._tool = 'remove'
                             elif event.key in self._keys['eyedropper']:
                                 self._tool = 'eyedropper'
-
+                            elif event.key in self._keys['mark']:
+                                self._tool = 'mark'
                         # Height / Elevation
                         if event.key in self._keys['vertical_increase']:
                             if mod:
@@ -882,24 +904,31 @@ class Game(object):
                             if mod:
                                 if self._change < len(self._history) - 1:
                                     change = self._history[self._change]
-                                    for key, value in change.items():
-                                        if value[1] is None:
-                                            data = self._tilemap.get(key)
-                                            if data is not None:
-                                                self._tilemap.pop(key)
-                                        else:
-                                            self._tilemap[key] = value[1]
+                                    # map key determines if place or mark tool
+                                    # was used
+                                    for map_key, data in change.items():
+                                        for key, value in data.items():
+                                            if value[1] is None:
+                                                data = self._dict[map_key].get(key)
+                                                if data is not None:
+                                                    self._dict[map_key].pop(key)
+                                            else:
+                                                self._dict[map_key][key] = value[1]
                                     self._change += 1
                             # undo
                             elif self._change > 0:
                                 self._change -= 1
                                 change = self._history[self._change]
-                                for key, value in change.items():
-                                    if value[0] is None:
-                                        if self._tilemap.get(key) is not None:
-                                            self._tilemap.pop(key)
-                                    else:
-                                        self._tilemap[key] = value[0]
+                                # map key determines if place or mark tool
+                                # was used
+                                for map_key, data in change.items():
+                                    for key, value in data.items():
+                                        if value[0] is None:
+                                            data = self._dict[map_key].get(key)
+                                            if data is not None:
+                                                self._dict[map_key].pop(key)
+                                        else:
+                                            self._dict[map_key][key] = value[0]
 
                     # Editing
                     elif event.type == pg.MOUSEBUTTONUP: # history
@@ -911,7 +940,7 @@ class Game(object):
                                     self._history[-1],
                                 ]
                             self._change = len(self._history)
-                            self._history.append({})
+                            self._history.append({'tilemap': {}, 'marks': {}})
                 self._update_widgets()
             
             if not self._panel.focused:
@@ -924,21 +953,26 @@ class Game(object):
                     )
                     tile_key = gen_tile_key(pos)
                     # set
-                    tile_data = self._tilemap.get(tile_key)
+                    tile_data = self._dict['tilemap'].get(tile_key)
                     self._hover_key = tile_key
                     self._hover_data = tile_data
                     if mouse[0]:
                         if self._tool == 'place':
                             if tile_data != self._data:
                                 data = self._data.copy()
-                                self._history[-1][tile_key] = (tile_data, data)
-                                self._tilemap[tile_key] = data
+                                self._history[-1]['tilemap'][tile_key] = (
+                                    tile_data, data,
+                                )
+                                self._dict['tilemap'][tile_key] = data
                         # remove
-                        elif self._tool == 'remove' and tile_data is not None:
-                            self._history[-1][tile_key] = (
-                                self._tilemap.pop(tile_key),
-                                None,
-                            )
+                        elif self._tool == 'remove':
+                            map_key = 'marks' if mod else 'tilemap'
+                            # I know it regets tilemap data if not mod
+                            data = self._dict[map_key].get(tile_key)
+                            if data is not None:
+                                self._history[-1][map_key][tile_key] = (
+                                    self._dict[map_key].pop(tile_key), None,
+                                )
                         elif self._tool == 'eyedropper':
                             if tile_data is None:
                                 self._data = self._default_data.copy()
@@ -946,6 +980,17 @@ class Game(object):
                                 self._data = tile_data.copy()
                             self._current_from_data(self._data)
                             self._update_surfaces()
+                        elif self._tool == 'mark':
+                            data = 0
+                            for dex, key in enumerate(self._keys['marks']):
+                                if keys[key]:
+                                    data = dex
+                            mark_data = self._dict['marks'].get(tile_key)
+                            if mark_data != data:
+                                self._history[-1]['marks'][tile_key] = (
+                                    mark_data, data,
+                                )
+                                self._dict['marks'][tile_key] = data
 
                 movement = pg.Vector2(
                     keys[pg.K_d] - keys[pg.K_a],
@@ -960,7 +1005,7 @@ class Game(object):
             
             self._screen.fill(self._colors['fill'])
             self._draw_grid()
-            self._draw_tiles()
+            self._draw_tiles_and_marks()
             self._draw_tool(mouse_pos)
             self._draw_panel()
 

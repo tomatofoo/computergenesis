@@ -542,7 +542,7 @@ class Game(object):
     # (as opposed to adding changes over time)
     def _load_change(self: Self, old: dict) -> None:
         self._make_change()
-        for map_key in self._dict:
+        for map_key in old:
             for key, value in old[map_key].items():
                 self._history[-1][map_key][key] = (value, None)
             for key, value in self._dict[map_key].items():

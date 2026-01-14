@@ -404,37 +404,37 @@ class Game(object):
                     font=self._fonts['title'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 270),
+                    (self._EDITOR_WIDTH + 10, 290),
                     text='Text',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 290),
+                    (self._EDITOR_WIDTH + 10, 310),
                     text='Elev',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 310),
+                    (self._EDITOR_WIDTH + 10, 330),
                     text='Hieg',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 330),
+                    (self._EDITOR_WIDTH + 10, 350),
                     text='Top',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 350),
+                    (self._EDITOR_WIDTH + 10, 370),
                     text='Bott',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 370),
+                    (self._EDITOR_WIDTH + 10, 390),
                     text='Rect',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 450),
+                    (self._EDITOR_WIDTH + 10, 470),
                     text='Semi',
                     font=self._fonts['main'],
                 ),
@@ -809,7 +809,7 @@ class Game(object):
         )
         if self._tool == 'place':
             self._draw_tile(self._place_alpha, self._data, (x, y))
-        elif self._tool in ('remove, eyedropper'):
+        else:
             pg.draw.rect(
                 self._screen,
                 self._colors[self._tool],

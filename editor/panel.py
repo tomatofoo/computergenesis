@@ -241,6 +241,12 @@ class Input(_Widget): # Text Input
                         text += self._text[self._cursor_pos:]
                         self._cursor_pos = max(self._cursor_pos - 1, 0)
                     self.text = text
+                if ((event.key == pg.K_d and ctrl)
+                    or event.key == pg.K_DELETE):
+                    text = self._text[:self._cursor_pos]
+                    if self._cursor_pos < length - 1:
+                        text += self._text[self._cursor_pos + 1:]
+                    self.text = text
                 elif event.key == pg.K_u and event.mod & pg.KMOD_CTRL:
                     text = self._text[self._cursor_pos:]
                     self.text = text

@@ -83,7 +83,6 @@ class Label(_Widget):
         )
 
 
-
 class Button(_Widget): # Text Button
     # COLORS
     # default: red

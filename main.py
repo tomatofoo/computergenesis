@@ -347,18 +347,6 @@ class Game(object):
             },
             rect=(0.2, 0, 0.0001, 1),
         )
-        self._level.walls.set_tile(
-            pos=(10, 8),
-            elevation=0,
-            height=2,
-            texture=0,
-            semitile={
-                'axis': 1,
-                'pos': (0.2, level_timer / 60 % 2 - 1),
-                'width': 1,
-            },
-            rect=(0.2, 0, 0.0001, 1),
-        )
 
     def run(self: Self) -> None:
         self._running = 1

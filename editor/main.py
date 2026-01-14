@@ -49,6 +49,7 @@ class Game(object):
             'bottom': (0, 0, 0), # default bottom
             'remove': (255, 0, 0), # remove tool
             'rect': (255, 255, 0),
+            'semitile': (0, 255, 0),
        }
 
         self._keys = {
@@ -70,13 +71,37 @@ class Game(object):
             'height': 1,
             'top': self._colors['top'],
             'bottom': self._colors['bottom'],
+            'rect': None,
         }
+        self._hover_data = None
 
         self._level = None
         self._wall_textures = []
         self._tilemap = {}
         
         # Panel
+        self._initialize_panel()
+
+        # tools
+        self._tool = 'place' # place, remove
+        self._place_alpha = 128 # alpha of 'ghost' tile when placing
+        self._remove_width = 1
+
+        # Zoom
+        self._zoom_step = 2
+        self._min_zoom = 8 # anything below tanks performance
+        self._zoom = 32 # tile size
+       
+        # Pos for top left
+        self._pos = pg.Vector2(0, 0)
+
+        # History
+        self._history = [{}] # pos: (prev, new)
+        self._change = 0
+
+    def _initialize_panel(self: Self) -> None:
+        # difference in y between widgets is 20
+
         self._fonts = {
             'title': pg.font.SysFont('Andale Mono', 16),
             'main': pg.font.SysFont('Andale Mono', 16),
@@ -97,25 +122,259 @@ class Game(object):
                 font=self._fonts['main'],
             ),
             'current': {
-                'elevation': Input(
+                'surface': Surface(
+                    (self._EDITOR_WIDTH + 10, 190),
+                    surf=pg.Surface((0, 0)),
+                ),
+                'texture': Input(
                     (self._EDITOR_WIDTH + 60, 230),
                     width=170,
                     max_chars=25,
                     font=self._fonts['main'],
                 ),
-                'height': Input(
+                'elevation': Input(
                     (self._EDITOR_WIDTH + 60, 250),
                     width=170,
                     max_chars=25,
                     font=self._fonts['main'],
                 ),
+                'height': Input(
+                    (self._EDITOR_WIDTH + 60, 270),
+                    width=170,
+                    max_chars=25,
+                    font=self._fonts['main'],
+                ),
+                'top': {
+                    'r': Input(
+                        (self._EDITOR_WIDTH + 60, 290),
+                        width=40,
+                        max_chars=25,
+                        font=self._fonts['main'],
+                    ),
+                    'g': Input(
+                        (self._EDITOR_WIDTH + 110, 290),
+                        width=40,
+                        max_chars=25,
+                        font=self._fonts['main'],
+                    ),
+                    'b': Input(
+                        (self._EDITOR_WIDTH + 160, 290),
+                        width=40,
+                        max_chars=25,
+                        font=self._fonts['main'],
+                    ),
+                },
+                'bottom': {
+                    'r': Input(
+                        (self._EDITOR_WIDTH + 60, 310),
+                        width=40,
+                        max_chars=25,
+                        font=self._fonts['main'],
+                    ),
+                    'g': Input(
+                        (self._EDITOR_WIDTH + 110, 310),
+                        width=40,
+                        max_chars=25,
+                        font=self._fonts['main'],
+                    ),
+                    'b': Input(
+                        (self._EDITOR_WIDTH + 160, 310),
+                        width=40,
+                        max_chars=25,
+                        font=self._fonts['main'],
+                    ),
+                },
+                'rect': {
+                    'left': Input(
+                        (self._EDITOR_WIDTH + 60, 330),
+                        width=170,
+                        max_chars=25,
+                        font=self._fonts['main'],
+                    ),
+                    'top': Input(
+                        (self._EDITOR_WIDTH + 60, 350),
+                        width=170,
+                        max_chars=25,
+                        font=self._fonts['main'],
+                    ),
+                    'width': Input(
+                        (self._EDITOR_WIDTH + 60, 370),
+                        width=170,
+                        max_chars=25,
+                        font=self._fonts['main'],
+                    ),
+                    'height': Input(
+                        (self._EDITOR_WIDTH + 60, 390),
+                        width=170,
+                        max_chars=25,
+                        font=self._fonts['main'],
+                    ),
+                },
+                'semitile': {
+                    'axis': Input(
+                        (self._EDITOR_WIDTH + 60, 410),
+                        width=170,
+                        max_chars=25,
+                        font=self._fonts['main'],
+                    ),
+                    'x': Input(
+                        (self._EDITOR_WIDTH + 60, 430),
+                        width=75,
+                        max_chars=25,
+                        font=self._fonts['main'],
+                    ),
+                    'y': Input(
+                        (self._EDITOR_WIDTH + 145, 430),
+                        width=75,
+                        max_chars=25,
+                        font=self._fonts['main'],
+                    ),
+                    'width': Input(
+                        (self._EDITOR_WIDTH + 60, 450),
+                        width=170,
+                        max_chars=25,
+                        font=self._fonts['main'],
+                    ),
+                },
+            },
+            'hover': {
+                'surface': Surface(
+                    (self._EDITOR_WIDTH + 10, 510),
+                    surf=pg.Surface((0, 0)),
+                ),
+                'texture': Label(
+                    (self._EDITOR_WIDTH + 60, 550),
+                    text='N/A',
+                    font=self._fonts['main'],
+                ),
+                'elevation': Label(
+                    (self._EDITOR_WIDTH + 60, 570),
+                    text='N/A',
+                    font=self._fonts['main'],
+                ),
+                'height': Label(
+                    (self._EDITOR_WIDTH + 60, 590),
+                    text='N/A',
+                    font=self._fonts['main'],
+                ),
+                'top': {
+                    'r': Label(
+                        (self._EDITOR_WIDTH + 60, 610),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                    'g': Label(
+                        (self._EDITOR_WIDTH + 110, 610),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                    'b': Label(
+                        (self._EDITOR_WIDTH + 160, 610),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                },
+                'bottom': {
+                    'r': Label(
+                        (self._EDITOR_WIDTH + 60, 630),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                    'g': Label(
+                        (self._EDITOR_WIDTH + 110, 630),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                    'b': Label(
+                        (self._EDITOR_WIDTH + 160, 630),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                },
+                'rect': {
+                    'left': Label(
+                        (self._EDITOR_WIDTH + 60, 650),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                    'top': Label(
+                        (self._EDITOR_WIDTH + 60, 670),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                    'width': Label(
+                        (self._EDITOR_WIDTH + 60, 690),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                    'height': Label(
+                        (self._EDITOR_WIDTH + 60, 710),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                },
+                'semitile': {
+                    'axis': Label(
+                        (self._EDITOR_WIDTH + 60, 730),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                    'x': Label(
+                        (self._EDITOR_WIDTH + 60, 750),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                    'y': Label(
+                        (self._EDITOR_WIDTH + 145, 750),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                    'width': Label(
+                        (self._EDITOR_WIDTH + 60, 770),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                }
             },
         }
         self._widgets['path'].text = 'data/maps/0.json'
         self._widgets['level'].text = '0'
         current = self._widgets['current']
+        current['texture'].text = str(self._data['texture'])
         current['elevation'].text = str(self._data['elevation'])
         current['height'].text = str(self._data['height'])
+        top = current['top']
+        top['r'].text = str(self._data['top'][0])
+        top['g'].text = str(self._data['top'][1])
+        top['b'].text = str(self._data['top'][2])
+        bottom = current['bottom']
+        bottom['r'].text = str(self._data['bottom'][0])
+        bottom['g'].text = str(self._data['bottom'][1])
+        bottom['b'].text = str(self._data['bottom'][2])
+        rect = current['rect']
+        data_rect = self._data.get('rect')
+        if data_rect is not None:
+            rect['left'].text = str(data_rect[0])
+            rect['top'].text = str(data_rect[1])
+            rect['width'].text = str(data_rect[2])
+            rect['height'].text = str(data_rect[3])
+        else:
+            rect['left'].text = '0'
+            rect['top'].text = '0'
+            rect['width'].text = '1'
+            rect['height'].text = '1'
+        semitile = current['semitile']
+        data_semitile = self._data.get('semitile')
+        if data_semitile is not None:
+            semitile['axis'].text = str(data_semitile['axis'])
+            semitile['x'].text = str(data_semitile['pos'][0])
+            semitile['y'].text = str(data_semitile['pos'][1])
+            semitile['width'].text = str(data_semitile['width'])
+        else:
+            semitile['axis'].text = '0'
+
+        hover = self._widgets['hover']
+        self._update_widgets()
 
         self._panel = Panel(
             widgets={
@@ -156,35 +415,98 @@ class Game(object):
                 ),
                 Label(
                     (self._EDITOR_WIDTH + 10, 230),
-                    text='Elev',
+                    text='Text',
                     font=self._fonts['main'],
                 ),
                 Label(
                     (self._EDITOR_WIDTH + 10, 250),
-                    text='High',
+                    text='Elev',
                     font=self._fonts['main'],
                 ),
-                *self._widgets['current'].values(),
+                Label(
+                    (self._EDITOR_WIDTH + 10, 270),
+                    text='Hieg',
+                    font=self._fonts['main'],
+                ),
+                Label(
+                    (self._EDITOR_WIDTH + 10, 290),
+                    text='Top',
+                    font=self._fonts['main'],
+                ),
+                Label(
+                    (self._EDITOR_WIDTH + 10, 310),
+                    text='Bott',
+                    font=self._fonts['main'],
+                ),
+                Label(
+                    (self._EDITOR_WIDTH + 10, 330),
+                    text='Rect',
+                    font=self._fonts['main'],
+                ),
+                Label(
+                    (self._EDITOR_WIDTH + 10, 410),
+                    text='Semi',
+                    font=self._fonts['main'],
+                ),
+                current['surface'],
+                current['texture'],
+                current['elevation'],
+                current['height'],
+                *current['top'].values(),
+                *current['bottom'].values(),
+                *current['rect'].values(),
+                *current['semitile'].values(),
+                Label(
+                    (self._EDITOR_WIDTH + 10, 490),
+                    'Hover',
+                    self._fonts['title'],
+                ),
+                Label(
+                    (self._EDITOR_WIDTH + 10, 550),
+                    text='Text',
+                    font=self._fonts['main'],
+                ),
+                Label(
+                    (self._EDITOR_WIDTH + 10, 570),
+                    text='Elev',
+                    font=self._fonts['main'],
+                ),
+                Label(
+                    (self._EDITOR_WIDTH + 10, 590),
+                    text='Hieg',
+                    font=self._fonts['main'],
+                ),
+                Label(
+                    (self._EDITOR_WIDTH + 10, 610),
+                    text='Top',
+                    font=self._fonts['main'],
+                ),
+                Label(
+                    (self._EDITOR_WIDTH + 10, 630),
+                    text='Bott',
+                    font=self._fonts['main'],
+                ),
+                Label(
+                    (self._EDITOR_WIDTH + 10, 650),
+                    text='Rect',
+                    font=self._fonts['main'],
+                ),
+                Label(
+                    (self._EDITOR_WIDTH + 10, 730),
+                    text='Semi',
+                    font=self._fonts['main'],
+                ),
+                hover['surface'],
+                hover['texture'],
+                hover['elevation'],
+                hover['height'],
+                *hover['top'].values(),
+                *hover['bottom'].values(),
+                *hover['rect'].values(),
+                *hover['semitile'].values(),
             },
             min_scroll=-self._SCREEN_SIZE[1],
-        )
-
-        # tools
-        self._tool = 'place' # place, remove
-        self._place_alpha = 128 # alpha of 'ghost' tile when placing
-        self._remove_width = 1
-
-        # Zoom
-        self._zoom_step = 2
-        self._min_zoom = 8 # anything below tanks performance
-        self._zoom = 32 # tile size
-       
-        # Pos for top left
-        self._pos = pg.Vector2(0, 0)
-
-        # History
-        self._history = [{}] # pos: (prev, new)
-        self._change = 0
+        ) 
 
     def _save(self: Self) -> None:
         pass
@@ -193,8 +515,157 @@ class Game(object):
         pass
 
     def _load_level(self: Self) -> None:
-        pass
+        try:
+            self._level = LEVELS[self._widgets['level'].text]
+        except:
+            self._level = None
 
+    def _update_surfaces(self: Self) -> None: # current and hovers
+        size = self._fonts['main'].get_height() + 20
+
+        surf = pg.Surface((size * 2, size))
+        self._draw_tile(None, self._data, (0, 0), size=size, surf=surf)
+        rect = (size, 0, size, size / 2)
+        pg.draw.rect(surf, self._data['top'], rect)
+        pg.draw.rect(surf, (255, 255, 255), rect, width=1)
+        rect = (size, size / 2, size, size / 2)
+        pg.draw.rect(surf, self._data['bottom'], rect)
+        pg.draw.rect(surf, (255, 255, 255), rect, width=1)
+        self._widgets['current']['surface'].surf = surf
+
+        surf = pg.Surface((size * 2, size))
+        if self._hover_data is not None:
+            self._draw_tile(
+                None,
+                self._hover_data,
+                (0, 0),
+                size=size,
+                surf=surf,
+            )
+            rect = (size, 0, size, size / 2)
+            pg.draw.rect(surf, self._hover_data['top'], rect)
+            pg.draw.rect(surf, (255, 255, 255), rect, width=1)
+            rect = (size, size / 2, size, size / 2)
+            pg.draw.rect(surf, self._hover_data['bottom'], rect)
+            pg.draw.rect(surf, (255, 255, 255), rect, width=1)
+        self._widgets['hover']['surface'].surf = surf
+
+    def _update_current(self: Self) -> None:
+        current = self._widgets['current']
+        # I'm not sure if there's a better way
+        try:
+            texture = int(current['texture'].text)
+        except ValueError:
+            texture = 0
+        self._data['texture'] = texture
+        try:
+            elevation = float(current['elevation'].text)
+        except ValueError:
+            elevation = 0
+        self._data['elevation'] = elevation
+        try:
+            height = float(current['height'].text)
+        except ValueError:
+            height = 1
+        self._data['height'] = height
+        try:
+            top = current['top']
+            top = (
+                int(top['r'].text),
+                int(top['g'].text),
+                int(top['b'].text),
+            )
+        except ValueError:
+            top = (0, 0, 0)
+        self._data['top'] = top
+        try:
+            bottom = current['bottom']
+            bottom = (
+                int(bottom['r'].text),
+                int(bottom['g'].text),
+                int(bottom['b'].text),
+            )
+        except ValueError:
+            bottom = (0, 0, 0)
+        self._data['bottom'] = bottom
+        try:
+            rect = current['rect']
+            rect = (
+                float(rect['left'].text),
+                float(rect['top'].text),
+                float(rect['width'].text),
+                float(rect['height'].text),
+            )
+            if rect == (0, 0, 1, 1):
+                rect = None
+        except ValueError:
+            rect = None
+        self._data['rect'] = rect
+        try:
+            semitile = current['semitile']
+            semitile = {
+                'axis': int(semitile['axis'].text),
+                'pos': (float(semitile['x'].text),
+                        float(semitile['y'].text)),
+                'width': float(semitile['width'].text),
+            }
+        except ValueError:
+            semitile = None
+        self._data['semitile'] = semitile
+
+    def _update_hover(self: Self) -> None:
+        data = self._hover_data
+        if data is None:
+            data = {
+                'texture': 'N/A',
+                'elevation': 'N/A',
+                'height': 'N/A',
+                'top': 'N/A',
+                'bottom': 'N/A',
+                'rect': ('N/A', 'N/A', 'N/A', 'N/A'),
+                'semitile': {
+                    'axis': 'N/A',
+                    'pos': ('N/A', 'N/A'),
+                    'width': 'N/A',
+                }
+            }
+        hover = self._widgets['hover']
+        hover['texture'].text = str(data['texture'])
+        hover['elevation'].text = str(data['elevation'])
+        hover['height'].text = str(data['height'])
+        top = hover['top']
+        top['r'].text = str(data['top'][0])
+        top['g'].text = str(data['top'][1])
+        top['b'].text = str(data['top'][2])
+        bottom = hover['bottom']
+        bottom['r'].text = str(data['bottom'][0])
+        bottom['g'].text = str(data['bottom'][1])
+        bottom['b'].text = str(data['bottom'][2])
+        rect = hover['rect']
+        data_rect = data.get('rect')
+        if data_rect is not None:
+            rect['left'].text = str(data_rect[0])
+            rect['top'].text = str(data_rect[1])
+            rect['width'].text = str(data_rect[2])
+            rect['height'].text = str(data_rect[3])
+        else:
+            rect['left'].text = '0'
+            rect['top'].text = '0'
+            rect['width'].text = '1'
+            rect['height'].text = '1'
+        semitile = hover['semitile']
+        data_semitile = data.get('semitile')
+        if data_semitile is not None:
+            semitile['axis'].text = str(data_semitile['axis'])
+            semitile['x'].text = str(data_semitile['pos'][0])
+            semitile['y'].text = str(data_semitile['pos'][1])
+            semitile['width'].text = str(data_semitile['width'])
+
+    def _update_widgets(self: Self) -> None:
+        self._update_current()
+        self._update_hover()
+        self._update_surfaces()
+        
     def _get_screen_pos(self: Self, x: int, y: int) -> None:
         return (
             (math.floor(self._pos[0]) + x - self._pos[0]) * self._zoom,
@@ -212,35 +683,55 @@ class Game(object):
     def _draw_tile(self: Self,
                    alpha: Optional[Real],
                    data: dict,
-                   pos: tuple) -> None:
+                   pos: tuple,
+                   size: Optional[int]=None,
+                   surf: Optional[pg.Surface]=None) -> None:
 
-        surf = pg.Surface((self._zoom, self._zoom))
-        semizoom = self._zoom / 2
-        quarterzoom = self._zoom / 4
+        if size is None:
+            size = self._zoom
+        if surf is None:
+            surf = self._screen
+
+        # surface is what's rendered
+        # surf is where surface is rendered
+
+        surface = pg.Surface((size, size))
+        semizoom = size / 2
+        quarterzoom = size / 4
         # Texture
         try:
             texture = self._wall_textures[self._data['texture']]._surf
         except:
             texture = FALLBACK_SURF
-        surf.blit(
-            pg.transform.scale(texture, (self._zoom, self._zoom)),
-            (0, 0),
+        surface.blit(
+            pg.transform.scale(texture, (size, size)), (0, 0),
         )
         # Rect
         rect = data.get('rect')
         if rect is None:
-            rect = (0, 0, self._zoom, self._zoom)
+            rect = (0, 0, size, size)
         else:
             rect = (
-                rect[0] * self._zoom,
-                rect[1] * self._zoom,
-                rect[2] * self._zoom,
-                rect[3] * self._zoom,
+                rect[0] * size,
+                rect[1] * size,
+                rect[2] * size,
+                rect[3] * size,
             )
-        pg.draw.rect(surf, self._colors['rect'], rect, width=1)
+        pg.draw.rect(surface, self._colors['rect'], rect, width=1)
+        # Semitile
+        semitile = data.get('semitile')
+        if semitile is not None:
+            rect = (
+                (semitile['pos'][0] * size,
+                 semitile['pos'][1] * size),
+                (1, semitile['width'] * size)
+                if semitile['axis']
+                else (semitile['width'] * size, 1)
+            )
+            pg.draw.rect(surface, self._colors['semitile'], rect)
         # Draw
-        surf.set_alpha(alpha)
-        self._screen.blit(surf, pos)
+        surface.set_alpha(alpha)
+        surf.blit(surface, pos)
 
     def _draw_tiles(self: Self) -> None:
         for y in range(math.ceil(self._SCREEN_SIZE[1] / self._zoom) + 1):
@@ -295,6 +786,7 @@ class Game(object):
             keys = pg.key.get_pressed()
             mod = any(keys[key] for key in self._keys['mod'])
             mod2 = any(keys[key] for key in self._keys['mod2'])
+            current = self._widgets['current']
             for event in pg.event.get():
                 self._panel.handle_event(event)
                 if event.type == pg.QUIT:
@@ -317,14 +809,22 @@ class Game(object):
                         # Height / Elevation
                         if event.key in self._keys['vertical_increase']:
                             if mod:
-                                self._data['elevation'] += 0.05
+                                current['elevation'].text = str(
+                                    round(self._data['elevation'] + 0.05, 3),
+                                )
                             else:
-                                self._data['height'] += 0.05
+                                current['height'].text = str(
+                                    round(self._data['height'] + 0.05, 3),
+                                )
                         elif event.key in self._keys['vertical_decrease']:
                             if mod:
-                                self._data['elevation'] -= 0.05
+                                current['elevation'].text = str(
+                                    round(self._data['elevation'] - 0.05, 3),
+                                )
                             else:
-                                self._data['height'] -= 0.05
+                                current['height'].text = str(
+                                    round(self._data['height'] - 0.05, 3),
+                                )
                         # History
                         if mod2 and event.key in self._keys['do']:
                             # redo
@@ -361,6 +861,7 @@ class Game(object):
                                 ]
                             self._change = len(self._history)
                             self._history.append({})
+                self._update_widgets()
             
             if not self._panel.focused:
                 mouse_pos = pg.mouse.get_pos()
@@ -373,6 +874,7 @@ class Game(object):
                     tile_key = gen_tile_key(pos)
                     # set
                     tile_data = self._tilemap.get(tile_key)
+                    self._hover_data = tile_data
                     if mouse[0]:
                         if self._tool == 'place':
                             if tile_data != self._data:

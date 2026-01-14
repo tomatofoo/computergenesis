@@ -9,6 +9,7 @@ from typing import Self
 
 import pygame as pg
 
+from data.levels import LEVELS
 from modules.level import ColumnTexture
 from modules.level import Walls
 from modules.level import Floor
@@ -241,7 +242,7 @@ class Game(object):
                 pg.image.load(gen_img_path('tilesets/all/wood.png')).convert(),
             ),
             ceiling=Sky(pg.image.load(gen_img_path('nightsky.png')).convert()),
-            walls=Walls.load('data/map.json', wall_textures),
+            walls=Walls.load('data/maps/0.json', wall_textures),
             specials=self._specials,
             entities=self._entities,
             sounds=self._sounds,

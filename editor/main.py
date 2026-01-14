@@ -2,6 +2,7 @@ import os
 import sys
 import time
 import math
+import json
 from typing import Self
 
 import pygame as pg
@@ -481,14 +482,21 @@ class Game(object):
         ) 
 
     def _save(self: Self) -> None:
-        pass
+        with open(self._widgets['path'].text, 'w') as file:
+            json.dump({'tilemap': self._tilemap}, file)
 
     def _load(self: Self) -> None:
-        pass
+        try:
+            with open(self._widgets['path'].text, 'r') as file:
+                self._tilemap = json.loads(file.read())['tilemap']
+        except:
+            pass
 
     def _load_level(self: Self) -> None:
         try:
             self._level = LEVELS[self._widgets['level'].text]
+            self._tilemap = self._level._walls._tilemap
+            self._wall_textures = self._level._walls._textures
         except:
             self._level = None
 

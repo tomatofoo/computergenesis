@@ -1,4 +1,4 @@
-import pygame as pg
+from modules.level import Level
 
 
 LEVELS = (

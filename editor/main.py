@@ -732,7 +732,7 @@ class Game(object):
         quarterzoom = size / 4
         # Texture
         try:
-            texture = self._wall_textures[self._data['texture']]._surf
+            texture = self._wall_textures[data['texture']]._surf
         except:
             texture = FALLBACK_SURF
         surface.blit(

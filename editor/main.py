@@ -48,6 +48,7 @@ class Game(object):
             'top': (0, 0, 0), # default top
             'bottom': (0, 0, 0), # default bottom
             'remove': (255, 0, 0), # remove tool
+            'eyedropper': (0, 255, 0), # eyedropper
             'rect': (255, 255, 0),
             'semitile': (0, 255, 0),
        }
@@ -62,10 +63,11 @@ class Game(object):
             'do': (pg.K_z, ), # undo redo
             'place': (pg.K_b, ),
             'remove': (pg.K_e, ),
+            'eyedropper': (pg.K_i, ),
         }
-
-        # Settings for current tile
-        self._data = {
+        
+        # Data
+        self._default_data = {
             'texture': 0,
             'elevation': 0,
             'height': 1,
@@ -73,8 +75,10 @@ class Game(object):
             'bottom': self._colors['bottom'],
             'rect': None,
         }
+        self._data = self._default_data.copy()
         self._hover_data = None
-
+        
+        # Level Stuff
         self._level = None
         self._wall_textures = []
         self._tilemap = {}
@@ -83,7 +87,7 @@ class Game(object):
         self._initialize_panel()
 
         # tools
-        self._tool = 'place' # place, remove
+        self._tool = 'place' # place, remove, 'eyedropper'
         self._place_alpha = 128 # alpha of 'ghost' tile when placing
         self._remove_width = 1
 
@@ -339,40 +343,8 @@ class Game(object):
         }
         self._widgets['path'].text = 'data/maps/0.json'
         self._widgets['level'].text = '0'
-        current = self._widgets['current']
-        current['texture'].text = str(self._data['texture'])
-        current['elevation'].text = str(self._data['elevation'])
-        current['height'].text = str(self._data['height'])
-        top = current['top']
-        top['r'].text = str(self._data['top'][0])
-        top['g'].text = str(self._data['top'][1])
-        top['b'].text = str(self._data['top'][2])
-        bottom = current['bottom']
-        bottom['r'].text = str(self._data['bottom'][0])
-        bottom['g'].text = str(self._data['bottom'][1])
-        bottom['b'].text = str(self._data['bottom'][2])
-        rect = current['rect']
-        data_rect = self._data.get('rect')
-        if data_rect is not None:
-            rect['left'].text = str(data_rect[0])
-            rect['top'].text = str(data_rect[1])
-            rect['width'].text = str(data_rect[2])
-            rect['height'].text = str(data_rect[3])
-        else:
-            rect['left'].text = '0'
-            rect['top'].text = '0'
-            rect['width'].text = '1'
-            rect['height'].text = '1'
-        semitile = current['semitile']
-        data_semitile = self._data.get('semitile')
-        if data_semitile is not None:
-            semitile['axis'].text = str(data_semitile['axis'])
-            semitile['x'].text = str(data_semitile['pos'][0])
-            semitile['y'].text = str(data_semitile['pos'][1])
-            semitile['width'].text = str(data_semitile['width'])
-        else:
-            semitile['axis'].text = '0'
-
+        current = self._widgets['current'] 
+        self._current_from_data(self._data)
         hover = self._widgets['hover']
         self._update_widgets()
 
@@ -613,6 +585,41 @@ class Game(object):
             semitile = None
         self._data['semitile'] = semitile
 
+    def _current_from_data(self: Self, data: dict) -> None:
+        current = self._widgets['current']
+        current['texture'].text = str(data['texture'])
+        current['elevation'].text = str(data['elevation'])
+        current['height'].text = str(data['height'])
+        top = current['top']
+        top['r'].text = str(data['top'][0])
+        top['g'].text = str(data['top'][1])
+        top['b'].text = str(data['top'][2])
+        bottom = current['bottom']
+        bottom['r'].text = str(data['bottom'][0])
+        bottom['g'].text = str(data['bottom'][1])
+        bottom['b'].text = str(data['bottom'][2])
+        rect = current['rect']
+        data_rect = data.get('rect')
+        if data_rect is not None:
+            rect['left'].text = str(data_rect[0])
+            rect['top'].text = str(data_rect[1])
+            rect['width'].text = str(data_rect[2])
+            rect['height'].text = str(data_rect[3])
+        else:
+            rect['left'].text = '0'
+            rect['top'].text = '0'
+            rect['width'].text = '1'
+            rect['height'].text = '1'
+        semitile = current['semitile']
+        data_semitile = data.get('semitile')
+        if data_semitile is not None:
+            semitile['axis'].text = str(data_semitile['axis'])
+            semitile['x'].text = str(data_semitile['pos'][0])
+            semitile['y'].text = str(data_semitile['pos'][1])
+            semitile['width'].text = str(data_semitile['width'])
+        else:
+            semitile['axis'].text = '0'
+
     def _update_hover(self: Self) -> None:
         data = self._hover_data
         if data is None:
@@ -765,10 +772,10 @@ class Game(object):
         )
         if self._tool == 'place':
             self._draw_tile(self._place_alpha, self._data, (x, y))
-        elif self._tool == 'remove':
+        else:
             pg.draw.rect(
                 self._screen,
-                self._colors['remove'],
+                self._colors[self._tool],
                 (x, y, self._zoom, self._zoom),
                 width=self._remove_width,
             )
@@ -806,6 +813,8 @@ class Game(object):
                                 self._tool = 'place'
                             elif event.key in self._keys['remove']:
                                 self._tool = 'remove'
+                            elif event.key in self._keys['eyedropper']:
+                                self._tool = 'eyedropper'
                         # Height / Elevation
                         if event.key in self._keys['vertical_increase']:
                             if mod:
@@ -887,6 +896,13 @@ class Game(object):
                                 self._tilemap.pop(tile_key),
                                 None,
                             )
+                        elif self._tool == 'eyedropper':
+                            self._data = tile_data
+                            if tile_data is None:
+                                self._data = self._default_data.copy()
+                            self._current_from_data(self._data)
+                            self._update_surfaces()
+
                 movement = pg.Vector2(
                     keys[pg.K_d] - keys[pg.K_a],
                     keys[pg.K_s] - keys[pg.K_w],

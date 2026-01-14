@@ -252,6 +252,8 @@ class Input(_Widget): # Text Input
                     self._cursor_pos = 0
                 elif event.key == pg.K_e and ctrl:
                     self._cursor_pos = len(self._text)
+                elif event.key == pg.K_ESCAPE:
+                    self._focused = 0
 
 
 class Panel(object):

@@ -1092,7 +1092,6 @@ cdef class Camera:
                                     texture,
                                     (render_width, render_height),
                                 )
-
                             # add to depth buffer
                             for i in range(render_width):
                                 pos = (render_x + i, y)

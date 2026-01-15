@@ -150,7 +150,7 @@ entities = {
     ),
 }
 for dex, entity in enumerate(entities):
-    entity.glowing = 1
+    entity.glowing = 0
 
 player = Player((6.5, 7))
 player.yaw = 180

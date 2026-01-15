@@ -1066,24 +1066,21 @@ cdef class Camera:
                             # order depends on if scale is greater or less
                             # (optimization)
                             # I know this might be long but it works so yes
-                            # lighting
                             if not entity._glowing and self._darkness:
-                                factor = (
-                                    -rel_vector[2]**0.9 * self._darkness / 7
-                                )
                                 if (render_width * render_height
                                     <= rect_width * rect_height):
-
                                     texture = pg.transform.scale(
                                         texture,
                                         (render_width, render_height),
                                     )
-                                    pg.transform.hsl(
-                                        texture,
-                                        0, 0, fmax(factor, -1),
-                                        texture,
-                                    )
+                                    self._darken_line(texture, rel_vector[2])
                                 else:
+                                    # not using darken_line because it will 
+                                    # darken the actual entity's texture object
+                                    factor = (
+                                        -rel_vector[2]**0.9
+                                        * self._darkness / 7
+                                    )
                                     texture = pg.transform.scale(
                                         pg.transform.hsl(
                                             texture, 0, 0, fmax(factor, -1),

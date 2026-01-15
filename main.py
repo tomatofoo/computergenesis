@@ -61,10 +61,11 @@ class Game(object):
             tile_size=self._SURF_SIZE[0] / 2,
             wall_render_distance=8,
             player=self._player,
+            darkness=1,
             multithreaded=True,
         )
         self._camera.horizon = 0.5
-        self._camera.weapon_scale = 1
+        self._camera.weapon_scale = 3 / self._SURF_RATIO[0]
 
         textures = [
             pg.image.load(gen_img_path('shotgun/1.png')),

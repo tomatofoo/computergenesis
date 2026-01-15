@@ -71,7 +71,6 @@ class Entity(object):
         self._health = health
         self._manager = None
         self._remove = 0 # internal for when entity wants removal
-        self._dont_collide = set() # internal for no collision
        
     @property
     def glowing(self: Self) -> int:
@@ -334,9 +333,7 @@ class Entity(object):
             if entities:
                 for entity in entities:
                     # referencing Missile before declaration works somehow
-                    if (entity not in self._dont_collide
-                        and self not in entity._dont_collide
-                        and not isinstance(entity, Missile)):
+                    if entity is not self and not isinstance(entity, Missile):
                         tiles.append((
                             entity.rect(),
                             entity._elevation,

@@ -544,11 +544,12 @@ class Game(object):
         self._make_change()
         for map_key in old:
             for key, value in old[map_key].items():
-                self._history[-1][map_key][key] = (value, None)
+                if self._dict[map_key].get(key) is None:
+                    self._history[-1][map_key][key] = (value, None)
             for key, value in self._dict[map_key].items():
-                self._history[-1][map_key][key] = (
-                    old[map_key].get(key), value,
-                )
+                old_value = old[map_key].get(key)
+                if old_value != value:
+                    self._history[-1][map_key][key] = (old_value, value)
         self._make_change()
 
     def _clear(self: Self, map_key: str) -> None:

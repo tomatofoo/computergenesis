@@ -888,7 +888,6 @@ class Player(Entity):
             horizontal = entity_rect.colliderect(rect)
             if vertical and horizontal:
                 if top - self._elevation > self._climb:
-                    if top == 1: print(2, self._velocity2[0])
                     if self._velocity2[1] > 0:
                         entity_rect.bottom = rect.top
                     elif self._velocity2[1] < 0:

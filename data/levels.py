@@ -150,7 +150,7 @@ entities = {
     ),
 }
 for dex, entity in enumerate(entities):
-    entity.glowing = 0
+    entity.glowing = 1
 
 player = Player((6.5, 7))
 player.yaw = 180
@@ -164,7 +164,7 @@ specials = SpecialManager()
 level0 = Level(
     floor=Floor(pg.image.load(gen_img_path('tilesets/all/wood.png'))),
     ceiling=Sky(pg.image.load(gen_img_path('nightsky.png'))),
-    walls=Walls.load('data/maps/1.json', wall_textures),
+    walls=Walls.load('data/maps/2.json', wall_textures),
     specials=specials,
     entities=entities,
     sounds=SOUNDS,

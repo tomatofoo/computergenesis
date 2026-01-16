@@ -21,7 +21,6 @@ class Weapon(object):
                  damage: Real,
                  attack_range: Real,
                  cooldown: Real,
-                 id: str='',
                  ground_textures: Optional[list[pg.Surface]]=None,
                  hold_textures: Optional[list[pg.Surface]]=None,
                  attack_textures: Optional[list[pg.Surface]]=None,
@@ -32,7 +31,6 @@ class Weapon(object):
         self._range = attack_range
         self._damage = damage
         self._cooldown = cooldown
-        self._id = id
 
         self._textures = {
             'ground': ground_textures,
@@ -72,14 +70,6 @@ class Weapon(object):
     def cooldown(self: Self, value: Real) -> None:
         self._cooldown = value
 
-    @property
-    def id(self: Self) -> str:
-        return self._id
-
-    @id.setter
-    def id(self: Self, value: str) -> None:
-        self._id = value
-
 
 class AmmoWeapon(Weapon):
     def __init__(self: Self,
@@ -87,7 +77,6 @@ class AmmoWeapon(Weapon):
                  attack_range: Real,
                  cooldown: Real,
                  capacity: int,
-                 id: str='',
                  ground_textures: Optional[list[pg.Surface]]=None,
                  hold_textures: Optional[list[pg.Surface]]=None,
                  attack_textures: Optional[list[pg.Surface]]=None,
@@ -100,7 +89,6 @@ class AmmoWeapon(Weapon):
             damage=damage,
             attack_range=attack_range,
             cooldown=cooldown,
-            id=id,
             ground_textures=ground_textures,
             hold_textures=hold_textures,
             attack_textures=attack_textures,
@@ -135,7 +123,6 @@ class MeleeWeapon(Weapon): # also hitscan btw
                  attack_range: Real,
                  cooldown: Real,
                  durability: int,
-                 id: str='',
                  ground_textures: Optional[list[pg.Surface]]=None,
                  hold_textures: Optional[list[pg.Surface]]=None,
                  attack_textures: Optional[list[pg.Surface]]=None,
@@ -147,7 +134,6 @@ class MeleeWeapon(Weapon): # also hitscan btw
             damage=damage,
             attack_range=attack_range,
             cooldown=cooldown,
-            id=id,
             ground_textures=ground_textures,
             hold_textures=hold_textures,
             attack_textures=attack_textures,
@@ -173,7 +159,6 @@ class HitscanWeapon(AmmoWeapon):
                  attack_range: Real,
                  cooldown: Real,
                  capacity: int,
-                 id: str='',
                  ground_textures: Optional[list[pg.Surface]]=None,
                  hold_textures: Optional[list[pg.Surface]]=None,
                  attack_textures: Optional[list[pg.Surface]]=None,
@@ -187,7 +172,6 @@ class HitscanWeapon(AmmoWeapon):
             attack_range=attack_range,
             cooldown=cooldown,
             capacity=capacity,
-            id=id,
             ground_textures=ground_textures,
             hold_textures=hold_textures,
             attack_textures=attack_textures,
@@ -205,7 +189,6 @@ class MissileWeapon(AmmoWeapon):
                  capacity: int,
                  cooldown: Real,
                  speed: Real,
-                 id: str='',
                  ground_textures: Optional[list[pg.Surface]]=None,
                  hold_textures: Optional[list[pg.Surface]]=None,
                  attack_textures: Optional[list[pg.Surface]]=None,
@@ -219,7 +202,6 @@ class MissileWeapon(AmmoWeapon):
             attack_range=attack_range,
             cooldown=cooldown,
             capacity=capacity,
-            id=id,
             ground_textures=ground_textures,
             hold_textures=hold_textures,
             attack_textures=attack_textures,
@@ -257,6 +239,18 @@ class MissileWeapon(AmmoWeapon):
     def speed(self: Self, value: Real) -> None:
         self._speed = value
 
+
+class WeaponManager(object):
+    def __init__(self: Self, weapons: dict[str, Weapon]) -> None:
+        self._weapons = weapons
+
+    @property
+    def weapons(self: Self) -> dict[str, Weapon]:
+        return self._weapons
+
+    @weapons.setter
+    def weapons(self: Self, value: dict[str, Weapon]) -> None:
+        self._weapons = value
 
 # CUSTOM
 

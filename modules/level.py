@@ -206,6 +206,9 @@ class Special(object):
     @property
     def data(self: Self) -> dict:
         return self._data
+
+    def _get_data(self: Self, key: str) -> dict:
+        return self._data
     
     def interaction(self: Self, entity: Entity, side: int=0) -> None:
         # side 0 = perpendicular to x-axis; lesser x value
@@ -258,7 +261,7 @@ class SpecialManager(object):
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         for key, special in self._specials.items():
             special.update(rel_game_speed, level_timer)
-            self._level._walls._dynamic_tilemap[key] = special._data
+            self._level._walls._dynamic_tilemap[key] = special._get_data(key)
 
 
 class Level(object):

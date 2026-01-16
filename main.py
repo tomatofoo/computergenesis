@@ -9,6 +9,7 @@ from typing import Self
 
 import pygame as pg
 
+from data.weapons import WEAPONS
 from data.levels import LEVELS
 from modules.camera import Camera
 from modules.hud import HUDElement

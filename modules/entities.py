@@ -711,6 +711,7 @@ class Item(EntityEx):
                  width: Real=0.5,
                  height: Real=1,
                  gravity: Real=0,
+                 loop: Real=-1,
                  render_width: Optional[Real]=None,
                  render_height: Optional[Real]=None) -> None:
 
@@ -724,6 +725,13 @@ class Item(EntityEx):
             render_height=render_height,
         )
         self._obj = obj
+        self._states = {
+            'default': EntityExState(
+                textures=(self._obj._textures['ground'],),
+                animation_time=self._obj._animation_times['ground'],
+                loop=loop,
+            ),
+        }
 
     @property
     def obj(self: Self) -> Collectible | Weapon:

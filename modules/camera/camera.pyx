@@ -567,12 +567,14 @@ cdef class Camera:
             * self._tile_size / 2 / rel_depth
         )
         
-    cdef void _darken_line(self: Self, line: pg.Surface, float dist):
+    cdef void _darken_line(self: Self,
+                           line: pg.Surface,
+                           float dist,
+                           float darkness=1):
         cdef float factor
-
-        if self._darkness:
+        if self._darkness and darkness:
             # magic numbers found through testing
-            factor = -dist**0.9 * self._darkness / 7
+            factor = -dist**0.9 * self._darkness / 7 * darkness
             pg.transform.hsl(line, 0, 0, fmax(factor, -1), line)
 
     cdef void _render_walls_and_entities(self: Self,
@@ -582,6 +584,7 @@ cdef class Camera:
         cdef:
             object texture
             object manager = self._player._manager
+            object darkness
             int i
             int x
             int render_back = 0
@@ -659,9 +662,9 @@ cdef class Camera:
             end_pos = [self._player._pos[0], self._player._pos[1]]
             slope = ray[1] / ray[0] if ray[0] else 2147483647
             tile = [floorf(end_pos[0]), floorf(end_pos[1])]
-            center = (tile[0] + 0.5, tile[1] + 0.5)
             tile_key = gen_tile_key(tile)
             data = tilemap.get(tile_key)
+            center = (tile[0] + 0.5, tile[1] + 0.5)
             dir = (ray[0] > 0, ray[1] > 0)
             # step for tile (for each displacement)
             step_x = dir[0] * 2 - 1 # 1 if yes, -1 if no
@@ -678,6 +681,9 @@ cdef class Camera:
             # I know it's funky but it works
             if data is not None:
                 obj = data.get('semitile')
+                darkness = data.get('darkness')
+                if darkness is None:
+                    darkness = 1
                 if obj is None:
                     if self._player._render_elevation < data['elevation']:
                         render_back = 2
@@ -731,7 +737,9 @@ cdef class Camera:
                             line = pg.Surface((1, 1))
                             line.set_at((0, 0), data[side_key])
                             self._darken_line(
-                                line, self._player._pos.distance_to(center),
+                                line,
+                                self._player._pos.distance_to(center),
+                                darkness,
                             )
                             color = line.get_at((0, 0))
                             colors[tile_key] = color
@@ -753,6 +761,9 @@ cdef class Camera:
                 data = tilemap.get(tile_key)
                 if data is not None:
                     obj = data.get('semitile')
+                    darkness = data.get('darkness')
+                    if darkness is None:
+                        darkness = 1
                     # this weird if statement structure is so that rendering
                     # semitiles works; if a semitile is directly underneath 
                     # the player, the old if statement structure wouldn't've 
@@ -891,7 +902,7 @@ cdef class Camera:
                             line.subsurface(0, top, 1, rect_height),
                             (1, render_line_height)
                         )
-                        self._darken_line(line, dist)
+                        self._darken_line(line, dist, darkness)
 
                         # if not semitile or if semitile and no alpha
                         # walls expected to have no transparency
@@ -1066,20 +1077,25 @@ cdef class Camera:
                             # order depends on if scale is greater or less
                             # (optimization)
                             # I know this might be long but it works so yes
-                            if not entity._glowing and self._darkness:
+                            if entity._darkness and self._darkness:
                                 if (render_width * render_height
                                     <= rect_width * rect_height):
                                     texture = pg.transform.scale(
                                         texture,
                                         (render_width, render_height),
                                     )
-                                    self._darken_line(texture, rel_vector[2])
+                                    self._darken_line(
+                                        texture,
+                                        rel_vector[2],
+                                        entity._darkness,
+                                    )
                                 else:
                                     # not using darken_line because it will 
                                     # darken the actual entity's texture object
                                     factor = (
                                         -rel_vector[2]**0.9
                                         * self._darkness / 7
+                                        * entity._darkness
                                     )
                                     texture = pg.transform.scale(
                                         pg.transform.hsl(

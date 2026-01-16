@@ -50,7 +50,7 @@ class Entity(object):
         self.elevation_velocity = 0
         self.yaw_velocity = 0
         self.textures = textures
-        self._glowing = 0
+        self._darkness = 1
         self._pos = pg.Vector2(pos)
         self._width = width # width of rect
         self._height = height
@@ -73,12 +73,12 @@ class Entity(object):
         self._remove = 0 # internal for when entity wants removal
        
     @property
-    def glowing(self: Self) -> int:
-        return self._glowing
+    def darkness(self: Self) -> float:
+        return self._darkness
 
-    @glowing.setter
-    def glowing(self: Self, value: bool) -> None:
-        self._glowing = value
+    @darkness.setter
+    def darkness(self: Self, value: float) -> None:
+        self._darkness = value
   
     @property
     def pos(self: Self) -> pg.Vector2:
@@ -766,7 +766,7 @@ class Player(Entity):
         # delete variables we don't need from entity init
         del self._textures
         del self._texture_angle
-        del self._glowing
+        del self._darkness
         del self._render_width
         del self._render_height
 

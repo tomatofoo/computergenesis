@@ -241,7 +241,7 @@ class MissileWeapon(AmmoWeapon):
 
 
 class WeaponManager(object):
-    def __init__(self: Self, weapons: dict[str, Weapon]) -> None:
+    def __init__(self: Self, weapons: dict[str, Weapon]={}) -> None:
         self._weapons = weapons
 
     @property
@@ -251,6 +251,7 @@ class WeaponManager(object):
     @weapons.setter
     def weapons(self: Self, value: dict[str, Weapon]) -> None:
         self._weapons = value
+
 
 # CUSTOM
 

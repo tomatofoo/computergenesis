@@ -3,7 +3,7 @@ from typing import Self
 
 import pygame as pg
 
-from .weapons import Weapon
+from .weapons import WeaponManager
 
 
 class Collectible(object):
@@ -20,7 +20,7 @@ class Collectible(object):
 
 class Inventory(object):
     def __init__(self: Self,
-                 weapons: set[Weapon]=set(),
+                 weapons: WeaponManager=WeaponManager(),
                  collectibles: set[Collectible]=set()) -> None:
         self._weapons = {}
         for weapon in weapons:

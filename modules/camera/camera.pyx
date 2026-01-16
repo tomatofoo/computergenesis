@@ -757,9 +757,8 @@ cdef class Camera:
                         _limits_add(&limits, render_y, render_end)
                     render_back = 0
                 
-                if rel_depth:
-                    tile_key = gen_tile_key(tile)
-                    data = tilemap.get(tile_key)
+                tile_key = gen_tile_key(tile)
+                data = tilemap.get(tile_key)
                 if data is not None:
                     if rel_depth:
                         obj = data.get('semitile')

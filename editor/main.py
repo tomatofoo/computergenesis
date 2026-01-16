@@ -91,6 +91,8 @@ class Game(object):
             'top': self._colors['top'],
             'bottom': self._colors['bottom'],
             'rect': None,
+            'semitile': None,
+            'darkness': None,
         }
         # Deepcopying in case of semitile
         self._data = copy.deepcopy(self._default_data)
@@ -270,50 +272,39 @@ class Game(object):
                         font=self._fonts['main'],
                     ),
                 },
+                'darkness': Input(
+                    (self._EDITOR_WIDTH + 60, 530),
+                    width=170,
+                    max_chars=25,
+                    font=self._fonts['main'],
+                ),
             },
             'hover': {
                 'surface': Surface(
-                    (self._EDITOR_WIDTH + 10, 570),
+                    (self._EDITOR_WIDTH + 10, 590),
                     surf=pg.Surface((0, 0)),
                 ),
                 'key': Label(
-                    (self._EDITOR_WIDTH + 60, 610),
-                    text='N/A',
-                    font=self._fonts['main'],
-                ),
-                'texture': Label(
                     (self._EDITOR_WIDTH + 60, 630),
                     text='N/A',
                     font=self._fonts['main'],
                 ),
-                'elevation': Label(
+                'texture': Label(
                     (self._EDITOR_WIDTH + 60, 650),
                     text='N/A',
                     font=self._fonts['main'],
                 ),
-                'height': Label(
+                'elevation': Label(
                     (self._EDITOR_WIDTH + 60, 670),
                     text='N/A',
                     font=self._fonts['main'],
                 ),
+                'height': Label(
+                    (self._EDITOR_WIDTH + 60, 690),
+                    text='N/A',
+                    font=self._fonts['main'],
+                ),
                 'top': {
-                    'r': Label(
-                        (self._EDITOR_WIDTH + 60, 690),
-                        text='N/A',
-                        font=self._fonts['main'],
-                    ),
-                    'g': Label(
-                        (self._EDITOR_WIDTH + 110, 690),
-                        text='N/A',
-                        font=self._fonts['main'],
-                    ),
-                    'b': Label(
-                        (self._EDITOR_WIDTH + 160, 690),
-                        text='N/A',
-                        font=self._fonts['main'],
-                    ),
-                },
-                'bottom': {
                     'r': Label(
                         (self._EDITOR_WIDTH + 60, 710),
                         text='N/A',
@@ -330,50 +321,72 @@ class Game(object):
                         font=self._fonts['main'],
                     ),
                 },
-                'rect': {
-                    'left': Label(
+                'bottom': {
+                    'r': Label(
                         (self._EDITOR_WIDTH + 60, 730),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
-                    'top': Label(
+                    'g': Label(
+                        (self._EDITOR_WIDTH + 110, 730),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                    'b': Label(
+                        (self._EDITOR_WIDTH + 160, 730),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                },
+                'rect': {
+                    'left': Label(
                         (self._EDITOR_WIDTH + 60, 750),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
-                    'width': Label(
+                    'top': Label(
                         (self._EDITOR_WIDTH + 60, 770),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
-                    'height': Label(
+                    'width': Label(
                         (self._EDITOR_WIDTH + 60, 790),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                    'height': Label(
+                        (self._EDITOR_WIDTH + 60, 810),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
                 },
                 'semitile': {
                     'axis': Label(
-                        (self._EDITOR_WIDTH + 60, 810),
-                        text='N/A',
-                        font=self._fonts['main'],
-                    ),
-                    'x': Label(
                         (self._EDITOR_WIDTH + 60, 830),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
-                    'y': Label(
-                        (self._EDITOR_WIDTH + 145, 830),
-                        text='N/A',
-                        font=self._fonts['main'],
-                    ),
-                    'width': Label(
+                    'x': Label(
                         (self._EDITOR_WIDTH + 60, 850),
                         text='N/A',
                         font=self._fonts['main'],
                     ),
-                }
+                    'y': Label(
+                        (self._EDITOR_WIDTH + 145, 850),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                    'width': Label(
+                        (self._EDITOR_WIDTH + 60, 870),
+                        text='N/A',
+                        font=self._fonts['main'],
+                    ),
+                },
+                'darkness': Label(
+                    (self._EDITOR_WIDTH + 60, 890),
+                    text='N/A',
+                    font=self._fonts['main'],
+                ),
             },
         }
         self._widgets['path'].text = 'data/maps/0.json'
@@ -461,6 +474,11 @@ class Game(object):
                     text='Semi',
                     font=self._fonts['main'],
                 ),
+                Label(
+                    (self._EDITOR_WIDTH + 10, 530),
+                    text='Dark',
+                    font=self._fonts['main'],
+                ),
                 current['surface'],
                 current['texture'],
                 current['elevation'],
@@ -469,49 +487,55 @@ class Game(object):
                 *current['bottom'].values(),
                 *current['rect'].values(),
                 *current['semitile'].values(),
+                current['darkness'],
                 Label(
-                    (self._EDITOR_WIDTH + 10, 550),
+                    (self._EDITOR_WIDTH + 10, 570),
                     'Hover',
                     self._fonts['title'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 610),
+                    (self._EDITOR_WIDTH + 10, 630),
                     text='Key',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 630),
+                    (self._EDITOR_WIDTH + 10, 650),
                     text='Text',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 650),
+                    (self._EDITOR_WIDTH + 10, 670),
                     text='Elev',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 670),
+                    (self._EDITOR_WIDTH + 10, 690),
                     text='Hieg',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 690),
+                    (self._EDITOR_WIDTH + 10, 710),
                     text='Top',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 710),
+                    (self._EDITOR_WIDTH + 10, 730),
                     text='Bott',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 730),
+                    (self._EDITOR_WIDTH + 10, 750),
                     text='Rect',
                     font=self._fonts['main'],
                 ),
                 Label(
-                    (self._EDITOR_WIDTH + 10, 810),
+                    (self._EDITOR_WIDTH + 10, 830),
                     text='Semi',
+                    font=self._fonts['main'],
+                ),
+                Label(
+                    (self._EDITOR_WIDTH + 10, 890),
+                    text='Dark',
                     font=self._fonts['main'],
                 ),
                 hover['key'],
@@ -523,6 +547,7 @@ class Game(object):
                 *hover['bottom'].values(),
                 *hover['rect'].values(),
                 *hover['semitile'].values(),
+                hover['darkness'],
             },
             min_scroll=-self._SCREEN_SIZE[1],
         ) 
@@ -623,17 +648,17 @@ class Game(object):
         # I'm not sure if there's a better way
         try:
             texture = int(current['texture'].text)
-        except ValueError:
+        except:
             texture = 0
         self._data['texture'] = texture
         try:
             elevation = float(current['elevation'].text)
-        except ValueError:
+        except:
             elevation = 0
         self._data['elevation'] = elevation
         try:
             height = float(current['height'].text)
-        except ValueError:
+        except:
             height = 1
         self._data['height'] = height
         try:
@@ -643,7 +668,7 @@ class Game(object):
                 int(top['g'].text),
                 int(top['b'].text),
             )
-        except ValueError:
+        except:
             top = (0, 0, 0)
         self._data['top'] = top
         try:
@@ -653,7 +678,7 @@ class Game(object):
                 int(bottom['g'].text),
                 int(bottom['b'].text),
             )
-        except ValueError:
+        except:
             bottom = (0, 0, 0)
         self._data['bottom'] = bottom
         try:
@@ -666,7 +691,7 @@ class Game(object):
             )
             if rect == (0, 0, 1, 1):
                 rect = None
-        except ValueError:
+        except:
             rect = None
         self._data['rect'] = rect
         try:
@@ -677,9 +702,14 @@ class Game(object):
                         float(semitile['y'].text)),
                 'width': float(semitile['width'].text),
             }
-        except ValueError:
+        except:
             semitile = None
         self._data['semitile'] = semitile
+        try:
+            darkness = float(current['darkness'].text)
+        except:
+            darkness = None
+        self._data['darkness'] = darkness
 
     def _current_from_data(self: Self, data: dict) -> None:
         current = self._widgets['current']
@@ -718,6 +748,12 @@ class Game(object):
             semitile['x'].text = ''
             semitile['y'].text = ''
             semitile['width'].text = ''
+        darkness = current['darkness']
+        data_darkness = data.get('darkness')
+        if data_darkness is not None:
+            darkness.text = str(data_darkness)
+        else:
+            darkness.text = '1'
 
     def _update_hover(self: Self) -> None:
         data = self._hover_data
@@ -733,7 +769,8 @@ class Game(object):
                     'axis': 'N/A',
                     'pos': ('N/A', 'N/A'),
                     'width': 'N/A',
-                }
+                },
+                'darkness': 'N/A',
             }
         hover = self._widgets['hover']
         hover['key'].text = self._hover_key
@@ -767,6 +804,12 @@ class Game(object):
             semitile['x'].text = str(data_semitile['pos'][0])
             semitile['y'].text = str(data_semitile['pos'][1])
             semitile['width'].text = str(data_semitile['width'])
+        darkness = hover['darkness']
+        data_darkness = data.get('darkness')
+        if data_darkness is not None:
+            darkness.text = str(data_darkness)
+        else:
+            darkness.text = '1'
 
     def _update_widgets(self: Self) -> None:
         self._widgets['tool'].text = self._tool

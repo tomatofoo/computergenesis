@@ -1,5 +1,6 @@
 import math
 import json
+import copy
 from numbers import Real
 from typing import Self
 from typing import Optional
@@ -122,6 +123,7 @@ class Walls(object):
                  rect: Optional[list]=None,
                  top: Optional[ColorLike]=None,
                  bottom: Optional[ColorLike]=None,
+                 darkness: Optional[Real]=None,
                  change: int=2):
         # change dictates which tilemaps to change
         # 0 = static only
@@ -159,15 +161,17 @@ class Walls(object):
             'elevation': elevation,
             'height': height,
             'texture': texture,
-            'semitile': semitile,
             'top': top,
             'bottom': bottom,
             'rect': rect,
+            'semitile': semitile,
+            'darkness': darkness,
         }
         if change != 1:
             self._tilemap[tile_key] = data
+        # deepcopy so that changing one won't change other
         if change:
-            self._dynamic_tilemap[tile_key] = data
+            self._dynamic_tilemap[tile_key] = copy.deepcopy(data)
 
     def pop_tile(self: Self, pos: Point):
         return self._walls.pop(f'{pos[0]};{pos[1]}')

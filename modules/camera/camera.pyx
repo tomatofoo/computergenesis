@@ -756,14 +756,16 @@ cdef class Camera:
 
                         _limits_add(&limits, render_y, render_end)
                     render_back = 0
-
-                tile_key = gen_tile_key(tile)
-                data = tilemap.get(tile_key)
+                
+                if rel_depth:
+                    tile_key = gen_tile_key(tile)
+                    data = tilemap.get(tile_key)
                 if data is not None:
-                    obj = data.get('semitile')
-                    darkness = data.get('darkness')
-                    if darkness is None:
-                        darkness = 1
+                    if rel_depth:
+                        obj = data.get('semitile')
+                        darkness = data.get('darkness')
+                        if darkness is None:
+                            darkness = 1
                     # this weird if statement structure is so that rendering
                     # semitiles works; if a semitile is directly underneath 
                     # the player, the old if statement structure wouldn't've 

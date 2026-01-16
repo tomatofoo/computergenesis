@@ -400,6 +400,8 @@ class Entity(object):
         if self._yaw_velocity:
             self.yaw += self._yaw_velocity * rel_game_speed
         
+        # The +/-0.00001 is to account for floating-point precision errors
+
         self._pos[0] += self._velocity2[0] * rel_game_speed
         entity_rect = self.rect()
         for rect, bottom, top, entity in self._get_rects_around():
@@ -408,9 +410,9 @@ class Entity(object):
             if vertical and horizontal:
                 if top - self._elevation > self._climb:
                     if self._velocity2[0] > 0:
-                        entity_rect.right = rect.left
+                        entity_rect.right = rect.left - 0.00001
                     elif self._velocity2[0] < 0:
-                        entity_rect.left = rect.right
+                        entity_rect.left = rect.right + 0.00001
                     self._pos[0] = entity_rect.centerx
                 else: # climbing up
                     self.elevation = top
@@ -423,9 +425,9 @@ class Entity(object):
             if vertical and horizontal:
                 if top - self._elevation > self._climb:
                     if self._velocity2[1] > 0:
-                        entity_rect.bottom = rect.top
+                        entity_rect.bottom = rect.top - 0.00001
                     elif self._velocity2[1] < 0:
-                        entity_rect.top = rect.bottom
+                        entity_rect.top = rect.bottom + 0.00001
                     self._pos[1] = entity_rect.centery
                 else: # climbing up
                     self.elevation = top
@@ -864,6 +866,8 @@ class Player(Entity):
 
         if self._yaw_velocity:
             self.yaw += self._yaw_velocity * rel_game_speed
+        
+        # The +/-0.00001 is to account for floating-point precision errors
 
         self._pos[0] += self._velocity2[0] * rel_game_speed
         entity_rect = self.rect()
@@ -873,9 +877,9 @@ class Player(Entity):
             if vertical and horizontal:
                 if top - self._elevation > self._climb:
                     if self._velocity2[0] > 0:
-                        entity_rect.right = rect.left
+                        entity_rect.right = rect.left - 0.00001
                     elif self._velocity2[0] < 0:
-                        entity_rect.left = rect.right
+                        entity_rect.left = rect.right + 0.00001
                     self._pos[0] = entity_rect.centerx
                 else: # climbing up
                     self.elevation = top
@@ -889,9 +893,9 @@ class Player(Entity):
             if vertical and horizontal:
                 if top - self._elevation > self._climb:
                     if self._velocity2[1] > 0:
-                        entity_rect.bottom = rect.top
+                        entity_rect.bottom = rect.top - 0.00001
                     elif self._velocity2[1] < 0:
-                        entity_rect.top = rect.bottom
+                        entity_rect.top = rect.bottom + 0.00001
                     self._pos[1] = entity_rect.centery
                 else: # climbing up
                     self.elevation = top

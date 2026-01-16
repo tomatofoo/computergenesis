@@ -703,6 +703,41 @@ class Missile(EntityEx):
                 self.attack()
 
 
+class Item(EntityEx):
+    def __init__(self: Self,
+                 obj: Collectible | Weapon,
+                 pos: Point=(0, 0),
+                 elevation: Real=0,
+                 width: Real=0.5,
+                 height: Real=1,
+                 gravity: Real=0,
+                 render_width: Optional[Real]=None,
+                 render_height: Optional[Real]=None) -> None:
+
+        super().__init__(
+            pos=pos,
+            elevation=elevation,
+            width=width,
+            height=height,
+            gravity=gravity,
+            render_width=render_width,
+            render_height=render_height,
+        )
+        self._obj = obj
+
+    @property
+    def obj(self: Self) -> Collectible | Weapon:
+        return self._obj
+
+    @obj.setter
+    def obj(self: Self, value: Collectible | Weapon) -> None: 
+        self._obj = value
+
+    def interaction(self: Self, entity: Entity, inventory: Inventory) -> None:
+        inventory.add(self)
+        self._remove = 1
+
+
 class Player(Entity):
     def __init__(self: Self,
                  pos: Point=(0, 0),

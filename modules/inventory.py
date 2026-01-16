@@ -18,14 +18,26 @@ class Inventory(object):
     def __init__(self: Self,
                  weapons: set[Weapon]=set(),
                  collectibles: set[Collectible]=set()) -> None:
-        self._weapons = weapons
+        self._weapons = {}
+        for weapon in weapons:
+            self._weapons[weapon._id] = weapon
         self._collectibles = collectibles
 
+    def add(self: Self, obj: Collectible | Weapon) -> None:
+        if isinstance(obj, Weapon):
+            self.add_weapon(obj)
+        elif isinstance(obj, Collectible):
+            self.add_collectible(obj)
+    
     def add_weapon(self: Self, weapon: Weapon) -> None:
-        self._weapons.add(weapon)
+        value = self._weapons.get(weapon._id)
+        if value is None:
+            self._weapons[weapon._id] = weapon
+        else:
+            value.ammo += weapon.ammo
 
-    def remove_weapon(self: Self, weapon: Weapon) -> None:
-        self._weapons.remove(weapon)
+    def pop_weapon(self: Self, id: str) -> Weapon:
+        return self._weapons[id].pop()
 
     def add_collectible(self: Self, collectible: Collectible) -> None:
         self._collectibles.add(collectible)

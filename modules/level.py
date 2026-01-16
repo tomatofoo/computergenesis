@@ -221,6 +221,8 @@ class Special(object):
 class SpecialManager(object):
     # yes I know that using a dict with key is a little redundant given that 
     # the special has it as an attribute but I don't know a better way
+    # BUT this might work for like duo specials
+    # (i.e. a special that manages two tiles)
     def __init__(self: Self, specials: dict[str, Special]={}) -> None:
         self._specials = {}
         self.specials = specials

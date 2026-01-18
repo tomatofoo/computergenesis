@@ -240,6 +240,47 @@ class MissileWeapon(AmmoWeapon):
         self._speed = value
 
 
+class WeaponItem(object):
+    def __init__(self: Self, weapon: Weapon) -> None:
+        self._weapon = weapon
+    
+    @property
+    def weapon(self: Self) -> Weapon:
+        return self._weapon
+
+    @weapon.setter
+    def weapon(self: Self, value: Weapon) -> None:
+        self._weapon = value
+
+
+class MeleeWeaponItem(WeaponItem):
+    def __init__(self: Self, weapon: Weapon, durability: int) -> None:
+        super().__init__(weapon)
+        self._durability = durability
+
+    @property
+    def durability(self: Self) -> int:
+        return self._durability
+
+    @durability.setter
+    def durability(self: Self, value: int) -> None:
+        self._durability = value
+
+
+class AmmoWeaponItem(WeaponItem):
+    def __init__(self: Self, weapon: Weapon, ammo: int) -> None:
+        super().__init__(weapon)
+        self._ammo = ammo
+
+    @property
+    def ammo(self: Self) -> int:
+        return self._ammo
+
+    @ammo.setter
+    def ammo(self: Self, value: int) -> None:
+        self._ammo = value
+
+
 class WeaponManager(object):
     def __init__(self: Self, weapons: dict[str, Weapon]={}) -> None:
         self._weapons = weapons
@@ -251,7 +292,16 @@ class WeaponManager(object):
     @weapons.setter
     def weapons(self: Self, value: dict[str, Weapon]) -> None:
         self._weapons = value
+    
+    def set_weapon(self: Self, id: str, weapon: Weapon) -> None:
+        self._weapons[id] = weapon
+    
+    # returns if weapon was added in any way
+    def add_weapon(self: Self, id: str, weapon: Weapon) -> bool:
+        pass
 
+    def pop_weapon(self: Self, id: str) -> Weapon:
+        return self._weapons.pop(id)
 
 # CUSTOM
 

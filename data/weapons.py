@@ -73,6 +73,7 @@ WEAPONS = {
         hold_animation_time=30,
         attack_animation_time=50,
         attack_sound=SOUNDS['shotgun'],
+        pickup_sound=SOUNDS['pickup'],
     ),
     'launcher': MissileWeapon(
         attack_range=10,

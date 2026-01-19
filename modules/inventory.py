@@ -1,8 +1,10 @@
 from numbers import Real
 from typing import Self
+from typing import Optional
 
 import pygame as pg
 
+from .sound import Sound
 from .weapons import Weapon
 from .weapons import MeleeWeapon
 from .weapons import AmmoWeapon
@@ -11,12 +13,16 @@ from .weapons import AmmoWeapon
 class Collectible(object):
     def __init__(self: Self,
                  textures: list[pg.Surface],
-                 animation_time: Real) -> None:
+                 animation_time: Real,
+                 pickup_sound: Optional[Sound]=None) -> None:
         self._textures = {
             'ground': textures,
         }
         self._animation_times = {
             'ground': animation_time,
+        }
+        self._sounds = {
+            'pickup': pickup_sound,
         }
 
 

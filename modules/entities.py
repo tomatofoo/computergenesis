@@ -725,8 +725,7 @@ class CollectibleItem(EntityEx):
                  gravity: Real=0,
                  loop: Real=-1,
                  render_width: Optional[Real]=None,
-                 render_height: Optional[Real]=None,
-                 interaction_sound: Optional[Sound]=None) -> None:
+                 render_height: Optional[Real]=None) -> None:
 
         super().__init__(
             pos=pos,
@@ -740,9 +739,6 @@ class CollectibleItem(EntityEx):
         self._collectible = collectible
         self._loop = loop
         self._update_states()
-        self._sounds = {
-            'interaction': interaction_sound,
-        }
 
     @property
     def collectible(self: Self) -> Collectible:
@@ -762,14 +758,6 @@ class CollectibleItem(EntityEx):
         self._loop = value
         self._states['default']._loop = value
 
-    @property
-    def interaction_sound(self: Self) -> Sound:
-        return self._sounds['interaction']
-
-    @interaction_sound.setter
-    def interaction_sound(self: Self, value: Sound) -> None:
-        self._sounds['interaction'] = value
-
     def _update_states(self: Self) -> None:
         self._states = {
             'default': EntityExState(
@@ -782,7 +770,7 @@ class CollectibleItem(EntityEx):
     def interaction(self: Self, entity: Entity) -> None:
         try: 
             self._remove = entity._inventory.add_collectible(self._collectible)
-            sound = self._sounds['interaction']
+            sound = self._collectible._sounds['pickup']
             if sound is not None:
                 sound.play()
         except AttributeError:
@@ -800,8 +788,7 @@ class WeaponItem(EntityEx):
                  gravity: Real=0,
                  loop: Real=-1,
                  render_width: Optional[Real]=None,
-                 render_height: Optional[Real]=None,
-                 interaction_sound: Optional[Sound]=None) -> None:
+                 render_height: Optional[Real]=None) -> None:
 
         super().__init__(
             pos=pos,
@@ -816,9 +803,6 @@ class WeaponItem(EntityEx):
         self._number = number
         self._loop = loop
         self._update_states()
-        self._sounds = {
-            'interaction': interaction_sound,
-        }
 
     @property
     def weapon(self: Self) -> Weapon:
@@ -846,14 +830,6 @@ class WeaponItem(EntityEx):
         self._loop = value
         self._states['default']._loop = value
 
-    @property
-    def interaction_sound(self: Self) -> Sound:
-        return self._sounds['interaction']
-
-    @interaction_sound.setter
-    def interaction_sound(self: Self, value: Sound) -> None:
-        self._sounds['interaction'] = value
-
     def _update_states(self: Self) -> None:
         self._states = {
             'default': EntityExState(
@@ -866,7 +842,7 @@ class WeaponItem(EntityEx):
     def interaction(self: Self, entity: Entity) -> None:
         try: 
             self._remove = entity._inventory.add_weapon(self._weapon, self._number)
-            sound = self._sounds['interaction']
+            sound = self._weapon._sounds['pickup']
             if sound is not None:
                 sound.play()
         except AttributeError:

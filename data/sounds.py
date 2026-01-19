@@ -12,6 +12,7 @@ patch_surround()
 SOUNDS = SoundManager(
     sounds={
         'shotgun': Sound(gen_sfx_path('shotgun.mp3')),
+        'pickup': Sound(gen_sfx_path('pickup.mp3')),
         'water': Sound(gen_sfx_path('water.wav')),
     },
 )

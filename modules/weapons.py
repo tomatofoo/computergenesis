@@ -27,6 +27,7 @@ class Weapon(object):
                  ground_animation_time: Real=1,
                  hold_animation_time: Real=1,
                  attack_animation_time: Real=1,
+                 pickup_sound: Optional[Sound]=None,
                  attack_sound: Optional[Sound]=None) -> None:
         self._range = attack_range
         self._damage = damage
@@ -43,6 +44,7 @@ class Weapon(object):
             'attack': attack_animation_time,
         }
         self._sounds = {
+            'pickup': pickup_sound,
             'attack': attack_sound,
         }
 
@@ -83,6 +85,7 @@ class AmmoWeapon(Weapon):
                  ground_animation_time: Real=1,
                  hold_animation_time: Real=1,
                  attack_animation_time: Real=1,
+                 pickup_sound: Optional[Sound]=None,
                  attack_sound: Optional[Sound]=None) -> None:
 
         super().__init__(
@@ -95,6 +98,7 @@ class AmmoWeapon(Weapon):
             ground_animation_time=ground_animation_time,
             hold_animation_time=hold_animation_time,
             attack_animation_time=attack_animation_time,
+            pickup_sound=pickup_sound,
             attack_sound=attack_sound,
         )
         
@@ -121,6 +125,7 @@ class MeleeWeapon(Weapon): # also hitscan btw
                  ground_animation_time: Real=1,
                  hold_animation_time: Real=1,
                  attack_animation_time: Real=1,
+                 pickup_sound: Optional[Sound]=None,
                  attack_sound: Optional[Sound]=None) -> None:
         super().__init__(
             damage=damage,
@@ -132,6 +137,7 @@ class MeleeWeapon(Weapon): # also hitscan btw
             ground_animation_time=ground_animation_time,
             hold_animation_time=hold_animation_time,
             attack_animation_time=attack_animation_time,
+            pickup_sound=pickup_sound,
             attack_sound=attack_sound,
         )
         self._durability = durability
@@ -157,6 +163,7 @@ class HitscanWeapon(AmmoWeapon):
                  ground_animation_time: Real=1,
                  hold_animation_time: Real=1,
                  attack_animation_time: Real=1,
+                 pickup_sound: Optional[Sound]=None,
                  attack_sound: Optional[Sound]=None) -> None:
 
         super().__init__(
@@ -170,6 +177,7 @@ class HitscanWeapon(AmmoWeapon):
             ground_animation_time=ground_animation_time,
             hold_animation_time=hold_animation_time,
             attack_animation_time=attack_animation_time,
+            pickup_sound=pickup_sound,
             attack_sound=attack_sound,
         )
 
@@ -187,6 +195,7 @@ class MissileWeapon(AmmoWeapon):
                  ground_animation_time: Real=1,
                  hold_animation_time: Real=1,
                  attack_animation_time: Real=1,
+                 pickup_sound: Optional[Sound]=None,
                  attack_sound: Optional[Sound]=None) -> None:
 
         super().__init__(
@@ -200,6 +209,7 @@ class MissileWeapon(AmmoWeapon):
             ground_animation_time=ground_animation_time,
             hold_animation_time=hold_animation_time,
             attack_animation_time=attack_animation_time,
+            pickup_sound=pickup_sound,
             attack_sound=attack_sound,
         )
 

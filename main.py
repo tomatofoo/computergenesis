@@ -9,6 +9,7 @@ from typing import Self
 
 import pygame as pg
 
+from data.sounds import SOUNDS
 from data.weapons import WEAPONS
 from data.levels import LEVELS
 from modules.camera import Camera
@@ -55,7 +56,7 @@ class Game(object):
 
         self._level = LEVELS[0]
         self._player = self._level.entities.player
-        self._sounds = self._level.sounds
+        self._sounds = SOUNDS
 
         self._camera = Camera(
             fov=90,
@@ -68,86 +69,6 @@ class Game(object):
         self._camera.horizon = 0.5
         self._camera.weapon_scale = 3 / self._SURF_RATIO[0]
 
-        textures = [
-            pg.image.load(gen_img_path('shotgun/1.png')),
-            pg.image.load(gen_img_path('shotgun/2.png')),
-            pg.image.load(gen_img_path('shotgun/3.png')),
-            pg.image.load(gen_img_path('shotgun/4.png')),
-        ]
-        for surf in textures:
-            surf.set_colorkey((255, 0, 255))
-        self._shotgun = HitscanWeapon(
-            damage=100,
-            attack_range=20,
-            cooldown=60,
-            capacity=25,
-            ground_textures=None,
-            hold_textures=[textures[0]],
-            attack_textures=[
-                textures[1],
-                textures[2],
-                textures[3],
-                textures[2],
-                textures[1],
-            ],
-            ground_animation_time=1,
-            hold_animation_time=30,
-            attack_animation_time=50,
-            attack_sound=self._sounds['shotgun'],
-        )
-        self._shotgun.ammo = math.inf
-        textures = [
-            pg.image.load(gen_img_path('fist/1.png')),
-            pg.image.load(gen_img_path('fist/2.png')),
-            pg.image.load(gen_img_path('fist/3.png')),
-            pg.image.load(gen_img_path('fist/4.png')),
-        ]
-        for surf in textures:
-            surf.set_colorkey((255, 0, 255))
-        self._fist = MeleeWeapon(
-            damage=100,
-            attack_range=0.25,
-            cooldown=35,
-            durability=math.inf,
-            ground_textures=None,
-            hold_textures=[textures[0]],
-            attack_textures=[
-                textures[1],
-                textures[2],
-                textures[3],
-                textures[2],
-                textures[1],
-            ],
-            ground_animation_time=1,
-            hold_animation_time=30,
-            attack_animation_time=30,
-        )
-        textures = [
-            pg.image.load(gen_img_path('missile_launcher/1.png')),
-            pg.image.load(gen_img_path('missile_launcher/2.png')),
-        ]
-        for surf in textures:
-            surf.set_colorkey((255, 0, 255))
-        self._missile_launcher = MissileWeapon(
-            attack_range=10,
-            cooldown=25,
-            capacity=25,
-            speed=0.075,
-            missile=Missile(
-                damage=100,
-                width=0.25,
-                height=0.25,
-            ),
-            ground_textures=None,
-            hold_textures=[textures[0]],
-            attack_textures=[
-                textures[1],
-            ],
-            ground_animation_time=1,
-            hold_animation_time=30,
-            attack_animation_time=10,
-        )
-        self._missile_launcher.ammo = math.inf
         self._player.weapon = self._missile_launcher
 
     def move_tiles(self: Self, level_timer: Real) -> None:

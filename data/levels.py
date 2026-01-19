@@ -1,6 +1,6 @@
 import pygame as pg
-from pygame import mixer as mx
 
+from data.sounds import SOUNDS
 from modules.level import ColumnTexture
 from modules.level import Walls
 from modules.level import Floor
@@ -8,9 +8,6 @@ from modules.level import Sky
 from modules.level import Special
 from modules.level import SpecialManager
 from modules.level import Level
-from modules.sound import patch_surround
-from modules.sound import Sound
-from modules.sound import SoundManager
 from modules.entities import Entity
 from modules.entities import EntityExState
 from modules.entities import EntityEx
@@ -18,20 +15,7 @@ from modules.entities import Missile
 from modules.entities import Player
 from modules.entities import EntityManager
 from modules.utils import gen_img_path
-from modules.utils import gen_sfx_path
-from modules.utils import gen_mus_path
 
-
-# Sound
-# All levels share the same sounds
-mx.init()
-patch_surround()
-SOUNDS = SoundManager(
-    sounds={
-        'shotgun': Sound(gen_sfx_path('shotgun.mp3')),
-        'water': Sound(gen_sfx_path('water.wav')),
-    },
-)
 
 textures = (
     (pg.image.load(gen_img_path('cacodemon/1/1.png')),

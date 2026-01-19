@@ -714,7 +714,7 @@ class Missile(EntityEx):
 class WeaponItem(EntityEx):
     def __init__(self: Self,
                  weapon: Weapon,
-                 number: Optional[int]=None,
+                 number: int=0,
                  pos: Point=(0, 0),
                  elevation: Real=0,
                  width: Real=0.5,
@@ -748,11 +748,11 @@ class WeaponItem(EntityEx):
         self._update_states()
 
     @property
-    def number(self: Self) -> Optional[int]:
+    def number(self: Self) -> int:
         return self._number
 
     @number.setter
-    def number(self: Self, value: Optional[int]) -> None:
+    def number(self: Self, value: int) -> None:
         self._number = value
 
     @property
@@ -928,6 +928,14 @@ class Player(Entity):
         self._velocity2 = pg.Vector2(value)
         self._forward_velocity = self._velocity2.project(self._yaw)
         self._right_velocity = self._velocity2.project(self._semiplane)
+
+    @property
+    def inventory(self: Self) -> Inventory:
+        return self._inventory
+
+    @inventory.setter
+    def inventory(self: Self, value: Inventory) -> None:
+        self._inventory = value
 
     @property
     def weapon(self: Self) -> Optional[Weapon]:
@@ -1247,18 +1255,18 @@ class Player(Entity):
                     attack_range=self._weapon._range,
                     foa=self._foa,
                 ):
-                    self._weapon._durability -= 1
+                    self._inventory.change_weapon_number(self._weapon, -1)
                     return 2
                 return 1
             elif isinstance(self._weapon, HitscanWeapon):
-                self._weapon._ammo -= 1
+                self._inventory.change_weapon_number(self._weapon, -1)
                 return self.hitscan_attack(
                     damage=self._weapon._damage,
                     attack_range=self._weapon._range,
                     foa=self._foa,
                 ) + 1
             elif isinstance(self._weapon, MissileWeapon):
-                self._weapon._ammo -= 1
+                self._inventory.change_weapon_number(self._weapon, -1)
                 return self.missile_attack(
                     missile=self._weapon._missile,
                     attack_range=self._weapon._range,

@@ -99,15 +99,6 @@ class AmmoWeapon(Weapon):
         )
         
         self._capacity = capacity
-        self._ammo = 0
-
-    @property
-    def ammo(self: Self) -> int:
-        return self._ammo
-
-    @ammo.setter
-    def ammo(self: Self, value: int) -> None:
-        self._ammo = value
 
     @property
     def capacity(self: Self) -> int:

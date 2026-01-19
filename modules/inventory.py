@@ -21,9 +21,11 @@ class Collectible(object):
 
 
 class Inventory(object):
-    def __init__(self: Self, collectibles: set[Collectible]=set()) -> None:
-        self._weapons = {}
+    def __init__(self: Self,
+                 collectibles: set[Collectible]=set(),
+                 weapons: dict[Weapon, int]={}) -> None:
         self._collectibles = collectibles
+        self._weapons = weapons
 
     @property
     def collectibles(self: Self) -> set[Collectible]:
@@ -33,9 +35,17 @@ class Inventory(object):
     def collectibles(self: Self, value: set[Collectible]) -> None:
         self._collectibles = value
 
+    @property
+    def weapons(self: Self) -> dict[Weapon, int]:
+        return self._weapons
+
+    @weapons.setter
+    def weapons(self: Self, value: dict[Weapon, int]) -> None:
+        self._weapons = value
+
     def add_weapon(self: Self,
                    weapon: Weapon,
-                   number: Optional[int]=None) -> bool:
+                   number: int=0) -> bool:
         value = self._weapons.get(weapon)
         if value is None:
             self._weapons[weapon] = number
@@ -50,6 +60,15 @@ class Inventory(object):
 
     def remove_weapon(self: Self, weapon: Weapon) -> None:
         self._weapons.pop(weapon)
+
+    def get_weapon_number(self: Self, weapon: Weapon) -> int:
+        return self._weapons[weapon]
+
+    def set_weapon_number(self: Self, weapon: Weapon, number: int) -> None:
+        self._weapons[weapon] = number
+
+    def change_weapon_number(self: Self, weapon: Weapon, change: int) -> None:
+        self._weapons[weapon] += change
 
     def add_collectible(self: Self, collectible: Collectible) -> None:
         self._collectibles.add(collectible)

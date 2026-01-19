@@ -335,9 +335,7 @@ class Entity(object):
                 for entity in entities:
                     # the and not is cleaner than using union type
                     if (entity is not self
-                        and not isinstance(entity, Missile)
-                        and not isinstance(entity, CollectibleItem)
-                        and not isinstance(entity, WeaponItem)):
+                        and not isinstance(entity, Missile | Item)):
                         tiles.append((
                             entity.rect(),
                             entity._elevation,
@@ -715,9 +713,9 @@ class Missile(EntityEx):
                 self.attack()
 
 
-class CollectibleItem(EntityEx):
+class Item(EntityEx):
     def __init__(self: Self,
-                 collectible: Collectible, 
+                 obj: object, 
                  pos: Point=(0, 0),
                  elevation: Real=0,
                  width: Real=0.5,
@@ -736,17 +734,8 @@ class CollectibleItem(EntityEx):
             render_width=render_width,
             render_height=render_height,
         )
-        self._collectible = collectible
+        self._obj = obj
         self._loop = loop
-        self._update_states()
-
-    @property
-    def collectible(self: Self) -> Collectible:
-        return self._collectible
-
-    @collectible.setter
-    def collectible(self: Self, value: Collectible) -> None: 
-        self._collectible = value
         self._update_states()
 
     @property
@@ -761,23 +750,60 @@ class CollectibleItem(EntityEx):
     def _update_states(self: Self) -> None:
         self._states = {
             'default': EntityExState(
-                textures=(self._collectible._textures['ground'],),
-                animation_time=self._collectible._animation_times['ground'],
+                textures=(self._obj._textures['ground'],),
+                animation_time=self._obj._animation_times['ground'],
                 loop=self._loop,
             ),
         }
 
     def interaction(self: Self, entity: Entity) -> None:
+        pass
+
+
+class CollectibleItem(Item):
+    def __init__(self: Self,
+                 collectible: Collectible, 
+                 pos: Point=(0, 0),
+                 elevation: Real=0,
+                 width: Real=0.5,
+                 height: Real=1,
+                 gravity: Real=0,
+                 loop: Real=-1,
+                 render_width: Optional[Real]=None,
+                 render_height: Optional[Real]=None) -> None:
+
+        super().__init__(
+            obj=collectible,
+            pos=pos,
+            elevation=elevation,
+            width=width,
+            height=height,
+            gravity=gravity,
+            loop=loop,
+            render_width=render_width,
+            render_height=render_height,
+        )
+
+    @property
+    def collectible(self: Self) -> Collectible:
+        return self._obj
+
+    @collectible.setter
+    def collectible(self: Self, value: Collectible) -> None: 
+        self._obj = value
+        self._update_states()
+
+    def interaction(self: Self, entity: Entity) -> None:
         try: 
-            self._remove = entity._inventory.add_collectible(self._collectible)
-            sound = self._collectible._sounds['pickup']
+            self._remove = entity._inventory.add_collectible(self._obj)
+            sound = self._obj._sounds['pickup']
             if sound is not None:
                 sound.play()
         except AttributeError:
             pass
 
 
-class WeaponItem(EntityEx):
+class WeaponItem(Item):
     def __init__(self: Self,
                  weapon: Weapon,
                  number: int=0,
@@ -791,26 +817,25 @@ class WeaponItem(EntityEx):
                  render_height: Optional[Real]=None) -> None:
 
         super().__init__(
+            obj=weapon,
             pos=pos,
             elevation=elevation,
             width=width,
             height=height,
             gravity=gravity,
+            loop=loop,
             render_width=render_width,
             render_height=render_height,
         )
-        self._weapon = weapon
         self._number = number
-        self._loop = loop
-        self._update_states()
 
     @property
     def weapon(self: Self) -> Weapon:
-        return self._weapon
+        return self._obj
 
     @weapon.setter
     def weapon(self: Self, value: Weapon) -> None: 
-        self._weapon = value
+        self._obj = value
         self._update_states()
 
     @property
@@ -830,19 +855,12 @@ class WeaponItem(EntityEx):
         self._loop = value
         self._states['default']._loop = value
 
-    def _update_states(self: Self) -> None:
-        self._states = {
-            'default': EntityExState(
-                textures=(self._weapon._textures['ground'],),
-                animation_time=self._weapon._animation_times['ground'],
-                loop=self._loop,
-            ),
-        }
-
     def interaction(self: Self, entity: Entity) -> None:
         try: 
-            self._remove = entity._inventory.add_weapon(self._weapon, self._number)
-            sound = self._weapon._sounds['pickup']
+            self._remove = entity._inventory.add_weapon(
+                self._obj, self._number,
+            )
+            sound = self._obj._sounds['pickup']
             if sound is not None:
                 sound.play()
         except AttributeError:
@@ -1396,7 +1414,7 @@ class Player(Entity):
                     entity_dist = self._pos.distance_to(entity._pos)
                     if (entity._health <= 0
                         or not entity_dist
-                        or isinstance(entity, Missile)):
+                        or isinstance(entity, Missile | Item)):
                         continue
                     
                     entity_slope = (entity.centere - midheight) / entity_dist

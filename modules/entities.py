@@ -11,6 +11,7 @@ from collections.abc import Sequence
 import pygame as pg
 from pygame.typing import Point
 
+from .sound import Sound
 from .weapons import Weapon
 from .weapons import AmmoWeapon
 from .weapons import MeleeWeapon
@@ -332,10 +333,11 @@ class Entity(object):
             entities = self._manager._sets.get(tile_key)
             if entities:
                 for entity in entities:
+                    # the and not is cleaner than using union type
                     if (entity is not self
                         and not isinstance(entity, Missile)
-                        and not isinstance(entity, WeaponItem)
-                        and not isinstance(entity, CollectibleItem)):
+                        and not isinstance(entity, CollectibleItem)
+                        and not isinstance(entity, WeaponItem)):
                         tiles.append((
                             entity.rect(),
                             entity._elevation,
@@ -713,6 +715,80 @@ class Missile(EntityEx):
                 self.attack()
 
 
+class CollectibleItem(EntityEx):
+    def __init__(self: Self,
+                 collectible: Collectible, 
+                 pos: Point=(0, 0),
+                 elevation: Real=0,
+                 width: Real=0.5,
+                 height: Real=1,
+                 gravity: Real=0,
+                 loop: Real=-1,
+                 render_width: Optional[Real]=None,
+                 render_height: Optional[Real]=None,
+                 interaction_sound: Optional[Sound]=None) -> None:
+
+        super().__init__(
+            pos=pos,
+            elevation=elevation,
+            width=width,
+            height=height,
+            gravity=gravity,
+            render_width=render_width,
+            render_height=render_height,
+        )
+        self._collectible = collectible
+        self._loop = loop
+        self._update_states()
+        self._sounds = {
+            'interaction': interaction_sound,
+        }
+
+    @property
+    def collectible(self: Self) -> Collectible:
+        return self._collectible
+
+    @collectible.setter
+    def collectible(self: Self, value: Collectible) -> None: 
+        self._collectible = value
+        self._update_states()
+
+    @property
+    def loop(self: Self) -> Real:
+        return self._loop
+
+    @loop.setter
+    def loop(self: Self, value: Real) -> None:
+        self._loop = value
+        self._states['default']._loop = value
+
+    @property
+    def interaction_sound(self: Self) -> Sound:
+        return self._sounds['interaction']
+
+    @interaction_sound.setter
+    def interaction_sound(self: Self, value: Sound) -> None:
+        self._sounds['interaction'] = value
+
+    def _update_states(self: Self) -> None:
+        self._states = {
+            'default': EntityExState(
+                textures=(self._collectible._textures['ground'],),
+                animation_time=self._collectible._animation_times['ground'],
+                loop=self._loop,
+            ),
+        }
+
+    def interaction(self: Self, entity: Entity) -> None:
+        try: 
+            self._remove = entity._inventory.add_collectible(self._collectible)
+            sound = self._sounds['interaction']
+            if sound is not None:
+                sound.play()
+        except AttributeError:
+            pass
+
+
 class WeaponItem(EntityEx):
     def __init__(self: Self,
                  weapon: Weapon,
@@ -724,7 +800,8 @@ class WeaponItem(EntityEx):
                  gravity: Real=0,
                  loop: Real=-1,
                  render_width: Optional[Real]=None,
-                 render_height: Optional[Real]=None) -> None:
+                 render_height: Optional[Real]=None,
+                 interaction_sound: Optional[Sound]=None) -> None:
 
         super().__init__(
             pos=pos,
@@ -739,6 +816,9 @@ class WeaponItem(EntityEx):
         self._number = number
         self._loop = loop
         self._update_states()
+        self._sounds = {
+            'interaction': interaction_sound,
+        }
 
     @property
     def weapon(self: Self) -> Weapon:
@@ -766,6 +846,14 @@ class WeaponItem(EntityEx):
         self._loop = value
         self._states['default']._loop = value
 
+    @property
+    def interaction_sound(self: Self) -> Sound:
+        return self._sounds['interaction']
+
+    @interaction_sound.setter
+    def interaction_sound(self: Self, value: Sound) -> None:
+        self._sounds['interaction'] = value
+
     def _update_states(self: Self) -> None:
         self._states = {
             'default': EntityExState(
@@ -778,65 +866,9 @@ class WeaponItem(EntityEx):
     def interaction(self: Self, entity: Entity) -> None:
         try: 
             self._remove = entity._inventory.add_weapon(self._weapon, self._number)
-        except AttributeError:
-            pass
-
-
-class CollectibleItem(EntityEx):
-    def __init__(self: Self,
-                 collectible: Collectible, 
-                 pos: Point=(0, 0),
-                 elevation: Real=0,
-                 width: Real=0.5,
-                 height: Real=1,
-                 gravity: Real=0,
-                 loop: Real=-1,
-                 render_width: Optional[Real]=None,
-                 render_height: Optional[Real]=None) -> None:
-
-        super().__init__(
-            pos=pos,
-            elevation=elevation,
-            width=width,
-            height=height,
-            gravity=gravity,
-            render_width=render_width,
-            render_height=render_height,
-        )
-        self._collectible = collectible
-        self._loop = loop
-        self._update_states()
-
-    @property
-    def collectible(self: Self) -> Collectible:
-        return self._collectible
-
-    @collectible.setter
-    def weapon(self: Self, value: Collectible) -> None: 
-        self._collectible = value
-        self._update_states()
-
-    @property
-    def loop(self: Self) -> Real:
-        return self._loop
-
-    @loop.setter
-    def loop(self: Self, value: Real) -> None:
-        self._loop = value
-        self._states['default']._loop = value
-
-    def _update_states(self: Self) -> None:
-        self._states = {
-            'default': EntityExState(
-                textures=(self._collectible._textures['ground'],),
-                animation_time=self._collectible._animation_times['ground'],
-                loop=self._loop,
-            ),
-        }
-
-    def interaction(self: Self, entity: Entity) -> None:
-        try: 
-            self._remove = entity._inventory.add_collectible(self._collectible)
+            sound = self._sounds['interaction']
+            if sound is not None:
+                sound.play()
         except AttributeError:
             pass
 
@@ -1150,7 +1182,7 @@ class Player(Entity):
 
         closest = (math.inf, None)
         tangent = math.tan(math.radians(self._foi) / 2)
-        midheight = self.centere
+        top = self.top
         vector = self.vector3
 
         while dist < self._roi:
@@ -1190,10 +1222,19 @@ class Player(Entity):
                 if dist >= self._roi:
                     end_pos = self._pos + ray * self._roi
                 for entity in entities:
-                    entity_slope = (
-                        (entity.centere - midheight)
-                        / self._pos.distance_to(entity._pos)
-                    )
+                    # Slope calculation (uses lowest magnitude slope)
+                    entity_slope = 0
+                    entity_top = entity.top
+                    entity_dist = self._pos.distance_to(entity._pos)
+                    if self._elevation > entity_top:
+                        entity_slope = (
+                            (entity_top - self._elevation) / entity_dist
+                        ) if entity_dist else -math.inf
+                    elif top < entity._elevation:
+                        entity_slope = (
+                            (entity._elevation - top) / entity_dist
+                        ) if entity_dist else math.inf
+                    # Checks
                     if entity_slope < -tangent or entity_slope > tangent:
                         continue
                     rect = entity.rect()
@@ -1382,8 +1423,6 @@ class Player(Entity):
                         or isinstance(entity, Missile)):
                         continue
                     
-                    # checks if entity is outside foa and checks (somewhat 
-                    # inaccurately) if shooting at entity will hit tile
                     entity_slope = (entity.centere - midheight) / entity_dist
                     dont_check = 1
                     if -tangent <= entity_slope <= tangent:

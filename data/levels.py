@@ -140,9 +140,11 @@ entities = {
     WeaponItem(
         weapon=WEAPONS['shotgun'],
         number=5,
-        pos=(6.5, 1),
-        width=0.25,
-        height=0.6,
+        pos=(7.5, 3),
+        width=1,
+        height=0.5,
+        render_width=1,
+        render_height=0.1875,
     ),
 }
 for dex, entity in enumerate(entities):

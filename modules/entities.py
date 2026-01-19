@@ -756,6 +756,12 @@ class Item(EntityEx):
             ),
         }
 
+    def _interaction_play_sound(self: Self) -> None:
+        if self._remove:
+            sound = self._obj._sounds['pickup']
+            if sound is not None:
+                sound.play(pos=entity.vector3)
+
     def interaction(self: Self, entity: Entity) -> None:
         pass
 
@@ -796,10 +802,7 @@ class CollectibleItem(Item):
     def interaction(self: Self, entity: Entity) -> None:
         try: 
             self._remove = entity._inventory.add_collectible(self._obj)
-            if self._remove:
-                sound = self._obj._sounds['pickup']
-                if sound is not None:
-                    sound.play()
+            self._interaction_play_sound()
         except AttributeError:
             pass
 
@@ -861,10 +864,7 @@ class WeaponItem(Item):
             self._remove = entity._inventory.add_weapon(
                 self._obj, self._number,
             )
-            if self._remove:
-                sound = self._obj._sounds['pickup']
-                if sound is not None:
-                    sound.play()
+            self._interaction_play_sound()
         except AttributeError:
             pass
 

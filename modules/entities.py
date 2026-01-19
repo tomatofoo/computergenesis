@@ -332,8 +332,10 @@ class Entity(object):
             entities = self._manager._sets.get(tile_key)
             if entities:
                 for entity in entities:
-                    # referencing Missile before declaration works somehow
-                    if entity is not self and not isinstance(entity, Missile):
+                    if (entity is not self
+                        and not isinstance(entity, Missile)
+                        and not isinstance(entity, WeaponItem)
+                        and not isinstance(entity, CollectibleItem)):
                         tiles.append((
                             entity.rect(),
                             entity._elevation,
@@ -1242,9 +1244,8 @@ class Player(Entity):
             return 0
         elif self._weapon_cooldown_timer > 0:
             return 0
-        elif ((isinstance(self._weapon, AmmoWeapon)
-               or isinstance(self._weapon, MeleeWeapon))
-              and self._inventory.get_weapon_number(self._weapon) <= 0):
+        elif (isinstance(self._weapon, AmmoWeapon | MeleeWeapon)
+              and self._inventory._weapons[self._weapon] <= 0):
             return 0
         else:
             sound = self._weapon._sounds['attack']

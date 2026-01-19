@@ -21,6 +21,7 @@ textures = {
         pg.image.load(gen_img_path('shotgun/2.png')),
         pg.image.load(gen_img_path('shotgun/3.png')),
         pg.image.load(gen_img_path('shotgun/4.png')),
+        pg.image.load(gen_img_path('shotgun/ground.png')),
     ],
     'launcher': [
         pg.image.load(gen_img_path('missile_launcher/1.png')),
@@ -57,7 +58,9 @@ WEAPONS = {
         attack_range=20,
         cooldown=60,
         capacity=25,
-        ground_textures=None,
+        ground_textures=[
+            textures['shotgun'][4],
+        ],
         hold_textures=[textures['shotgun'][0]],
         attack_textures=[
             textures['shotgun'][1],

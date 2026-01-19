@@ -14,6 +14,7 @@ from modules.level import Level
 from modules.entities import Entity
 from modules.entities import EntityExState
 from modules.entities import EntityEx
+from modules.entities import WeaponItem
 from modules.entities import Player
 from modules.entities import EntityManager
 from modules.inventory import Collectible
@@ -135,6 +136,13 @@ entities = {
         attack_width=0.4,
         render_width=0.5,
         textures=[pg.image.load(gen_img_path('GrenadeZombie.png'))],
+    ),
+    WeaponItem(
+        weapon=WEAPONS['shotgun'],
+        number=5,
+        pos=(6.5, 1),
+        width=0.25,
+        height=0.6,
     ),
 }
 for dex, entity in enumerate(entities):

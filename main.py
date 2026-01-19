@@ -15,13 +15,7 @@ from data.levels import LEVELS
 from modules.camera import Camera
 from modules.hud import HUDElement
 from modules.hud import HUD
-from modules.entities import Missile
 from modules.entities import Player
-from modules.inventory import Collectible
-from modules.inventory import Inventory
-from modules.weapons import MeleeWeapon
-from modules.weapons import HitscanWeapon
-from modules.weapons import MissileWeapon
 from modules.utils import gen_img_path
 
 
@@ -69,7 +63,7 @@ class Game(object):
         self._camera.horizon = 0.5
         self._camera.weapon_scale = 3 / self._SURF_RATIO[0]
 
-        self._player.weapon = self._missile_launcher
+        self._player.weapon = WEAPONS['launcher']
 
     def move_tiles(self: Self, level_timer: Real) -> None:
         self._level.walls.set_tile(
@@ -127,11 +121,11 @@ class Game(object):
                     frames = []
                 elif event.type == pg.KEYDOWN:
                     if event.key == pg.K_1:
-                        self._player.weapon = self._fist
+                        self._player.weapon = WEAPONS['fist']
                     elif event.key == pg.K_2:
-                        self._player.weapon = self._shotgun
+                        self._player.weapon = WEAPONS['shotgun']
                     elif event.key == pg.K_3:
-                        self._player.weapon = self._missile_launcher
+                        self._player.weapon = WEAPONS['launcher']
                     elif event.key == pg.K_0:
                         self._sounds['water'].play(pos=(9, 0.25, 9)) 
                     elif event.key == pg.K_e:

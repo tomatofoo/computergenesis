@@ -1,6 +1,9 @@
+import math
+
 import pygame as pg
 
 from data.sounds import SOUNDS
+from data.weapons import WEAPONS 
 from modules.level import ColumnTexture
 from modules.level import Walls
 from modules.level import Floor
@@ -11,9 +14,10 @@ from modules.level import Level
 from modules.entities import Entity
 from modules.entities import EntityExState
 from modules.entities import EntityEx
-from modules.entities import Missile
 from modules.entities import Player
 from modules.entities import EntityManager
+from modules.inventory import Collectible
+from modules.inventory import Inventory
 from modules.utils import gen_img_path
 
 
@@ -136,7 +140,16 @@ entities = {
 for dex, entity in enumerate(entities):
     entity.darkness = 0
 
-player = Player((6.5, 7))
+player = Player(
+    pos=(6.5, 7),
+    inventory=Inventory(
+        weapons={
+            WEAPONS['fist']: math.inf,
+            WEAPONS['shotgun']: 5,
+            WEAPONS['launcher']: 5,
+        }
+    ),
+)
 player.yaw = 180
 player.elevation = 1
 entities = EntityManager(player, entities)

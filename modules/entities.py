@@ -889,8 +889,9 @@ class Player(Entity):
         # Interaction Stuff
         self._foi = foi
         self._roi = roi # Range of Interaction
-
-        # Weapon Stuff
+        
+        # Weapon / Inventory Stuff
+        self._inventory = inventory
         self._foa = foa
         self._roa = roa
         self._weapon = weapon
@@ -1241,7 +1242,9 @@ class Player(Entity):
             return 0
         elif self._weapon_cooldown_timer > 0:
             return 0
-        elif isinstance(self._weapon, AmmoWeapon) and self._weapon._ammo <= 0:
+        elif ((isinstance(self._weapon, AmmoWeapon)
+               or isinstance(self._weapon, MeleeWeapon))
+              and self._inventory.get_weapon_number(self._weapon) <= 0):
             return 0
         else:
             sound = self._weapon._sounds['attack']

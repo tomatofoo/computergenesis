@@ -1,5 +1,13 @@
-from data.sounds import SOUNDS
+import math
 
+import pygame as pg
+
+from data.sounds import SOUNDS
+from modules.utils import gen_img_path
+from modules.entities import Missile
+from modules.weapons import MeleeWeapon
+from modules.weapons import HitscanWeapon
+from modules.weapons import MissileWeapon
 
 textures = {
     'fist': [
@@ -32,13 +40,13 @@ WEAPONS = {
         cooldown=35,
         durability=math.inf,
         ground_textures=None,
-        hold_textures=[textures[0]],
+        hold_textures=[textures['fist'][0]],
         attack_textures=[
-            textures[1],
-            textures[2],
-            textures[3],
-            textures[2],
-            textures[1],
+            textures['fist'][1],
+            textures['fist'][2],
+            textures['fist'][3],
+            textures['fist'][2],
+            textures['fist'][1],
         ],
         ground_animation_time=1,
         hold_animation_time=30,
@@ -74,9 +82,9 @@ WEAPONS = {
             height=0.25,
         ),
         ground_textures=None,
-        hold_textures=[textures[0]],
+        hold_textures=[textures['launcher'][0]],
         attack_textures=[
-            textures[1],
+            textures['launcher'][1],
         ],
         ground_animation_time=1,
         hold_animation_time=30,

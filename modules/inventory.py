@@ -3,7 +3,9 @@ from typing import Self
 
 import pygame as pg
 
-from .weapons import WeaponManager
+from .weapons import Weapon
+from .weapons import MeleeWeapon
+from .weapons import AmmoWeapon
 
 
 class Collectible(object):
@@ -19,29 +21,27 @@ class Collectible(object):
 
 
 class Inventory(object):
-    def __init__(self: Self,
-                 weapons: WeaponManager=WeaponManager(),
-                 collectibles: set[Collectible]=set()) -> None:
+    def __init__(self: Self, collectibles: set[Collectible]=set()) -> None:
         self._weapons = {}
-        for weapon in weapons:
-            self._weapons[weapon._id] = weapon
         self._collectibles = collectibles
 
-    def add(self: Self, obj: Collectible | Weapon) -> None:
-        if isinstance(obj, Weapon):
-            self.add_weapon(obj)
-        elif isinstance(obj, Collectible):
-            self.add_collectible(obj)
-    
-    def add_weapon(self: Self, weapon: Weapon) -> None:
-        value = self._weapons.get(weapon._id)
+    def add_weapon(self: Self,
+                   weapon: Weapon,
+                   number: Optional[int]=None) -> bool:
+        value = self._weapons.get(weapon)
         if value is None:
-            self._weapons[weapon._id] = weapon
-        else:
-            value.ammo += weapon.ammo
+            self._weapons[weapon] = number
+            return True
+        elif ((isinstance(weapon, MeleeWeapon)
+               and value + number <= weapon._durability)
+              or (isinstance(weapon, AmmoWeapon)
+                  and value + number <= weapon._capacity)):
+            self._weapons[weapon] += number
+            return True
+        return False
 
-    def pop_weapon(self: Self, id: str) -> Weapon:
-        return self._weapons[id].pop()
+    def remove_weapon(self: Self, weapon: Weapon) -> None:
+        self._weapons.pop(weapon)
 
     def add_collectible(self: Self, collectible: Collectible) -> None:
         self._collectibles.add(collectible)

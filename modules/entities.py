@@ -703,9 +703,10 @@ class Missile(EntityEx):
                 self.attack()
 
 
-class Item(EntityEx):
+class WeaponItem(EntityEx):
     def __init__(self: Self,
-                 obj: Collectible | Weapon,
+                 weapon: Weapon,
+                 number: Optional[int]=None,
                  pos: Point=(0, 0),
                  elevation: Real=0,
                  width: Real=0.5,
@@ -724,7 +725,8 @@ class Item(EntityEx):
             render_width=render_width,
             render_height=render_height,
         )
-        self._obj = obj
+        self._weapon = weapon
+        self._number = number
         self._states = {
             'default': EntityExState(
                 textures=(self._obj._textures['ground'],),
@@ -734,16 +736,23 @@ class Item(EntityEx):
         }
 
     @property
-    def obj(self: Self) -> Collectible | Weapon:
-        return self._obj
+    def weapon(self: Self) -> Weapon:
+        return self._weapon
 
-    @obj.setter
-    def obj(self: Self, value: Collectible | Weapon) -> None: 
-        self._obj = value
+    @weapon.setter
+    def weapon(self: Self, value: Weapon) -> None: 
+        self._weapon = value
+
+    @property
+    def number(self: Self) -> Optional[int]:
+        return self._number
+
+    @number.setter
+    def number(self: Self, value: Optional[int]) -> None:
+        self._number = value
 
     def interaction(self: Self, entity: Entity, inventory: Inventory) -> None:
-        inventory.add(self)
-        self._remove = 1
+        self._remove = inventory.add_weapon(self._weapon, self._number)
 
 
 class Player(Entity):

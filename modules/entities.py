@@ -756,11 +756,11 @@ class Item(EntityEx):
             ),
         }
 
-    def _interaction_play_sound(self: Self) -> None:
+    def _interaction_play_sound(self: Self, pos: Optional[pg.Vector3]) -> None:
         if self._remove:
             sound = self._obj._sounds['pickup']
             if sound is not None:
-                sound.play(pos=entity.vector3)
+                sound.play(pos=pos)
 
     def interaction(self: Self, entity: Entity) -> None:
         pass
@@ -802,7 +802,7 @@ class CollectibleItem(Item):
     def interaction(self: Self, entity: Entity) -> None:
         try: 
             self._remove = entity._inventory.add_collectible(self._obj)
-            self._interaction_play_sound()
+            self._interaction_play_sound(entity.vector3)
         except AttributeError:
             pass
 
@@ -850,21 +850,12 @@ class WeaponItem(Item):
     def number(self: Self, value: int) -> None:
         self._number = value
 
-    @property
-    def loop(self: Self) -> Real:
-        return self._loop
-
-    @loop.setter
-    def loop(self: Self, value: Real) -> None:
-        self._loop = value
-        self._states['default']._loop = value
-
     def interaction(self: Self, entity: Entity) -> None:
         try: 
             self._remove = entity._inventory.add_weapon(
                 self._obj, self._number,
             )
-            self._interaction_play_sound()
+            self._interaction_play_sound(entity.vector3)
         except AttributeError:
             pass
 

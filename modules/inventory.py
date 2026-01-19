@@ -76,8 +76,10 @@ class Inventory(object):
     def change_weapon_number(self: Self, weapon: Weapon, change: int) -> None:
         self._weapons[weapon] += change
 
-    def add_collectible(self: Self, collectible: Collectible) -> None:
+    def add_collectible(self: Self, collectible: Collectible) -> bool:
+        value = collectible not in self._collectibles
         self._collectibles.add(collectible)
+        return value
 
     def remove_collectible(self: Self, collectible: Collectible) -> None:
         self._collectibles.remove(collectible)

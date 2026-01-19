@@ -796,9 +796,10 @@ class CollectibleItem(Item):
     def interaction(self: Self, entity: Entity) -> None:
         try: 
             self._remove = entity._inventory.add_collectible(self._obj)
-            sound = self._obj._sounds['pickup']
-            if sound is not None:
-                sound.play()
+            if self._remove:
+                sound = self._obj._sounds['pickup']
+                if sound is not None:
+                    sound.play()
         except AttributeError:
             pass
 
@@ -860,9 +861,10 @@ class WeaponItem(Item):
             self._remove = entity._inventory.add_weapon(
                 self._obj, self._number,
             )
-            sound = self._obj._sounds['pickup']
-            if sound is not None:
-                sound.play()
+            if self._remove:
+                sound = self._obj._sounds['pickup']
+                if sound is not None:
+                    sound.play()
         except AttributeError:
             pass
 

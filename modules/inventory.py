@@ -25,6 +25,14 @@ class Inventory(object):
         self._weapons = {}
         self._collectibles = collectibles
 
+    @property
+    def collectibles(self: Self) -> set[Collectible]:
+        return self._collectibles
+    
+    @collectibles.setter
+    def collectibles(self: Self, value: set[Collectible]) -> None:
+        self._collectibles = value
+
     def add_weapon(self: Self,
                    weapon: Weapon,
                    number: Optional[int]=None) -> bool:

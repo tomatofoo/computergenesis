@@ -15,7 +15,6 @@ from modules.entities import Entity
 from modules.entities import EntityExState
 from modules.entities import EntityEx
 from modules.entities import Missile
-from modules.entities import Item
 from modules.entities import Player
 from modules.entities import EntityManager
 from modules.utils import gen_img_path

@@ -495,6 +495,14 @@ class EntityExState(object):
     def trigger(self: Self, value: bool) -> None:
         self._trigger = value
 
+    @property
+    def loop(self: Self) -> Real:
+        return self._loop
+
+    @loop.setter
+    def loop(self: Self, value: Real) -> None:
+        self._loop = value
+
     def ended_loop(self: Self) -> bool:
         if self._loop < 0:
             return False
@@ -727,13 +735,8 @@ class WeaponItem(EntityEx):
         )
         self._weapon = weapon
         self._number = number
-        self._states = {
-            'default': EntityExState(
-                textures=(self._obj._textures['ground'],),
-                animation_time=self._obj._animation_times['ground'],
-                loop=loop,
-            ),
-        }
+        self._loop = loop
+        self._update_states()
 
     @property
     def weapon(self: Self) -> Weapon:
@@ -742,6 +745,7 @@ class WeaponItem(EntityEx):
     @weapon.setter
     def weapon(self: Self, value: Weapon) -> None: 
         self._weapon = value
+        self._update_states()
 
     @property
     def number(self: Self) -> Optional[int]:
@@ -751,8 +755,88 @@ class WeaponItem(EntityEx):
     def number(self: Self, value: Optional[int]) -> None:
         self._number = value
 
-    def interaction(self: Self, entity: Entity, inventory: Inventory) -> None:
-        self._remove = inventory.add_weapon(self._weapon, self._number)
+    @property
+    def loop(self: Self) -> Real:
+        return self._loop
+
+    @loop.setter
+    def loop(self: Self, value: Real) -> None:
+        self._loop = value
+        self._states['default']._loop = value
+
+    def _update_states(self: Self) -> None:
+        self._states = {
+            'default': EntityExState(
+                textures=(self._weapon._textures['ground'],),
+                animation_time=self._weapon._animation_times['ground'],
+                loop=self._loop,
+            ),
+        }
+
+    def interaction(self: Self, entity: Entity) -> None:
+        try: 
+            self._remove = entity._inventory.add_weapon(self._weapon, self._number)
+        except AttributeError:
+            pass
+
+
+class CollectibleItem(EntityEx):
+    def __init__(self: Self,
+                 collectible: Collectible, 
+                 pos: Point=(0, 0),
+                 elevation: Real=0,
+                 width: Real=0.5,
+                 height: Real=1,
+                 gravity: Real=0,
+                 loop: Real=-1,
+                 render_width: Optional[Real]=None,
+                 render_height: Optional[Real]=None) -> None:
+
+        super().__init__(
+            pos=pos,
+            elevation=elevation,
+            width=width,
+            height=height,
+            gravity=gravity,
+            render_width=render_width,
+            render_height=render_height,
+        )
+        self._collectible = collectible
+        self._loop = loop
+        self._update_states()
+
+    @property
+    def collectible(self: Self) -> Collectible:
+        return self._collectible
+
+    @collectible.setter
+    def weapon(self: Self, value: Collectible) -> None: 
+        self._collectible = value
+        self._update_states()
+
+    @property
+    def loop(self: Self) -> Real:
+        return self._loop
+
+    @loop.setter
+    def loop(self: Self, value: Real) -> None:
+        self._loop = value
+        self._states['default']._loop = value
+
+    def _update_states(self: Self) -> None:
+        self._states = {
+            'default': EntityExState(
+                textures=(self._collectible._textures['ground'],),
+                animation_time=self._collectible._animation_times['ground'],
+                loop=self._loop,
+            ),
+        }
+
+    def interaction(self: Self, entity: Entity) -> None:
+        try: 
+            self._remove = entity._inventory.add_collectible(self._collectible)
+        except AttributeError:
+            pass
 
 
 class Player(Entity):
@@ -769,6 +853,7 @@ class Player(Entity):
                  roi: Real=0.25, # Range of Interaction
                  foa: Real=60, # Field of Attack
                  roa: Real=0.75, # Radius of Autoaim (for missiles)
+                 inventory: Inventory=Inventory(),
                  weapon: Optional[Weapon]=None) -> None:
 
         super().__init__(

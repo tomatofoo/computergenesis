@@ -56,11 +56,11 @@ class Inventory(object):
         if value is None:
             self._weapons[weapon] = number
             return True
-        elif ((isinstance(weapon, MeleeWeapon)
-               and value + number <= weapon._durability)
-              or (isinstance(weapon, AmmoWeapon)
-                  and value + number <= weapon._capacity)):
-            self._weapons[weapon] += number
+        elif isinstance(weapon, MeleeWeapon) and value < weapon._durability:
+            self._weapons[weapon] = min(value + number, weapon._durability)
+            return True
+        elif isinstance(weapon, AmmoWeapon) and value < weapon._capacity:
+            self._weapons[weapon] = min(value + number, weapon._capacity)
             return True
         return False
 

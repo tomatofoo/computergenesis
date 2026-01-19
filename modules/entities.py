@@ -1237,7 +1237,6 @@ class Player(Entity):
 
             tile_key = gen_tile_key(tile)
             special = self._manager._level._specials.get(tile_key)
-            # allows shooting through semitiles
             if special is not None:
                 data = tilemap[tile_key]
                 bottom_slope = (data['height'] - midheight) / dist
@@ -1503,7 +1502,6 @@ class Player(Entity):
                        precision: int=100) -> None:
         # unlike melee and hitscan, missile attack will return true if a hit is
         # predicted (not guaranteed)
-        # (i.e. the monstor could move and it wouldn't hit)
         entity, could_hit = self._hitscan(
             attack_range,
             foa,

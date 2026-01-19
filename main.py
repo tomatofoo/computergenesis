@@ -19,7 +19,7 @@ from modules.entities import Player
 from modules.utils import gen_img_path
 
 
-# TODO: INVENTORY, *SPECIAL TILES, HUD, MENUS, LEVEL EDITOR, data/level.py, GAMEPLAY / LEVELS
+# TODO: *INVENTORY, *SPECIAL TILES, HUD, MENUS, *LEVEL EDITOR, *data/level.py, GAMEPLAY / LEVELS
 class Game(object):
 
     _SCREEN_SIZE = (960, 720)

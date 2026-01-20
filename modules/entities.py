@@ -70,6 +70,11 @@ class Entity(object):
         if render_height is None:
             self._render_height = height
         self._health = health
+        self._collisions = {
+            'x': [0, 0],
+            'y': [0, 0],
+            'e': [0, 0],
+        }
         self._manager = None
         self._remove = 0 # internal for when entity wants removal
        
@@ -303,6 +308,10 @@ class Entity(object):
         return self._textures[dex]
 
     @property
+    def collisions(self: Self) -> dict[str, tuple[int]]:
+        return self._collisions
+
+    @property
     def manager(self: Self) -> Optional[EntityManager]:
         return self._manager
 
@@ -399,11 +408,16 @@ class Entity(object):
         return rect
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
+        self._collisions = {
+            'x': [0, 0],
+            'y': [0, 0],
+            'e': [0, 0],
+        }
+
         if self._yaw_velocity:
             self.yaw += self._yaw_velocity * rel_game_speed
-        
-        # The +/-0.00001 is to account for floating-point precision errors
 
+        # The +/-0.00001 is to account for floating-point precision errors
         self._pos[0] += self._velocity2[0] * rel_game_speed
         entity_rect = self.rect()
         for rect, bottom, top, entity in self._get_rects_around():
@@ -413,11 +427,14 @@ class Entity(object):
                 if top - self._elevation > self._climb:
                     if self._velocity2[0] > 0:
                         entity_rect.right = rect.left - 0.00001
+                        self._collisions['x'][1] = 1
                     elif self._velocity2[0] < 0:
                         entity_rect.left = rect.right + 0.00001
+                        self._collisions['x'][0] = 1
                     self._pos[0] = entity_rect.centerx
                 else: # climbing up
                     self.elevation = top
+                    self._collsions['e'][0] = 1
 
         self._pos[1] += self._velocity2[1] * rel_game_speed
         entity_rect = self.rect()
@@ -428,20 +445,25 @@ class Entity(object):
                 if top - self._elevation > self._climb:
                     if self._velocity2[1] > 0:
                         entity_rect.bottom = rect.top - 0.00001
+                        self._collisions['y'][1] = 1
                     elif self._velocity2[1] < 0:
                         entity_rect.top = rect.bottom + 0.00001
+                        self._collisions['y'][0] = 1
                     self._pos[1] = entity_rect.centery
                 else: # climbing up
                     self.elevation = top
+                    self._collsions['e'][0] = 1
 
         # 3D collisions
         self.elevation += self._elevation_velocity * rel_game_speed
         self._elevation_velocity -= self._gravity * rel_game_speed
         if self._elevation <= 0:
             self._elevation_velocity = 0
+            self._collisions['e'][0] = 1
         if self.top >= self._manager._level._ceiling_elevation:
             self.top = self._manager._level._ceiling_elevation
             self._elevation_velocity = 0
+            self._collisions['e'][1] = 1
         entity_rect = self.rect()
         for rect, bottom, top, entity in self._get_rects_around():
             vertical = self._elevation < top and self.top > bottom
@@ -450,9 +472,11 @@ class Entity(object):
                 if self._elevation_velocity > 0:
                     self.top = bottom
                     self._elevation_velocity = 0
+                    self._collisions['e'][1] = 1
                 elif self._elevation_velocity < 0:
                     self.elevation = top
                     self._elevation_velocity = 0
+                    self._collisions['e'][0] = 1
 
 
 class EntityExState(object):
@@ -689,7 +713,6 @@ class Missile(EntityEx):
                         entity.splash_damage(
                             dist / self._blast_radius * self._damage / 2
                         )
-
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         # has to be at start
@@ -1003,6 +1026,12 @@ class Player(Entity):
                yaw: Real,
                up: Optional[Real]=None) -> None:
 
+        self._collisions = {
+            'x': [0, 0],
+            'y': [0, 0],
+            'e': [0, 0],
+        }
+
         if forward:
             self._forward_velocity.update(self._yaw * forward)
         if right:
@@ -1039,12 +1068,15 @@ class Player(Entity):
                 if top - self._elevation > self._climb:
                     if self._velocity2[0] > 0:
                         entity_rect.right = rect.left - 0.00001
+                        self._collisions['x'][1] = 1
                     elif self._velocity2[0] < 0:
                         entity_rect.left = rect.right + 0.00001
+                        self._collisions['x'][0] = 1
                     self._pos[0] = entity_rect.centerx
                 else: # climbing up
                     self.elevation = top
                     self._climbing = 1
+                    self._collisions['e'][0] = 1
 
         self._pos[1] += self._velocity2[1] * rel_game_speed
         entity_rect = self.rect()
@@ -1055,12 +1087,15 @@ class Player(Entity):
                 if top - self._elevation > self._climb:
                     if self._velocity2[1] > 0:
                         entity_rect.bottom = rect.top - 0.00001
+                        self._collisions['y'][1] = 1
                     elif self._velocity2[1] < 0:
                         entity_rect.top = rect.bottom + 0.00001
+                        self._collisions['y'][0] = 1
                     self._pos[1] = entity_rect.centery
                 else: # climbing up
                     self.elevation = top
                     self._climbing = 1
+                    self._collisions['e'][0] = 1
         
         # 3D collisions
         self._elevation_velocity -= self._gravity * rel_game_speed
@@ -1069,9 +1104,11 @@ class Player(Entity):
         self.elevation += self._elevation_velocity * rel_game_speed
         if self._elevation <= 0:
             self._elevation_velocity = 0
+            self._collisions['e'][0] = 1
         if self.top >= self._manager._level._ceiling_elevation:
             self.top = self._manager._level._ceiling_elevation
             self._elevation_velocity = 0
+            self._collisions['e'][1] = 1
         entity_rect = self.rect()
         for rect, bottom, top, entity in self._get_rects_around():
             vertical = self._elevation < top and self.top > bottom
@@ -1080,9 +1117,11 @@ class Player(Entity):
                 if self._elevation_velocity > 0:
                     self.top = bottom
                     self._elevation_velocity = 0
+                    self._collisions['e'][1] = 1
                 elif self._elevation_velocity < 0:
                     self.elevation = top
                     self._elevation_velocity = 0
+                    self._collisions['e'][0] = 1
         
         # climbing animation / headbob
         factor = min(self._velocity2.magnitude() * 20, 2)
@@ -1095,8 +1134,7 @@ class Player(Entity):
                 self._climbing = 0
         else:
             self._render_elevation = elevation
-            # yes it will headbob while falling but I'm okay with that
-            if bob_update:
+            if bob_update and self._collisions['e'][0]:
                 self._render_elevation += (
                     math.sin(level_timer * self._settings['headbob_frequency'])
                     * self._settings['headbob_strength']

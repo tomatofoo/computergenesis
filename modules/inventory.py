@@ -67,9 +67,6 @@ class Inventory(object):
     def remove_weapon(self: Self, weapon: Weapon) -> None:
         self._weapons.pop(weapon)
 
-    def get_weapon_number(self: Self, weapon: Weapon) -> int:
-        return self._weapons[weapon]
-
     def set_weapon_number(self: Self, weapon: Weapon, number: int) -> None:
         self._weapons[weapon] = number
 

@@ -1146,6 +1146,7 @@ class Player(Entity):
 
     def interact(self: Self, precision: int=100) -> bool:
         # returns true if interacted with something
+        # can interact through walls btw
         ray = self._yaw.normalize()
 
         end_pos = list(self._pos)

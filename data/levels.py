@@ -165,11 +165,11 @@ player.elevation = 1
 entities = EntityManager(player, entities)
 
 wall_textures = (
-    ColumnTexture(pg.image.load(gen_img_path('tilesets/wolf/redbrick.png'))),
+    ColumnTexture(pg.image.load(gen_img_path('tilesets/main/stonebrick.png'))),
 )
 specials = SpecialManager()
 level0 = Level(
-    floor=Floor(pg.image.load(gen_img_path('tilesets/wolf/wood.png'))),
+    floor=Floor(pg.image.load(gen_img_path('tilesets/main/wood.png'))),
     ceiling=Sky(pg.image.load(gen_img_path('nightsky.png'))),
     walls=Walls.load('data/maps/0.json', wall_textures),
     specials=specials,

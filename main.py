@@ -143,10 +143,12 @@ class Game(object):
                 (keys[pg.K_DOWN] - keys[pg.K_UP]),
                 (keys[pg.K_SPACE] and not jumping) * 0.05 * 1.5,
             )
+            
             if keys[pg.K_SPACE]:
                 jumping = 1
             if self._player.collisions['e'][0]:
                 jumping = 0
+
             self._player.update(
                 rel_game_speed,
                 level_timer,

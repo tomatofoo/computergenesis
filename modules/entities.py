@@ -1058,7 +1058,6 @@ class Player(Entity):
             self.yaw += self._yaw_velocity * rel_game_speed
         
         # The +/-0.00001 is to account for floating-point precision errors
-
         self._pos[0] += self._velocity2[0] * rel_game_speed
         entity_rect = self.rect()
         for rect, bottom, top, entity in self._get_rects_around():
@@ -1098,6 +1097,8 @@ class Player(Entity):
                     self._collisions['e'][0] = 1
         
         # 3D collisions
+        # note that if setting elevation velocity it will subtract 
+        # gravity * rel_game_speed before subtreacting
         self._elevation_velocity -= self._gravity * rel_game_speed
         if up is not None:
             self._elevation_velocity = up

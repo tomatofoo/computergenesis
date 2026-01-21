@@ -8,6 +8,7 @@ from libc.math cimport M_PI
 from libc.math cimport tan
 from libc.math cimport floorf
 from libc.math cimport ceilf
+from libc.math cimport roundf
 from libc.math cimport fabs
 from libc.math cimport fmax
 from libc.math cimport fmin
@@ -560,12 +561,12 @@ cdef class Camera:
         # ^ pixel glitches at bottoms of wall are avoided
 
         # elevation offset
-        calculation[2] = int( # offset
+        calculation[2] = int(roundf( # offset
             (<float>self._player._render_elevation * 2
              - elevation * 2
              - height)
             * self._tile_size / 2 / rel_depth
-        )
+        ))
         
     cdef void _darken_line(self: Self,
                            line: pg.Surface,

@@ -169,7 +169,7 @@ wall_textures = (
 )
 specials = SpecialManager()
 level0 = Level(
-    floor=Floor(pg.image.load(gen_img_path('tilesets/main/wood.png'))),
+    floor=Floor(pg.image.load(gen_img_path('tilesets/main/wood2.png'))),
     ceiling=Sky(pg.image.load(gen_img_path('nightsky.png'))),
     walls=Walls.load('data/maps/0.json', wall_textures),
     specials=specials,

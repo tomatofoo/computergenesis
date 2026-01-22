@@ -710,7 +710,9 @@ cdef class Camera:
                     )
 
                 # no nested if statement on purpose
-                if render_back and side != -1: # top/bottom of wall rendering
+                # using rel_depth instead of side != -1 
+                # because side is set if obj isn't none
+                if render_back and rel_depth: # top/bottom of wall rendering
                     self._calculate_line(
                         rel_depth,
                         data['height'],

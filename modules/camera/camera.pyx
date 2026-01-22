@@ -710,8 +710,12 @@ cdef class Camera:
                     )
 
                 # no nested if statement on purpose
+
                 # using rel_depth instead of side != -1 
-                # because side is set if obj isn't none
+                # because side is not equal to -1 if obj isn't none at start
+                # then, after, when data is set to none
+                # this will trigger if using "side != -1"
+                # doesn't seem to cause problems
                 if render_back and rel_depth: # top/bottom of wall rendering
                     self._calculate_line(
                         rel_depth,

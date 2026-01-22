@@ -770,9 +770,7 @@ cdef class Camera:
                         if darkness is None:
                             darkness = 1
                     # this weird if statement structure is so that rendering
-                    # semitiles works; if a semitile is directly underneath 
-                    # the player, the old if statement structure wouldn't've 
-                    # worked because rel_depth is 0
+                    # semitiles works 
                     if obj is None:
                         if side != -1:
                             self._calculate_line(

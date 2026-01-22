@@ -661,6 +661,7 @@ class Game(object):
         except:
             height = 1
         self._data['height'] = height
+        # minmax instead of clamp to return an int
         try:
             top = current['top']
             top = (

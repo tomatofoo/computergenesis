@@ -611,7 +611,10 @@ cdef class Camera:
             int bottom
             int rect_height
             int texture_height
-            int side
+            # this is used to indicate if a ray has been casted
+            # we use this instead of checking rel_depth because
+            # rel_depth CAN be 0 (180 yaw at perfect edge)
+            int side = -1
             float scale
             float dist
             float rel_depth
@@ -672,7 +675,7 @@ cdef class Camera:
             step_y = dir[1] * 2 - 1 
             rel_depth = 0 # relative to yaw magnitude
             dist = 0
-            
+
             _limits_reset(&limits)
             
             # render_back:
@@ -707,7 +710,7 @@ cdef class Camera:
                     )
 
                 # no nested if statement on purpose
-                if render_back and rel_depth: # top/bottom of wall rendering
+                if render_back and side != -1: # top/bottom of wall rendering
                     self._calculate_line(
                         rel_depth,
                         data['height'],
@@ -761,7 +764,7 @@ cdef class Camera:
                 tile_key = gen_tile_key(tile)
                 data = tilemap.get(tile_key)
                 if data is not None:
-                    if rel_depth:
+                    if side != -1:
                         obj = data.get('semitile')
                         darkness = data.get('darkness')
                         if darkness is None:
@@ -771,7 +774,7 @@ cdef class Camera:
                     # the player, the old if statement structure wouldn't've 
                     # worked because rel_depth is 0
                     if obj is None:
-                        if rel_depth:
+                        if side != -1:
                             self._calculate_line(
                                 rel_depth,
                                 data['height'],

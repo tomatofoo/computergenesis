@@ -166,6 +166,7 @@ entities = EntityManager(player, entities)
 
 wall_textures = (
     ColumnTexture(pg.image.load(gen_img_path('tilesets/main/stonebrick.png'))),
+    ColumnTexture(pg.image.load(gen_img_path('tilesets/main/bars.png'))),
 )
 specials = SpecialManager()
 level0 = Level(

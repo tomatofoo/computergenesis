@@ -664,9 +664,9 @@ class Game(object):
         try:
             top = current['top']
             top = (
-                int(top['r'].text),
-                int(top['g'].text),
-                int(top['b'].text),
+                min(max(int(top['r'].text), 0), 255),
+                min(max(int(top['g'].text), 0), 255),
+                min(max(int(top['b'].text), 0), 255),
             )
         except:
             top = (0, 0, 0)
@@ -674,9 +674,9 @@ class Game(object):
         try:
             bottom = current['bottom']
             bottom = (
-                int(bottom['r'].text),
-                int(bottom['g'].text),
-                int(bottom['b'].text),
+                min(max(int(bottom['r'].text), 0), 255),
+                min(max(int(bottom['g'].text), 0), 255),
+                min(max(int(bottom['b'].text), 0), 255),
             )
         except:
             bottom = (0, 0, 0)

@@ -882,7 +882,7 @@ class Player(Entity):
                  pos: Point=(0, 0),
                  elevation: Real=0,
                  width: Real=0.4,
-                 height: Real=0.75,
+                 height: Real=0.6,
                  attack_width: Optional[Real]=None,
                  attack_height: Optional[Real]=None,
                  climb: Real=0.2,

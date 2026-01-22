@@ -22,6 +22,7 @@ from modules.inventory import Inventory
 from modules.utils import gen_img_path
 
 
+# LEVEL 0
 textures = (
     (pg.image.load(gen_img_path('cacodemon/1/1.png')),
      pg.image.load(gen_img_path('cacodemon/1/2.png')),
@@ -173,13 +174,58 @@ specials = SpecialManager()
 level0 = Level(
     floor=Floor(pg.image.load(gen_img_path('tilesets/main/wood.png'))),
     ceiling=Sky(pg.image.load(gen_img_path('nightsky.png'))),
+    walls=Walls.load('data/maps/demo.json', wall_textures),
+    specials=specials,
+    entities=entities,
+    sounds=SOUNDS,
+)
+
+# LEVEL 1
+entities = {
+    WeaponItem(
+        weapon=WEAPONS['shotgun'],
+        number=5,
+        pos=(7.5, 3),
+        width=1,
+        height=0.5,
+        render_width=1,
+        render_height=0.1875,
+    ),
+}
+for dex, entity in enumerate(entities):
+    entity.darkness = 0
+
+player = Player(
+    pos=(5.5, 4.5),
+    inventory=Inventory(
+        weapons={
+            WEAPONS['fist']: math.inf,
+            WEAPONS['shotgun']: 5,
+            WEAPONS['launcher']: 5,
+        }
+    ),
+)
+player.yaw = 180
+entities = EntityManager(player, entities)
+
+wall_textures = (
+    ColumnTexture(pg.image.load(gen_img_path('tilesets/main/stonebrick.png'))),
+    ColumnTexture(pg.image.load(gen_img_path('tilesets/main/bars.png'))),
+    ColumnTexture(pg.image.load(gen_img_path('tilesets/main/broken_bars.png'))),
+)
+specials = SpecialManager()
+level1 = Level(
+    floor=Floor(pg.image.load(gen_img_path('tilesets/main/wood.png'))),
+    ceiling=Floor(pg.image.load(gen_img_path('tilesets/main/wood.png'))),
     walls=Walls.load('data/maps/0.json', wall_textures),
     specials=specials,
     entities=entities,
     sounds=SOUNDS,
 )
 
+
 LEVELS = (
     level0,
+    level1,
 )
 

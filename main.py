@@ -48,7 +48,7 @@ class Game(object):
         
         pg.mouse.set_relative_mode(1)
 
-        self._level = LEVELS[0]
+        self._level = LEVELS[1]
         self._player = self._level.entities.player
         self._sounds = SOUNDS
 

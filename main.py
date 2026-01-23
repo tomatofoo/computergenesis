@@ -57,7 +57,7 @@ class Game(object):
             tile_size=self._SURF_SIZE[0] / 2,
             wall_render_distance=8,
             player=self._player,
-            darkness=0,
+            darkness=1,
             multithreaded=True,
         )
         self._camera.horizon = 0.5

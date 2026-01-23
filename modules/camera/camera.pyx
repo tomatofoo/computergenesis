@@ -488,8 +488,7 @@ cdef class Camera:
                 #lighting
                 if self._darkness:
                     lighting = np.minimum(
-                        np.vstack(offsets) / semiheight / self._darkness,
-                        1,
+                        np.vstack(offsets) / semiheight / self._darkness, 1,
                     )
                     array = (array * lighting).astype('uint8')
                     # can't do *= ^
@@ -536,8 +535,7 @@ cdef class Camera:
                 # lighting
                 if self._darkness:
                     lighting = np.minimum(
-                        np.vstack(offsets) / semiheight / self._darkness,
-                        1,
+                        np.vstack(offsets) / semiheight / self._darkness, 1,
                     )
                     array = (array * lighting).astype('uint8')
                     # can't do *= ^

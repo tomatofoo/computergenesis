@@ -215,8 +215,8 @@ wall_textures = (
 )
 specials = SpecialManager()
 level1 = Level(
-    floor=Floor(pg.image.load(gen_img_path('tilesets/main/wood.png'))),
-    ceiling=Floor(pg.image.load(gen_img_path('tilesets/main/wood.png'))),
+    floor=Floor(pg.image.load(gen_img_path('tilesets/main/stone.png'))),
+    ceiling=Floor(pg.image.load(gen_img_path('tilesets/main/stone.png'))),
     walls=Walls.load('data/maps/0.json', wall_textures),
     specials=specials,
     entities=entities,

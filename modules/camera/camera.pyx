@@ -473,7 +473,7 @@ cdef class Camera:
                     endpoint=0,
                 ) # offsets from horizon to render
 
-                mult = self._tile_size * <float>self._player._render_elevation
+                mult = <float>self._player._render_elevation * self._tile_size
                 array = self._generate_array(
                     width=width,
                     mult=mult,
@@ -488,7 +488,11 @@ cdef class Camera:
                 #lighting
                 if self._darkness:
                     lighting = np.minimum(
-                        np.vstack(offsets) / semiheight / self._darkness, 1,
+                        np.vstack(offsets)
+                        / semiheight
+                        / self._darkness
+                        / self._player._render_elevation,
+                        1,
                     )
                     array = (array * lighting).astype('uint8')
                     # can't do *= ^
@@ -517,13 +521,12 @@ cdef class Camera:
                 ) # offsets from horizon to render
 
                 mult = (
-                    self._tile_size
-                    * (<float>level._ceiling_elevation
-                       - <float>self._player._render_elevation)
+                    <float>level._ceiling_elevation
+                    - <float>self._player._render_elevation
                 )
                 array = self._generate_array(
                     width=width,
-                    mult=mult,
+                    mult=mult * self._tile_size,
                     left_ray=left_ray,
                     right_ray=right_ray,
                     scale=obj._scale,
@@ -535,7 +538,11 @@ cdef class Camera:
                 # lighting
                 if self._darkness:
                     lighting = np.minimum(
-                        np.vstack(offsets) / semiheight / self._darkness, 1,
+                        np.vstack(offsets)
+                        / semiheight
+                        / self._darkness
+                        / mult,
+                        1,
                     )
                     array = (array * lighting).astype('uint8')
                     # can't do *= ^

@@ -134,7 +134,8 @@ class Game(object):
                         self._player.interact()
 
             # Update
-            self.move_tiles(level_timer)
+            if self._level is LEVELS[0]:
+                self.move_tiles(level_timer)
             keys = pg.key.get_pressed()
 
             speed = 1.5 if keys[pg.K_LSHIFT] else 1

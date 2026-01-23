@@ -554,8 +554,8 @@ cdef class Camera:
             self._tile_size / rel_depth * height,
             self._tile_size * self._max_line_height,
         ))
-        # 2 was found through testing
-        calculation[1] = calculation[0] + 2 # render_line_height
+        # 1 was found through testing
+        calculation[1] = calculation[0] + 1 # render_line_height
         # ^ pixel glitches at bottoms of wall are avoided
 
         # elevation offset

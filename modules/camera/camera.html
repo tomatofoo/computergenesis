@@ -5004,9 +5004,9 @@ static int __pyx_pf_6camera_6Camera_13multithreaded_2__set__(struct __pyx_obj_6c
 </pre><pre class="cython line score-0">&#xA0;<span class="">0554</span>:             self._tile_size / rel_depth * height,</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0555</span>:             self._tile_size * self._max_line_height,</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0556</span>:         ))</pre>
-<pre class="cython line score-0">&#xA0;<span class="">0557</span>:         # 2 was found through testing</pre>
-<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0558</span>:         calculation[1] = calculation[0] + 2 # render_line_height</pre>
-<pre class='cython code score-0 '>  (__pyx_v_calculation[1]) = ((__pyx_v_calculation[0]) + 2);
+<pre class="cython line score-0">&#xA0;<span class="">0557</span>:         # 1 was found through testing</pre>
+<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0558</span>:         calculation[1] = calculation[0] + 1 # render_line_height</pre>
+<pre class='cython code score-0 '>  (__pyx_v_calculation[1]) = ((__pyx_v_calculation[0]) + 1);
 </pre><pre class="cython line score-0">&#xA0;<span class="">0559</span>:         # ^ pixel glitches at bottoms of wall are avoided</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0560</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">0561</span>:         # elevation offset</pre>

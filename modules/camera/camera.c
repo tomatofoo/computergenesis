@@ -14429,12 +14429,12 @@ static void __pyx_f_6camera_6Camera__calculate_line(struct __pyx_obj_6camera_Cam
 
   /* "camera.pyx":558
  *         ))
- *         # 2 was found through testing
- *         calculation[1] = calculation[0] + 2 # render_line_height             # <<<<<<<<<<<<<<
+ *         # 1 was found through testing
+ *         calculation[1] = calculation[0] + 1 # render_line_height             # <<<<<<<<<<<<<<
  *         # ^ pixel glitches at bottoms of wall are avoided
  * 
 */
-  (__pyx_v_calculation[1]) = ((__pyx_v_calculation[0]) + 2);
+  (__pyx_v_calculation[1]) = ((__pyx_v_calculation[0]) + 1);
 
   /* "camera.pyx":563
  *         # elevation offset

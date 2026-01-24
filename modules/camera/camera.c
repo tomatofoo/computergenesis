@@ -14580,7 +14580,7 @@ static PyObject *__pyx_f_6camera_6Camera__darken_line(struct __pyx_obj_6camera_C
  *         cdef float factor
  *         if self._darkness and darkness:             # <<<<<<<<<<<<<<
  *             # magic numbers found through testing
- *             factor = -dist**0.9 * self._darkness / 7 * darkness
+ *             factor = -dist**0.9 * self._darkness / 8 * darkness
 */
   __pyx_t_2 = (__pyx_v_self->_darkness != 0);
   if (__pyx_t_2) {
@@ -14596,15 +14596,15 @@ static PyObject *__pyx_f_6camera_6Camera__darken_line(struct __pyx_obj_6camera_C
     /* "camera.pyx":580
  *         if self._darkness and darkness:
  *             # magic numbers found through testing
- *             factor = -dist**0.9 * self._darkness / 7 * darkness             # <<<<<<<<<<<<<<
+ *             factor = -dist**0.9 * self._darkness / 8 * darkness             # <<<<<<<<<<<<<<
  *             return pg.transform.hsl(line, 0, 0, fmax(factor, -1))
  *         return line
 */
-    __pyx_v_factor = ((((-pow(((double)__pyx_v_dist), 0.9)) * __pyx_v_self->_darkness) / 7.0) * __pyx_v_darkness);
+    __pyx_v_factor = ((((-pow(((double)__pyx_v_dist), 0.9)) * __pyx_v_self->_darkness) / 8.0) * __pyx_v_darkness);
 
     /* "camera.pyx":581
  *             # magic numbers found through testing
- *             factor = -dist**0.9 * self._darkness / 7 * darkness
+ *             factor = -dist**0.9 * self._darkness / 8 * darkness
  *             return pg.transform.hsl(line, 0, 0, fmax(factor, -1))             # <<<<<<<<<<<<<<
  *         return line
  * 
@@ -14639,12 +14639,12 @@ static PyObject *__pyx_f_6camera_6Camera__darken_line(struct __pyx_obj_6camera_C
  *         cdef float factor
  *         if self._darkness and darkness:             # <<<<<<<<<<<<<<
  *             # magic numbers found through testing
- *             factor = -dist**0.9 * self._darkness / 7 * darkness
+ *             factor = -dist**0.9 * self._darkness / 8 * darkness
 */
   }
 
   /* "camera.pyx":582
- *             factor = -dist**0.9 * self._darkness / 7 * darkness
+ *             factor = -dist**0.9 * self._darkness / 8 * darkness
  *             return pg.transform.hsl(line, 0, 0, fmax(factor, -1))
  *         return line             # <<<<<<<<<<<<<<
  * 
@@ -14722,7 +14722,7 @@ static void __pyx_f_6camera_6Camera__darken_line_ip(struct __pyx_obj_6camera_Cam
  *         cdef float factor
  *         if self._darkness and darkness:             # <<<<<<<<<<<<<<
  *             # magic numbers found through testing
- *             factor = -dist**0.9 * self._darkness / 7 * darkness
+ *             factor = -dist**0.9 * self._darkness / 8 * darkness
 */
   __pyx_t_2 = (__pyx_v_self->_darkness != 0);
   if (__pyx_t_2) {
@@ -14738,15 +14738,15 @@ static void __pyx_f_6camera_6Camera__darken_line_ip(struct __pyx_obj_6camera_Cam
     /* "camera.pyx":591
  *         if self._darkness and darkness:
  *             # magic numbers found through testing
- *             factor = -dist**0.9 * self._darkness / 7 * darkness             # <<<<<<<<<<<<<<
+ *             factor = -dist**0.9 * self._darkness / 8 * darkness             # <<<<<<<<<<<<<<
  *             pg.transform.hsl(line, 0, 0, fmax(factor, -1), line)
  * 
 */
-    __pyx_v_factor = ((((-pow(((double)__pyx_v_dist), 0.9)) * __pyx_v_self->_darkness) / 7.0) * __pyx_v_darkness);
+    __pyx_v_factor = ((((-pow(((double)__pyx_v_dist), 0.9)) * __pyx_v_self->_darkness) / 8.0) * __pyx_v_darkness);
 
     /* "camera.pyx":592
  *             # magic numbers found through testing
- *             factor = -dist**0.9 * self._darkness / 7 * darkness
+ *             factor = -dist**0.9 * self._darkness / 8 * darkness
  *             pg.transform.hsl(line, 0, 0, fmax(factor, -1), line)             # <<<<<<<<<<<<<<
  * 
  *     cdef void _render_walls_and_entities(self: Self,
@@ -14777,7 +14777,7 @@ static void __pyx_f_6camera_6Camera__darken_line_ip(struct __pyx_obj_6camera_Cam
  *         cdef float factor
  *         if self._darkness and darkness:             # <<<<<<<<<<<<<<
  *             # magic numbers found through testing
- *             factor = -dist**0.9 * self._darkness / 7 * darkness
+ *             factor = -dist**0.9 * self._darkness / 8 * darkness
 */
   }
 
@@ -22852,7 +22852,7 @@ __Pyx_RefNannySetupContext("PyInit_camera", 0);
   (void)__Pyx_modinit_variable_import_code(__pyx_mstate);
   (void)__Pyx_modinit_function_import_code(__pyx_mstate);
   /*--- Execution code ---*/
-  __Pyx_TraceStartFunc("PyInit_camera", __pyx_f[0], 1, 4, 0, 0, __PYX_ERR(0, 1, __pyx_L1_error));
+  __Pyx_TraceStartFunc("PyInit_camera", __pyx_f[0], 1, 2, 0, 0, __PYX_ERR(0, 1, __pyx_L1_error));
 
   /* "camera.pyx":18
  * from libc.string cimport memset
@@ -23180,7 +23180,7 @@ __Pyx_RefNannySetupContext("PyInit_camera", 0);
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_mstate_global->__pyx_d, __pyx_mstate_global->__pyx_n_u_test, __pyx_t_2) < (0)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_TraceReturnValue(Py_None, 4, 0, __PYX_ERR(0, 1, __pyx_L1_error));
+  __Pyx_TraceReturnValue(Py_None, 2, 0, __PYX_ERR(0, 1, __pyx_L1_error));
   __Pyx_PyMonitoring_ExitScope(0);
 
   /*--- Wrapped vars code ---*/
@@ -23190,7 +23190,7 @@ __Pyx_RefNannySetupContext("PyInit_camera", 0);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_TraceException(__pyx_lineno, 0, 0);
-  __Pyx_TraceExceptionUnwind(4, 0);
+  __Pyx_TraceExceptionUnwind(2, 0);
   if (__pyx_m) {
     if (__pyx_mstate->__pyx_d && stringtab_initialized) {
       __Pyx_AddTraceback("init camera", __pyx_clineno, __pyx_lineno, __pyx_filename);

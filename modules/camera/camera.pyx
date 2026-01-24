@@ -577,7 +577,7 @@ cdef class Camera:
         cdef float factor
         if self._darkness and darkness:
             # magic numbers found through testing
-            factor = -dist**0.9 * self._darkness / 7 * darkness
+            factor = -dist**0.9 * self._darkness / 8 * darkness
             return pg.transform.hsl(line, 0, 0, fmax(factor, -1))
         return line
 
@@ -588,7 +588,7 @@ cdef class Camera:
         cdef float factor
         if self._darkness and darkness:
             # magic numbers found through testing
-            factor = -dist**0.9 * self._darkness / 7 * darkness
+            factor = -dist**0.9 * self._darkness / 8 * darkness
             pg.transform.hsl(line, 0, 0, fmax(factor, -1), line)
 
     cdef void _render_walls_and_entities(self: Self,

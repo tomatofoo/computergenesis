@@ -5094,8 +5094,8 @@ struct __pyx_opt_args_6camera_6Camera__darken_line {
 /* … */
   }
 </pre><pre class="cython line score-0">&#xA0;<span class="">0579</span>:             # magic numbers found through testing</pre>
-<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0580</span>:             factor = -dist**0.9 * self._darkness / 7 * darkness</pre>
-<pre class='cython code score-0 '>    __pyx_v_factor = ((((-pow(((double)__pyx_v_dist), 0.9)) * __pyx_v_self-&gt;_darkness) / 7.0) * __pyx_v_darkness);
+<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0580</span>:             factor = -dist**0.9 * self._darkness / 8 * darkness</pre>
+<pre class='cython code score-0 '>    __pyx_v_factor = ((((-pow(((double)__pyx_v_dist), 0.9)) * __pyx_v_self-&gt;_darkness) / 8.0) * __pyx_v_darkness);
 </pre><pre class="cython line score-17" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0581</span>:             return pg.transform.hsl(line, 0, 0, fmax(factor, -1))</pre>
 <pre class='cython code score-17 '>    <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_r);
     <span class='pyx_c_api'>__Pyx_GetModuleGlobalName</span>(__pyx_t_5, __pyx_mstate_global-&gt;__pyx_n_u_pg);<span class='error_goto'> if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 581, __pyx_L1_error)</span>
@@ -5183,8 +5183,8 @@ struct __pyx_opt_args_6camera_6Camera__darken_line_ip {
 /* … */
   }
 </pre><pre class="cython line score-0">&#xA0;<span class="">0590</span>:             # magic numbers found through testing</pre>
-<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0591</span>:             factor = -dist**0.9 * self._darkness / 7 * darkness</pre>
-<pre class='cython code score-0 '>    __pyx_v_factor = ((((-pow(((double)__pyx_v_dist), 0.9)) * __pyx_v_self-&gt;_darkness) / 7.0) * __pyx_v_darkness);
+<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0591</span>:             factor = -dist**0.9 * self._darkness / 8 * darkness</pre>
+<pre class='cython code score-0 '>    __pyx_v_factor = ((((-pow(((double)__pyx_v_dist), 0.9)) * __pyx_v_self-&gt;_darkness) / 8.0) * __pyx_v_darkness);
 </pre><pre class="cython line score-17" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0592</span>:             pg.transform.hsl(line, 0, 0, fmax(factor, -1), line)</pre>
 <pre class='cython code score-17 '>    <span class='pyx_c_api'>__Pyx_GetModuleGlobalName</span>(__pyx_t_5, __pyx_mstate_global-&gt;__pyx_n_u_pg);<span class='error_goto'> if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 592, __pyx_L1_error)</span>
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_5);

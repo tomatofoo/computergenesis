@@ -946,8 +946,7 @@ cdef class Camera:
 
                         else: # transparent semitiles
                             obj = _DepthBufferObject(
-                                final_rel_depth,
-                                (line, (x, y)),
+                                final_rel_depth, (line, (x, y)),
                             )
                             render_buffer[x].append(obj)
                 else:

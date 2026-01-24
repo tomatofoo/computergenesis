@@ -736,6 +736,7 @@ cdef class Camera:
                         back_line_height = y + line_height - render_y
                         side_key = 'bottom'
                     
+                    # fix pixel glitches
                     render_back_line_height = back_line_height + 1
                     render_end = render_y + render_back_line_height
                     if (render_end > 0

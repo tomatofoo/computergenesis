@@ -470,7 +470,7 @@ cdef class Camera:
                     1,
                     difference,
                     num=difference,
-                    endpoint=0,
+                    endpoint=1,
                 ) # offsets from horizon to render
 
                 mult = <float>self._player._render_elevation * self._tile_size
@@ -561,9 +561,9 @@ cdef class Camera:
             self._tile_size / rel_depth * height,
             self._tile_size * self._max_line_height,
         ))
-        # 1 was found through testing
-        calculation[1] = calculation[0] + 1 # render_line_height
-        # ^ pixel glitches at bottoms of wall are avoided
+        
+        # original it was + 1 but now thiis is here just in case
+        calculation[1] = calculation[0] + 0 # render_line_height
 
         # elevation offset
         calculation[2] = int(roundf( # offset

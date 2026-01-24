@@ -4416,7 +4416,7 @@ static int __pyx_pf_6camera_6Camera_13multithreaded_2__set__(struct __pyx_obj_6c
         __pyx_t_8 = <span class='pyx_c_api'>__Pyx_MakeVectorcallBuilderKwds</span>(2);<span class='error_goto'> if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 469, __pyx_L1_error)</span>
         <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_8);
         if (<span class='pyx_c_api'>__Pyx_VectorcallBuilder_AddArg</span>(__pyx_mstate_global-&gt;__pyx_n_u_num, __pyx_t_11, __pyx_t_8, __pyx_callargs+3, 0) &lt; (0)) <span class='error_goto'>__PYX_ERR(0, 469, __pyx_L1_error)</span>
-        if (<span class='pyx_c_api'>__Pyx_VectorcallBuilder_AddArg</span>(__pyx_mstate_global-&gt;__pyx_n_u_endpoint, __pyx_mstate_global-&gt;__pyx_int_0, __pyx_t_8, __pyx_callargs+3, 1) &lt; (0)) <span class='error_goto'>__PYX_ERR(0, 469, __pyx_L1_error)</span>
+        if (<span class='pyx_c_api'>__Pyx_VectorcallBuilder_AddArg</span>(__pyx_mstate_global-&gt;__pyx_n_u_endpoint, __pyx_mstate_global-&gt;__pyx_int_1, __pyx_t_8, __pyx_callargs+3, 1) &lt; (0)) <span class='error_goto'>__PYX_ERR(0, 469, __pyx_L1_error)</span>
         __pyx_t_1 = <span class='pyx_c_api'>__Pyx_Object_Vectorcall_CallFromBuilder</span>((PyObject*)__pyx_t_9, __pyx_callargs+__pyx_t_10, (3-__pyx_t_10) | (__pyx_t_10*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET), __pyx_t_8);
         <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_5); __pyx_t_5 = 0;
         <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_4); __pyx_t_4 = 0;
@@ -4428,7 +4428,7 @@ static int __pyx_pf_6camera_6Camera_13multithreaded_2__set__(struct __pyx_obj_6c
       }
       __pyx_v_offsets = __pyx_t_1;
       __pyx_t_1 = 0;
-</pre><pre class="cython line score-0">&#xA0;<span class="">0473</span>:                     endpoint=0,</pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">0473</span>:                     endpoint=1,</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0474</span>:                 ) # offsets from horizon to render</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0475</span>: </pre>
 <pre class="cython line score-10" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0476</span>:                 mult = &lt;float&gt;self._player._render_elevation * self._tile_size</pre>
@@ -5022,11 +5022,11 @@ static int __pyx_pf_6camera_6Camera_13multithreaded_2__set__(struct __pyx_obj_6c
 </pre><pre class="cython line score-0">&#xA0;<span class="">0561</span>:             self._tile_size / rel_depth * height,</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0562</span>:             self._tile_size * self._max_line_height,</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0563</span>:         ))</pre>
-<pre class="cython line score-0">&#xA0;<span class="">0564</span>:         # 1 was found through testing</pre>
-<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0565</span>:         calculation[1] = calculation[0] + 1 # render_line_height</pre>
-<pre class='cython code score-0 '>  (__pyx_v_calculation[1]) = ((__pyx_v_calculation[0]) + 1);
-</pre><pre class="cython line score-0">&#xA0;<span class="">0566</span>:         # ^ pixel glitches at bottoms of wall are avoided</pre>
-<pre class="cython line score-0">&#xA0;<span class="">0567</span>: </pre>
+<pre class="cython line score-0">&#xA0;<span class="">0564</span>: </pre>
+<pre class="cython line score-0">&#xA0;<span class="">0565</span>:         # original it was + 1 but now thiis is here just in case</pre>
+<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0566</span>:         calculation[1] = calculation[0] + 0 # render_line_height</pre>
+<pre class='cython code score-0 '>  (__pyx_v_calculation[1]) = ((__pyx_v_calculation[0]) + 0);
+</pre><pre class="cython line score-0">&#xA0;<span class="">0567</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">0568</span>:         # elevation offset</pre>
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0569</span>:         calculation[2] = int(roundf( # offset</pre>
 <pre class='cython code score-0 '>  (__pyx_v_calculation[2]) = ((int)roundf(((((((((float)__pyx_t_2) * 2.0) - (__pyx_v_elevation * 2.0)) - __pyx_v_height) * __pyx_v_self-&gt;_tile_size) / 2.0) / __pyx_v_rel_depth)));

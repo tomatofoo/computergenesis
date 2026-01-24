@@ -55,7 +55,7 @@ class Game(object):
         self._camera = Camera(
             fov=90,
             tile_size=self._SURF_SIZE[0] / 2,
-            wall_render_distance=24,
+            wall_render_distance=8,
             player=self._player,
             darkness=1,
             multithreaded=True,

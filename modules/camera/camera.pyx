@@ -553,7 +553,7 @@ cdef class Camera:
                               float rel_depth,
                               float height,
                               float elevation,
-                              int[3] calculation):
+                              int[2] calculation):
         
         # distance already does fisheye correction because it 
         # divides by the magnitude of ray (when "depth" is 1)
@@ -562,11 +562,8 @@ cdef class Camera:
             self._tile_size * self._max_line_height,
         ))
         
-        # original it was + 1 but now this is here for legacy
-        calculation[1] = calculation[0] + 0 # render_line_height
-
         # elevation offset
-        calculation[2] = int(roundf( # offset
+        calculation[1] = int(roundf( # offset
             (<float>self._player._render_elevation * 2
              - elevation * 2
              - height)
@@ -600,7 +597,6 @@ cdef class Camera:
             int render_y
             int y
             int line_height
-            int render_line_height
             int old_y
             int old_render_end
             int back_line_height
@@ -609,7 +605,7 @@ cdef class Camera:
             int end
             int axis
             int[2] dir
-            int[3] calculation
+            int[2] calculation
             int offset
             int top
             int bottom
@@ -727,7 +723,7 @@ cdef class Camera:
                         data['elevation'],
                         calculation,
                     )
-                    line_height, render_line_height, offset = calculation
+                    line_height, offset = calculation
                     y = horizon - line_height / 2 + offset
                     
                     if render_back == 1: # render back on top
@@ -736,7 +732,7 @@ cdef class Camera:
                         side_key = 'top'
                     elif render_back == 2: # render back at bottom
                         render_y = back_edge
-                        back_line_height = y + render_line_height - render_y
+                        back_line_height = y + line_height - render_y
                         side_key = 'bottom'
                     
                     render_end = render_y + back_line_height
@@ -788,10 +784,9 @@ cdef class Camera:
                                 calculation,
                             )
                             line_height = calculation[0]
-                            render_line_height = calculation[1]
-                            offset = calculation[2]
+                            offset = calculation[1]
                             y = horizon - line_height / 2 + offset
-                            render_end = y + render_line_height
+                            render_end = y + line_height
 
                             center = (tile[0] + 0.5, tile[1] + 0.5)
                             # render back of tile on to
@@ -876,10 +871,9 @@ cdef class Camera:
                                 calculation,
                             )
                             line_height = calculation[0]
-                            render_line_height = calculation[1]
-                            offset = calculation[2]
+                            offset = calculation[1]
                             y = horizon - line_height / 2 + offset
-                            render_end = y + render_line_height
+                            render_end = y + line_height
                         else:
                             render_end = -1 # so it won't get rendered
 
@@ -893,7 +887,7 @@ cdef class Camera:
                         dex = int(floorf(part * <int>texture.width))
                         
                         # only resize the part that is visible (optimization)
-                        scale = render_line_height / <float>texture_height
+                        scale = line_height / <float>texture_height
                         top = int(floorf(fmax(-y / scale, 0)))
                         bottom = int(ceilf(fmin(
                             (height - y) / scale, texture_height,
@@ -905,13 +899,13 @@ cdef class Camera:
                         # adjust variables accordingly
                         # for some reason needs angle brackets to use C
                         y += <int>ceilf(top * scale)
-                        render_line_height = int(rect_height * scale)
-                        render_end = y + render_line_height
+                        line_height = int(rect_height * scale)
+                        render_end = y + line_height
                         
                         line = texture[dex]
                         line = pg.transform.scale(
                             line.subsurface(0, top, 1, rect_height),
-                            (1, render_line_height)
+                            (1, line_height)
                         )
                         self._darken_line(line, dist, darkness)
 
@@ -942,7 +936,7 @@ cdef class Camera:
                                     )
                                     render_buffer[x].append(obj)
                                     # rect bottom
-                                    if start - y + 1 >= render_line_height:
+                                    if start - y + 1 >= line_height:
                                         break
                             # old variables because of the full check
                             _limits_add(&limits, old_y, old_render_end)

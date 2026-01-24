@@ -604,7 +604,6 @@ cdef class Camera:
             int old_y
             int old_render_end
             int back_line_height
-            int render_back_line_height
             int render_end
             int start
             int end
@@ -740,10 +739,7 @@ cdef class Camera:
                         back_line_height = y + render_line_height - render_y
                         side_key = 'bottom'
                     
-                    # original was + 1 but this is here for legacy
-                    render_back_line_height = back_line_height + 0
-
-                    render_end = render_y + render_back_line_height
+                    render_end = render_y + back_line_height
                     if (render_end > 0
                         and y < height
                         and not _limits_full(&limits, y, render_end)):
@@ -765,7 +761,7 @@ cdef class Camera:
                         # that much
                         obj = _DepthBufferObject(
                             rel_depth,
-                            (color, (x, render_y, 1, render_back_line_height)),
+                            (color, (x, render_y, 1, back_line_height)),
                             is_rect=1,
                         )
                         render_buffer[x].append(obj)

@@ -99,6 +99,7 @@ class Game(object):
         pg.time.set_timer(second, 1000)
 
         jumping = 0
+        dashing = 0
 
         while self._running:
             # Time
@@ -146,7 +147,7 @@ class Game(object):
                 (keys[pg.K_DOWN] - keys[pg.K_UP]),
                 (keys[pg.K_SPACE] and not jumping) * 0.05 * 1.25,
             )
-            
+
             if keys[pg.K_SPACE]:
                 jumping = 1
             if self._player.collisions['e'][0]:

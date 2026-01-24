@@ -221,6 +221,7 @@ level1 = Level(
     specials=specials,
     entities=entities,
     sounds=SOUNDS,
+    ceiling_elevation=2,
 )
 
 

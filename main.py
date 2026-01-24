@@ -23,7 +23,7 @@ from modules.utils import gen_img_path
 class Game(object):
 
     _SCREEN_SIZE = (960, 720)
-    _SURF_RATIO = (4, 4)
+    _SURF_RATIO = (3, 3)
     _SURF_SIZE = (
         int(_SCREEN_SIZE[0] / _SURF_RATIO[0]),
         int(_SCREEN_SIZE[1] / _SURF_RATIO[1]),

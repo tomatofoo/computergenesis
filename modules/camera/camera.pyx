@@ -569,11 +569,22 @@ cdef class Camera:
              - height)
             * self._tile_size / 2 / rel_depth
         ))
-        
-    cdef void _darken_line(self: Self,
-                           line: pg.Surface,
-                           float dist,
-                           float darkness=1):
+
+    cdef object _darken_line(self: Self,
+                             line: pg.Surface,
+                             float dist,
+                             float darkness=1):
+        cdef float factor
+        if self._darkness and darkness:
+            # magic numbers found through testing
+            factor = -dist**0.9 * self._darkness / 7 * darkness
+            return pg.transform.hsl(line, 0, 0, fmax(factor, -1))
+        return line
+
+    cdef void _darken_line_ip(self: Self,
+                              line: pg.Surface,
+                              float dist,
+                              float darkness=1):
         cdef float factor
         if self._darkness and darkness:
             # magic numbers found through testing
@@ -747,7 +758,7 @@ cdef class Camera:
                         if not color:
                             line = pg.Surface((1, 1))
                             line.set_at((0, 0), data[side_key])
-                            self._darken_line(
+                            self._darken_line_ip(
                                 line,
                                 self._player._pos.distance_to(center),
                                 darkness,
@@ -905,12 +916,15 @@ cdef class Camera:
                         line_height = int(rect_height * scale)
                         render_end = y + line_height
                         
-                        line = texture[dex]
-                        line = pg.transform.scale(
-                            line.subsurface(0, top, 1, rect_height),
-                            (1, line_height)
-                        )
-                        self._darken_line(line, dist, darkness)
+                        line = texture[dex].subsurface(0, top, 1, rect_height)
+                        if rect_height < line_height:
+                            line = pg.transform.scale(
+                                self._darken_line(line, dist, darkness),
+                                (1, line_height),
+                            )
+                        else:
+                            line = pg.transform.scale(line, (1, line_height))
+                            self._darken_line_ip(line, dist, darkness)
 
                         # if not semitile or if semitile and no alpha
                         # walls expected to have no transparency
@@ -1083,36 +1097,26 @@ cdef class Camera:
                             # scaling and lighting
                             # order depends on if scale is greater or less
                             # (optimization)
-                            # I know this might be long but it works so yes
-                            if entity._darkness and self._darkness:
-                                if (render_width * render_height
-                                    <= rect_width * rect_height):
-                                    texture = pg.transform.scale(
-                                        texture,
-                                        (render_width, render_height),
-                                    )
+                            if (render_width * render_height
+                                <= rect_width * rect_height):
+                                texture = pg.transform.scale(
+                                    texture,
+                                    (render_width, render_height),
+                                )
+                                self._darken_line_ip(
+                                    texture,
+                                    rel_vector[2],
+                                    entity._darkness,
+                                )
+                            else:
+                                # not using darken_line because it will 
+                                # darken the actual entity's texture object
+                                texture = pg.transform.scale(
                                     self._darken_line(
                                         texture,
                                         rel_vector[2],
                                         entity._darkness,
-                                    )
-                                else:
-                                    # not using darken_line because it will 
-                                    # darken the actual entity's texture object
-                                    factor = (
-                                        -rel_vector[2]**0.9
-                                        * self._darkness / 7
-                                        * entity._darkness
-                                    )
-                                    texture = pg.transform.scale(
-                                        pg.transform.hsl(
-                                            texture, 0, 0, fmax(factor, -1),
-                                        ),
-                                        (render_width, render_height),
-                                    )
-                            else: # no lighting
-                                texture = pg.transform.scale(
-                                    texture,
+                                    ),
                                     (render_width, render_height),
                                 )
                             # add to depth buffer

@@ -562,7 +562,7 @@ cdef class Camera:
             self._tile_size * self._max_line_height,
         ))
         
-        # original it was + 1 but now thiis is here just in case
+        # original it was + 1 but now this is here for legacy
         calculation[1] = calculation[0] + 0 # render_line_height
 
         # elevation offset
@@ -739,9 +739,10 @@ cdef class Camera:
                         render_y = back_edge
                         back_line_height = y + render_line_height - render_y
                         side_key = 'bottom'
+                    
+                    # original was + 1 but this is here for legacy
+                    render_back_line_height = back_line_height + 0
 
-                    render_back_line_height = back_line_height + 1
-                    # this + 1 helps with pixel glitches (found by testing)
                     render_end = render_y + render_back_line_height
                     if (render_end > 0
                         and y < height

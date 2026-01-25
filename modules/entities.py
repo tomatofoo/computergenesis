@@ -1324,16 +1324,20 @@ class Player(Entity):
             self._weapon_attacking = 1
             self._weapon_cooldown_timer = self._weapon._cooldown
             if isinstance(self._weapon, MeleeWeapon):
-                if self._weapon.attack(self, self._foa):
+                if self._weapon.autoaim_attack(self, self._foa):
                     self._inventory.change_weapon_number(self._weapon, -1)
                     return 2
                 return 1
             elif isinstance(self._weapon, HitscanWeapon):
                 self._inventory.change_weapon_number(self._weapon, -1)
-                return self._weapon.attack(self, self._foa) + 1
+                return self._weapon.autoaim_attack(self, self._foa) + 1
             elif isinstance(self._weapon, MissileWeapon):
                 self._inventory.change_weapon_number(self._weapon, -1)
-                return self._weapon.attack(self, self._foa, self._roa) + 1
+                return self._weapon.autoaim_attack(
+                    self,
+                    self._foa,
+                    self._roa,
+                ) + 1
 
 
 class EntityManager(object):

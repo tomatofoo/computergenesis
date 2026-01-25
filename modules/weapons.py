@@ -18,8 +18,6 @@ if TYPE_CHECKING:
     from .entities import Entity
 
 
-# This is a very weird file but it creates an abstraction layer
-
 class Weapon(object):
     def __init__(self: Self,
                  damage: Real,
@@ -75,8 +73,8 @@ class Weapon(object):
     @cooldown.setter
     def cooldown(self: Self, value: Real) -> None:
         self._cooldown = value
-
-    def _hitscan(self: Self,
+    
+    def _autoaim_hitscan(self: Self,
                  attacker: Entity,
                  attack_range: Real,
                  foa: Real,
@@ -322,8 +320,8 @@ class MeleeWeapon(Weapon): # also hitscan btw
     def durability(self: Self, value: int) -> None:
         self._durability = durability
 
-    def attack(self: Self, attacker: Entity, foa: Real):
-        entity = self._hitscan(attacker, self._range, foa)
+    def autoaim_attack(self: Self, attacker: Entity, foa: Real):
+        entity = self._autoaim_hitscan(attacker, self._range, foa)
         if entity is not None:
             entity.melee_damage(self._damage)
             return True
@@ -360,8 +358,8 @@ class HitscanWeapon(AmmoWeapon):
             attack_sound=attack_sound,
         )
 
-    def attack(self: Self, attacker: Entity, foa: Real) -> bool:
-        entity = self._hitscan(attacker, self._range, foa)
+    def autoaim_attack(self: Self, attacker: Entity, foa: Real) -> bool:
+        entity = self._autoaim_hitscan(attacker, self._range, foa)
         attacker.velocity2 += -attacker._yaw.normalize() * 0.5
         attacker._elevation_velocity += 0.1
         if entity is not None:
@@ -429,10 +427,18 @@ class MissileWeapon(AmmoWeapon):
     def speed(self: Self, value: Real) -> None:
         self._speed = value
 
-    def attack(self: Self, attacker: Entity, foa: Real, roa: Real) -> None:
+    def autoaim_attack(self: Self,
+                       attacker: Entity,
+                       foa: Real,
+                       roa: Real) -> None:
         # unlike melee and hitscan, missile attack will return true if a hit is
         # predicted (not guaranteed)
-        entity, could_hit = self._hitscan(attacker, self._range, foa, roa=roa)
+        entity, could_hit = self._autoaim_hitscan(
+            attacker,
+            self._range,
+            foa,
+            roa=roa,
+        )
         missile = copy.deepcopy(self._missile)
         if entity is None:
             vector = pg.Vector3(attacker._yaw[0], 0, attacker._yaw[1])

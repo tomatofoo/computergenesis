@@ -75,6 +75,7 @@ class Entity(object):
         }
         self._manager = None
         self._remove = 0 # internal for when entity wants removal
+        self._boost = pg.Vector2(0, 0)
        
     @property
     def darkness(self: Self) -> float:
@@ -365,6 +366,9 @@ class Entity(object):
                 self._manager._sets[key] = set()
             self._manager._sets[key].add(self)
 
+    def boost(self: Self, velocity: Point) -> None:
+        self._boost = pg.Vector2(velocity)
+
     def melee_damage(self: Self, value: Real) -> None:
         self._health -= value
         if self._health <= 0:
@@ -413,15 +417,25 @@ class Entity(object):
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         self._collisions = {
             'x': [0, 0],
-            'y': [0, 0],
+            'y': [0, 0], # x/y will equal 2 when climb
             'e': [0, 0],
         }
-
+        
+        # Boost
+        vel_mult = 0.90625**rel_game_speed # number used in Doom
+        if self._boost.magnitude() >= 0.001:
+            self._boost *= vel_mult
+        else:
+            self._boost.update(0, 0)
+        
+        # Yaw
         if self._yaw_velocity:
             self.yaw += self._yaw_velocity * rel_game_speed
 
+        velocity2 = self._velocity2 + self._boost
+
         # The +/-0.00001 is to account for floating-point precision errors
-        self._pos[0] += self._velocity2[0] * rel_game_speed
+        self._pos[0] += velocity2[0] * rel_game_speed
         entity_rect = self.rect()
         for rect, bottom, top, entity in self._get_rects_around():
             vertical = self._elevation < top and self.top > bottom
@@ -437,9 +451,12 @@ class Entity(object):
                     self._pos[0] = entity_rect.centerx
                 else: # climbing up
                     self.elevation = top
-                    self._collsions['e'][0] = 1
+                    if self._velocity2[0] > 0:
+                        self._collisions['x'][1] = 2
+                    elif self._velocity2[0] < 0:
+                        self._collisions['x'][0] = 2
 
-        self._pos[1] += self._velocity2[1] * rel_game_speed
+        self._pos[1] += velocity2[1] * rel_game_speed
         entity_rect = self.rect()
         for rect, bottom, top, entity in self._get_rects_around():
             vertical = self._elevation < top and self.top > bottom
@@ -455,7 +472,10 @@ class Entity(object):
                     self._pos[1] = entity_rect.centery
                 else: # climbing up
                     self.elevation = top
-                    self._collsions['e'][0] = 1
+                    if self._velocity2[0] > 0:
+                        self._collisions['y'][1] = 2
+                    elif self._velocity2[0] < 0:
+                        self._collisions['y'][0] = 2
 
         # 3D collisions
         # x = v0t + 0.5at^2
@@ -1058,81 +1078,14 @@ class Player(Entity):
             self._right_velocity *= vel_mult
         else:
             self._right_velocity.update(0, 0)
-        
         self._velocity2 = self._forward_velocity + self._right_velocity
-
-        if self._yaw_velocity:
-            self.yaw += self._yaw_velocity * rel_game_speed
-        
-        # The +/-0.00001 is to account for floating-point precision errors
-        self._pos[0] += self._velocity2[0] * rel_game_speed
-        entity_rect = self.rect()
-        for rect, bottom, top, entity in self._get_rects_around():
-            vertical = self._elevation < top and self.top > bottom
-            horizontal = entity_rect.colliderect(rect)
-            if vertical and horizontal:
-                if top - self._elevation > self._climb:
-                    if self._velocity2[0] > 0:
-                        entity_rect.right = rect.left - 0.00001
-                        self._collisions['x'][1] = 1
-                    elif self._velocity2[0] < 0:
-                        entity_rect.left = rect.right + 0.00001
-                        self._collisions['x'][0] = 1
-                    self._pos[0] = entity_rect.centerx
-                else: # climbing up
-                    self.elevation = top
-                    self._climbing = 1
-                    self._collisions['e'][0] = 1
-
-        self._pos[1] += self._velocity2[1] * rel_game_speed
-        entity_rect = self.rect()
-        for rect, bottom, top, entity in self._get_rects_around():
-            vertical = self._elevation < top and self.top > bottom
-            horizontal = entity_rect.colliderect(rect)
-            if vertical and horizontal:
-                if top - self._elevation > self._climb:
-                    if self._velocity2[1] > 0:
-                        entity_rect.bottom = rect.top - 0.00001
-                        self._collisions['y'][1] = 1
-                    elif self._velocity2[1] < 0:
-                        entity_rect.top = rect.bottom + 0.00001
-                        self._collisions['y'][0] = 1
-                    self._pos[1] = entity_rect.centery
-                else: # climbing up
-                    self.elevation = top
-                    self._climbing = 1
-                    self._collisions['e'][0] = 1
-        
-        # 3D collisions
         if up is not None:
             self._elevation_velocity = up
-        # x = v0t + 0.5at^2
-        self.elevation += (
-            self._elevation_velocity * rel_game_speed
-            - 0.5 * self._gravity * rel_game_speed * rel_game_speed
-        )
-        self._elevation_velocity -= self._gravity * rel_game_speed
-        if self._elevation <= 0:
-            self._elevation_velocity = 0
-            self._collisions['e'][0] = 1
-        if self.top >= self._manager._level._ceiling_elevation:
-            self.top = self._manager._level._ceiling_elevation
-            self._elevation_velocity = 0
-            self._collisions['e'][1] = 1
-        entity_rect = self.rect()
-        for rect, bottom, top, entity in self._get_rects_around():
-            vertical = self._elevation < top and self.top > bottom
-            horizontal = entity_rect.colliderect(rect)
-            if vertical and horizontal:
-                if self._elevation_velocity > 0:
-                    self.top = bottom
-                    self._elevation_velocity = 0
-                    self._collisions['e'][1] = 1
-                elif self._elevation_velocity < 0:
-                    self.elevation = top
-                    self._elevation_velocity = 0
-                    self._collisions['e'][0] = 1
-        
+        super().update(rel_game_speed, level_timer)
+
+        if 2 in self._collisions['x'] or 2 in self._collisions['y']:
+            self._climbing = 1
+
         # climbing animation / headbob
         factor = min(self._velocity2.magnitude() * 20, 2)
         elevation = self._elevation + self._settings['camera_offset']

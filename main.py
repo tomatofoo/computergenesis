@@ -144,7 +144,7 @@ class Game(object):
                 (keys[pg.K_d] - keys[pg.K_a]) * 0.05 * speed,
                 (keys[pg.K_RIGHT] - keys[pg.K_LEFT]) * 2.5,
                 (keys[pg.K_DOWN] - keys[pg.K_UP]),
-                (keys[pg.K_SPACE] and not jumping) * 0.05 * 1.25,
+                (keys[pg.K_SPACE] and not jumping) * 0.05 * 1.5,
             )
             self._player.update(
                 rel_game_speed,

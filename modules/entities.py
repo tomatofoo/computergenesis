@@ -1043,6 +1043,7 @@ class Player(Entity):
         
         self._yaw_velocity = yaw
 
+        # not perfect but its a good approximation using deltatime
         vel_mult = 0.90625**rel_game_speed # number used in Doom
         bob_update = 0
         if self._forward_velocity.magnitude() >= 0.001:
@@ -1137,6 +1138,7 @@ class Player(Entity):
         elevation = self._elevation + self._settings['camera_offset']
         if self._climbing:
             difference = elevation - self._render_elevation
+            # not perfect but its a good approximation using deltatime
             mult = (1 - (1 - self._settings['climb_speed'])**rel_game_speed)
             self._render_elevation += difference * mult
             if difference < 0.001:

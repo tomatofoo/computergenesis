@@ -1082,7 +1082,8 @@ class Player(Entity):
         if up is not None:
             self._elevation_velocity = up
         super().update(rel_game_speed, level_timer)
-
+        
+        # climbing
         if 2 in self._collisions['x'] or 2 in self._collisions['y']:
             self._climbing = 1
 

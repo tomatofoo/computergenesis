@@ -362,6 +362,8 @@ class HitscanWeapon(AmmoWeapon):
 
     def attack(self: Self, attacker: Entity, foa: Real) -> bool:
         entity = self._hitscan(attacker, self._range, foa)
+        attacker.velocity2 += -attacker._yaw.normalize() * 0.5
+        attacker._elevation_velocity += 0.1
         if entity is not None:
             entity.hitscan_damage(self._damage)
             return True

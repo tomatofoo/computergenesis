@@ -455,7 +455,11 @@ class Entity(object):
                     self._collsions['e'][0] = 1
 
         # 3D collisions
-        self.elevation += self._elevation_velocity * rel_game_speed
+        # x = v0t + 0.5at^2
+        self.elevation += (
+            self._elevation_velocity * rel_game_speed
+            - 0.5 * self._gravity * rel_game_speed * rel_game_speed
+        )
         self._elevation_velocity -= self._gravity * rel_game_speed
         if self._elevation <= 0:
             self._elevation_velocity = 0
@@ -1099,10 +1103,14 @@ class Player(Entity):
         # 3D collisions
         # note that if setting elevation velocity it will subtract 
         # gravity * rel_game_speed before subtreacting
-        self._elevation_velocity -= self._gravity * rel_game_speed
         if up is not None:
             self._elevation_velocity = up
-        self.elevation += self._elevation_velocity * rel_game_speed
+        # x = v0t + 0.5at^2
+        self.elevation += (
+            self._elevation_velocity * rel_game_speed
+            - 0.5 * self._gravity * rel_game_speed * rel_game_speed
+        )
+        self._elevation_velocity -= self._gravity * rel_game_speed
         if self._elevation <= 0:
             self._elevation_velocity = 0
             self._collisions['e'][0] = 1

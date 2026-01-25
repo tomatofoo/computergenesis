@@ -99,7 +99,7 @@ class Game(object):
         pg.time.set_timer(second, 1000)
 
         jumping = 0
-        dashing = 0
+        highest = 0
 
         while self._running:
             # Time
@@ -147,12 +147,6 @@ class Game(object):
                 (keys[pg.K_DOWN] - keys[pg.K_UP]),
                 (keys[pg.K_SPACE] and not jumping) * 0.05 * 1.25,
             )
-
-            if keys[pg.K_SPACE]:
-                jumping = 1
-            if self._player.collisions['e'][0]:
-                jumping = 0
-
             self._player.update(
                 rel_game_speed,
                 level_timer,
@@ -161,6 +155,16 @@ class Game(object):
                 movement[2],
                 movement[4] if movement[4] else None,
             )
+
+            if keys[pg.K_SPACE]:
+                jumping = 1
+            if self._player.collisions['e'][0]:
+                jumping = 0
+
+            if self._player.elevation > highest:
+                highest = self._player.elevation
+                print(highest)
+
             self._camera.horizon -= movement[3] * 0.025 * rel_game_speed
             self._level.update(rel_game_speed, level_timer)
             frames.append(1 / delta_time if delta_time else math.inf)

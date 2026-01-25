@@ -1042,8 +1042,9 @@ class Player(Entity):
             self._right_velocity.update(self._semiplane * right)
         
         self._yaw_velocity = yaw
-
+        
         vel_mult = 0.90625**rel_game_speed # number used in Doom
+        # ^ not perfect but is a good approximation with deltatime
         bob_update = 0
         if self._forward_velocity.magnitude() >= 0.001:
             bob_update = 1

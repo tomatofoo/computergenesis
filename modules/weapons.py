@@ -171,7 +171,7 @@ class Weapon(object):
                     entity_dist = attacker._pos.distance_to(entity._pos)
                     if (entity._health <= 0
                         or not entity_dist
-                        or not attacker._dont_attack(entity)):
+                        or attacker._dont_attack(entity)):
                         continue
                     
                     entity_slope = (entity.centere - midheight) / entity_dist

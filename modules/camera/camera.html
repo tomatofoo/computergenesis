@@ -5018,11 +5018,11 @@ static int __pyx_pf_6camera_6Camera_13multithreaded_2__set__(struct __pyx_obj_6c
 <pre class="cython line score-0">&#xA0;<span class="">0557</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">0558</span>:         # distance already does fisheye correction because it</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0559</span>:         # divides by the magnitude of ray (when "depth" is 1)</pre>
-<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0560</span>:         calculation[0] = int(fmin( # line height</pre>
-<pre class='cython code score-0 '>  (__pyx_v_calculation[0]) = ((int)fmin(((__pyx_v_self-&gt;_tile_size / __pyx_v_rel_depth) * __pyx_v_height), (__pyx_v_self-&gt;_tile_size * __pyx_v_self-&gt;_max_line_height)));
+<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0560</span>:         calculation[0] = int(roundf(fmin( # line height</pre>
+<pre class='cython code score-0 '>  (__pyx_v_calculation[0]) = ((int)roundf(fmin(((__pyx_v_self-&gt;_tile_size / __pyx_v_rel_depth) * __pyx_v_height), (__pyx_v_self-&gt;_tile_size * __pyx_v_self-&gt;_max_line_height))));
 </pre><pre class="cython line score-0">&#xA0;<span class="">0561</span>:             self._tile_size / rel_depth * height,</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0562</span>:             self._tile_size * self._max_line_height,</pre>
-<pre class="cython line score-0">&#xA0;<span class="">0563</span>:         ))</pre>
+<pre class="cython line score-0">&#xA0;<span class="">0563</span>:         )))</pre>
 <pre class="cython line score-0">&#xA0;<span class="">0564</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">0565</span>:         # elevation offset</pre>
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0566</span>:         calculation[1] = int(roundf( # offset</pre>
@@ -5745,64 +5745,64 @@ struct __pyx_opt_args_6camera_6Camera__darken_line_ip {
       if (__pyx_t_16) {
 /* … */
       }
-</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0732</span>:                     self._calculate_line(</pre>
-<pre class='cython code score-0 '>        ((struct __pyx_vtabstruct_6camera_Camera *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_calculate_line(__pyx_v_self, __pyx_v_rel_depth, __pyx_t_10, __pyx_t_11, __pyx_v_calculation);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 732, __pyx_L1_error)</span>
-</pre><pre class="cython line score-0">&#xA0;<span class="">0733</span>:                         rel_depth,</pre>
-<pre class="cython line score-15" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0734</span>:                         data['height'],</pre>
-<pre class='cython code score-15 '>        if (unlikely(__pyx_v_data == Py_None)) {
-          <span class='py_c_api'>PyErr_SetString</span>(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          <span class='error_goto'>__PYX_ERR(0, 734, __pyx_L1_error)</span>
-        }
-        __pyx_t_8 = <span class='pyx_c_api'>__Pyx_PyDict_GetItem</span>(__pyx_v_data, __pyx_mstate_global-&gt;__pyx_n_u_height);<span class='error_goto'> if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 734, __pyx_L1_error)</span>
-        <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_8);
-        __pyx_t_10 = <span class='pyx_c_api'>__Pyx_PyFloat_AsFloat</span>(__pyx_t_8); if (unlikely((__pyx_t_10 == (float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 734, __pyx_L1_error)</span>
-        <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_8); __pyx_t_8 = 0;
-</pre><pre class="cython line score-15" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0735</span>:                         data['elevation'],</pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">0732</span>:                     # various +/-1's to fix pixel glitches</pre>
+<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0733</span>:                     self._calculate_line(</pre>
+<pre class='cython code score-0 '>        ((struct __pyx_vtabstruct_6camera_Camera *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_calculate_line(__pyx_v_self, __pyx_v_rel_depth, __pyx_t_10, __pyx_t_11, __pyx_v_calculation);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 733, __pyx_L1_error)</span>
+</pre><pre class="cython line score-0">&#xA0;<span class="">0734</span>:                         rel_depth,</pre>
+<pre class="cython line score-15" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0735</span>:                         data['height'],</pre>
 <pre class='cython code score-15 '>        if (unlikely(__pyx_v_data == Py_None)) {
           <span class='py_c_api'>PyErr_SetString</span>(PyExc_TypeError, "'NoneType' object is not subscriptable");
           <span class='error_goto'>__PYX_ERR(0, 735, __pyx_L1_error)</span>
         }
-        __pyx_t_8 = <span class='pyx_c_api'>__Pyx_PyDict_GetItem</span>(__pyx_v_data, __pyx_mstate_global-&gt;__pyx_n_u_elevation);<span class='error_goto'> if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 735, __pyx_L1_error)</span>
+        __pyx_t_8 = <span class='pyx_c_api'>__Pyx_PyDict_GetItem</span>(__pyx_v_data, __pyx_mstate_global-&gt;__pyx_n_u_height);<span class='error_goto'> if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 735, __pyx_L1_error)</span>
         <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_8);
-        __pyx_t_11 = <span class='pyx_c_api'>__Pyx_PyFloat_AsFloat</span>(__pyx_t_8); if (unlikely((__pyx_t_11 == (float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 735, __pyx_L1_error)</span>
+        __pyx_t_10 = <span class='pyx_c_api'>__Pyx_PyFloat_AsFloat</span>(__pyx_t_8); if (unlikely((__pyx_t_10 == (float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 735, __pyx_L1_error)</span>
         <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_8); __pyx_t_8 = 0;
-</pre><pre class="cython line score-0">&#xA0;<span class="">0736</span>:                         calculation,</pre>
-<pre class="cython line score-0">&#xA0;<span class="">0737</span>:                     )</pre>
-<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0738</span>:                     line_height, offset = calculation</pre>
+</pre><pre class="cython line score-15" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0736</span>:                         data['elevation'],</pre>
+<pre class='cython code score-15 '>        if (unlikely(__pyx_v_data == Py_None)) {
+          <span class='py_c_api'>PyErr_SetString</span>(PyExc_TypeError, "'NoneType' object is not subscriptable");
+          <span class='error_goto'>__PYX_ERR(0, 736, __pyx_L1_error)</span>
+        }
+        __pyx_t_8 = <span class='pyx_c_api'>__Pyx_PyDict_GetItem</span>(__pyx_v_data, __pyx_mstate_global-&gt;__pyx_n_u_elevation);<span class='error_goto'> if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 736, __pyx_L1_error)</span>
+        <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_8);
+        __pyx_t_11 = <span class='pyx_c_api'>__Pyx_PyFloat_AsFloat</span>(__pyx_t_8); if (unlikely((__pyx_t_11 == (float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 736, __pyx_L1_error)</span>
+        <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_8); __pyx_t_8 = 0;
+</pre><pre class="cython line score-0">&#xA0;<span class="">0737</span>:                         calculation,</pre>
+<pre class="cython line score-0">&#xA0;<span class="">0738</span>:                     )</pre>
+<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0739</span>:                     line_height, offset = calculation</pre>
 <pre class='cython code score-0 '>        __pyx_t_15 = __pyx_v_calculation;
         __pyx_t_19 = (__pyx_t_15[0]);
         __pyx_t_20 = (__pyx_t_15[1]);
         __pyx_v_line_height = __pyx_t_19;
         __pyx_v_offset = __pyx_t_20;
-</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0739</span>:                     y = horizon - line_height / 2 + offset</pre>
-<pre class='cython code score-0 '>        __pyx_v_y = ((__pyx_v_horizon - (((long)__pyx_v_line_height) / 2)) + __pyx_v_offset);
-</pre><pre class="cython line score-0">&#xA0;<span class="">0740</span>: </pre>
-<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0741</span>:                     if render_back == 1: # render back on top</pre>
+</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0740</span>:                     y = horizon - line_height / 2 + offset - 1</pre>
+<pre class='cython code score-0 '>        __pyx_v_y = (((__pyx_v_horizon - (((long)__pyx_v_line_height) / 2)) + __pyx_v_offset) - 1);
+</pre><pre class="cython line score-0">&#xA0;<span class="">0741</span>: </pre>
+<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0742</span>:                     if render_back == 1: # render back on top</pre>
 <pre class='cython code score-0 '>        switch (__pyx_v_render_back) {
           case 1:
 /* … */
           break;
           case 2:
-</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0742</span>:                         render_y = horizon - line_height / 2 + offset</pre>
-<pre class='cython code score-0 '>          __pyx_v_render_y = ((__pyx_v_horizon - (((long)__pyx_v_line_height) / 2)) + __pyx_v_offset);
-</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0743</span>:                         back_line_height = back_edge - render_y</pre>
+</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0743</span>:                         render_y = y</pre>
+<pre class='cython code score-0 '>          __pyx_v_render_y = __pyx_v_y;
+</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0744</span>:                         back_line_height = back_edge - render_y</pre>
 <pre class='cython code score-0 '>          __pyx_v_back_line_height = (__pyx_v_back_edge - __pyx_v_render_y);
-</pre><pre class="cython line score-2" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0744</span>:                         side_key = 'top'</pre>
+</pre><pre class="cython line score-2" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0745</span>:                         side_key = 'top'</pre>
 <pre class='cython code score-2 '>          <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_mstate_global-&gt;__pyx_n_u_top);
           <span class='pyx_macro_api'>__Pyx_XDECREF_SET</span>(__pyx_v_side_key, __pyx_mstate_global-&gt;__pyx_n_u_top);
-</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0745</span>:                     elif render_back == 2: # render back at bottom</pre>
+</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0746</span>:                     elif render_back == 2: # render back at bottom</pre>
 <pre class='cython code score-0 '>          break;
           default: break;
         }
-</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0746</span>:                         render_y = back_edge</pre>
+</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0747</span>:                         render_y = back_edge</pre>
 <pre class='cython code score-0 '>          __pyx_v_render_y = __pyx_v_back_edge;
-</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0747</span>:                         back_line_height = y + line_height - render_y</pre>
-<pre class='cython code score-0 '>          __pyx_v_back_line_height = ((__pyx_v_y + __pyx_v_line_height) - __pyx_v_render_y);
-</pre><pre class="cython line score-2" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0748</span>:                         side_key = 'bottom'</pre>
+</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0748</span>:                         back_line_height = y + line_height - render_y + 1</pre>
+<pre class='cython code score-0 '>          __pyx_v_back_line_height = (((__pyx_v_y + __pyx_v_line_height) - __pyx_v_render_y) + 1);
+</pre><pre class="cython line score-2" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0749</span>:                         side_key = 'bottom'</pre>
 <pre class='cython code score-2 '>          <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_mstate_global-&gt;__pyx_n_u_bottom);
           <span class='pyx_macro_api'>__Pyx_XDECREF_SET</span>(__pyx_v_side_key, __pyx_mstate_global-&gt;__pyx_n_u_bottom);
-</pre><pre class="cython line score-0">&#xA0;<span class="">0749</span>: </pre>
-<pre class="cython line score-0">&#xA0;<span class="">0750</span>:                     # fix pixel glitches</pre>
+</pre><pre class="cython line score-0">&#xA0;<span class="">0750</span>: </pre>
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0751</span>:                     render_back_line_height = back_line_height + 1</pre>
 <pre class='cython code score-0 '>        __pyx_v_render_back_line_height = (__pyx_v_back_line_height + 1);
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">0752</span>:                     render_end = render_y + render_back_line_height</pre>

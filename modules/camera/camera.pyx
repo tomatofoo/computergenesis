@@ -557,10 +557,10 @@ cdef class Camera:
         
         # distance already does fisheye correction because it 
         # divides by the magnitude of ray (when "depth" is 1)
-        calculation[0] = int(fmin( # line height
+        calculation[0] = int(roundf(fmin( # line height
             self._tile_size / rel_depth * height,
             self._tile_size * self._max_line_height,
-        ))
+        )))
         
         # elevation offset
         calculation[1] = int(roundf( # offset
@@ -729,6 +729,7 @@ cdef class Camera:
                 # this will trigger if using "side != -1"
                 # doesn't seem to cause problems
                 if render_back and rel_depth: # top/bottom of wall rendering
+                    # various +/-1's to fix pixel glitches
                     self._calculate_line(
                         rel_depth,
                         data['height'],
@@ -736,18 +737,17 @@ cdef class Camera:
                         calculation,
                     )
                     line_height, offset = calculation
-                    y = horizon - line_height / 2 + offset
-                    
+                    y = horizon - line_height / 2 + offset - 1
+                     
                     if render_back == 1: # render back on top
-                        render_y = horizon - line_height / 2 + offset
+                        render_y = y
                         back_line_height = back_edge - render_y
                         side_key = 'top'
                     elif render_back == 2: # render back at bottom
                         render_y = back_edge
-                        back_line_height = y + line_height - render_y
+                        back_line_height = y + line_height - render_y + 1
                         side_key = 'bottom'
                     
-                    # fix pixel glitches
                     render_back_line_height = back_line_height + 1
                     render_end = render_y + render_back_line_height
                     if (render_end > 0

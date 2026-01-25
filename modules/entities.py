@@ -1102,8 +1102,6 @@ class Player(Entity):
                     self._collisions['e'][0] = 1
         
         # 3D collisions
-        # note that if setting elevation velocity it will subtract 
-        # gravity * rel_game_speed before subtreacting
         if up is not None:
             self._elevation_velocity = up
         # x = v0t + 0.5at^2

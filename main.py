@@ -99,7 +99,6 @@ class Game(object):
         pg.time.set_timer(second, 1000)
 
         jumping = 0
-        highest = 0
 
         while self._running:
             # Time
@@ -160,10 +159,6 @@ class Game(object):
                 jumping = 1
             if self._player.collisions['e'][0]:
                 jumping = 0
-
-            if self._player.elevation > highest:
-                highest = self._player.elevation
-                print(highest)
 
             self._camera.horizon -= movement[3] * 0.025 * rel_game_speed
             self._level.update(rel_game_speed, level_timer)

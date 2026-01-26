@@ -51,6 +51,7 @@ class Game(object):
         self._level = LEVELS[0]
         self._level.sounds = SOUNDS
         self._player = self._level.entities.player
+        self._player.weapon = WEAPONS['launcher']
 
         self._camera = Camera(
             fov=90,
@@ -62,8 +63,6 @@ class Game(object):
         )
         self._camera.horizon = 0.5
         self._camera.weapon_scale = 3 / self._SURF_RATIO[0]
-
-        self._player.weapon = WEAPONS['launcher']
 
     def move_tiles(self: Self, level_timer: Real) -> None:
         self._level.walls.set_tile(
@@ -147,8 +146,13 @@ class Game(object):
                                 self._player.height = 0.35
                                 self._camera.camera_offset = 0.3
                                 self._player.elevation_velocity = -0.075
-                            else:
+                            elif not crouching:
                                 crouching = 1
+                    elif event.key == pg.K_l:
+                        self._player.try_width(2)
+                    elif event.key == pg.K_h:
+                        self._player.try_width(0.1)
+
             # Update
             if self._level is LEVELS[0]:
                 self.move_tiles(level_timer)
@@ -170,10 +174,11 @@ class Game(object):
                     speed = 0.65
                 else:
                     crouching = max(crouching - rel_game_speed, 0)
-                    if not crouching:
-                        self._player.height = 0.6
+                    self._player.try_height(0.6)
+                    if self._player.height < 0.6:
+                        crouching = 10
                 self._camera.camera_offset = 0.5 - crouching / 10 * 0.2
-
+            print(crouching)
             movement = (
                 (keys[pg.K_w] - keys[pg.K_s]) * 0.05 * speed,
                 (keys[pg.K_d] - keys[pg.K_a]) * 0.05 * speed,

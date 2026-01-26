@@ -373,6 +373,29 @@ class Entity(object):
             if not self._manager._sets.get(key):
                 self._manager._sets[key] = set()
             self._manager._sets[key].add(self)
+    
+    def try_width(self: Self, value: Real) -> None:
+        lowest = math.inf
+        entity_rect = self.rect()
+        for rect, bottom, top, entity in self._get_rects_around():
+            if self._elevation < top and self.top > bottom:
+                left = rect.left - self._pos[0]
+                right = self._pos[0] - rect.right
+                if 0 < left < lowest:
+                    lowest = left
+                if 0 < right < lowest:
+                    lowest = right
+        self._width = pg.math.clamp(lowest * 2, 0, value)
+
+    def try_height(self: Self, value: Real) -> None:
+        lowest = math.inf
+        entity_rect = self.rect()
+        for rect, bottom, top, entity in self._get_rects_around():
+            if entity_rect.colliderect(rect):
+                height = bottom - self._elevation
+                if 0 < height < lowest:
+                    lowest = height
+        self._height = pg.math.clamp(lowest, 0, value)
 
     def melee_damage(self: Self, value: Real) -> None:
         self._health -= value

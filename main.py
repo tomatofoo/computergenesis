@@ -66,7 +66,10 @@ class Game(object):
         self._camera.weapon_scale = 3 / self._SURF_RATIO[0]
         
         self._player_height = 0.6
+        self._offset_ratio = 5 / 6
         self._crouch_height = 0.35
+        self._crouch_time = 10
+        self._slide_time = 30
 
     def move_tiles(self: Self, level_timer: Real) -> None:
         self._level.walls.set_tile(
@@ -102,7 +105,7 @@ class Game(object):
         pg.time.set_timer(second, 1000)
 
         jumping = 0
-        dashing = 0
+        sliding = 0
         crouching = 0
 
         while self._running:
@@ -138,9 +141,9 @@ class Game(object):
                     elif event.key == pg.K_e:
                         self._player.interact()
                     elif event.key == pg.K_LSHIFT:
-                        if not dashing:
+                        if not sliding:
                             if jumping:
-                                dashing = 1
+                                sliding = 1
                                 mult = 1
                                 if keys[pg.K_s] and not keys[pg.K_w]:
                                     mult = -1
@@ -163,25 +166,26 @@ class Game(object):
             keys = pg.key.get_pressed()
 
             speed = 1.5
-            if dashing:
-                dashing += rel_game_speed
-                self._camera.camera_offset = dashing / 30 * 0.3 + 0.2
-                if dashing > 30:
-                    dashing = 0
+            if sliding:
+                sliding += rel_game_speed
+                #self._camera.camera_offset = sliding / 30 * 0.3 + 0.2
+                if sliding > 30:
+                    sliding = 0
                     crouching = 1
                     # self._player.height = 0.6
                     # self._camera.camera_offset = 0.5
             if crouching: 
                 if keys[pg.K_LSHIFT]:
-                    self._player.height = 0.35
+                    self._player.try_height(0.5 - crouching / 10 * 0.2)
                     crouching = min(crouching + rel_game_speed, 10)
                     speed = 0.65
                 else:
                     crouching = max(crouching - rel_game_speed, 0)
-                    self._player.try_height(0.6)
+                    self._player.try_height(0.5 - crouching / 10 * 0.2)
                     if self._player.height < 0.6:
                         crouching = 10
-                self._camera.camera_offset = 0.5 - crouching / 10 * 0.2
+
+            self._camera.camera_offset = self._offset_ratio * self._player.height
 
             movement = (
                 (keys[pg.K_w] - keys[pg.K_s]) * 0.05 * speed,

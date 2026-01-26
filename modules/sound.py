@@ -23,6 +23,11 @@ class Sound(object):
         self.path = path
         self._manager = None
 
+    def __copy__(self: Self) -> Self:
+        sound = Sound(self._path, self._volume)
+        sound._manager = self._manager
+        return sound
+
     @property
     def path(self: Self) -> str:
         return self._path
@@ -66,9 +71,7 @@ class Sound(object):
         self._sound.stop()
 
     def copy(self: Self) -> Self:
-        sound = Sound(self._path, self._volume)
-        sound._manager = self._manager
-        return sound
+        return self.__copy__()
 
 
 class SoundManager(object):
@@ -87,6 +90,21 @@ class SoundManager(object):
         self._dist_factor = dist_factor
         self.volume = volume
         mx.set_num_channels(channels)
+
+    def __copy__(self: Self) -> Self: # will be linked to the same level
+        # will copy the sounds as well
+        # can't copy what sounds are currently playinig
+        sounds = {}
+        for id, sound in self._sounds.items():
+            sounds[id] = sound.copy()
+        obj = SoundManager(
+            sounds,
+            self._volume,
+            mx.get_num_channels(),
+            self._dist_factor,
+        )
+        obj._level = self._level
+        return obj
 
     def __getitem__(self: Self, id: str) -> Sound:
         return self._sounds[id]
@@ -124,20 +142,8 @@ class SoundManager(object):
     def dist_factor(self: Self, value: Real) -> None:
         self._dist_factor = value
 
-    def copy(self: Self) -> Self: # will be linked to the same level
-        # will copy the sounds as well
-        # won't copy what sounds are currently playinig
-        sounds = {}
-        for id, sound in self._sounds.items():
-            sounds[id] = sound.copy()
-        obj = SoundManager(
-            sounds,
-            self._volume,
-            mx.get_num_channels(),
-            self._dist_factor,
-        )
-        obj._level = self._level
-        return obj
+    def copy(self: Self) -> Self:
+        return self.__copy__()
 
     def set_sound(self: Self, id: str, sound: Sound) -> None:
         old = self._sounds.get(id)

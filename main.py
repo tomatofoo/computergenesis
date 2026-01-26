@@ -16,6 +16,7 @@ from modules.camera import Camera
 from modules.hud import HUDElement
 from modules.hud import HUD
 from modules.entities import Player
+from modules.utils import SMALL
 from modules.utils import gen_img_path
 
 
@@ -37,6 +38,8 @@ class Game(object):
         self._settings = {
             'vsync': 1,
             'keys': {
+                'crouch': pg.K_LSHIFT,
+                'slide': pg.K_LSHIFT,
             },
         }
         self._screen = pg.display.set_mode(
@@ -72,11 +75,13 @@ class Game(object):
         # Misc
         self._offset_ratio = 5 / 6
         self._player_height = 0.6
-        self._crouch_height = 0.325
+        self._crouch_height = 0.3125
         self._crouch_time = 10
         self._crouch_speed = 0.6
-        self._slide_height = 0.325
+        self._slide_height = 0.3125
         self._slide_time = 30
+        self._slide_speed = 0.15
+        self._slide_elevation_velocity = -0.075
 
     def move_tiles(self: Self, level_timer: Real) -> None:
         self._level.walls.set_tile(
@@ -100,6 +105,38 @@ class Game(object):
             rect=(0.2, 0, 0.0001, 1),
         )
 
+    def _update_crouch_height(self: Self, crouching: Real) -> None:
+        self._player.height = self._player.try_height(
+            pg.math.lerp(
+                self._player_height,
+                self._crouch_height,
+                crouching / self._crouch_time,
+            ),
+        )
+
+    def _get_crouching(self: Self, height: Real) -> Real:
+        return pg.math.invlerp(
+            self._player_height,
+            self._crouch_height,
+            height,
+        ) * self._crouch_time
+
+    def _update_slide_height(self: Self, sliding: Real) -> None:
+        self._player.height = self._player.try_height(
+            pg.math.lerp(
+                self._slide_height,
+                self._player_height,
+                sliding / self._slide_time,
+            ),
+        )
+
+    def _get_sliding(self: Self, height: Real) -> Real:
+        return pg.math.invlerp(
+            self._slide_height,
+            self._player_height,
+            height,
+        ) * self._slide_time
+
     def run(self: Self) -> None:
         self._running = 1
         start_time = time.time()
@@ -121,6 +158,9 @@ class Game(object):
             start_time = time.time()
             rel_game_speed = delta_time * self._GAME_SPEED
             level_timer += rel_game_speed
+            
+            # Keys
+            keys = pg.key.get_pressed()
             
             # Events
             for event in pg.event.get():
@@ -150,18 +190,20 @@ class Game(object):
                     elif event.key == pg.K_LSHIFT:
                         if not sliding:
                             if jumping:
-                                sliding = 1
+                                sliding = SMALL
                                 mult = 1
                                 if keys[pg.K_s] and not keys[pg.K_w]:
                                     mult = -1
                                 self._player.boost = (
-                                    self._player.forward * 0.15 * mult
+                                    self._player.forward
+                                    * self._slide_speed
+                                    * mult
                                 )
-                                self._player.height = 0.35
-                                self._camera.camera_offset = 0.3
-                                self._player.elevation_velocity = -0.075
+                                self._player.elevation_velocity = (
+                                    self._slide_elevation_velocity
+                                )
                             elif not crouching:
-                                crouching = 1
+                                crouching = SMALL
                     elif event.key == pg.K_l:
                         self._player.try_width(2)
                     elif event.key == pg.K_h:
@@ -170,41 +212,37 @@ class Game(object):
             # Update
             if self._level is LEVELS[0]:
                 self.move_tiles(level_timer)
-            keys = pg.key.get_pressed()
-
+            
             speed = 1.5
+            
+            # Slide / Crouch
             if sliding:
-                sliding += 1
-                self._player.height = (
-                    sliding
-                    / self._slide_time
-                    * (self._player_height - self._slide_height)
-                    + self._slide_height
-                )
-                if sliding > self._slide_time:
+                sliding = min(sliding + rel_game_speed, self._slide_time)
+                self._update_slide_height(sliding)
+                sliding = self._get_sliding(self._player.height)
+                if sliding >= self._slide_time:
                     sliding = 0
-                    crouching = rel_game_speed
-                    # self._player.height = 0.6
-                    # self._camera.camera_offset = 0.5
+                    if not jumping:
+                        crouching = SMALL
             if crouching:
-                height = self._player.height
-                self._player.try_height(
-                    self._player_height
-                    - (crouching
-                       / self._crouch_time
-                       * (self._player_height - self._crouch_height))
-                )
                 if keys[pg.K_LSHIFT]:
                     crouching = min(
                         crouching + rel_game_speed, self._crouch_time,
                     )
                     speed = self._crouch_speed
-                elif (height != self._player.height
-                      or height == self._crouch_height):
+                    self._update_crouch_height(crouching)
+                else:
                     crouching = max(crouching - rel_game_speed, 0)
+                    self._update_crouch_height(crouching)
+                    crouching = self._get_crouching(self._player.height)
+                    if not crouching:
+                        self._player.height = self._player_height
 
-            self._camera.camera_offset = self._offset_ratio * self._player.height
-
+            self._camera.camera_offset = (
+                self._offset_ratio * self._player.height
+            )
+            
+            # Movement
             movement = (
                 (keys[pg.K_w] - keys[pg.K_s]) * 0.05 * speed,
                 (keys[pg.K_d] - keys[pg.K_a]) * 0.05 * speed,

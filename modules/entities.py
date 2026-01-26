@@ -17,6 +17,7 @@ from .weapons import HitscanWeapon
 from .weapons import MissileWeapon
 from .inventory import Collectible
 from .inventory import Inventory 
+from .utils import SMALL
 from .utils import FALLBACK_SURF
 from .utils import gen_tile_key
 
@@ -375,7 +376,7 @@ class Entity(object):
                 self._manager._sets[key] = set()
             self._manager._sets[key].add(self)
     
-    def try_width(self: Self, value: Real) -> None:
+    def try_width(self: Self, value: Real) -> Real:
         lowest = math.inf
         entity_rect = self.rect()
         for rect, bottom, top, entity in self._get_rects_around():
@@ -386,9 +387,9 @@ class Entity(object):
                     lowest = left
                 if 0 < right < lowest:
                     lowest = right
-        self._width = pg.math.clamp(lowest * 2, 0, value)
+        return pg.math.clamp(lowest * 2, 0, value)
 
-    def try_height(self: Self, value: Real) -> None:
+    def try_height(self: Self, value: Real) -> Real:
         lowest = math.inf
         entity_rect = self.rect()
         for rect, bottom, top, entity in self._get_rects_around():
@@ -396,7 +397,7 @@ class Entity(object):
                 height = bottom - self._elevation
                 if 0 < height < lowest:
                     lowest = height
-        self._height = pg.math.clamp(lowest, 0, value)
+        return pg.math.clamp(lowest, 0, value)
 
     def melee_damage(self: Self, value: Real) -> None:
         self._health -= value
@@ -470,20 +471,28 @@ class Entity(object):
             vertical = self._elevation < top and self.top > bottom
             horizontal = entity_rect.colliderect(rect)
             if vertical and horizontal:
-                if top - self._elevation > self._climb:
+                collision = 1 # if doing normal collision
+                if top - self._elevation <= self._climb:
+                    lowest = math.inf
+                    for rect, bottom, _, entity in self._get_rects_around():
+                        height = bottom - top
+                        if entity_rect.colliderect(rect) and 0 < height < lowest:
+                            lowest = height
+                    if lowest >= self._height:
+                        collision = 0
+                        self.elevation = top
+                        if velocity2[0] > 0:
+                            self._collisions['x'][1] = 2
+                        elif velocity2[0] < 0:
+                            self._collisions['x'][0] = 2
+                if collision:
                     if velocity2[0] > 0:
-                        entity_rect.right = rect.left - 0.00001
+                        entity_rect.right = rect.left - SMALL
                         self._collisions['x'][1] = 1
                     elif velocity2[0] < 0:
-                        entity_rect.left = rect.right + 0.00001
+                        entity_rect.left = rect.right + SMALL
                         self._collisions['x'][0] = 1
                     self._pos[0] = entity_rect.centerx
-                else: # climbing up
-                    self.elevation = top
-                    if velocity2[0] > 0:
-                        self._collisions['x'][1] = 2
-                    elif velocity2[0] < 0:
-                        self._collisions['x'][0] = 2
 
         self._pos[1] += velocity2[1] * rel_game_speed
         entity_rect = self.rect()
@@ -491,20 +500,28 @@ class Entity(object):
             vertical = self._elevation < top and self.top > bottom
             horizontal = entity_rect.colliderect(rect)
             if vertical and horizontal:
-                if top - self._elevation > self._climb:
+                collision = 1 # if doing normal collision
+                if top - self._elevation <= self._climb:
+                    lowest = math.inf
+                    for rect, bottom, _, entity in self._get_rects_around():
+                        height = bottom - top
+                        if entity_rect.colliderect(rect) and 0 < height < lowest:
+                            lowest = height
+                    if lowest >= self._height: # climb
+                        collision = 0
+                        self.elevation = top
+                        if velocity2[1] > 0:
+                            self._collisions['y'][1] = 2
+                        elif velocity2[1] < 0:
+                            self._collisions['y'][0] = 2
+                if collision:
                     if velocity2[1] > 0:
-                        entity_rect.bottom = rect.top - 0.00001
+                        entity_rect.bottom = rect.top - SMALL
                         self._collisions['y'][1] = 1
                     elif velocity2[1] < 0:
-                        entity_rect.top = rect.bottom + 0.00001
+                        entity_rect.top = rect.bottom + SMALL
                         self._collisions['y'][0] = 1
                     self._pos[1] = entity_rect.centery
-                else: # climbing up
-                    self.elevation = top
-                    if velocity2[1] > 0:
-                        self._collisions['y'][1] = 2
-                    elif velocity2[1] < 0:
-                        self._collisions['y'][0] = 2
 
         # 3D collisions
         # x = v0t + 0.5at^2

@@ -113,13 +113,14 @@ class Entity(object):
     def y(self: Self, value: Real) -> None:
         self._pos[1] = value
 
+    # using .copy because this is used for camera
     @property
     def forward(self: Self) -> pg.Vector2:
-        return self._yaw
+        return self._yaw.copy()
 
     @property
     def right(self: Self) -> pg.Vector2:
-        return self._semiplane
+        return self._semiplane.copy()
 
     @property
     def elevation(self: Self) -> Real:

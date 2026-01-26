@@ -100,6 +100,7 @@ class Game(object):
 
         jumping = 0
         dashing = 0
+        crouching = 0
 
         while self._running:
             # Time
@@ -133,24 +134,46 @@ class Game(object):
                         SOUNDS['water'].play(pos=(9, 0.25, 9)) 
                     elif event.key == pg.K_e:
                         self._player.interact()
-                    elif event.key == pg.K_SPACE and jumping and not dashing:
-                        dashing = 1
-                        mult = 1
-                        if keys[pg.K_s] and not keys[pg.K_w]:
-                            mult = -1
-                        self._player.boost = (
-                            self._player.right * 0.091875 * (keys[pg.K_d] - keys[pg.K_a])
-                            + self._player.forward * 0.091875 * mult
-                        )
-
-                        self._player.elevation_velocity = 0.075
-
+                    elif event.key == pg.K_LSHIFT:
+                        if not dashing:
+                            if jumping:
+                                dashing = 1
+                                mult = 1
+                                if keys[pg.K_s] and not keys[pg.K_w]:
+                                    mult = -1
+                                self._player.boost = (
+                                    self._player.forward * 0.15 * mult
+                                )
+                                self._player.height = 0.35
+                                self._camera.camera_offset = 0.3
+                                self._player.elevation_velocity = -0.075
+                            else:
+                                crouching = 1
             # Update
             if self._level is LEVELS[0]:
                 self.move_tiles(level_timer)
             keys = pg.key.get_pressed()
 
-            speed = 1.5 if keys[pg.K_LSHIFT] else 1
+            speed = 1.5
+            if dashing:
+                dashing += rel_game_speed
+                self._camera.camera_offset = dashing / 30 * 0.3 + 0.2
+                if dashing > 30:
+                    dashing = 0
+                    crouching = 1
+                    # self._player.height = 0.6
+                    # self._camera.camera_offset = 0.5
+            if crouching: 
+                if keys[pg.K_LSHIFT]:
+                    self._player.height = 0.35
+                    crouching = min(crouching + rel_game_speed, 10)
+                    speed = 0.65
+                else:
+                    crouching = max(crouching - rel_game_speed, 0)
+                    if not crouching:
+                        self._player.height = 0.6
+                self._camera.camera_offset = 0.5 - crouching / 10 * 0.2
+
             movement = (
                 (keys[pg.K_w] - keys[pg.K_s]) * 0.05 * speed,
                 (keys[pg.K_d] - keys[pg.K_a]) * 0.05 * speed,
@@ -171,7 +194,6 @@ class Game(object):
                 jumping = 1
             if self._player.collisions['e'][0]:
                 jumping = 0
-                dashing = 0
 
             self._camera.horizon -= movement[3] * 0.025 * rel_game_speed
             self._level.update(rel_game_speed, level_timer)

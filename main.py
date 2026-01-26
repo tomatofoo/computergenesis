@@ -161,7 +161,7 @@ class Game(object):
                                 self._camera.camera_offset = 0.3
                                 self._player.elevation_velocity = -0.075
                             elif not crouching:
-                                crouching += rel_game_speed
+                                crouching = 1
                     elif event.key == pg.K_l:
                         self._player.try_width(2)
                     elif event.key == pg.K_h:
@@ -174,7 +174,7 @@ class Game(object):
 
             speed = 1.5
             if sliding:
-                sliding += rel_game_speed
+                sliding += 1
                 self._player.height = (
                     sliding
                     / self._slide_time
@@ -183,7 +183,7 @@ class Game(object):
                 )
                 if sliding > self._slide_time:
                     sliding = 0
-                    crouching = 1
+                    crouching = rel_game_speed
                     # self._player.height = 0.6
                     # self._camera.camera_offset = 0.5
             if crouching:

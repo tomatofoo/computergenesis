@@ -72,9 +72,10 @@ class Game(object):
         # Misc
         self._offset_ratio = 5 / 6
         self._player_height = 0.6
-        self._crouch_height = 0.35
+        self._crouch_height = 0.325
         self._crouch_time = 10
-        self._slide_height = 0.35
+        self._crouch_speed = 0.6
+        self._slide_height = 0.325
         self._slide_time = 30
 
     def move_tiles(self: Self, level_timer: Real) -> None:
@@ -174,8 +175,13 @@ class Game(object):
             speed = 1.5
             if sliding:
                 sliding += rel_game_speed
-                self._player.height = sliding / 30 * 0.4 + 0.2
-                if sliding > 30:
+                self._player.height = (
+                    sliding
+                    / self._slide_time
+                    * (self._player_height - self._slide_height)
+                    + self._slide_height
+                )
+                if sliding > self._slide_time:
                     sliding = 0
                     crouching = 1
                     # self._player.height = 0.6
@@ -190,8 +196,9 @@ class Game(object):
                 )
                 if keys[pg.K_LSHIFT]:
                     crouching = min(crouching + rel_game_speed, 10)
-                    speed = 0.65
-                elif height != self._player.height or height == self._crouch_height:
+                    speed = self._crouch_speed
+                elif (height != self._player.height
+                      or height == self._crouch_height):
                     crouching = max(crouching - rel_game_speed, 0)
 
             self._camera.camera_offset = self._offset_ratio * self._player.height

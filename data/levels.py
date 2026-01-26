@@ -164,6 +164,7 @@ player = Player(
 player.yaw = 180
 player.elevation = 1
 entities = EntityManager(player, entities)
+entities = EntityManager(player)
 
 wall_textures = (
     ColumnTexture(pg.image.load(gen_img_path('tilesets/main/stone/brick.png'))),
@@ -174,7 +175,7 @@ specials = SpecialManager()
 level0 = Level(
     floor=Floor(pg.image.load(gen_img_path('tilesets/main/wood.png'))),
     ceiling=Sky(pg.image.load(gen_img_path('nightsky.png'))),
-    walls=Walls.load('data/maps/demo.json', wall_textures),
+    walls=Walls.load('data/maps/demo2.json', wall_textures),
     specials=specials,
     entities=entities,
     sounds=SOUNDS,

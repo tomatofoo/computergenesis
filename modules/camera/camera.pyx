@@ -623,10 +623,7 @@ cdef class Camera:
             int bottom
             int rect_height
             int texture_height
-            # this is used to indicate if a ray has been casted
-            # we use this instead of checking rel_depth because
-            # rel_depth CAN be 0 (180 yaw at perfect edge)
-            int side = -1
+            int side
             float scale
             float dist
             float rel_depth
@@ -687,6 +684,10 @@ cdef class Camera:
             step_y = dir[1] * 2 - 1 
             rel_depth = 0 # relative to yaw magnitude
             dist = 0
+            # this is used to indicate if a ray has been casted
+            # we use this instead of checking rel_depth because
+            # rel_depth CAN be 0 (180 yaw at perfect edge)
+            side = -1
 
             _limits_reset(&limits)
             
@@ -721,13 +722,8 @@ cdef class Camera:
                         f'{<int>ceilf(end_pos[0])};{<int>ceilf(end_pos[1])}',
                     )
 
-                # no nested if statement on purpose
-
-                # using rel_depth instead of side != -1 
-                # because side is not equal to -1 if obj isn't none at start
-                # then, after, when data is set to none
-                # this will trigger if using "side != -1"
-                # doesn't seem to cause problems
+                # using rel_depth instead of side != -1 just in case
+                # you shouldn't need to render_back if rel_depth is 0
                 if render_back and rel_depth: # top/bottom of wall rendering
                     # various +/-1's to fix pixel glitches
                     self._calculate_line(

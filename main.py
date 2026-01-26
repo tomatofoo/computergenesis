@@ -50,6 +50,7 @@ class Game(object):
 
         self._level = LEVELS[0]
         self._player = self._level.entities.player
+        self._player.y += 1
         self._sounds = SOUNDS
 
         self._camera = Camera(

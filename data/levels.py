@@ -157,7 +157,7 @@ player = Player(
         weapons={
             WEAPONS['fist']: math.inf,
             WEAPONS['shotgun']: 5,
-            WEAPONS['launcher']: 5,
+            WEAPONS['launcher']: math.inf,
         }
     ),
 )
@@ -201,7 +201,7 @@ player = Player(
         weapons={
             WEAPONS['fist']: math.inf,
             WEAPONS['shotgun']: 5,
-            WEAPONS['launcher']: 5,
+            WEAPONS['launcher']: math.inf,
         }
     ),
 )

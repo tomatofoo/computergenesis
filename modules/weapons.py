@@ -322,8 +322,6 @@ class MeleeWeapon(Weapon): # also hitscan btw
 
     def autoaim_attack(self: Self, attacker: Entity, foa: Real):
         entity = self._autoaim_hitscan(attacker, self._range, foa)
-        attacker.boost(-attacker._yaw.normalize() * 0.5)
-        attacker._elevation_velocity += 0.1
         if entity is not None:
             entity.melee_damage(self._damage)
             return True
@@ -433,6 +431,9 @@ class MissileWeapon(AmmoWeapon):
                        roa: Real) -> None:
         # unlike melee and hitscan, missile attack will return true if a hit is
         # predicted (not guaranteed)
+        attacker.boost = -attacker._yaw.normalize() * 0.5
+        attacker._elevation_velocity += 0.1
+
         entity, could_hit = self._autoaim_hitscan(
             attacker,
             self._range,

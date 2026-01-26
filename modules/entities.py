@@ -274,6 +274,14 @@ class Entity(object):
         self._elevation_velocity = value[1]
 
     @property
+    def boost(self: Self) -> pg.Vector2:
+        return self._boost
+
+    @boost.setter
+    def boost(self: Self, value: pg.Vector2) -> None:
+        self._boost = value
+
+    @property
     def yaw_velocity(self: Self) -> Real:
         return self._yaw_velocity
 
@@ -291,7 +299,7 @@ class Entity(object):
     def textures(self: Self, value: list[pg.Surface]) -> None:
         self._textures = value
         self._texture_angle = 360 / len(value)
-    
+
     # layer of abstraction for directional sprites
     @property
     def texture(self: Self) -> pg.Surface:
@@ -365,9 +373,6 @@ class Entity(object):
             if not self._manager._sets.get(key):
                 self._manager._sets[key] = set()
             self._manager._sets[key].add(self)
-
-    def boost(self: Self, velocity: Point) -> None:
-        self._boost = pg.Vector2(velocity)
 
     def melee_damage(self: Self, value: Real) -> None:
         self._health -= value

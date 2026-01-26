@@ -29,6 +29,7 @@ class Sound(object):
 
     @path.setter
     def path(self: Self, value: str) -> None:
+        self._path = value
         self._sound = mx.Sound(value)
         self._sound.set_volume(self._volume)
 

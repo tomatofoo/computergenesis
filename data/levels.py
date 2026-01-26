@@ -177,7 +177,7 @@ level0 = Level(
     walls=Walls.load('data/maps/demo.json', wall_textures),
     specials=specials,
     entities=entities,
-    sounds=SOUNDS,
+    sounds=SOUNDS.copy(),
 )
 
 # LEVEL 1
@@ -220,7 +220,7 @@ level1 = Level(
     walls=Walls.load('data/maps/0.json', wall_textures),
     specials=specials,
     entities=entities,
-    sounds=SOUNDS,
+    sounds=SOUNDS.copy(),
     ceiling_elevation=2,
 )
 

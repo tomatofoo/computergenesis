@@ -19,10 +19,18 @@ def patch_surround():
 
 class Sound(object):
     def __init__(self: Self, path: str, volume: Real=1) -> None:
-        self._sound = mx.Sound(path)
-        self._sound.set_volume(volume)
         self._volume = volume
+        self.path = path
         self._manager = None
+
+    @property
+    def path(self: Self) -> str:
+        return self._path
+
+    @path.setter
+    def path(self: Self, value: str) -> None:
+        self._sound = mx.Sound(value)
+        self._sound.set_volume(self._volume)
 
     @property
     def volume(self: Self) -> Real:
@@ -31,6 +39,7 @@ class Sound(object):
     @volume.setter
     def volume(self: Self, value: Real) -> None:
         self._volume = value
+        self._sound.set_volume(value)
 
     def play(self: Self,
              loops=0,
@@ -54,6 +63,11 @@ class Sound(object):
 
     def stop(self: Self) -> None:
         self._sound.stop()
+
+    def copy(self: Self) -> Self:
+        sound = Sound(self._path, self._volume)
+        sound._manager = self._manager
+        return sound
 
 
 class SoundManager(object):
@@ -108,6 +122,19 @@ class SoundManager(object):
     @dist_factor.setter
     def dist_factor(self: Self, value: Real) -> None:
         self._dist_factor = value
+
+    def copy(self: Self) -> Self:
+        sounds = {}
+        for id, sound in self._sounds.items():
+            sounds[id] = sound.copy()
+        obj = SoundManager(
+            sounds,
+            self._volume,
+            mx.get_num_channels(),
+            self._dist_factor,
+        )
+        obj._level = self._level
+        return obj
 
     def set_sound(self: Self, id: str, sound: Sound) -> None:
         old = self._sounds.get(id)

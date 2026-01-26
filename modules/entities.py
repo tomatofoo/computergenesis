@@ -477,9 +477,9 @@ class Entity(object):
                     self._pos[1] = entity_rect.centery
                 else: # climbing up
                     self.elevation = top
-                    if velocity2[0] > 0:
+                    if velocity2[1] > 0:
                         self._collisions['y'][1] = 2
-                    elif velocity2[0] < 0:
+                    elif velocity2[1] < 0:
                         self._collisions['y'][0] = 2
 
         # 3D collisions
@@ -1084,8 +1084,10 @@ class Player(Entity):
         else:
             self._right_velocity.update(0, 0)
         self._velocity2 = self._forward_velocity + self._right_velocity
+
         if up is not None:
             self._elevation_velocity = up
+
         super().update(rel_game_speed, level_timer)
         
         # test if climbing

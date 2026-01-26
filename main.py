@@ -62,7 +62,10 @@ class Game(object):
             multithreaded=True,
         )
         self._camera.horizon = 0.5
+        self._camera.camera_offset = 5 / 6 * self._player.height
         self._camera.weapon_scale = 3 / self._SURF_RATIO[0]
+
+        self._crouch_height = 0.35
 
     def move_tiles(self: Self, level_timer: Real) -> None:
         self._level.walls.set_tile(
@@ -178,7 +181,7 @@ class Game(object):
                     if self._player.height < 0.6:
                         crouching = 10
                 self._camera.camera_offset = 0.5 - crouching / 10 * 0.2
-            print(crouching)
+
             movement = (
                 (keys[pg.K_w] - keys[pg.K_s]) * 0.05 * speed,
                 (keys[pg.K_d] - keys[pg.K_a]) * 0.05 * speed,

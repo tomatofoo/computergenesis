@@ -9,7 +9,6 @@ from typing import Self
 
 import pygame as pg
 
-from data.sounds import SOUNDS
 from data.weapons import WEAPONS
 from data.levels import LEVELS
 from modules.camera import Camera
@@ -50,7 +49,7 @@ class Game(object):
 
         self._level = LEVELS[0]
         self._player = self._level.entities.player
-        self._sounds = SOUNDS
+        self._sounds = self._level.sounds
 
         self._camera = Camera(
             fov=90,

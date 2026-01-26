@@ -195,7 +195,9 @@ class Game(object):
                        * (self._player_height - self._crouch_height))
                 )
                 if keys[pg.K_LSHIFT]:
-                    crouching = min(crouching + rel_game_speed, 10)
+                    crouching = min(
+                        crouching + rel_game_speed, self._crouch_time,
+                    )
                     speed = self._crouch_speed
                 elif (height != self._player.height
                       or height == self._crouch_height):

@@ -98,6 +98,7 @@ class Game(object):
         pg.time.set_timer(second, 1000)
 
         jumping = 0
+        dashing = 0
 
         while self._running:
             # Time
@@ -131,6 +132,9 @@ class Game(object):
                         self._sounds['water'].play(pos=(9, 0.25, 9)) 
                     elif event.key == pg.K_e:
                         self._player.interact()
+                    elif event.key == pg.K_SPACE and jumping and not dashing:
+                        dashing = 1
+                        self._player.boost = self._player.forward * 0.25
 
             # Update
             if self._level is LEVELS[0]:
@@ -158,6 +162,7 @@ class Game(object):
                 jumping = 1
             if self._player.collisions['e'][0]:
                 jumping = 0
+                dashing = 0
 
             self._camera.horizon -= movement[3] * 0.025 * rel_game_speed
             self._level.update(rel_game_speed, level_timer)

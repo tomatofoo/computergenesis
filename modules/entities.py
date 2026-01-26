@@ -119,7 +119,7 @@ class Entity(object):
 
     @property
     def right(self: Self) -> pg.Vector2:
-        return self._plane
+        return self._semiplane
 
     @property
     def elevation(self: Self) -> Real:
@@ -278,8 +278,8 @@ class Entity(object):
         return self._boost
 
     @boost.setter
-    def boost(self: Self, value: pg.Vector2) -> None:
-        self._boost = value
+    def boost(self: Self, value: Point) -> None:
+        self._boost = pg.Vector2(value)
 
     @property
     def yaw_velocity(self: Self) -> Real:

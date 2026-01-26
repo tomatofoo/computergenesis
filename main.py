@@ -64,7 +64,8 @@ class Game(object):
         self._camera.horizon = 0.5
         self._camera.camera_offset = 5 / 6 * self._player.height
         self._camera.weapon_scale = 3 / self._SURF_RATIO[0]
-
+        
+        self._player_height = 0.6
         self._crouch_height = 0.35
 
     def move_tiles(self: Self, level_timer: Real) -> None:

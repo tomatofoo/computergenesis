@@ -9,6 +9,7 @@ from typing import Self
 
 import pygame as pg
 
+from data.weapons import SOUNDS
 from data.weapons import WEAPONS
 from data.levels import LEVELS
 from modules.camera import Camera
@@ -48,8 +49,8 @@ class Game(object):
         pg.mouse.set_relative_mode(1)
 
         self._level = LEVELS[0]
+        self._level.sounds = SOUNDS
         self._player = self._level.entities.player
-        self._sounds = self._level.sounds
 
         self._camera = Camera(
             fov=90,
@@ -98,7 +99,6 @@ class Game(object):
         pg.time.set_timer(second, 1000)
 
         jumping = 0
-        dashing = 0
 
         while self._running:
             # Time
@@ -129,12 +129,9 @@ class Game(object):
                     elif event.key == pg.K_3:
                         self._player.weapon = WEAPONS['launcher']
                     elif event.key == pg.K_0:
-                        self._sounds['water'].play(pos=(9, 0.25, 9)) 
+                        SOUNDS['water'].play(pos=(9, 0.25, 9)) 
                     elif event.key == pg.K_e:
                         self._player.interact()
-                    elif event.key == pg.K_SPACE and jumping and not dashing:
-                        dashing = 1
-                        self._player.boost = self._player.forward * 0.25
 
             # Update
             if self._level is LEVELS[0]:
@@ -162,7 +159,6 @@ class Game(object):
                 jumping = 1
             if self._player.collisions['e'][0]:
                 jumping = 0
-                dashing = 0
 
             self._camera.horizon -= movement[3] * 0.025 * rel_game_speed
             self._level.update(rel_game_speed, level_timer)

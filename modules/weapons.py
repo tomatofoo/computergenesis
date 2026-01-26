@@ -359,6 +359,9 @@ class HitscanWeapon(AmmoWeapon):
         )
 
     def autoaim_attack(self: Self, attacker: Entity, foa: Real) -> bool:
+        attacker.boost = -attacker._yaw.normalize() * 0.1
+        attacker._elevation_velocity += 0.05
+
         entity = self._autoaim_hitscan(attacker, self._range, foa)
         if entity is not None:
             entity.hitscan_damage(self._damage)

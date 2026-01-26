@@ -126,6 +126,7 @@ class SoundManager(object):
 
     def copy(self: Self) -> Self: # will be linked to the same level
         # will copy the sounds as well
+        # won't copy what sounds are currently playinig
         sounds = {}
         for id, sound in self._sounds.items():
             sounds[id] = sound.copy()
@@ -154,10 +155,9 @@ class SoundManager(object):
         channels = []
         for pos, channel in self._channels:
             rel_vector = (pos[0], pos[2]) - player._pos
+            angle = 0
             if rel_vector:
                 angle = player._yaw_value - rel_vector.angle - 90
-            else:
-                angle = 0
             dist = player.vector3.distance_to(pos) * self._dist_factor
             channel.set_source_location(angle, min(dist, 255))
             if channel.get_busy(): # filter inactive channels

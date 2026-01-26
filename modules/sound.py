@@ -124,7 +124,8 @@ class SoundManager(object):
     def dist_factor(self: Self, value: Real) -> None:
         self._dist_factor = value
 
-    def copy(self: Self) -> Self:
+    def copy(self: Self) -> Self: # will be linked to the same level
+        # will copy the sounds as well
         sounds = {}
         for id, sound in self._sounds.items():
             sounds[id] = sound.copy()

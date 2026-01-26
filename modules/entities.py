@@ -442,18 +442,18 @@ class Entity(object):
             horizontal = entity_rect.colliderect(rect)
             if vertical and horizontal:
                 if top - self._elevation > self._climb:
-                    if self._velocity2[0] > 0:
+                    if velocity2[0] > 0:
                         entity_rect.right = rect.left - 0.00001
                         self._collisions['x'][1] = 1
-                    elif self._velocity2[0] < 0:
+                    elif velocity2[0] < 0:
                         entity_rect.left = rect.right + 0.00001
                         self._collisions['x'][0] = 1
                     self._pos[0] = entity_rect.centerx
                 else: # climbing up
                     self.elevation = top
-                    if self._velocity2[0] > 0:
+                    if velocity2[0] > 0:
                         self._collisions['x'][1] = 2
-                    elif self._velocity2[0] < 0:
+                    elif velocity2[0] < 0:
                         self._collisions['x'][0] = 2
 
         self._pos[1] += velocity2[1] * rel_game_speed
@@ -463,18 +463,18 @@ class Entity(object):
             horizontal = entity_rect.colliderect(rect)
             if vertical and horizontal:
                 if top - self._elevation > self._climb:
-                    if self._velocity2[1] > 0:
+                    if velocity2[1] > 0:
                         entity_rect.bottom = rect.top - 0.00001
                         self._collisions['y'][1] = 1
-                    elif self._velocity2[1] < 0:
+                    elif velocity2[1] < 0:
                         entity_rect.top = rect.bottom + 0.00001
                         self._collisions['y'][0] = 1
                     self._pos[1] = entity_rect.centery
                 else: # climbing up
                     self.elevation = top
-                    if self._velocity2[0] > 0:
+                    if velocity2[0] > 0:
                         self._collisions['y'][1] = 2
-                    elif self._velocity2[0] < 0:
+                    elif velocity2[0] < 0:
                         self._collisions['y'][0] = 2
 
         # 3D collisions

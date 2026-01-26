@@ -36,6 +36,8 @@ class Game(object):
 
         self._settings = {
             'vsync': 1,
+            'keys': {
+            },
         }
         self._screen = pg.display.set_mode(
             self._SCREEN_SIZE,
@@ -158,7 +160,7 @@ class Game(object):
                                 self._camera.camera_offset = 0.3
                                 self._player.elevation_velocity = -0.075
                             elif not crouching:
-                                crouching = 1
+                                crouching += rel_game_speed
                     elif event.key == pg.K_l:
                         self._player.try_width(2)
                     elif event.key == pg.K_h:
@@ -172,22 +174,25 @@ class Game(object):
             speed = 1.5
             if sliding:
                 sliding += rel_game_speed
-                #self._camera.camera_offset = sliding / 30 * 0.3 + 0.2
+                self._player.height = sliding / 30 * 0.4 + 0.2
                 if sliding > 30:
                     sliding = 0
                     crouching = 1
                     # self._player.height = 0.6
                     # self._camera.camera_offset = 0.5
-            if crouching: 
+            if crouching:
+                height = self._player.height
+                self._player.try_height(
+                    self._player_height
+                    - (crouching
+                       / self._crouch_time
+                       * (self._player_height - self._crouch_height))
+                )
                 if keys[pg.K_LSHIFT]:
-                    self._player.try_height(0.6 - crouching / 10)
                     crouching = min(crouching + rel_game_speed, 10)
                     speed = 0.65
-                else:
+                elif height != self._player.height or height == self._crouch_height:
                     crouching = max(crouching - rel_game_speed, 0)
-                    self._player.try_height(0.6 - crouching / 10)
-                    if self._player.height < 0.6:
-                        crouching = 10
 
             self._camera.camera_offset = self._offset_ratio * self._player.height
 

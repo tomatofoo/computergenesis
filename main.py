@@ -47,12 +47,14 @@ class Game(object):
         self._running = 0
         
         pg.mouse.set_relative_mode(1)
-
+        
+        # Level
         self._level = LEVELS[0]
         self._level.sounds = SOUNDS
         self._player = self._level.entities.player
         self._player.weapon = WEAPONS['launcher']
-
+        
+        # Camera
         self._camera = Camera(
             fov=90,
             tile_size=self._SURF_SIZE[0] / 2,
@@ -65,10 +67,12 @@ class Game(object):
         self._camera.camera_offset = 5 / 6 * self._player.height
         self._camera.weapon_scale = 3 / self._SURF_RATIO[0]
         
-        self._player_height = 0.6
+        # Misc
         self._offset_ratio = 5 / 6
+        self._player_height = 0.6
         self._crouch_height = 0.35
         self._crouch_time = 10
+        self._slide_height = 0.35
         self._slide_time = 30
 
     def move_tiles(self: Self, level_timer: Real) -> None:
@@ -176,12 +180,12 @@ class Game(object):
                     # self._camera.camera_offset = 0.5
             if crouching: 
                 if keys[pg.K_LSHIFT]:
-                    self._player.try_height(0.5 - crouching / 10 * 0.2)
+                    self._player.try_height(0.6 - crouching / 10)
                     crouching = min(crouching + rel_game_speed, 10)
                     speed = 0.65
                 else:
                     crouching = max(crouching - rel_game_speed, 0)
-                    self._player.try_height(0.5 - crouching / 10 * 0.2)
+                    self._player.try_height(0.6 - crouching / 10)
                     if self._player.height < 0.6:
                         crouching = 10
 

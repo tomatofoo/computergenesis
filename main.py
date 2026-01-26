@@ -139,15 +139,21 @@ class Game(object):
 
     def run(self: Self) -> None:
         self._running = 1
+
+        # Time
         start_time = time.time()
         level_timer = 0
         
+        # Keys
+        keys = pg.key.get_pressed()
+
         from statistics import mean
         frames = []
         fps = 0
         second = pg.event.custom_type()
         pg.time.set_timer(second, 1000)
-
+        
+        # Movement
         jumping = 0
         sliding = 0
         crouching = 0
@@ -158,9 +164,6 @@ class Game(object):
             start_time = time.time()
             rel_game_speed = delta_time * self._GAME_SPEED
             level_timer += rel_game_speed
-            
-            # Keys
-            keys = pg.key.get_pressed()
             
             # Events
             for event in pg.event.get():
@@ -208,11 +211,14 @@ class Game(object):
                         self._player.try_width(2)
                     elif event.key == pg.K_h:
                         self._player.try_width(0.1)
-
+            
+            # Keys
+            keys = pg.key.get_pressed()
+            
             # Update
             if self._level is LEVELS[0]:
                 self.move_tiles(level_timer)
-            
+
             speed = 1.5
             
             # Slide / Crouch

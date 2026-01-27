@@ -474,9 +474,10 @@ class Entity(object):
                 collision = 1 # if doing normal collision
                 if top - self._elevation <= self._climb:
                     lowest = math.inf
-                    for rect2, bottom2, _, _ in self._get_rects_around():
-                        if entity_rect.colliderect(rect2):
-                            height = bottom2 - top
+                    # avoid namespace collisions by using these names
+                    for r, b, t, e in self._get_rects_around():
+                        if entity_rect.colliderect(r):
+                            height = b - top
                             if 0 < height < lowest:
                                 lowest = height
                     if lowest >= self._height:
@@ -504,9 +505,10 @@ class Entity(object):
                 collision = 1 # if doing normal collision
                 if top - self._elevation <= self._climb:
                     lowest = math.inf
-                    for rect2, bottom2, _, _ in self._get_rects_around():
-                        if entity_rect.colliderect(rect2):
-                            height = bottom2 - top
+                    # avoid namespace collisions by using these names
+                    for r, b, t, e in self._get_rects_around():
+                        if entity_rect.colliderect(r):
+                            height = b - top
                             if 0 < height < lowest:
                                 lowest = height
                     if lowest >= self._height: # climb

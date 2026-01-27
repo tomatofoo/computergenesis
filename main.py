@@ -36,16 +36,29 @@ class Game(object):
         pg.init()
 
         self._settings = {
-            'vsync': 1,
+            'graphics': {
+                'vsync': 1,
+                'multithreaded': 1,
+                'fov': 90,
+                'render_distance': 8,
+            },
             'keys': {
+                'interact': pg.K_e,
                 'crouch': pg.K_LSHIFT,
                 'slide': pg.K_LSHIFT,
+                'jump': pg.K_SPACE,
+                'forward': pg.K_w,
+                'left': pg.K_a,
+                'backward': pg.K_s,
+                'right': pg.K_d,
+                'look_left': pg.K_LEFT,
+                'look_right': pg.K_RIGHT,
             },
         }
         self._screen = pg.display.set_mode(
             self._SCREEN_SIZE,
             flags=self._SCREEN_FLAGS,
-            vsync=self._settings['vsync']
+            vsync=self._settings['graphics']['vsync']
         )
         pg.display.set_caption('Computergenesis')
         self._surface = pg.Surface(self._SURF_SIZE)
@@ -61,12 +74,12 @@ class Game(object):
         
         # Camera
         self._camera = Camera(
-            fov=90,
+            fov=self._settings['graphics']['fov'],
             tile_size=self._SURF_SIZE[0] / 2,
-            wall_render_distance=8,
+            wall_render_distance=self._settings['graphics']['render_distance'],
             player=self._player,
             darkness=1,
-            multithreaded=True,
+            multithreaded=self._settings['graphics']['multithreaded'],
         )
         self._camera.horizon = 0.5
         self._camera.camera_offset = 5 / 6 * self._player.height
@@ -77,11 +90,15 @@ class Game(object):
         self._player_height = 0.6
         self._crouch_height = 0.3125
         self._crouch_time = 10
-        self._crouch_speed = 0.6
+        self._crouch_speed = 0.03
         self._slide_height = 0.3125
         self._slide_time = 30
         self._slide_speed = 0.15
         self._slide_elevation_velocity = -0.075
+        self._walk_speed = 0.075
+        self._jump_velocity = 0.075
+        self._key_look_speed = 2.5
+        self._mouse_look_speed = 0.2
 
     def move_tiles(self: Self, level_timer: Real) -> None:
         self._level.walls.set_tile(
@@ -171,8 +188,8 @@ class Game(object):
                     self._running = 0
                 elif event.type == pg.MOUSEMOTION:
                     rel = pg.mouse.get_rel()
-                    self._player.yaw += rel[0] * 0.2
-                    #self._camera.horizon -= rel[1] * 0.0025
+                    self._player.yaw += rel[0] * self._mouse_look_speed
+                    # self._camera.horizon -= rel[1] * 0.0025
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     self._player.attack()
                 elif event.type == second:
@@ -180,6 +197,7 @@ class Game(object):
                     pg.display.set_caption(str(int(fps)))
                     frames = []
                 elif event.type == pg.KEYDOWN:
+                    # TEMP
                     if event.key == pg.K_1:
                         self._player.weapon = WEAPONS['fist']
                     elif event.key == pg.K_2:
@@ -188,29 +206,26 @@ class Game(object):
                         self._player.weapon = WEAPONS['launcher']
                     elif event.key == pg.K_0:
                         SOUNDS['water'].play(pos=(9, 0.25, 9)) 
-                    elif event.key == pg.K_e:
+                    
+                    elif event.key == self._settings['keys']['interact']:
                         self._player.interact()
-                    elif event.key == pg.K_LSHIFT:
-                        if not sliding:
-                            if jumping:
-                                sliding = SMALL
-                                mult = 1
-                                if keys[pg.K_s] and not keys[pg.K_w]:
-                                    mult = -1
-                                self._player.boost = (
-                                    self._player.forward
-                                    * self._slide_speed
-                                    * mult
-                                )
-                                self._player.elevation_velocity = (
-                                    self._slide_elevation_velocity
-                                )
-                            elif not crouching:
-                                crouching = SMALL
-                    elif event.key == pg.K_l:
-                        self._player.try_width(2)
-                    elif event.key == pg.K_h:
-                        self._player.try_width(0.1)
+                    elif not sliding:
+                        if (event.key == self._settings['keys']['slide']
+                            and jumping):
+                            sliding = SMALL
+                            self._player.boost = (
+                                self._player.forward
+                                * self._slide_speed
+                                * (keys[self._settings['keys']['forward']]
+                                   - keys[self._settings['keys']['backward']])
+                            )
+                            self._player.elevation_velocity = (
+                                self._slide_elevation_velocity
+                            )
+                        elif (event.key == self._settings['keys']['crouch']
+                              and not jumping
+                              and not crouching):
+                            crouching = SMALL
 
             # Keys
             keys = pg.key.get_pressed()
@@ -219,8 +234,8 @@ class Game(object):
             if self._level is LEVELS[0]:
                 self.move_tiles(level_timer)
 
-            speed = 1.5
-            
+            speed = self._walk_speed
+
             # Slide / Crouch
             if sliding:
                 sliding = min(sliding + rel_game_speed, self._slide_time)
@@ -231,7 +246,7 @@ class Game(object):
                     if not jumping:
                         crouching = SMALL
             if crouching:
-                if keys[pg.K_LSHIFT]:
+                if keys[self._settings['keys']['crouch']]:
                     crouching = min(
                         crouching + rel_game_speed, self._crouch_time,
                     )
@@ -250,11 +265,17 @@ class Game(object):
             
             # Movement
             movement = (
-                (keys[pg.K_w] - keys[pg.K_s]) * 0.05 * speed,
-                (keys[pg.K_d] - keys[pg.K_a]) * 0.05 * speed,
-                (keys[pg.K_RIGHT] - keys[pg.K_LEFT]) * 2.5,
-                (keys[pg.K_DOWN] - keys[pg.K_UP]),
-                (keys[pg.K_SPACE] and not jumping) * 0.05 * 1.5,
+                (keys[self._settings['keys']['forward']]
+                 - keys[self._settings['keys']['backward']])
+                * speed, # FORWARD BACKWARD
+                (keys[self._settings['keys']['right']]
+                 - keys[self._settings['keys']['left']])
+                * speed, # LEFT RIGHT
+                (keys[self._settings['keys']['look_right']]
+                 - keys[self._settings['keys']['look_left']])
+                * self._key_look_speed, # LOOK LEFT RIGHT
+                (keys[self._settings['keys']['jump']] and not jumping)
+                * self._jump_velocity, # JUMP
             )
             self._player.update(
                 rel_game_speed,
@@ -262,15 +283,14 @@ class Game(object):
                 movement[0],
                 movement[1],
                 movement[2],
-                movement[4] if movement[4] else None,
+                movement[3] if movement[3] else None,
             )
 
-            if keys[pg.K_SPACE]:
+            if keys[self._settings['keys']['jump']]:
                 jumping = 1
             if self._player.collisions['e'][0]:
                 jumping = 0
 
-            self._camera.horizon -= movement[3] * 0.025 * rel_game_speed
             self._level.update(rel_game_speed, level_timer)
             frames.append(1 / delta_time if delta_time else math.inf)
 

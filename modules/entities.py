@@ -472,13 +472,13 @@ class Entity(object):
             horizontal = entity_rect.colliderect(rect)
             if vertical and horizontal:
                 collision = 1 # if doing normal collision
-                """
                 if top - self._elevation <= self._climb:
                     lowest = math.inf
-                    for rect, bottom, _, entity in self._get_rects_around():
-                        height = bottom - top
-                        if entity_rect.colliderect(rect) and 0 < height < lowest:
-                            lowest = height
+                    for rect2, bottom2, _, _ in self._get_rects_around():
+                        if entity_rect.colliderect(rect2):
+                            height = bottom2 - top
+                            if 0 < height < lowest:
+                                lowest = height
                     if lowest >= self._height:
                         collision = 0
                         self.elevation = top
@@ -486,7 +486,6 @@ class Entity(object):
                             self._collisions['x'][1] = 2
                         elif velocity2[0] < 0:
                             self._collisions['x'][0] = 2
-                """
                 if collision:
                     if velocity2[0] > 0:
                         entity_rect.right = rect.left - SMALL
@@ -502,15 +501,14 @@ class Entity(object):
             vertical = self._elevation < top and self.top > bottom
             horizontal = entity_rect.colliderect(rect)
             if vertical and horizontal:
-                print(self._elevation, top, self.top, bottom)
                 collision = 1 # if doing normal collision
-                """
                 if top - self._elevation <= self._climb:
                     lowest = math.inf
-                    for rect, bottom, _, entity in self._get_rects_around():
-                        height = bottom - top
-                        if entity_rect.colliderect(rect) and 0 < height < lowest:
-                            lowest = height
+                    for rect2, bottom2, _, _ in self._get_rects_around():
+                        if entity_rect.colliderect(rect2):
+                            height = bottom2 - top
+                            if 0 < height < lowest:
+                                lowest = height
                     if lowest >= self._height: # climb
                         collision = 0
                         self.elevation = top
@@ -518,7 +516,6 @@ class Entity(object):
                             self._collisions['y'][1] = 2
                         elif velocity2[1] < 0:
                             self._collisions['y'][0] = 2
-                """
                 if collision:
                     if velocity2[1] > 0:
                         entity_rect.bottom = rect.top - SMALL

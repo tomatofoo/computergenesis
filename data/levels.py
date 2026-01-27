@@ -186,6 +186,7 @@ entities = EntityManager(
         ),
     },
 )
+entities = EntityManager(player)
 
 wall_textures = (
     ColumnTexture(pg.image.load(gen_img_path('tilesets/main/stone/brick.png'))),

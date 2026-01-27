@@ -164,7 +164,28 @@ player = Player(
 player.yaw = 180
 player.elevation = 1
 entities = EntityManager(player, entities)
-entities = EntityManager(player)
+entities = EntityManager(
+    player,
+    entities={
+        Entity(
+            pos=(6.5, 6),
+            width=0.25,
+            height=0.6,
+            attack_width=0.4,
+            render_width=0.5,
+            textures=[
+                pg.image.load(gen_img_path('vassago/1.png')),
+                pg.image.load(gen_img_path('vassago/2.png')),
+                pg.image.load(gen_img_path('vassago/3.png')),
+                pg.image.load(gen_img_path('vassago/4.png')),
+                pg.image.load(gen_img_path('vassago/5.png')),
+                pg.image.load(gen_img_path('vassago/6.png')),
+                pg.image.load(gen_img_path('vassago/7.png')),
+                pg.image.load(gen_img_path('vassago/8.png')),
+            ]
+        ),
+    },
+)
 
 wall_textures = (
     ColumnTexture(pg.image.load(gen_img_path('tilesets/main/stone/brick.png'))),

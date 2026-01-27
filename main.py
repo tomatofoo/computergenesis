@@ -164,7 +164,7 @@ class Game(object):
             start_time = time.time()
             rel_game_speed = delta_time * self._GAME_SPEED
             level_timer += rel_game_speed
-            
+
             # Events
             for event in pg.event.get():
                 if event.type == pg.QUIT:
@@ -211,7 +211,7 @@ class Game(object):
                         self._player.try_width(2)
                     elif event.key == pg.K_h:
                         self._player.try_width(0.1)
-            
+
             # Keys
             keys = pg.key.get_pressed()
             

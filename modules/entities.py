@@ -472,6 +472,7 @@ class Entity(object):
             horizontal = entity_rect.colliderect(rect)
             if vertical and horizontal:
                 collision = 1 # if doing normal collision
+                """
                 if top - self._elevation <= self._climb:
                     lowest = math.inf
                     for rect, bottom, _, entity in self._get_rects_around():
@@ -485,6 +486,7 @@ class Entity(object):
                             self._collisions['x'][1] = 2
                         elif velocity2[0] < 0:
                             self._collisions['x'][0] = 2
+                """
                 if collision:
                     if velocity2[0] > 0:
                         entity_rect.right = rect.left - SMALL
@@ -500,7 +502,9 @@ class Entity(object):
             vertical = self._elevation < top and self.top > bottom
             horizontal = entity_rect.colliderect(rect)
             if vertical and horizontal:
+                print(self._elevation, top, self.top, bottom)
                 collision = 1 # if doing normal collision
+                """
                 if top - self._elevation <= self._climb:
                     lowest = math.inf
                     for rect, bottom, _, entity in self._get_rects_around():
@@ -514,6 +518,7 @@ class Entity(object):
                             self._collisions['y'][1] = 2
                         elif velocity2[1] < 0:
                             self._collisions['y'][0] = 2
+                """
                 if collision:
                     if velocity2[1] > 0:
                         entity_rect.bottom = rect.top - SMALL
@@ -1146,7 +1151,8 @@ class Player(Entity):
                 self._climbing = 0
         else:
             self._render_elevation = elevation
-            if bob_update and self._collisions['e'][0]:
+            if (bob_update # allowing stuff above and below player on purpose
+                and (self._collisions['e'][0] or self._collisions['e'][1])):
                 self._render_elevation += (
                     math.sin(level_timer * self._settings['headbob_frequency'])
                     * self._settings['headbob_strength']

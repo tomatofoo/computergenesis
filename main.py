@@ -91,7 +91,7 @@ class Game(object):
         self._crouch_height = 0.3125
         self._crouch_time = 10
         self._crouch_speed = 0.03
-        self._crouch_friction = 0.8
+        self._crouch_friction = 0.7
         self._slide_height = 0.3125
         self._slide_time = 30
         self._slide_speed = 0.135

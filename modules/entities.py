@@ -986,6 +986,7 @@ class Player(Entity):
 
         self._forward_velocity = pg.Vector2(0, 0)
         self._right_velocity = pg.Vector2(0, 0)
+        self._friction = 0.90625 # number used in doom
         
         # Camera settings
         self._settings = {
@@ -1044,6 +1045,14 @@ class Player(Entity):
         self._velocity2 = pg.Vector2(value)
         self._forward_velocity = self._velocity2.project(self._yaw)
         self._right_velocity = self._velocity2.project(self._semiplane)
+
+    @property
+    def friction(self: Self) -> Real:
+        return self._fricion
+
+    @friction.setter
+    def friction(self: Self, value: Real) -> None:
+        self._friction = value
 
     @property
     def inventory(self: Self) -> Inventory:
@@ -1123,9 +1132,9 @@ class Player(Entity):
         
         # UPDATE
         super().update(rel_game_speed, level_timer)
-
-        # Friction (kinda)
-        vel_mult = 0.90625**rel_game_speed # number used in Doom
+        
+        # Friction
+        vel_mult = self._friction**rel_game_speed
         if self._forward_velocity.magnitude() >= SMALL:
             self._forward_velocity *= vel_mult
         else:

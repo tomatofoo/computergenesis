@@ -788,8 +788,9 @@ class Enemy(EntityEx): # A* pathfinder entity
             or self._tilemap.get(self._end) != None):
 
             return None
-
+        
         # Setup
+        tilemap = self._manager._walls._tilemap
         self._g = {}
         self._h = {}
         self._parent = {}
@@ -819,9 +820,14 @@ class Enemy(EntityEx): # A* pathfinder entity
                 tentative = self._get_g(node) + weight
                 invalid = (
                     neighbor in visited # this will skip (0, 0)
-                    or self._tilemap.get(gen_tile_key(neighbor))
+                    or tilemap.get(gen_tile_key(neighbor))
                     or tentative >= self._get_g(neighbor)
                 )
+                if weight != 1: # diagonal
+                    key = gen_tile_key((offset[0] + node[0], node[1]))
+                    invalid |= tilemap.get(key)
+                    key = gen_tile_key((node[0], offset[1] + node[1]))
+                    invalid |= tilemap.get(key)
                 if invalid:
                     continue
 

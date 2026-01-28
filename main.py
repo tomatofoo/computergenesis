@@ -91,11 +91,13 @@ class Game(object):
         self._crouch_height = 0.3125
         self._crouch_time = 10
         self._crouch_speed = 0.03
+        self._crouch_friction = 0.8
         self._slide_height = 0.3125
         self._slide_time = 30
         self._slide_speed = 0.135
         self._slide_elevation_velocity = -0.075
         self._walk_speed = 0.0675
+        self._walk_friction = 0.90625
         self._jump_velocity = 0.075
         self._key_look_speed = 2.5
         self._mouse_look_speed = 0.2
@@ -233,8 +235,10 @@ class Game(object):
             # Update
             if self._level is LEVELS[0]:
                 self.move_tiles(level_timer)
-
+            
+            # Movement
             speed = self._walk_speed
+            self._player.friction = self._walk_friction
 
             # Slide / Crouch
             if sliding:
@@ -251,6 +255,7 @@ class Game(object):
                         crouching + rel_game_speed, self._crouch_time,
                     )
                     speed = self._crouch_speed
+                    self._player.friction = self._crouch_friction
                     self._update_crouch_height(crouching)
                 else:
                     crouching = max(crouching - rel_game_speed, 0)
@@ -263,7 +268,6 @@ class Game(object):
                 self._offset_ratio * self._player.height
             )
             
-            # Movement
             movement = (
                 (keys[self._settings['keys']['forward']]
                  - keys[self._settings['keys']['backward']])

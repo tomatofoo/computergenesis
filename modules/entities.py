@@ -77,6 +77,7 @@ class Entity(object):
         self._manager = None
         self._remove = 0 # internal for when entity wants removal
         self._boost = pg.Vector2(0, 0)
+        self._boost_friction = 0.90625
        
     @property
     def darkness(self: Self) -> float:
@@ -284,6 +285,14 @@ class Entity(object):
         self._boost = pg.Vector2(value)
 
     @property
+    def boost_friction(self: Self) -> Real:
+        return self._boost_friction
+
+    @boost_friction.setter
+    def boost_friction(self: Self, value: Real) -> None:
+        self._boost_friction = value
+
+    @property
     def yaw_velocity(self: Self) -> Real:
         return self._yaw_velocity
 
@@ -458,7 +467,7 @@ class Entity(object):
             self.yaw += self._yaw_velocity * rel_game_speed
 
         # Boost
-        vel_mult = 0.90625**rel_game_speed # number used in Doom
+        vel_mult = self._boost_friction**rel_game_speed
         if self._boost.magnitude() >= SMALL:
             self._boost *= vel_mult
         else:

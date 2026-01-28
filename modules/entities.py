@@ -721,55 +721,40 @@ class EntityEx(Entity):
         super().update(rel_game_speed, level_timer)
 
 
-class Enemy(EntityEx): # 4-path pathfinder using A*
+class Enemy(EntityEx): # A* pathfinder entity
 
-    _STRAIGHT_OFFSETS = {
-        (0, 1): 1,
-        (-1, 0): 1,
-        (1, 0): 1,
+    _TILE_OFFSETS = {
+        (-1,  1): 1.414,
+        (0,  1): 1,
+        (1,  1): 1.414,
+        (-1,  0): 1,
+        (0,  0): 0,
+        (1,  0): 1,
+        (-1, -1): 1.414,
         (0, -1): 1,
-    }
+        (1, -1): 1.414,
+    } # get_rects_around still works
 
-    _DIAGONAL_OFFSETS = {
-        (0, 1): 1,
-        (-1, 0): 1,
-        (1, 0): 1,
-        (0, -1): 1,
-    }
-
-    def __init__(self: Self) -> None:
-        self.start = start
-        self.end = end
-        self.tilemap = tilemap
-
+    def __init__(self: Self,
+                 pos: Point=(0, 0),
+                 elevation: Real=0,
+                 width: Real=0.5,
+                 height: Real=1,
+                 health: Real=100,
+                 climb: Real=0.2,
+                 gravity: Real=0,
+                 states: dict[str, EntityExState]={'default': EntityExState()},
+                 state: str='default',
+                 attack_width: Optional[Real]=None,
+                 attack_height: Optional[Real]=None,
+                 render_width: Optional[Real]=None,
+                 render_height: Optional[Real]=None) -> None:
+        
+        # Heuristic is 3D Euclidian Distance
         self._path = []
         self._g = {}
         self._h = {}
         self._parent = {}
-
-    @property
-    def start(self: Self) -> tuple:
-        return self._start
-
-    @start.setter
-    def start(self: Self, value: Point) -> None:
-        self._start = tuple(value)
-
-    @property
-    def end(self: Self) -> tuple:
-        return self._end
-
-    @end.setter
-    def end(self: Self, value: Point) -> None:
-        self._end = tuple(value)
-    
-    @property
-    def tilemap(self: Self) -> dict:
-        return self._tilemap
-
-    @tilemap.setter
-    def tilemap(self: Self, value: dict) -> None:
-        self._tilemap = value
 
     @property
     def path(self: Self) -> list:
@@ -777,24 +762,21 @@ class Enemy(EntityEx): # 4-path pathfinder using A*
         path.reverse()
         return path
 
-    def _manhattan(self: Self, start: Point, end: Point) -> int:
-        return abs(end[0] - start[0]) + abs(end[1] - start[1])
-
-    def _get_g(self: Self, location: Point) -> Number:
+    def _get_g(self: Self, location: pg.Vector3) -> Number:
         g = self._g.get(location)
         if g == None:
             g = math.inf
             self._g[location] = g
         return g
 
-    def _get_h(self: Self, location: Point) -> Number:
+    def _get_h(self: Self, location: pg.Vector3) -> Number:
         h = self._h.get(location)
         if h == None:
-            h = self._manhattan(location, self._end)
+            h = self._end.distance_to(location)
             self._h[location] = h
         return h
 
-    def _get_parent(self: Self, location: Point) -> Point:
+    def _get_parent(self: Self, location: pg.Vector3) -> Point:
         parent = self._parent.get(location)
         if parent == None:
             parent = self._start
@@ -836,7 +818,7 @@ class Enemy(EntityEx): # 4-path pathfinder using A*
                 neighbor = (node[0] + offset[0], node[1] + offset[1])
                 tentative = self._get_g(node) + weight
                 invalid = (
-                    neighbor in visited
+                    neighbor in visited # this will skip (0, 0)
                     or self._tilemap.get(gen_tile_key(neighbor))
                     or tentative >= self._get_g(neighbor)
                 )

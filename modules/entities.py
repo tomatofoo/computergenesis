@@ -1313,10 +1313,14 @@ class Player(Entity):
             special = self._manager._level._specials.get(tile_key)
             if special is not None:
                 data = tilemap[tile_key]
-                bottom_slope = (data['height'] - midheight) / dist
-                top_slope = (
-                    (data['height'] + data['elevation'] - midheight) / dist
-                )
+                if dist:
+                    bottom_slope = (data['height'] - midheight) / dist
+                    top_slope = (
+                        (data['height'] + data['elevation'] - midheight) / dist
+                    )
+                elif data['height'] <= midheight <= data['elevation']:
+                    bottom_slope = 0
+                    top_slope = 0
                 if bottom_slope >= -tangent and top_slope <= tangent:
                     # kinda slick boolean operation to determine side
                     special.interaction(self, side + (not dir[not side]) * 2)

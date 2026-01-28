@@ -128,9 +128,9 @@ class Weapon(object):
                 end_pos[0] += disp_y / slope if slope else math.inf
                 end_pos[1] += disp_y
                 dist += len_y
-            
+                
             # for accurate slope ranges
-            if slope_range:
+            if slope_range: # don't need to check if dist > 0
                 if back[0]:
                     slope_range[0] = max(
                         (bottom - midheight) / dist, -tangent,
@@ -230,11 +230,11 @@ class Weapon(object):
                 if not back[0]:
                     slope_range[0] = max(
                         (bottom - midheight) / dist, -tangent,
-                    )
+                    ) if dist else -math.inf
                 if not back[1]:
                     slope_range[1] = min(
                         (top - midheight) / dist, tangent,
-                    )
+                    ) if dist else math.inf
                 # you either use the back or front of the tile for the slope
 
             last_tile = tile

@@ -450,19 +450,19 @@ class Entity(object):
             'y': [0, 0], # x/y will equal 2 when climb
             'e': [0, 0],
         }
-        
-        # Boost
-        vel_mult = 0.90625**rel_game_speed # number used in Doom
-        if self._boost.magnitude() >= 0.001:
-            self._boost *= vel_mult
-        else:
-            self._boost.update(0, 0)
-        
+
+        velocity2 = self._velocity2 + self._boost
+
         # Yaw
         if self._yaw_velocity:
             self.yaw += self._yaw_velocity * rel_game_speed
 
-        velocity2 = self._velocity2 + self._boost
+        # Boost
+        vel_mult = 0.90625**rel_game_speed # number used in Doom
+        if self._boost.magnitude() >= SMALL:
+            self._boost *= vel_mult
+        else:
+            self._boost.update(0, 0)
 
         # The +/-0.00001 is to account for floating-point precision errors
         self._pos[0] += velocity2[0] * rel_game_speed
@@ -1108,45 +1108,45 @@ class Player(Entity):
             'y': [0, 0],
             'e': [0, 0],
         }
-
+        
+        # Velocities
+        self._yaw_velocity = yaw
         if forward:
             self._forward_velocity.update(self._yaw * forward)
         if right:
             self._right_velocity.update(self._semiplane * right)
+        self._velocity2 = self._forward_velocity + self._right_velocity
+        speed = self._velocity2.magnitude()
+        bob_update = speed >= SMALL
+        if up is not None:
+            self._elevation_velocity = up
         
-        self._yaw_velocity = yaw
-        
+        # UPDATE
+        super().update(rel_game_speed, level_timer)
+
+        # Friction (kinda)
         vel_mult = 0.90625**rel_game_speed # number used in Doom
-        bob_update = 0
-        if self._forward_velocity.magnitude() >= 0.001:
-            bob_update = 1
+        if self._forward_velocity.magnitude() >= SMALL:
             self._forward_velocity *= vel_mult
         else:
             self._forward_velocity.update(0, 0)
-        if self._right_velocity.magnitude() >= 0.001:
-            bob_update = 1
+        if self._right_velocity.magnitude() >= SMALL:
             self._right_velocity *= vel_mult
         else:
             self._right_velocity.update(0, 0)
-        self._velocity2 = self._forward_velocity + self._right_velocity
 
-        if up is not None:
-            self._elevation_velocity = up
-
-        super().update(rel_game_speed, level_timer)
-        
         # test if climbing
         if 2 in self._collisions['x'] or 2 in self._collisions['y']:
             self._climbing = 1
 
         # climbing animation / headbob
-        factor = min(self._velocity2.magnitude() * 20, 2)
+        factor = min(speed * 20, 2)
         elevation = self._elevation + self._settings['camera_offset']
         if self._climbing:
             difference = elevation - self._render_elevation
             mult = (1 - (1 - self._settings['climb_speed'])**rel_game_speed)
             self._render_elevation += difference * mult
-            if difference < 0.001:
+            if difference < SMALL:
                 self._climbing = 0
         else:
             self._render_elevation = elevation

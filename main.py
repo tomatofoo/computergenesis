@@ -93,9 +93,9 @@ class Game(object):
         self._crouch_speed = 0.03
         self._slide_height = 0.3125
         self._slide_time = 30
-        self._slide_speed = 0.15
+        self._slide_speed = 0.135
         self._slide_elevation_velocity = -0.075
-        self._walk_speed = 0.075
+        self._walk_speed = 0.0675
         self._jump_velocity = 0.075
         self._key_look_speed = 2.5
         self._mouse_look_speed = 0.2

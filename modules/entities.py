@@ -721,12 +721,7 @@ class EntityEx(Entity):
         super().update(rel_game_speed, level_timer)
 
 
-class Enemy(EntityEx):
-    def __init__(self: Self) -> None:
-        pass
-
-
-class Pathfinder(object): # 4-path pathfinder using A*
+class Enemy(EntityEx): # 4-path pathfinder using A*
 
     _STRAIGHT_OFFSETS = {
         (0, 1): 1,

@@ -235,9 +235,16 @@ def gen_mus_path(path: str):
 
 class Pathfinder(object): # 4-path pathfinder using A*
 
-    _TILE_OFFSETS = (
-        (0, 1), (-1, 0), (1, 0), (0, -1),
-    )
+    _TILE_OFFSETS = {
+        (0, 1): 1,
+        (-1, 0): 1,
+        (1, 0): 1,
+        (0, -1): 1,
+        (1, 1): 1.414,
+        (-1, 1): 1.414,
+        (1, -1): 1.414,
+        (-1, -1): 1.414,
+    }
 
     def __init__(self: Self, start: Point, end: Point, tilemap: dict) -> None:
         self.start = start
@@ -334,12 +341,9 @@ class Pathfinder(object): # 4-path pathfinder using A*
                 break
             
             # Check Neighbor
-            for offset in self._TILE_OFFSETS:
+            for offset, weight in self._TILE_OFFSETS.items():
                 neighbor = (node[0] + offset[0], node[1] + offset[1])
-
-                weight = 1
                 tentative = self._get_g(node) + weight
-
                 invalid = (
                     neighbor in visited
                     or self._tilemap.get(gen_tile_key(neighbor))

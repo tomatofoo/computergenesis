@@ -721,6 +721,11 @@ class EntityEx(Entity):
         super().update(rel_game_speed, level_timer)
 
 
+class Enemy(EntityEx):
+    def __init__(self: Self) -> None:
+        pass
+
+
 class Missile(EntityEx):
     def __init__(self: Self,
                  damage: Real,

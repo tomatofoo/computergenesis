@@ -56,7 +56,7 @@ class Game(object):
                 'menu_up': pg.K_UP,
                 'menu_down': pg.K_DOWN,
                 'menu_enter': pg.K_RETURN,
-                'pause': pg.K_ESCAPE,
+                'pause': pg.K_ESCAPE, # not remappable
             },
         }
         self._screen = pg.display.set_mode(
@@ -104,7 +104,7 @@ class Game(object):
         main = Menu(
             self._fonts['bold'][1],
             y=32,
-            gap=12,
+            gap=8,
             selected_color=(255, 0, 0),
         )
         logo = pg.image.load(gen_img_path('logo.png')).convert()

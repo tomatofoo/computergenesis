@@ -775,7 +775,6 @@ class Pathfinder(EntityEx): # A* pathfinder entity
     def _reset_cache(self: Self) -> None:
         self._g = {}
         self._h = {}
-        self._parent = {}
         self._vector3 = {}
 
     def _get_g(self: Self, location: tuple[Point, int]) -> Number:
@@ -785,7 +784,9 @@ class Pathfinder(EntityEx): # A* pathfinder entity
             self._g[location] = g
         return g
 
-    def _get_h(self: Self, end: pg.Vector3, location: pg.Vector3) -> Number:
+    def _get_h(self: Self,
+               location: tuple[Point, int],
+               end: tuple[Point, int]) -> Number:
         h = self._h.get(location)
         if h is None:
             if elevation: # if else elevation is already 0
@@ -795,57 +796,81 @@ class Pathfinder(EntityEx): # A* pathfinder entity
                 elevation = 0
                 if data is not None:
                     elevation = data['height']
-            h = end.distance_to(location)
+            h = self._get_vector3(location).distance_to(self._get_vector3(end))
             self._h[location] = h
         return h
-
-    def _get_parent(self: Self, location: tuple[Point, int]) -> Point:
-        parent = self._parent.get(location)
-        if parent is None:
-            parent = self._start
-            self._parent[location] = parent
-        return parent
 
     def _get_vector3(self: Self, location: tuple[Point, int]) -> pg.Vector3:
         vector3 = self._vector3.get(location)
         if vector3 is None:
-            vector3 = pg.Vector3(location[0][0], 0, location[0][1])
+            tile = location[0]
+            vector3 = pg.Vector3(tile[0], 0, tile[1])
             tilemap = self._manager._level._walls._tilemap
-            data = tilemap.get(gen_tile_key(location[0]))
+            data = tilemap.get(gen_tile_key(tile))
             if location[2] and data is not None:
                 vector3[1] = data['height'] + data['elevation']
             self._vector3[location] = vector3
         return vector3
 
-    def _weight(self: Self, location: tuple[Point, int]) -> Real:
-        pass
+    def _cant(self: Self, data: Optional[dict], bottom: Real) -> bool:
+        return (
+            data is not None
+            and (data['elevation'] + data['height'] - bottom > self._climb
+                 or data['elevation'] > bottom + self._height)
+        )
+
+    def _calculate(self: Self,
+                   location: tuple[Point, int],
+                   offset: tuple[int],
+                   elevation: int) -> tuple[tuple[Point, int], Number]:
+        tile = location[0]
+        neighbor = ((tile[0] + offset[0], tile[1] + offset[1]), elevation)
+        bottom = self._get_vector3(location)[1]
+        
+        # I'm aware of how weird this looks but it works
+        tilemap = self._manager._level._walls._tilemap
+        data = tilemap.get(gen_tile_key(neighbor[0]))
+        weight = self._TILE_OFFSETS[offset]
+        if data['elevation'] + data['height'] - bottom < 0:
+            weight += bottom - self._get_vector3(neighbor)[1]
+        if self._cant(data, bottom):
+            return (neighbor, math.inf)
+        elif weight != 1:
+            data = tilemap.get(gen_tile_key((tile[0], tile[1] + offset[1])))
+            if self._cant(data, bottom):
+                return (neighbor, math.inf)
+            data = tilemap.get(gen_tile_key((tile[0] + offset[0], tile[1])))
+            if self._cant(data, bottom):
+                return (neighbor, math.inf)
 
     def _pathfind(self: Self,
                   end: tuple[Point, int],
-                  max_nodes: int=1000) -> None:
-
+                  max_nodes: int=100) -> list[tuple[Point, int]]:
+        
+        # Start
         tilemap = self._manager._level._walls._tilemap
-        if self.top < 
-        start = (self.tile, pass)
+        data = tilemap.get(self.tile_key)
+
+        elevation = 0
+        if data is not None:
+            top = data['height'] + data['height']
+            if self._elevation >= top:
+                elevation = top
+        start = (self.tile, elevation)
 
         # Setup
         self._reset_cache()
+        parent = {}
         visited = set()
         will = {start}
         self._g[start] = 0
 
         # Algorithm
-        while will:
+        while will and len(visited) < max_nodes:
             # Find the node
             least = math.inf
             for tentative in will:
-                f = (
-                    self._get_g(tentative)
-                    + self._get_h(
-                        self._get_vector3(tentative),
-                        self._get_vector3(end),
-                    )
-                )
+                f = self._get_g(tentative) + self._get_h(tentative, end)
                 if f < least:
                     node = tentative
                     least = f
@@ -857,12 +882,9 @@ class Pathfinder(EntityEx): # A* pathfinder entity
             
             # Check Neighbor
             for offset in self._TILE_OFFSETS:
-                for elevation in range(2): # 0 is below, 1 is above
-                    neighbor = (node[0] + offset[0], node[1] + offset[1])
-                    tentative = (
-                        self._get_g(node)
-                        + self._weight((node, elevation))
-                    )
+                for elevation in range(2): # 0 is ground; 1 is atop tile
+                    neighbor, weight = self._calculate(node, offset, elevation)
+                    tentative = self._get_g(node) + weight
                     invalid = (
                         neighbor in visited # this will skip (0, 0)
                         or tentative >= self._get_g(neighbor)
@@ -871,15 +893,16 @@ class Pathfinder(EntityEx): # A* pathfinder entity
                         continue
 
                     self._g[neighbor] = tentative
-                    self._parent[neighbor] = node
+                    parent[neighbor] = node
                     will.add(neighbor)
         
         # Trace path back
-        self._path = []
-        node = self._get_parent(end)
-        while node != self._start:
-            node = self._get_parent(node)
-            self._path.append(node)
+        path = []
+        node = parent[end]
+        while node != start:
+            node = parent[node]
+            path.append(node)
+        return path
 
 
 class Missile(EntityEx):

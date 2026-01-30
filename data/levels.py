@@ -14,6 +14,7 @@ from modules.level import Level
 from modules.entities import Entity
 from modules.entities import EntityExState
 from modules.entities import EntityEx
+from modules.entities import Pathfinder
 from modules.entities import WeaponItem
 from modules.entities import Player
 from modules.entities import EntityManager
@@ -77,6 +78,16 @@ for animation in textures:
     for surf in animation:
         surf.set_colorkey((255, 0, 255))
 
+PATHFINDER = Pathfinder(
+    pos=(6.5, 0.5),
+    elevation=1,
+    width=0.25,
+    height=0.6,
+    attack_width=0.4,
+    render_width=0.5,
+    states={'default': EntityExState(textures, 60)},
+)
+
 entities = {
     EntityEx(
         pos=(9, 9),
@@ -138,6 +149,7 @@ entities = {
         render_width=0.5,
         textures=[pg.image.load(gen_img_path('GrenadeZombie.png'))],
     ),
+    PATHFINDER,
     WeaponItem(
         weapon=WEAPONS['shotgun'],
         number=5,
@@ -164,6 +176,7 @@ player = Player(
 player.yaw = 180
 player.elevation = 1
 entities = EntityManager(player, entities)
+"""
 entities = EntityManager(
     player,
     entities={
@@ -187,6 +200,7 @@ entities = EntityManager(
     },
 )
 entities = EntityManager(player)
+"""
 
 wall_textures = (
     ColumnTexture(pg.image.load(gen_img_path('tilesets/main/stone/brick.png'))),

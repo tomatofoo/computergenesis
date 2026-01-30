@@ -789,13 +789,6 @@ class Pathfinder(EntityEx): # A* pathfinder entity
                end: tuple[Point, int]) -> Number:
         h = self._h.get(location)
         if h is None:
-            if elevation: # if else elevation is already 0
-                data = self._manager._level._walls._tilemap.get(
-                    gen_tile_key(location[:2])
-                )
-                elevation = 0
-                if data is not None:
-                    elevation = data['height']
             h = self._get_vector3(location).distance_to(self._get_vector3(end))
             self._h[location] = h
         return h
@@ -807,22 +800,26 @@ class Pathfinder(EntityEx): # A* pathfinder entity
             vector3 = pg.Vector3(tile[0], 0, tile[1])
             tilemap = self._manager._level._walls._tilemap
             data = tilemap.get(gen_tile_key(tile))
-            if location[2] and data is not None:
+            if location[1] and data is not None:
                 vector3[1] = data['height'] + data['elevation']
             self._vector3[location] = vector3
         return vector3
 
-    def _cant(self: Self, data: Optional[dict], bottom: Real) -> bool:
+    def _cant(self: Self,
+              data: Optional[dict],
+              bottom: Real,
+              climb: Real) -> bool:
         return (
             data is not None
-            and (data['elevation'] + data['height'] - bottom > self._climb
+            and (data['elevation'] + data['height'] - bottom > climb
                  or data['elevation'] > bottom + self._height)
         )
 
     def _calculate(self: Self,
                    location: tuple[Point, int],
                    offset: tuple[int],
-                   elevation: int) -> tuple[tuple[Point, int], Number]:
+                   elevation: int,
+                   climb: Real) -> tuple[tuple[Point, int], Number]:
         tile = location[0]
         neighbor = ((tile[0] + offset[0], tile[1] + offset[1]), elevation)
         bottom = self._get_vector3(location)[1]
@@ -831,21 +828,24 @@ class Pathfinder(EntityEx): # A* pathfinder entity
         tilemap = self._manager._level._walls._tilemap
         data = tilemap.get(gen_tile_key(neighbor[0]))
         weight = self._TILE_OFFSETS[offset]
-        if data['elevation'] + data['height'] - bottom < 0:
+        top = 0 if data is None else data['elevation'] + data['height']
+        if top - bottom < 0:
             weight += bottom - self._get_vector3(neighbor)[1]
-        if self._cant(data, bottom):
+        if self._cant(data, bottom, climb):
             return (neighbor, math.inf)
         elif weight != 1:
             data = tilemap.get(gen_tile_key((tile[0], tile[1] + offset[1])))
-            if self._cant(data, bottom):
+            if self._cant(data, bottom, climb):
                 return (neighbor, math.inf)
             data = tilemap.get(gen_tile_key((tile[0] + offset[0], tile[1])))
-            if self._cant(data, bottom):
+            if self._cant(data, bottom, climb):
                 return (neighbor, math.inf)
+        return (neighbor, weight)
 
     def _pathfind(self: Self,
                   end: tuple[Point, int],
-                  max_nodes: int=100) -> list[tuple[Point, int]]:
+                  climb: Optional[Real]=None,
+                  max_nodes: int=100) -> Optional[list[tuple[Point, int]]]:
         
         # Start
         tilemap = self._manager._level._walls._tilemap
@@ -860,6 +860,8 @@ class Pathfinder(EntityEx): # A* pathfinder entity
 
         # Setup
         self._reset_cache()
+        if climb is None:
+            climb = self._climb 
         parent = {}
         visited = set()
         will = {start}
@@ -879,11 +881,13 @@ class Pathfinder(EntityEx): # A* pathfinder entity
 
             if node == end:
                 break
-            
+
             # Check Neighbor
             for offset in self._TILE_OFFSETS:
                 for elevation in range(2): # 0 is ground; 1 is atop tile
-                    neighbor, weight = self._calculate(node, offset, elevation)
+                    neighbor, weight = self._calculate(
+                        node, offset, elevation, climb,
+                    )
                     tentative = self._get_g(node) + weight
                     invalid = (
                         neighbor in visited # this will skip (0, 0)
@@ -895,6 +899,8 @@ class Pathfinder(EntityEx): # A* pathfinder entity
                     self._g[neighbor] = tentative
                     parent[neighbor] = node
                     will.add(neighbor)
+        else:
+            return None
         
         # Trace path back
         path = []

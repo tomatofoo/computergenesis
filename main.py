@@ -12,6 +12,7 @@ import pygame as pg
 from data.weapons import SOUNDS
 from data.weapons import WEAPONS
 from data.levels import LEVELS
+from data.levels import PATHFINDER
 from modules.camera import Camera
 from modules.hud import HUDElement
 from modules.hud import HUD
@@ -228,6 +229,9 @@ class Game(object):
         jumping = 0
         sliding = 0
         crouching = 0
+        
+        # PATH
+        path = []
 
         while self._running:
             # Time
@@ -260,7 +264,8 @@ class Game(object):
                         elif event.key == pg.K_3:
                             self._player.weapon = WEAPONS['launcher']
                         elif event.key == pg.K_0:
-                            SOUNDS['water'].play(pos=(9, 0.25, 9)) 
+                            # SOUNDS['water'].play(pos=(9, 0.25, 9)) 
+                            path = PATHFINDER._pathfind((self._player.tile, 1))
                         elif event.key == self._settings['keys']['interact']:
                             self._player.interact()
                         elif not sliding:
@@ -293,6 +298,14 @@ class Game(object):
                         menu.enter()
             
             if self._state == 'playing':
+                if path:
+                    PATHFINDER.elevation_velocity = -0.5
+                    PATHFINDER.velocity2 = -(pg.Vector2(PATHFINDER.pos) - path[-1][0] - (0.5, 0.5)) * 0.5
+                    if (pg.Vector2(PATHFINDER.pos) - path[-1][0] - (0.5, 0.5)).magnitude() < 0.1:
+                        path = path[:-1]
+                    if not path:
+                        PATHFINDER.velocity2 = (0, 0)
+
                 # Keys
                 keys = pg.key.get_pressed()
                 

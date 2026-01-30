@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+from numbers import Number
 from numbers import Real
 from typing import Self
 from typing import Optional
@@ -93,11 +94,10 @@ class Entity(object):
 
     @pos.setter
     def pos(self: Self, value: Point) -> None:
-        old_key = gen_tile_key(self._pos)
+        old_key = self.tile_key
         self._pos = pg.Vector2(value)
-        key = gen_tile_key(self._pos)
         if self._manager:
-            self._update_manager_sets(old_key, key)
+            self._update_manager_sets(old_key, self.tile_key)
 
     @property
     def x(self: Self) -> Real:
@@ -136,6 +136,10 @@ class Entity(object):
     def tile(self: Self) -> tuple[int]:
         return (int(math.floor(self._pos[0])),
                 int(math.floor(self._pos[1])))
+
+    @property
+    def tile_key(self: Self) -> str:
+        return gen_tile_key(self._pos)
 
     @property
     def vector3(self: Self) -> pg.Vector3:
@@ -721,7 +725,7 @@ class EntityEx(Entity):
         super().update(rel_game_speed, level_timer)
 
 
-class Enemy(EntityEx): # A* pathfinder entity
+class Pathfinder(EntityEx): # A* pathfinder entity
 
     _TILE_OFFSETS = {
         (-1,  1): 1.414,
@@ -749,95 +753,130 @@ class Enemy(EntityEx): # A* pathfinder entity
                  attack_height: Optional[Real]=None,
                  render_width: Optional[Real]=None,
                  render_height: Optional[Real]=None) -> None:
+
+        super().__init__(
+            pos=pos,
+            elevation=elevation,
+            width=width,
+            height=height,
+            health=health,
+            climb=climb,
+            gravity=gravity,
+            states=states,
+            state=state,
+            attack_width=attack_width,
+            attack_height=attack_height,
+            render_width=render_width,
+            render_height=render_height,
+        )
         
-        # Heuristic is 3D Euclidian Distance
-        self._path = []
+        self._reset_cache()
+
+    def _reset_cache(self: Self) -> None:
         self._g = {}
         self._h = {}
         self._parent = {}
+        self._vector3 = {}
 
-    @property
-    def path(self: Self) -> list:
-        path = list(self._path)
-        path.reverse()
-        return path
-
-    def _get_g(self: Self, location: pg.Vector3) -> Number:
+    def _get_g(self: Self, location: tuple[Point, int]) -> Number:
         g = self._g.get(location)
-        if g == None:
+        if g is None:
             g = math.inf
             self._g[location] = g
         return g
 
-    def _get_h(self: Self, location: pg.Vector3) -> Number:
+    def _get_h(self: Self, end: pg.Vector3, location: pg.Vector3) -> Number:
         h = self._h.get(location)
-        if h == None:
-            h = self._end.distance_to(location)
+        if h is None:
+            if elevation: # if else elevation is already 0
+                data = self._manager._level._walls._tilemap.get(
+                    gen_tile_key(location[:2])
+                )
+                elevation = 0
+                if data is not None:
+                    elevation = data['height']
+            h = end.distance_to(location)
             self._h[location] = h
         return h
 
-    def _get_parent(self: Self, location: pg.Vector3) -> Point:
+    def _get_parent(self: Self, location: tuple[Point, int]) -> Point:
         parent = self._parent.get(location)
-        if parent == None:
+        if parent is None:
             parent = self._start
             self._parent[location] = parent
         return parent
 
-    def pathfind(self: Self) -> None:
-        if (self._tilemap.get(self._start) != None
-            or self._tilemap.get(self._end) != None):
+    def _get_vector3(self: Self, location: tuple[Point, int]) -> pg.Vector3:
+        vector3 = self._vector3.get(location)
+        if vector3 is None:
+            vector3 = pg.Vector3(location[0][0], 0, location[0][1])
+            tilemap = self._manager._level._walls._tilemap
+            data = tilemap.get(gen_tile_key(location[0]))
+            if location[2] and data is not None:
+                vector3[1] = data['height'] + data['elevation']
+            self._vector3[location] = vector3
+        return vector3
 
-            return None
-        
+    def _weight(self: Self, location: tuple[Point, int]) -> Real:
+        pass
+
+    def _pathfind(self: Self,
+                  end: tuple[Point, int],
+                  max_nodes: int=1000) -> None:
+
+        tilemap = self._manager._level._walls._tilemap
+        if self.top < 
+        start = (self.tile, pass)
+
         # Setup
-        tilemap = self._manager._walls._tilemap
-        self._g = {}
-        self._h = {}
-        self._parent = {}
+        self._reset_cache()
         visited = set()
-         
-        will = {self._start}
-        self._g[self._start] = 0
+        will = {start}
+        self._g[start] = 0
 
         # Algorithm
         while will:
             # Find the node
             least = math.inf
             for tentative in will:
-                f = self._get_g(tentative) + self._get_h(tentative)
+                f = (
+                    self._get_g(tentative)
+                    + self._get_h(
+                        self._get_vector3(tentative),
+                        self._get_vector3(end),
+                    )
+                )
                 if f < least:
                     node = tentative
                     least = f
             will.remove(node)
             visited.add(node)
 
-            if node == self._end:
+            if node == end:
                 break
             
             # Check Neighbor
-            for offset, weight in self._TILE_OFFSETS.items():
-                neighbor = (node[0] + offset[0], node[1] + offset[1])
-                tentative = self._get_g(node) + weight
-                invalid = (
-                    neighbor in visited # this will skip (0, 0)
-                    or tilemap.get(gen_tile_key(neighbor))
-                    or tentative >= self._get_g(neighbor)
-                )
-                if weight != 1: # diagonal
-                    key = gen_tile_key((offset[0] + node[0], node[1]))
-                    invalid |= tilemap.get(key)
-                    key = gen_tile_key((node[0], offset[1] + node[1]))
-                    invalid |= tilemap.get(key)
-                if invalid:
-                    continue
+            for offset in self._TILE_OFFSETS:
+                for elevation in range(2): # 0 is below, 1 is above
+                    neighbor = (node[0] + offset[0], node[1] + offset[1])
+                    tentative = (
+                        self._get_g(node)
+                        + self._weight((node, elevation))
+                    )
+                    invalid = (
+                        neighbor in visited # this will skip (0, 0)
+                        or tentative >= self._get_g(neighbor)
+                    )
+                    if invalid:
+                        continue
 
-                self._g[neighbor] = tentative
-                self._parent[neighbor] = node
-                will.add(neighbor)
+                    self._g[neighbor] = tentative
+                    self._parent[neighbor] = node
+                    will.add(neighbor)
         
         # Trace path back
         self._path = []
-        node = self._get_parent(self._end)
+        node = self._get_parent(end)
         while node != self._start:
             node = self._get_parent(node)
             self._path.append(node)

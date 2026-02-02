@@ -725,7 +725,7 @@ class EntityEx(Entity):
         super().update(rel_game_speed, level_timer)
 
 
-class Pathfinder(EntityEx): # A* pathfinder entity
+class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
 
     _TILE_OFFSETS = {
         (-1,  1): 1.414,
@@ -789,7 +789,17 @@ class Pathfinder(EntityEx): # A* pathfinder entity
                end: tuple[Point, int]) -> Number:
         h = self._h.get(location)
         if h is None:
-            h = self._get_vector3(location).distance_to(self._get_vector3(end))
+            # Manhattan Distance
+            # Won't give perfect path if I use this heuristic
+            # But it is fast
+            h = (
+                abs(location[0][0] - end[0][0])
+                + abs(location[0][1] - end[0][1])
+                + abs(
+                    self._get_vector3(location)[1]
+                    - self._get_vector3(end)[1]
+                )
+            )
             self._h[location] = h
         return h
 
@@ -797,11 +807,12 @@ class Pathfinder(EntityEx): # A* pathfinder entity
         vector3 = self._vector3.get(location)
         if vector3 is None:
             tile = location[0]
-            vector3 = pg.Vector3(tile[0], 0, tile[1])
-            tilemap = self._manager._level._walls._tilemap
-            data = tilemap.get(gen_tile_key(tile))
-            if location[1] and data is not None:
-                vector3[1] = data['height'] + data['elevation']
+            vector3 = pg.Vector3(tile[0] + 0.5, 0, tile[1] + 0.5)
+            if location[1]: 
+                tilemap = self._manager._level._walls._tilemap
+                data = tilemap.get(gen_tile_key(tile))
+                if data is not None:
+                    vector3[1] = data['height'] + data['elevation']
             self._vector3[location] = vector3
         return vector3
 
@@ -849,7 +860,7 @@ class Pathfinder(EntityEx): # A* pathfinder entity
     def _pathfind(self: Self,
                   end: tuple[Point, int],
                   climb: Optional[Real]=None,
-                  max_nodes: int=500) -> Optional[list[tuple[Point, int]]]:
+                  max_nodes: int=100) -> Optional[list[tuple[Point, int]]]:
         # Start
         tilemap = self._manager._level._walls._tilemap
         data = tilemap.get(self.tile_key)

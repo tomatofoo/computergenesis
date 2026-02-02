@@ -846,7 +846,7 @@ class Pathfinder(EntityEx): # A* pathfinder entity
     def _pathfind(self: Self,
                   end: tuple[Point, int],
                   climb: Optional[Real]=None,
-                  max_nodes: int=100) -> Optional[list[tuple[Point, int]]]:
+                  max_nodes: int=500) -> Optional[list[tuple[Point, int]]]:
         
         # Start
         tilemap = self._manager._level._walls._tilemap
@@ -854,9 +854,9 @@ class Pathfinder(EntityEx): # A* pathfinder entity
 
         elevation = 0
         if data is not None:
-            top = data['height'] + data['height']
+            top = data['elevation'] + data['height']
             if self._elevation >= top:
-                elevation = top
+                elevation = 1
         start = (self.tile, elevation)
 
         # Setup

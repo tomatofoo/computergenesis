@@ -797,7 +797,7 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
     def _reset_cache(self: Self) -> None:
         self._g = {}
         self._h = {}
-        self._vector3 = {}
+        self._elevations = {}
 
     def _get_g(self: Self, location: tuple[Point, int]) -> Number:
         g = self._g.get(location)
@@ -819,25 +819,25 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
                  + abs(location[0][1] - end[0][1]))
                 * self._weights['straight']
                 + abs(
-                    self._get_vector3(location)[1]
-                    - self._get_vector3(end)[1]
+                    self._get_elevation(location)
+                    - self._get_elevation(end)
                 ) * self._weights['elevation']
             )
             self._h[location] = h
         return h
 
-    def _get_vector3(self: Self, location: tuple[Point, int]) -> pg.Vector3:
-        vector3 = self._vector3.get(location)
-        if vector3 is None:
+    def _get_elevation(self: Self, location: tuple[Point, int]) -> Real:
+        elevation = self._elevations.get(location)
+        if elevation is None:
             tile = location[0]
-            vector3 = pg.Vector3(tile[0] + 0.5, 0, tile[1] + 0.5)
+            elevation = 0
             if location[1]: 
                 tilemap = self._manager._level._walls._tilemap
                 data = tilemap.get(gen_tile_key(tile))
                 if data is not None:
-                    vector3[1] = data['height'] + data['elevation']
-            self._vector3[location] = vector3
-        return vector3
+                    elevation = data['height'] + data['elevation']
+            self._elevations[location] = elevation
+        return elevation
 
     def _cant(self: Self,
               data: Optional[dict],
@@ -860,7 +860,7 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
                    climb: Real) -> tuple[tuple[Point, int], Number]:
         tile = location[0]
         neighbor = ((tile[0] + offset[0], tile[1] + offset[1]), elevation)
-        bottom = self._get_vector3(location)[1]
+        bottom = self._get_elevation(location)
 
         # I'm aware of how weird this looks but it works
         tilemap = self._manager._level._walls._tilemap
@@ -877,7 +877,7 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
             weight = self._weights['diagonal']
         else:
             weight = self._weights['straight']
-        difference = self._get_vector3(neighbor)[1] - bottom
+        difference = self._get_elevation(neighbor) - bottom
         if difference < 0:
             weight -= difference * self._weights['elevation']
         elif difference > self._climb:

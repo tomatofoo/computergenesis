@@ -83,6 +83,7 @@ PATHFINDER = Pathfinder(
     elevation=1,
     width=0.25,
     height=0.6,
+    climb=0.5,
     attack_width=0.4,
     render_width=0.5,
     states={'default': EntityExState(textures, 60)},

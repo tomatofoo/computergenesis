@@ -727,17 +727,7 @@ class EntityEx(Entity):
 
 class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
 
-    _TILE_OFFSETS = {
-        (-1,  1): 1.414,
-        (0,  1): 1,
-        (1,  1): 1.414,
-        (-1,  0): 1,
-        (0,  0): 0,
-        (1,  0): 1,
-        (-1, -1): 1.414,
-        (0, -1): 1,
-        (1, -1): 1.414,
-    } # get_rects_around still works
+    _DIAGONAL = {(-1,  1), (1,  1), (-1, -1), (1, -1)}
 
     def __init__(self: Self,
                  pos: Point=(0, 0),
@@ -752,7 +742,10 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
                  attack_width: Optional[Real]=None,
                  attack_height: Optional[Real]=None,
                  render_width: Optional[Real]=None,
-                 render_height: Optional[Real]=None) -> None:
+                 render_height: Optional[Real]=None,
+                 straight_weight: Real=1,
+                 diagonal_weight: Real=1.414,
+                 elevation_weight: Real=1) -> None:
 
         super().__init__(
             pos=pos,
@@ -769,8 +762,37 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
             render_width=render_width,
             render_height=render_height,
         )
+        self._weights = {
+            'straight': straight_weight,
+            'diagonal': diagonal_weight,
+            'elevation': elevation_weight,
+        }
         
         self._reset_cache()
+
+    @property
+    def straight_weight(self: Self) -> Real:
+        return self._weights['straight']
+
+    @straight_weight.setter
+    def straight_weight(self: Self, value: Real) -> None:
+        self._weights['straight'] = value
+
+    @property
+    def diagonal_weight(self: Self) -> Real:
+        return self._weights['diagonal']
+
+    @diagonal_weight.setter
+    def diagonal_weight(self: Self, value: Real) -> None:
+        self._weights['diagonal'] = value
+
+    @property
+    def elevation_weight(self: Self) -> Real:
+        return self._weights['elevation']
+
+    @elevation_weight.setter
+    def elevation_weight(self: Self, value: Real) -> None:
+        self._weights['elevation'] = value
 
     def _reset_cache(self: Self) -> None:
         self._g = {}
@@ -793,12 +815,13 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
             # Won't give perfect path if I use this heuristic
             # But it is fast
             h = (
-                abs(location[0][0] - end[0][0])
-                + abs(location[0][1] - end[0][1])
+                (abs(location[0][0] - end[0][0])
+                 + abs(location[0][1] - end[0][1]))
+                * self._weights['straight']
                 + abs(
                     self._get_vector3(location)[1]
                     - self._get_vector3(end)[1]
-                )
+                ) * self._weights['elevation']
             )
             self._h[location] = h
         return h
@@ -842,19 +865,23 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
         # I'm aware of how weird this looks but it works
         tilemap = self._manager._level._walls._tilemap
         data = tilemap.get(gen_tile_key(neighbor[0]))
-        weight = self._TILE_OFFSETS[offset]
         if self._cant(data, elevation, bottom, climb):
             return (neighbor, math.inf)
-        elif weight != 1:
+        elif offset in self._DIAGONAL:
             data = tilemap.get(gen_tile_key((tile[0], tile[1] + offset[1])))
             if self._cant(data, elevation, bottom, climb):
                 return (neighbor, math.inf)
             data = tilemap.get(gen_tile_key((tile[0] + offset[0], tile[1])))
             if self._cant(data, elevation, bottom, climb):
                 return (neighbor, math.inf)
-        top = 0 if data is None else data['elevation'] + data['height']
-        if top - bottom < 0:
-            weight += bottom - self._get_vector3(neighbor)[1]
+            weight = self._weights['diagonal']
+        else:
+            weight = self._weights['straight']
+        difference = self._get_vector3(neighbor)[1] - bottom
+        if difference < 0:
+            weight -= difference * self._weights['elevation']
+        elif difference > self._climb:
+            weight += (difference - self._climb) * self._weights['elevation']
         return (neighbor, weight)
 
     def _pathfind(self: Self,
@@ -898,6 +925,8 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
 
             # Check Neighbor
             for offset in self._TILE_OFFSETS:
+                if offset == (0, 0):
+                    continue
                 for elevation in range(2): # 0 is ground; 1 is atop tile
                     neighbor, weight = self._calculate(
                         node, offset, elevation, climb,
@@ -919,6 +948,7 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
         while node != start:
             node = parent[node]
             path.append(node)
+        print(len(visited), len(path))
         return path
 
 

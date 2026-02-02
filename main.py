@@ -312,7 +312,11 @@ class Game(object):
                         PATHFINDER.elevation_velocity = (data['elevation'] + data['height'] - PATHFINDER.elevation) * 0.25
                     else:
                         PATHFINDER.elevation_velocity = -0.1
-                    PATHFINDER.velocity2 = -(pg.Vector2(PATHFINDER.pos) - path[-1][0] - (0.5, 0.5)) * 0.5
+                    vector = -(pg.Vector2(PATHFINDER.pos) - path[-1][0] - (0.5, 0.5))
+                    if vector:
+                        PATHFINDER.velocity2 = vector.normalize() * 0.1
+                    if len(path) == 1:
+                        PATHFINDER.velocity2 = vector * 0.075
                     if (pg.Vector2(PATHFINDER.pos) - path[-1][0] - (0.5, 0.5)).magnitude() < 0.1:
                         path = path[:-1]
                     if not path:

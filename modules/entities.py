@@ -943,12 +943,13 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
             return None
         
         # Trace path back
-        node = parent[end]
-        path = [node]
-        while node != start:
-            node = parent[node]
+        path = []
+        node = parent.get(end)
+        if node is not None:
             path.append(node)
-        print(len(visited), len(path))
+            while node != start:
+                node = parent[node]
+                path.append(node)
         return path
 
 

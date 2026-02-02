@@ -18,6 +18,7 @@ from modules.hud import HUDElement
 from modules.hud import HUD
 from modules.menu import Menu
 from modules.utils import SMALL
+from modules.utils import gen_tile_key
 from modules.utils import gen_img_path
 
 
@@ -265,7 +266,14 @@ class Game(object):
                             self._player.weapon = WEAPONS['launcher']
                         elif event.key == pg.K_0:
                             # SOUNDS['water'].play(pos=(9, 0.25, 9)) 
-                            path = PATHFINDER._pathfind((self._player.tile, 1))
+                            data = self._level.walls.tilemap.get(gen_tile_key(self._player.pos))
+                            if data is not None:
+                                elevation = self._player.elevation >= data['height'] + data['elevation']
+                            else:
+                                elevation = 0
+                            start = time.time()
+                            path = PATHFINDER._pathfind((self._player.tile, elevation))
+                            print(time.time() - start)
                         elif event.key == self._settings['keys']['interact']:
                             self._player.interact()
                         elif not sliding:
@@ -299,7 +307,11 @@ class Game(object):
             
             if self._state == 'playing':
                 if path:
-                    PATHFINDER.elevation_velocity = -0.5
+                    if path[-1][1]:
+                        data = self._level.walls.tilemap[gen_tile_key(path[-1][0])]
+                        PATHFINDER.elevation_velocity = (data['elevation'] + data['height'] - PATHFINDER.elevation) * 0.25
+                    else:
+                        PATHFINDER.elevation_velocity = -0.1
                     PATHFINDER.velocity2 = -(pg.Vector2(PATHFINDER.pos) - path[-1][0] - (0.5, 0.5)) * 0.5
                     if (pg.Vector2(PATHFINDER.pos) - path[-1][0] - (0.5, 0.5)).magnitude() < 0.1:
                         path = path[:-1]

@@ -807,12 +807,13 @@ class Pathfinder(EntityEx): # A* pathfinder entity
 
     def _cant(self: Self,
               data: Optional[dict],
+              elevation: int,
               bottom: Real,
               climb: Real) -> bool:
         return (
             data is not None
-            and (data['elevation'] + data['height'] - bottom > climb
-                 or data['elevation'] > bottom + self._height)
+            and (data['elevation'] < bottom + self._height if not elevation
+                 else data['elevation'] + data['height'] - bottom > climb)
         )
 
     def _calculate(self: Self,
@@ -831,14 +832,14 @@ class Pathfinder(EntityEx): # A* pathfinder entity
         top = 0 if data is None else data['elevation'] + data['height']
         if top - bottom < 0:
             weight += bottom - self._get_vector3(neighbor)[1]
-        if self._cant(data, bottom, climb):
+        if self._cant(data, elevation, bottom, climb):
             return (neighbor, math.inf)
         elif weight != 1:
             data = tilemap.get(gen_tile_key((tile[0], tile[1] + offset[1])))
-            if self._cant(data, bottom, climb):
+            if self._cant(data, elevation, bottom, climb):
                 return (neighbor, math.inf)
             data = tilemap.get(gen_tile_key((tile[0] + offset[0], tile[1])))
-            if self._cant(data, bottom, climb):
+            if self._cant(data, elevation, bottom, climb):
                 return (neighbor, math.inf)
         return (neighbor, weight)
 

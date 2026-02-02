@@ -884,10 +884,10 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
             weight += (difference - self._climb) * self._weights['elevation']
         return (neighbor, weight)
 
-    def _pathfind(self: Self,
-                  end: tuple[Point, int],
-                  climb: Optional[Real]=None,
-                  max_nodes: int=100) -> Optional[list[tuple[Point, int]]]:
+    def pathfind(self: Self,
+                 end: tuple[Point, int],
+                 climb: Optional[Real]=None,
+                 max_nodes: int=100) -> Optional[list[tuple[Point, int]]]:
         # Start
         tilemap = self._manager._level._walls._tilemap
         data = tilemap.get(self.tile_key)

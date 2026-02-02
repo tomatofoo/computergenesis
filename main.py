@@ -272,7 +272,7 @@ class Game(object):
                             else:
                                 elevation = 0
                             start = time.time()
-                            path = PATHFINDER._pathfind((self._player.tile, elevation))
+                            path = PATHFINDER.pathfind((self._player.tile, elevation))
                             print(time.time() - start)
                         elif event.key == self._settings['keys']['interact']:
                             self._player.interact()

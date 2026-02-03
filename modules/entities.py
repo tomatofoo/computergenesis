@@ -887,10 +887,9 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
         # Start
         elevation = 0
         data = self._manager._level._walls._tilemap.get(self.tile_key)
-        if data is not None:
-            top = data['elevation'] + data['height']
-            if self._elevation >= top:
-                elevation = 1
+        if (data is not None
+            and data['elevation'] + data['height'] <= self._elevation):
+            elevation = 1
         start = (self.tile, elevation)
 
         # Setup

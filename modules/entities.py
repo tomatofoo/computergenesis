@@ -22,6 +22,8 @@ from .utils import SMALL
 from .utils import FALLBACK_SURF
 from .utils import gen_tile_key
 
+import time
+
 
 class Entity(object):
 
@@ -916,7 +918,16 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
             # Find the node
             node = min(will, key=lambda x: will[x])
             if node == end:
-                break
+                # Trace path back
+                path = []
+                node = parent.get(end)
+                if node is not None:
+                    path.append(node)
+                    while node != start:
+                        node = parent[node]
+                        path.append(node)
+                print(len(visited), len(path))
+                return path
             will.pop(node)
             visited.add(node)
 
@@ -943,18 +954,6 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
                     self._gs[neighbor] = tentative
                     parent[neighbor] = node
                     will[neighbor] = tentative + self._h(neighbor, end)
-        else:
-            return None
-        
-        # Trace path back
-        path = []
-        node = parent.get(end)
-        if node is not None:
-            path.append(node)
-            while node != start:
-                node = parent[node]
-                path.append(node)
-        return path
 
 
 class Missile(EntityEx):

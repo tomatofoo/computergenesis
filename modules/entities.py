@@ -796,7 +796,6 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
 
     def _reset_cache(self: Self) -> None:
         self._gs = {}
-        self._hs = {}
         self._elevations = {}
 
     def _g(self: Self, location: tuple[Point, int]) -> Number:
@@ -809,22 +808,18 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
     def _h(self: Self,
                location: tuple[Point, int],
                end: tuple[Point, int]) -> Number:
-        h = self._hs.get(location)
-        if h is None:
-            # Manhattan Distance
-            # Won't give perfect path if I use this heuristic
-            # But it is fast
-            h = (
-                (abs(location[0][0] - end[0][0])
-                 + abs(location[0][1] - end[0][1]))
-                * self._weights['straight']
-                + abs(
-                    self._get_elevation(location)
-                    - self._get_elevation(end)
-                ) * self._weights['elevation']
-            )
-            self._hs[location] = h
-        return h
+        # Manhattan Distance
+        # Won't give perfect path if I use this heuristic
+        # But it is fast
+        return (
+            (abs(location[0][0] - end[0][0])
+             + abs(location[0][1] - end[0][1]))
+            * self._weights['straight']
+            + abs(
+                self._get_elevation(location)
+                - self._get_elevation(end)
+            ) * self._weights['elevation']
+        )
 
     def _get_elevation(self: Self, location: tuple[Point, int]) -> Real:
         elevation = self._elevations.get(location)

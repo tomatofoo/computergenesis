@@ -745,7 +745,8 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
                  render_height: Optional[Real]=None,
                  straight_weight: Real=1,
                  diagonal_weight: Real=1.414,
-                 elevation_weight: Real=1) -> None:
+                 elevation_weight: Real=1,
+                 greediness: Real=1) -> None:
 
         super().__init__(
             pos=pos,
@@ -767,6 +768,7 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
             'diagonal': diagonal_weight,
             'elevation': elevation_weight,
         }
+        self._greediness = greediness
         
         self._reset_cache()
 
@@ -794,6 +796,14 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
     def elevation_weight(self: Self, value: Real) -> None:
         self._weights['elevation'] = value
 
+    @property
+    def greediness(self: Self) -> Real:
+        return self._greediness
+
+    @greediness.setter
+    def greediness(self: Self, value: Real) -> None:
+        self._greediness = value
+
     def _reset_cache(self: Self) -> None:
         self._gs = {}
         self._elevations = {}
@@ -819,7 +829,7 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
                 self._get_elevation(location)
                 - self._get_elevation(end)
             ) * self._weights['elevation']
-        )
+        ) * self._greediness
 
     def _get_elevation(self: Self, location: tuple[Point, int]) -> Real:
         elevation = self._elevations.get(location)
@@ -944,7 +954,6 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
             while node != start:
                 node = parent[node]
                 path.append(node)
-        print(len(visited), len(path))
         return path
 
 

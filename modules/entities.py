@@ -907,11 +907,10 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
         while will and len(visited) < max_nodes:
             # Find the node
             node = min(will, key=lambda x: will[x])
-            will.pop(node)
-            visited.add(node)
-
             if node == end:
                 break
+            will.pop(node)
+            visited.add(node)
 
             # Check Neighbor
             for offset in self._TILE_OFFSETS:

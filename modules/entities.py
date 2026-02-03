@@ -927,7 +927,7 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
                         node, offset, elevation, climb,
                     )
                     tentative = self._g(node) + weight
-                    if tentative >= self._g(neighbor) or neighbor in visited:
+                    if neighbor in visited or tentative >= self._g(neighbor):
                         continue
 
                     self._gs[neighbor] = tentative

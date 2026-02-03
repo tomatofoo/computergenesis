@@ -273,7 +273,7 @@ class Game(object):
                                 elevation = 0
                             start = time.time()
                             path = PATHFINDER.pathfind((self._player.tile, elevation))
-                            # print(time.time() - start)
+                            print(time.time() - start)
                         elif event.key == self._settings['keys']['interact']:
                             self._player.interact()
                         elif not sliding:

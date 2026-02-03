@@ -806,8 +806,8 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
         return g
 
     def _h(self: Self,
-               location: tuple[Point, int],
-               end: tuple[Point, int]) -> Number:
+           location: tuple[Point, int],
+           end: tuple[Point, int]) -> Number:
         # Manhattan Distance
         # Won't give perfect path if I use this heuristic
         # But it is fast

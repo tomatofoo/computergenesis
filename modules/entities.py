@@ -889,10 +889,9 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
                  climb: Optional[Real]=None,
                  max_nodes: int=100) -> Optional[list[tuple[Point, int]]]:
         # Start
-        tilemap = self._manager._level._walls._tilemap
-        data = tilemap.get(self.tile_key)
 
         elevation = 0
+        data = self._manager._level._walls._tilemap.get(self.tile_key)
         if data is not None:
             top = data['elevation'] + data['height']
             if self._elevation >= top:

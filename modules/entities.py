@@ -919,7 +919,8 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
                     continue
                 for elevation in range(2): # 0 is ground; 1 is atop tile
                     neighbor = (
-                        (node[0][0] + offset[0], node[0][1] + offset[1]),
+                        (node[0][0] + offset[0],
+                         node[0][1] + offset[1]),
                         elevation,
                     )
                     if neighbor in visited:

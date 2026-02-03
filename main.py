@@ -272,7 +272,7 @@ class Game(object):
                             else:
                                 elevation = 0
                             start = time.time()
-                            path = PATHFINDER.pathfind((self._player.tile, elevation), max_nodes=1000)
+                            path = PATHFINDER.pathfind((self._player.tile, elevation))
                             print(time.time() - start)
                         elif event.key == self._settings['keys']['interact']:
                             self._player.interact()
@@ -311,12 +311,12 @@ class Game(object):
                         data = self._level.walls.tilemap[gen_tile_key(path[-1][0])]
                         PATHFINDER.elevation_velocity = (data['elevation'] + data['height'] - PATHFINDER.elevation) * 0.25
                     else:
-                        PATHFINDER.elevation_velocity = -0.1 * rel_game_speed
+                        PATHFINDER.elevation_velocity = -0.1
                     vector = -(pg.Vector2(PATHFINDER.pos) - path[-1][0] - (0.5, 0.5))
                     if vector:
-                        PATHFINDER.velocity2 = vector.normalize() * 0.1 * rel_game_speed
+                        PATHFINDER.velocity2 = vector.normalize() * 0.1
                     if len(path) == 1:
-                        PATHFINDER.velocity2 = vector * 0.075 * rel_game_speed
+                        PATHFINDER.velocity2 = vector * 0.075
                     if (pg.Vector2(PATHFINDER.pos) - path[-1][0] - (0.5, 0.5)).magnitude() < 0.1:
                         path = path[:-1]
                     if not path:

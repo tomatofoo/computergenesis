@@ -885,7 +885,6 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
                  climb: Optional[Real]=None,
                  max_nodes: int=100) -> Optional[list[tuple[Point, int]]]:
         # Start
-
         elevation = 0
         data = self._manager._level._walls._tilemap.get(self.tile_key)
         if data is not None:
@@ -904,7 +903,7 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
         self._gs[start] = 0
 
         # Algorithm
-        while will and len(visited) < max_nodes:
+        while will and len(visited) <= max_nodes:
             # Find the node
             node = min(will, key=lambda x: will[x])
             if node == end:

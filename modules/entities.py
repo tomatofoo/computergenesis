@@ -852,23 +852,24 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
                    location: tuple[Point, int],
                    offset: tuple[int],
                    elevation: int,
-                   climb: Real) -> tuple[tuple[Point, int], Number]:
+                   neighbor: tuple[Point, int],
+                   climb: Real) -> Number:
         tile = location[0]
-        neighbor = ((tile[0] + offset[0], tile[1] + offset[1]), elevation)
-
+        # i know neighbor can be calculated here
+        # but it is faster if it is calculated in the for loop
         # I'm aware of how weird this looks but it works
         tilemap = self._manager._level._walls._tilemap
         data = tilemap.get(gen_tile_key(neighbor[0]))
         bottom = self._get_elevation(location)
         if self._cant(data, elevation, bottom, climb):
-            return (neighbor, math.inf)
+            return math.inf
         elif offset in self._DIAGONAL:
             data = tilemap.get(gen_tile_key((tile[0], tile[1] + offset[1])))
             if self._cant(data, elevation, bottom, climb):
-                return (neighbor, math.inf)
+                return math.inf
             data = tilemap.get(gen_tile_key((tile[0] + offset[0], tile[1])))
             if self._cant(data, elevation, bottom, climb):
-                return (neighbor, math.inf)
+                return math.inf
             weight = self._weights['diagonal']
         else:
             weight = self._weights['straight']
@@ -877,7 +878,7 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
             weight -= difference * self._weights['elevation']
         elif difference > self._climb:
             weight += (difference - self._climb) * self._weights['elevation']
-        return (neighbor, weight)
+        return weight
 
     def pathfind(self: Self,
                  end: tuple[Point, int],
@@ -917,13 +918,20 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
                 if offset == (0, 0):
                     continue
                 for elevation in range(2): # 0 is ground; 1 is atop tile
-                    neighbor, weight = self._calculate(
-                        node, offset, elevation, climb,
+                    neighbor = (
+                        (node[0][0] + offset[0], node[0][1] + offset[1]),
+                        elevation,
                     )
-                    tentative = self._g(node) + weight
-                    if neighbor in visited or tentative >= self._g(neighbor):
+                    if neighbor in visited:
                         continue
-
+                    tentative = (
+                        self._g(node)
+                        + self._calculate(
+                            node, offset, elevation, neighbor, climb,
+                        )
+                    )
+                    if tentative >= self._g(neighbor):
+                        continue
                     self._gs[neighbor] = tentative
                     parent[neighbor] = node
                     will[neighbor] = tentative + self._h(neighbor, end)

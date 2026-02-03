@@ -795,21 +795,21 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
         self._weights['elevation'] = value
 
     def _reset_cache(self: Self) -> None:
-        self._g = {}
-        self._h = {}
+        self._gs = {}
+        self._hs = {}
         self._elevations = {}
 
-    def _get_g(self: Self, location: tuple[Point, int]) -> Number:
-        g = self._g.get(location)
+    def _g(self: Self, location: tuple[Point, int]) -> Number:
+        g = self._gs.get(location)
         if g is None:
             g = math.inf
-            self._g[location] = g
+            self._gs[location] = g
         return g
 
-    def _get_h(self: Self,
+    def _h(self: Self,
                location: tuple[Point, int],
                end: tuple[Point, int]) -> Number:
-        h = self._h.get(location)
+        h = self._hs.get(location)
         if h is None:
             # Manhattan Distance
             # Won't give perfect path if I use this heuristic
@@ -823,7 +823,7 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
                     - self._get_elevation(end)
                 ) * self._weights['elevation']
             )
-            self._h[location] = h
+            self._hs[location] = h
         return h
 
     def _get_elevation(self: Self, location: tuple[Point, int]) -> Real:
@@ -906,17 +906,12 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
         parent = {}
         visited = set()
         will = {start}
-        self._g[start] = 0
+        self._gs[start] = 0
 
         # Algorithm
         while will and len(visited) < max_nodes:
             # Find the node
-            least = math.inf
-            for tentative in will:
-                f = self._get_g(tentative) + self._get_h(tentative, end)
-                if f < least:
-                    node = tentative
-                    least = f
+            node = min(will, key=lambda x: self._g(x) + self._h(x, end))
             will.remove(node)
             visited.add(node)
 
@@ -931,12 +926,11 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
                     neighbor, weight = self._calculate(
                         node, offset, elevation, climb,
                     )
-                    tentative = self._get_g(node) + weight
-                    if (tentative >= self._get_g(neighbor)
-                        or neighbor in visited):
+                    tentative = self._g(node) + weight
+                    if tentative >= self._g(neighbor) or neighbor in visited:
                         continue
 
-                    self._g[neighbor] = tentative
+                    self._gs[neighbor] = tentative
                     parent[neighbor] = node
                     will.add(neighbor)
         else:

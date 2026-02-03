@@ -836,11 +836,11 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
     def _get_elevation(self: Self, location: tuple[Point, int]) -> Real:
         elevation = self._elevations.get(location)
         if elevation is None:
-            tile = location[0]
             elevation = 0
             if location[1]: 
-                tilemap = self._manager._level._walls._tilemap
-                data = tilemap.get(gen_tile_key(tile))
+                data = self._manager._level._walls._tilemap.get(
+                    gen_tile_key(location[0]),
+                )
                 if data is not None:
                     elevation = data['height'] + data['elevation']
             self._elevations[location] = elevation

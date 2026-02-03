@@ -944,6 +944,7 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
             while node != start:
                 node = parent[node]
                 path.append(node)
+        print(len(visited), len(path))
         return path
 
 

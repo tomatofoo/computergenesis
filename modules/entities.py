@@ -899,8 +899,8 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
         if climb is None:
             climb = self._climb 
         parent = {}
-        visited = set()
-        will = {start: self._h(start, end)}
+        visited = set() # closed
+        will = {start: self._h(start, end)} # open
         self._gs[start] = 0
 
         # Algorithm

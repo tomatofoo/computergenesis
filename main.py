@@ -311,12 +311,12 @@ class Game(object):
                         data = self._level.walls.tilemap[gen_tile_key(path[-1][0])]
                         PATHFINDER.elevation_velocity = (data['elevation'] + data['height'] - PATHFINDER.elevation) * 0.25
                     else:
-                        PATHFINDER.elevation_velocity = -0.1
+                        PATHFINDER.elevation_velocity = -0.1 * rel_game_speed
                     vector = -(pg.Vector2(PATHFINDER.pos) - path[-1][0] - (0.5, 0.5))
                     if vector:
-                        PATHFINDER.velocity2 = vector.normalize() * 0.1
+                        PATHFINDER.velocity2 = vector.normalize() * 0.1 * rel_game_speed
                     if len(path) == 1:
-                        PATHFINDER.velocity2 = vector * 0.075
+                        PATHFINDER.velocity2 = vector * 0.075 * rel_game_speed
                     if (pg.Vector2(PATHFINDER.pos) - path[-1][0] - (0.5, 0.5)).magnitude() < 0.1:
                         path = path[:-1]
                     if not path:

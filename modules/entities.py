@@ -904,14 +904,14 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
             climb = self._climb 
         parent = {}
         visited = set()
-        will = {start}
+        will = {start: 0 + self._h(start, end)}
         self._gs[start] = 0
 
         # Algorithm
         while will and len(visited) < max_nodes:
             # Find the node
-            node = min(will, key=lambda x: self._g(x) + self._h(x, end))
-            will.remove(node)
+            node = min(will, key=lambda x: will[x])
+            will.pop(node)
             visited.add(node)
 
             if node == end:
@@ -931,7 +931,7 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
 
                     self._gs[neighbor] = tentative
                     parent[neighbor] = node
-                    will.add(neighbor)
+                    will[neighbor] = tentative + self._h(neighbor, end)
         else:
             return None
         

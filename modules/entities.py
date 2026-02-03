@@ -860,11 +860,11 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
                    climb: Real) -> tuple[tuple[Point, int], Number]:
         tile = location[0]
         neighbor = ((tile[0] + offset[0], tile[1] + offset[1]), elevation)
-        bottom = self._get_elevation(location)
 
         # I'm aware of how weird this looks but it works
         tilemap = self._manager._level._walls._tilemap
         data = tilemap.get(gen_tile_key(neighbor[0]))
+        bottom = self._get_elevation(location)
         if self._cant(data, elevation, bottom, climb):
             return (neighbor, math.inf)
         elif offset in self._DIAGONAL:

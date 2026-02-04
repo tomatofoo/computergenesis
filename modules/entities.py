@@ -11,6 +11,7 @@ import pygame as pg
 from pygame.typing import Point
 
 from .sound import Sound
+from .pathfind import Pathfinder
 from .weapons import Weapon
 from .weapons import AmmoWeapon
 from .weapons import MeleeWeapon
@@ -727,7 +728,7 @@ class EntityEx(Entity):
         super().update(rel_game_speed, level_timer)
 
 
-class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
+class PathfinderEntity(EntityEx): # A* pathfinder entity (imperfect path)
 
     _DIAGONAL = {(-1,  1), (1,  1), (-1, -1), (1, -1)}
 
@@ -771,8 +772,7 @@ class Pathfinder(EntityEx): # A* pathfinder entity (imperfect path)
             'elevation': elevation_weight,
         }
         self._greediness = greediness
-        
-        self._reset_cache()
+
 
     @property
     def straight_weight(self: Self) -> Real:

@@ -14,7 +14,7 @@ from modules.level import Level
 from modules.entities import Entity
 from modules.entities import EntityExState
 from modules.entities import EntityEx
-from modules.entities import Pathfinder
+from modules.entities import PathfinderEntity
 from modules.entities import WeaponItem
 from modules.entities import Player
 from modules.entities import EntityManager
@@ -78,7 +78,7 @@ for animation in textures:
     for surf in animation:
         surf.set_colorkey((255, 0, 255))
 
-PATHFINDER = Pathfinder(
+TEST = EntityEx( # FOR PATHFINDING
     pos=(6.5, 0.5),
     elevation=1,
     width=0.25,
@@ -150,7 +150,7 @@ entities = {
         render_width=0.5,
         textures=[pg.image.load(gen_img_path('GrenadeZombie.png'))],
     ),
-    PATHFINDER,
+    TEST,
     WeaponItem(
         weapon=WEAPONS['shotgun'],
         number=5,

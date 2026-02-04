@@ -12,15 +12,22 @@ import pygame as pg
 from data.weapons import SOUNDS
 from data.weapons import WEAPONS
 from data.levels import LEVELS
-from data.levels import PATHFINDER
+from data.levels import TEST
 from modules.camera import Camera
 from modules.hud import HUDElement
 from modules.hud import HUD
 from modules.menu import Menu
+from modules.pathfind import Pathfinder
 from modules.utils import SMALL
 from modules.utils import gen_tile_key
 from modules.utils import gen_img_path
 
+
+PATHFINDER = Pathfinder(
+    TEST._manager._level._walls._tilemap,
+    TEST._height,
+    TEST._climb,
+)
 
 # TODO: *INVENTORY, *SPECIAL TILES, HUD, MENUS, *LEVEL EDITOR, *data/level.py, GAMEPLAY / LEVELS
 class Game(object):
@@ -271,8 +278,17 @@ class Game(object):
                                 elevation = self._player.elevation >= data['height'] + data['elevation']
                             else:
                                 elevation = 0
+                            data = self._level.walls.tilemap.get(gen_tile_key(TEST.pos))
+                            if data is not None:
+                                test_elevation = TEST.elevation >= data['height'] + data['elevation']
+                            else:
+                                test_elevation = 0
                             start = time.time()
-                            path = PATHFINDER.pathfind((self._player.tile, elevation), max_nodes=1000)
+                            path = PATHFINDER.pathfind(
+                                (TEST.tile, test_elevation),
+                                (self._player.tile, elevation),
+                                max_nodes=1000,
+                            )
                             print(time.time() - start)
                         elif event.key == self._settings['keys']['interact']:
                             self._player.interact()
@@ -309,18 +325,18 @@ class Game(object):
                 if path:
                     if path[-1][1]:
                         data = self._level.walls.tilemap[gen_tile_key(path[-1][0])]
-                        PATHFINDER.elevation_velocity = (data['elevation'] + data['height'] - PATHFINDER.elevation) * 0.25
+                        TEST.elevation_velocity = (data['elevation'] + data['height'] - TEST.elevation) * 0.25
                     else:
-                        PATHFINDER.elevation_velocity = -0.1
-                    vector = -(pg.Vector2(PATHFINDER.pos) - path[-1][0] - (0.5, 0.5))
+                        TEST.elevation_velocity = -0.1
+                    vector = -(pg.Vector2(TEST.pos) - path[-1][0] - (0.5, 0.5))
                     if vector:
-                        PATHFINDER.velocity2 = vector.normalize() * 0.1
+                        TEST.velocity2 = vector.normalize() * 0.1
                     if len(path) == 1:
-                        PATHFINDER.velocity2 = vector * 0.075
-                    if (pg.Vector2(PATHFINDER.pos) - path[-1][0] - (0.5, 0.5)).magnitude() < 0.1:
+                        TEST.velocity2 = vector * 0.075
+                    if (pg.Vector2(TEST.pos) - path[-1][0] - (0.5, 0.5)).magnitude() < 0.1:
                         path = path[:-1]
                     if not path:
-                        PATHFINDER.velocity2 = (0, 0)
+                        TEST.velocity2 = (0, 0)
 
                 # Keys
                 keys = pg.key.get_pressed()

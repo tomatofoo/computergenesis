@@ -728,6 +728,50 @@ class EntityEx(Entity):
         super().update(rel_game_speed, level_timer)
 
 
+ # 'stalking' is doom-style pathfinding, while 'approaching' is A*
+class Enemy(EntiytEx):
+    def __init__(self: Self,
+                 pos: Point=(0, 0),
+                 elevation: Real=0,
+                 width: Real=0.5,
+                 height: Real=1,
+                 health: Real=100,
+                 climb: Real=0.2,
+                 gravity: Real=0,
+                 states: dict[str, EntityExState]={
+                     'default': EntityExState(),
+                     'stalking': EntityExState(),
+                     'approaching': EntityExState(),
+                 },
+                 state: str='default',
+                 attack_width: Optional[Real]=None,
+                 attack_height: Optional[Real]=None,
+                 render_width: Optional[Real]=None,
+                 render_height: Optional[Real]=None) -> None:
+        super().__init__(
+            pos=pos,
+            elevation=elevation,
+            width=width,
+            height=height,
+            health=health,
+            climb=climb,
+            gravity=gravity,
+            states=states,
+            state=state,
+            attack_width=attack_width,
+            attack_height=attack_height,
+            render_width=render_width,
+            render_height=render_height,
+        )
+
+    def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
+        if self._state == 'stalking':
+            pass
+        elif self._state == 'approaching':
+            pass
+        super().update(rel_game_speed, level_timer)
+
+
 class Missile(EntityEx):
     def __init__(self: Self,
                  damage: Real,

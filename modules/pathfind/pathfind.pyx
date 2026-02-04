@@ -1,9 +1,10 @@
+# cython: language_level=3, profile=True, boundscheck=False, wraparound=False, initializedcheck=False, cdivision=True, cpow=True
+
 cimport cython
 
+from libc.math cimport abs
 from libc.math cimport floorf
-from libc.math cimport fabs
 
-import math
 from typing import Self
 
 from pygame.typing import Point
@@ -14,6 +15,17 @@ cdef str gen_tile_key(obj: Point):
     # <int> faster than int()
     return f'{<int>floorf(obj[0])};{<int>floorf(obj[1])}'
 
+
+cdef struct _Node:
+    int[2] _tile
+    int _elevation
+
+cdef bint _node_eq(_Node node1, _Node node2):
+    return (
+        node1._tile[0] == node2._tile[0]
+        and node1._tile[1] == node2._tile[1]
+        and node1._elevation == node2._elevation
+    )
 
 # A* pathfinder; points are in the format tuple[Point, int]
 cdef class Pathfinder:
@@ -39,9 +51,9 @@ cdef class Pathfinder:
                  float greediness=1) -> None:
         
         self._TILE_OFFSETS = [
-            (-1,  1), (0,  1), (1,  1),
-            (-1,  0), (1,  0),
-            (-1, -1), (0, -1), (1, -1),
+            [-1,  1], [0,  1], [1,  1],
+            [-1,  0],          [1,  0],
+            [-1, -1], [0, -1], [1, -1],
         ]
         
         self._tilemap = tilemap
@@ -90,38 +102,38 @@ cdef class Pathfinder:
         self._gs = {}
         self._elevations = {}
 
-    cdef float _g(self: Self, tuple location):
-        cdef float g = self._gs.get(location)
+    cdef float _g(self: Self, _Node location):
+        cdef object g = self._gs.get(location)
         if g is None:
             g = 2147483647
             self._gs[location] = g
         return g
 
     cdef float _h(self: Self,
-                  tuple location,
-                  tuple end):
+                  _Node node,
+                  _Node end):
         # Manhattan Distance
         # Won't give perfect path if I use this heuristic
         # But it is fast
         return (
-            (abs(location[0][0] - end[0][0])
-             + abs(location[0][1] - end[0][1]))
+            (abs(node._tile[0] - end._tile[0])
+             + abs(node._tile[1] - end._tile[1]))
             * self._straight_weight
             + abs(
-                self._get_elevation(location)
+                self._get_elevation(node)
                 - self._get_elevation(end)
             ) * self._elevation_weight
         ) * self._greediness
 
-    cdef float _get_elevation(self: Self, tuple location):
-        cdef float elevation = self._elevations.get(location)
+    cdef float _get_elevation(self: Self, _Node node):
+        cdef object elevation = self._elevations.get(node)
         if elevation is None:
             elevation = 0
-            if location[1]: 
-                data = self._tilemap.get(gen_tile_key(location[0]))
+            if node._elevation: 
+                data = self._tilemap.get(gen_tile_key(node._tile))
                 if data is not None:
                     elevation = data['height'] + data['elevation']
-            self._elevations[location] = elevation
+            self._elevations[node] = elevation
         return elevation
 
     cdef bint _cant(self: Self,
@@ -133,30 +145,36 @@ cdef class Pathfinder:
             if elevation:
                 return True
             return False
+        cdef float tile_elevation = data['elevation']
         return (
-            data['elevation'] < bottom + self._height if not elevation
-            else data['elevation'] + data['height'] - bottom > climb
+            tile_elevation < bottom + self._height if not elevation
+            else tile_elevation + float(data['height']) - bottom > climb
         )
 
     cdef float _calculate(self: Self,
-                          tuple location,
+                          _Node node,
                           int[2] offset,
                           int elevation,
-                          tuple neighbor,
+                          _Node neighbor,
                           float climb):
-        tile = location[0]
+        cdef:
+            object data
+            float bottom = self._get_elevation(node)
         # i know neighbor can be calculated here
         # but it is faster if it is calculated in the for loop
         # I'm aware of how weird this looks but it works
-        data = self._tilemap.get(gen_tile_key(neighbor[0]))
-        bottom = self._get_elevation(location)
+        data = self._tilemap.get(gen_tile_key(neighbor._tile))
         if self._cant(data, elevation, bottom, climb):
             return 2147483647
         elif offset[0] and offset[1]:
-            data = self._tilemap.get(gen_tile_key((tile[0], tile[1] + offset[1])))
+            data = self._tilemap.get(
+                gen_tile_key((node._tile[0], node._tile[1] + offset[1])),
+            )
             if self._cant(data, elevation, bottom, climb):
                 return 2147483647
-            data = self._tilemap.get(gen_tile_key((tile[0] + offset[0], tile[1])))
+            data = self._tilemap.get(
+                gen_tile_key((node._tile[0] + offset[0], node._tile[1])),
+            )
             if self._cant(data, elevation, bottom, climb):
                 return 2147483647
             weight = self._diagonal_weight
@@ -169,34 +187,47 @@ cdef class Pathfinder:
             weight += (difference - self._climb) * self._elevation_weight
         return weight
 
-    def pathfind(self: Self,
-                 start: tuple[Point, int],
-                 end: tuple[Point, int],
-                 climb: Optional[Real]=None,
-                 max_nodes: int=100) -> Optional[list[tuple[Point, int]]]:
+    cdef list _pathfind(self: Self,
+                        _Node start,
+                        _Node end,
+                        float climb=-1,
+                        int max_nodes=100):
         # Setup
         self._reset_cache()
-        if climb is None:
+        cdef:
+            list path # final path
+            dict parent = {}
+            dict will = {start: self._h(start, end)} # open
+            set[_Node] visited = set() # closed
+            int elevation
+            float f
+            float least
+            float tentative_g
+            _Node tentative
+            _Node node
+
+        if climb == -1:
             climb = self._climb 
-        parent = {}
-        visited = set() # closed
-        will = {start: self._h(start, end)} # open
         self._gs[start] = 0
 
         # Algorithm
         while will and len(visited) <= max_nodes:
             # Find the node
-            node = min(will, key=lambda x: will[x])
-            if node == end:
+            least = 2147483647
+            for tentative in will:
+                f = will[tentative]
+                if f < least:
+                    least = f
+                    node = tentative
+            if _node_eq(node, end):
                 # Trace path back
                 path = []
                 node = parent.get(end)
                 if node is not None:
                     path.append(node)
-                    while node != start:
+                    while _node_eq(node, start):
                         node = parent[node]
                         path.append(node)
-                print(len(visited), len(path))
                 return path
             will.pop(node)
             visited.add(node)
@@ -206,22 +237,35 @@ cdef class Pathfinder:
                 if not (offset[0] or offset[1]):
                     continue
                 for elevation in range(2): # 0 is ground; 1 is atop tile
-                    neighbor = (
-                        (node[0][0] + offset[0],
-                         node[0][1] + offset[1]),
+                    neighbor = _Node(
+                        [node._tile[0] + offset[0],
+                         node._tile[1] + offset[1]],
                         elevation,
                     )
                     if neighbor in visited:
                         continue
-                    tentative = (
+                    tentative_g = (
                         self._g(node)
                         + self._calculate(
                             node, offset, elevation, neighbor, climb,
                         )
                     )
-                    if tentative >= self._g(neighbor):
+                    if tentative_g >= self._g(neighbor):
                         continue
-                    self._gs[neighbor] = tentative
+                    self._gs[neighbor] = tentative_g
                     parent[neighbor] = node
-                    will[neighbor] = tentative + self._h(neighbor, end)
+                    will[neighbor] = tentative_g + self._h(neighbor, end)
+        return []
+
+    def pathfind(self: Self,
+                 tuple start,
+                 tuple end,
+                 float climb=-1,
+                 int max_nodes=100) -> list:
+        return self._pathfind(
+            _Node(start[0], start[1]),
+            _Node(end[0], end[1]),
+            climb,
+            max_nodes,
+    )
 

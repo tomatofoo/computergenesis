@@ -232,13 +232,13 @@ cdef class Pathfinder:
                     node = tentative
             if node == end:
                 # Trace path back
-                path = []
                 node = parent.get(end)
-                if node is not None:
+                if node is None:
+                    return []
+                path = [node]
+                while node != start:
+                    node = parent[node]
                     path.append(node)
-                    while node != start:
-                        node = parent[node]
-                        path.append(node)
                 return path
             will.pop(node)
             visited.add(node)

@@ -287,7 +287,7 @@ class Game(object):
                             path = PATHFINDER.pathfind(
                                 (TEST.tile, test_elevation),
                                 (self._player.tile, elevation),
-                                max_nodes=1000,
+                                max_nodes=100,
                             )
                             print(time.time() - start)
                         elif event.key == self._settings['keys']['interact']:

@@ -1,87 +1,111 @@
-cdef class Pathfinder: # A* pathfinder entity (imperfect path)
+cimport cython
 
-    _DIAGONAL = {(-1,  1), (1,  1), (-1, -1), (1, -1)}
+from libc.math cimport fabs
+
+import math
+from typing import Self
+
+
+# is getting called a lot so not using python implementation
+cdef str gen_tile_key(obj: Point):
+    # <int> faster than int()
+    return f'{<int>floorf(obj[0])};{<int>floorf(obj[1])}'
+
+
+# A* pathfinder; points are in the format tuple[Point, int]
+cdef class Pathfinder:
+    cdef: 
+        set _DIAGONAL = {(-1,  1), (1,  1), (-1, -1), (1, -1)}
+        dict tilemap
+        dict _gs
+        dict _elevations
+        float _height
+        float _climb
+        float _straight_weight
+        float _diagonal_weight
+        float _elevation_weight
+        float _greediness
 
     def __init__(self: Self,
-                 height: Real=1,
-                 climb: Real=0.2,
-                 straight_weight: Real=1,
-                 diagonal_weight: Real=1.414,
-                 elevation_weight: Real=1,
-                 greediness: Real=1) -> None:
-
+                 dict tilemap,
+                 float height=1,
+                 float climb=0.2,
+                 float straight_weight=1,
+                 float diagonal_weight=1.414,
+                 float elevation_weight=1,
+                 float greediness=1) -> None:
+        
+        self._tilemap = tilemap
         self._height = height
         self._climb = climb
-        self._weights = {
-            'straight': straight_weight,
-            'diagonal': diagonal_weight,
-            'elevation': elevation_weight,
-        }
+        self._straight_weight = straight_weight
+        self._diagonal_weight = diagonal_weight
+        self._elevation_weight = elevation_weight
         self._greediness = greediness
         
         self._reset_cache()
 
     @property
-    def straight_weight(self: Self) -> Real:
-        return self._weights['straight']
+    def straight_weight(self: Self):
+        return self._straight_weight
 
     @straight_weight.setter
-    def straight_weight(self: Self, value: Real) -> None:
-        self._weights['straight'] = value
+    def straight_weight(self: Self, float value):
+        self._straight_weight = value
 
     @property
     def diagonal_weight(self: Self) -> Real:
-        return self._weights['diagonal']
+        return self._diagonal_weight
 
     @diagonal_weight.setter
-    def diagonal_weight(self: Self, value: Real) -> None:
-        self._weights['diagonal'] = value
+    def diagonal_weight(self: Self, float value):
+        self._diagonal_weight = value
 
     @property
-    def elevation_weight(self: Self) -> Real:
-        return self._weights['elevation']
+    def elevation_weight(self: Self):
+        return self._elevation_weight
 
     @elevation_weight.setter
-    def elevation_weight(self: Self, value: Real) -> None:
-        self._weights['elevation'] = value
+    def elevation_weight(self: Self, float value):
+        self._elevation_weight = value
 
     @property
-    def greediness(self: Self) -> Real:
+    def greediness(self: Self):
         return self._greediness
 
     @greediness.setter
-    def greediness(self: Self, value: Real) -> None:
+    def greediness(self: Self, float value):
         self._greediness = value
 
-    def _reset_cache(self: Self) -> None:
+    cdef void _reset_cache(self: Self):
         self._gs = {}
         self._elevations = {}
 
-    def _g(self: Self, location: tuple[Point, int]) -> Number:
-        g = self._gs.get(location)
+    cdef float _g(self: Self, tuple location):
+        cdef float g = self._gs.get(location)
         if g is None:
-            g = math.inf
+            g = 2147483647
             self._gs[location] = g
         return g
 
-    def _h(self: Self,
-           location: tuple[Point, int],
-           end: tuple[Point, int]) -> Number:
+    cdef float _h(self: Self,
+                  tuple location,
+                  tuple end):
         # Manhattan Distance
         # Won't give perfect path if I use this heuristic
         # But it is fast
         return (
             (abs(location[0][0] - end[0][0])
              + abs(location[0][1] - end[0][1]))
-            * self._weights['straight']
+            * self._straight_weight
             + abs(
                 self._get_elevation(location)
                 - self._get_elevation(end)
-            ) * self._weights['elevation']
+            ) * self._elevation_weight
         ) * self._greediness
 
-    def _get_elevation(self: Self, location: tuple[Point, int]) -> Real:
-        elevation = self._elevations.get(location)
+    cdef float _get_elevation(self: Self, tuple location):
+        cdef float elevation = self._elevations.get(location)
         if elevation is None:
             elevation = 0
             if location[1]: 
@@ -93,11 +117,11 @@ cdef class Pathfinder: # A* pathfinder entity (imperfect path)
             self._elevations[location] = elevation
         return elevation
 
-    def _cant(self: Self,
-              data: Optional[dict],
-              elevation: int,
-              bottom: Real,
-              climb: Real) -> bool:
+    cdef bint _cant(self: Self,
+                    object data,
+                    int elevation,
+                    float bottom,
+                    float climb):
         if data is None:
             if elevation:
                 return True
@@ -107,12 +131,12 @@ cdef class Pathfinder: # A* pathfinder entity (imperfect path)
             else data['elevation'] + data['height'] - bottom > climb
         )
 
-    def _calculate(self: Self,
-                   location: tuple[Point, int],
-                   offset: tuple[int],
-                   elevation: int,
-                   neighbor: tuple[Point, int],
-                   climb: Real) -> Number:
+    cdef float _calculate(self: Self,
+                          tuple location,
+                          tuple[int] offset,
+                          int elevation,
+                          tuple neighbor,
+                          float climb):
         tile = location[0]
         # i know neighbor can be calculated here
         # but it is faster if it is calculated in the for loop
@@ -121,36 +145,29 @@ cdef class Pathfinder: # A* pathfinder entity (imperfect path)
         data = tilemap.get(gen_tile_key(neighbor[0]))
         bottom = self._get_elevation(location)
         if self._cant(data, elevation, bottom, climb):
-            return math.inf
+            return 2147483647
         elif offset in self._DIAGONAL:
             data = tilemap.get(gen_tile_key((tile[0], tile[1] + offset[1])))
             if self._cant(data, elevation, bottom, climb):
-                return math.inf
+                return 2147483647
             data = tilemap.get(gen_tile_key((tile[0] + offset[0], tile[1])))
             if self._cant(data, elevation, bottom, climb):
-                return math.inf
-            weight = self._weights['diagonal']
+                return 2147483647
+            weight = self._diagonal_weight
         else:
-            weight = self._weights['straight']
-        difference = self._get_elevation(neighbor) - bottom
+            weight = self._straight_weight
+        cdef float difference = self._get_elevation(neighbor) - bottom
         if difference < 0:
-            weight -= difference * self._weights['elevation']
+            weight -= difference * self._elevation_weight
         elif difference > self._climb:
-            weight += (difference - self._climb) * self._weights['elevation']
+            weight += (difference - self._climb) * self._elevation_weight
         return weight
 
     def pathfind(self: Self,
+                 start: tuple[Point, int],
                  end: tuple[Point, int],
                  climb: Optional[Real]=None,
                  max_nodes: int=100) -> Optional[list[tuple[Point, int]]]:
-        # Start
-        elevation = 0
-        data = self._manager._level._walls._tilemap.get(self.tile_key)
-        if (data is not None
-            and data['elevation'] + data['height'] <= self._elevation):
-            elevation = 1
-        start = (self.tile, elevation)
-
         # Setup
         self._reset_cache()
         if climb is None:

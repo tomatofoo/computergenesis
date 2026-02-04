@@ -1,9 +1,12 @@
 cimport cython
 
+from libc.math cimport floorf
 from libc.math cimport fabs
 
 import math
 from typing import Self
+
+from pygame.typing import Point
 
 
 # is getting called a lot so not using python implementation
@@ -15,7 +18,7 @@ cdef str gen_tile_key(obj: Point):
 # A* pathfinder; points are in the format tuple[Point, int]
 cdef class Pathfinder:
     cdef: 
-        set _DIAGONAL = {(-1,  1), (1,  1), (-1, -1), (1, -1)}
+        int[8][2] _TILE_OFFSETS
         dict tilemap
         dict _gs
         dict _elevations
@@ -34,6 +37,12 @@ cdef class Pathfinder:
                  float diagonal_weight=1.414,
                  float elevation_weight=1,
                  float greediness=1) -> None:
+        
+        self._TILE_OFFSETS = [
+            (-1,  1), (0,  1), (1,  1),
+            (-1,  0), (1,  0),
+            (-1, -1), (0, -1), (1, -1),
+        ]
         
         self._tilemap = tilemap
         self._height = height
@@ -109,9 +118,7 @@ cdef class Pathfinder:
         if elevation is None:
             elevation = 0
             if location[1]: 
-                data = self._manager._level._walls._tilemap.get(
-                    gen_tile_key(location[0]),
-                )
+                data = self._tilemap.get(gen_tile_key(location[0]))
                 if data is not None:
                     elevation = data['height'] + data['elevation']
             self._elevations[location] = elevation
@@ -133,7 +140,7 @@ cdef class Pathfinder:
 
     cdef float _calculate(self: Self,
                           tuple location,
-                          tuple[int] offset,
+                          int[2] offset,
                           int elevation,
                           tuple neighbor,
                           float climb):
@@ -141,16 +148,15 @@ cdef class Pathfinder:
         # i know neighbor can be calculated here
         # but it is faster if it is calculated in the for loop
         # I'm aware of how weird this looks but it works
-        tilemap = self._manager._level._walls._tilemap
-        data = tilemap.get(gen_tile_key(neighbor[0]))
+        data = self._tilemap.get(gen_tile_key(neighbor[0]))
         bottom = self._get_elevation(location)
         if self._cant(data, elevation, bottom, climb):
             return 2147483647
-        elif offset in self._DIAGONAL:
-            data = tilemap.get(gen_tile_key((tile[0], tile[1] + offset[1])))
+        elif offset[0] and offset[1]:
+            data = self._tilemap.get(gen_tile_key((tile[0], tile[1] + offset[1])))
             if self._cant(data, elevation, bottom, climb):
                 return 2147483647
-            data = tilemap.get(gen_tile_key((tile[0] + offset[0], tile[1])))
+            data = self._tilemap.get(gen_tile_key((tile[0] + offset[0], tile[1])))
             if self._cant(data, elevation, bottom, climb):
                 return 2147483647
             weight = self._diagonal_weight
@@ -197,7 +203,7 @@ cdef class Pathfinder:
 
             # Check Neighbor
             for offset in self._TILE_OFFSETS:
-                if offset == (0, 0):
+                if not (offset[0] or offset[1]):
                     continue
                 for elevation in range(2): # 0 is ground; 1 is atop tile
                     neighbor = (

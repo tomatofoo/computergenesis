@@ -303,7 +303,7 @@ body.cython { font-family: courier; font-size: 12; }
 </pre><pre class="cython line score-0">&#xA0;<span class="">002</span>: </pre>
 <pre class="cython line score-0">&#xA0;<span class="">003</span>: cimport cython</pre>
 <pre class="cython line score-0">&#xA0;<span class="">004</span>: </pre>
-<pre class="cython line score-0">&#xA0;<span class="">005</span>: from libc.math cimport abs</pre>
+<pre class="cython line score-0">&#xA0;<span class="">005</span>: from libc.math cimport fabs</pre>
 <pre class="cython line score-0">&#xA0;<span class="">006</span>: from libc.math cimport floorf</pre>
 <pre class="cython line score-0">&#xA0;<span class="">007</span>: </pre>
 <pre class="cython line score-11" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">008</span>: from typing import Self</pre>
@@ -1515,8 +1515,8 @@ static int __pyx_pf_8pathfind_10Pathfinder_10greediness_2__set__(struct __pyx_ob
   <span class='trace'>__Pyx_TraceReturnCValue</span>(__pyx_r, PyFloat_FromDouble, 19, 0, <span class='error_goto'>__PYX_ERR(0, 121, __pyx_L1_error)</span>);
   goto __pyx_L0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">122</span>: </pre>
-<pre class="cython line score-8" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">123</span>:     cdef float _h(self: Self, tuple node, tuple end):</pre>
-<pre class='cython code score-8 '>static float __pyx_f_8pathfind_10Pathfinder__h(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, PyObject *__pyx_v_node, PyObject *__pyx_v_end) {
+<pre class="cython line score-5" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">123</span>:     cdef float _h(self: Self, tuple node, tuple end):</pre>
+<pre class='cython code score-5 '>static float __pyx_f_8pathfind_10Pathfinder__h(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, PyObject *__pyx_v_node, PyObject *__pyx_v_end) {
   float __pyx_r;
   <span class='trace'>__Pyx_TraceDeclarationsFunc</span>
   <span class='trace'>__Pyx_TraceFrameInit</span>(((PyObject *)__pyx_mstate_global-&gt;__pyx_codeobj_tab[24]))
@@ -1525,9 +1525,6 @@ static int __pyx_pf_8pathfind_10Pathfinder_10greediness_2__set__(struct __pyx_ob
   /* function exit code */
   __pyx_L1_error:;
   <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_1);
-  <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_2);
-  <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_3);
-  <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_4);
   <span class='trace'>__Pyx_TraceException</span>(__pyx_lineno, 0, 0);
   #if CYTHON_USE_SYS_MONITORING
   <span class='trace'>__Pyx_TraceExceptionUnwind</span>(0, 0);
@@ -1545,81 +1542,49 @@ static int __pyx_pf_8pathfind_10Pathfinder_10greediness_2__set__(struct __pyx_ob
 <pre class="cython line score-0">&#xA0;<span class="">125</span>:         # Won't give perfect path if I use this heuristic</pre>
 <pre class="cython line score-0">&#xA0;<span class="">126</span>:         # But it is fast</pre>
 <pre class="cython line score-0">&#xA0;<span class="">127</span>:         return (</pre>
-<pre class="cython line score-28" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">128</span>:             (abs(node[0][0] - end[0][0])</pre>
-<pre class='cython code score-28 '>  if (unlikely(__pyx_v_node == Py_None)) {
+<pre class="cython line score-34" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">128</span>:             (fabs(&lt;float&gt;node[0][0] - &lt;float&gt;end[0][0])</pre>
+<pre class='cython code score-34 '>  if (unlikely(__pyx_v_node == Py_None)) {
     <span class='py_c_api'>PyErr_SetString</span>(PyExc_TypeError, "'NoneType' object is not subscriptable");
     <span class='error_goto'>__PYX_ERR(0, 128, __pyx_L1_error)</span>
   }
   __pyx_t_1 = <span class='pyx_c_api'>__Pyx_GetItemInt</span>(<span class='pyx_c_api'>__Pyx_PyTuple_GET_ITEM</span>(__pyx_v_node, 0), 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_SharedReference);<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 128, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
+  __pyx_t_2 = <span class='pyx_c_api'>__Pyx_PyFloat_AsFloat</span>(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 128, __pyx_L1_error)</span>
+  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
   if (unlikely(__pyx_v_end == Py_None)) {
     <span class='py_c_api'>PyErr_SetString</span>(PyExc_TypeError, "'NoneType' object is not subscriptable");
     <span class='error_goto'>__PYX_ERR(0, 128, __pyx_L1_error)</span>
   }
-  __pyx_t_2 = <span class='pyx_c_api'>__Pyx_GetItemInt</span>(<span class='pyx_c_api'>__Pyx_PyTuple_GET_ITEM</span>(__pyx_v_end, 0), 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_SharedReference);<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 128, __pyx_L1_error)</span>
-  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_2);
-  __pyx_t_3 = <span class='py_c_api'>PyNumber_Subtract</span>(__pyx_t_1, __pyx_t_2);<span class='error_goto'> if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 128, __pyx_L1_error)</span>
-  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_3);
+  __pyx_t_1 = <span class='pyx_c_api'>__Pyx_GetItemInt</span>(<span class='pyx_c_api'>__Pyx_PyTuple_GET_ITEM</span>(__pyx_v_end, 0), 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_SharedReference);<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 128, __pyx_L1_error)</span>
+  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
+  __pyx_t_3 = <span class='pyx_c_api'>__Pyx_PyFloat_AsFloat</span>(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 128, __pyx_L1_error)</span>
   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
-  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = <span class='pyx_c_api'>__Pyx_PyNumber_Absolute</span>(__pyx_t_3);<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 128, __pyx_L1_error)</span>
-  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_2);
-  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_3); __pyx_t_3 = 0;
-</pre><pre class="cython line score-35" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">129</span>:              + abs(node[0][1] - end[0][1]))</pre>
-<pre class='cython code score-35 '>  if (unlikely(__pyx_v_node == Py_None)) {
+</pre><pre class="cython line score-34" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">129</span>:              + fabs(&lt;float&gt;node[0][1] - &lt;float&gt;end[0][1]))</pre>
+<pre class='cython code score-34 '>  if (unlikely(__pyx_v_node == Py_None)) {
     <span class='py_c_api'>PyErr_SetString</span>(PyExc_TypeError, "'NoneType' object is not subscriptable");
     <span class='error_goto'>__PYX_ERR(0, 129, __pyx_L1_error)</span>
   }
-  __pyx_t_3 = <span class='pyx_c_api'>__Pyx_GetItemInt</span>(<span class='pyx_c_api'>__Pyx_PyTuple_GET_ITEM</span>(__pyx_v_node, 0), 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_SharedReference);<span class='error_goto'> if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 129, __pyx_L1_error)</span>
-  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_3);
+  __pyx_t_1 = <span class='pyx_c_api'>__Pyx_GetItemInt</span>(<span class='pyx_c_api'>__Pyx_PyTuple_GET_ITEM</span>(__pyx_v_node, 0), 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_SharedReference);<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 129, __pyx_L1_error)</span>
+  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
+  __pyx_t_4 = <span class='pyx_c_api'>__Pyx_PyFloat_AsFloat</span>(__pyx_t_1); if (unlikely((__pyx_t_4 == (float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 129, __pyx_L1_error)</span>
+  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
   if (unlikely(__pyx_v_end == Py_None)) {
     <span class='py_c_api'>PyErr_SetString</span>(PyExc_TypeError, "'NoneType' object is not subscriptable");
     <span class='error_goto'>__PYX_ERR(0, 129, __pyx_L1_error)</span>
   }
   __pyx_t_1 = <span class='pyx_c_api'>__Pyx_GetItemInt</span>(<span class='pyx_c_api'>__Pyx_PyTuple_GET_ITEM</span>(__pyx_v_end, 0), 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_SharedReference);<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 129, __pyx_L1_error)</span>
   <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
-  __pyx_t_4 = <span class='py_c_api'>PyNumber_Subtract</span>(__pyx_t_3, __pyx_t_1);<span class='error_goto'> if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 129, __pyx_L1_error)</span>
-  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
-  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_5 = <span class='pyx_c_api'>__Pyx_PyFloat_AsFloat</span>(__pyx_t_1); if (unlikely((__pyx_t_5 == (float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 129, __pyx_L1_error)</span>
   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = <span class='pyx_c_api'>__Pyx_PyNumber_Absolute</span>(__pyx_t_4);<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 129, __pyx_L1_error)</span>
-  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
-  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = <span class='py_c_api'>PyNumber_Add</span>(__pyx_t_2, __pyx_t_1);<span class='error_goto'> if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 129, __pyx_L1_error)</span>
-  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
-  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
-  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
-</pre><pre class="cython line score-12" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">130</span>:             * self._straight_weight</pre>
-<pre class='cython code score-12 '>  __pyx_t_1 = <span class='py_c_api'>PyFloat_FromDouble</span>(__pyx_v_self-&gt;_straight_weight);<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 130, __pyx_L1_error)</span>
-  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
-  __pyx_t_2 = <span class='py_c_api'>PyNumber_Multiply</span>(__pyx_t_4, __pyx_t_1);<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 130, __pyx_L1_error)</span>
-  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_2);
-  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_4); __pyx_t_4 = 0;
-  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
-</pre><pre class="cython line score-7" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">131</span>:             + abs(</pre>
-<pre class='cython code score-7 '>  __pyx_t_7 = fabsf((__pyx_t_5 - __pyx_t_6)); 
-/* … */
-  __pyx_t_4 = <span class='py_c_api'>PyNumber_Add</span>(__pyx_t_2, __pyx_t_1);<span class='error_goto'> if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 131, __pyx_L1_error)</span>
-  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
-  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
-  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
-</pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">132</span>:                 self._get_elevation(node)</pre>
-<pre class='cython code score-0 '>  __pyx_t_5 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_get_elevation(__pyx_v_self, __pyx_v_node);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 132, __pyx_L1_error)</span>
+</pre><pre class="cython line score-0">&#xA0;<span class="">130</span>:             * self._straight_weight</pre>
+<pre class="cython line score-0">&#xA0;<span class="">131</span>:             + fabs(</pre>
+<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">132</span>:                 self._get_elevation(node)</pre>
+<pre class='cython code score-0 '>  __pyx_t_6 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_get_elevation(__pyx_v_self, __pyx_v_node);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 132, __pyx_L1_error)</span>
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">133</span>:                 - self._get_elevation(end)</pre>
-<pre class='cython code score-0 '>  __pyx_t_6 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_get_elevation(__pyx_v_self, __pyx_v_end);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 133, __pyx_L1_error)</span>
-</pre><pre class="cython line score-5" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">134</span>:             ) * self._elevation_weight</pre>
-<pre class='cython code score-5 '>  __pyx_t_1 = <span class='py_c_api'>PyFloat_FromDouble</span>((__pyx_t_7 * __pyx_v_self-&gt;_elevation_weight));<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 134, __pyx_L1_error)</span>
-  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
-</pre><pre class="cython line score-20" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">135</span>:         ) * self._greediness</pre>
-<pre class='cython code score-20 '>  __pyx_t_1 = <span class='py_c_api'>PyFloat_FromDouble</span>(__pyx_v_self-&gt;_greediness);<span class='error_goto'> if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 135, __pyx_L1_error)</span>
-  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_1);
-  __pyx_t_2 = <span class='py_c_api'>PyNumber_Multiply</span>(__pyx_t_4, __pyx_t_1);<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 135, __pyx_L1_error)</span>
-  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_2);
-  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_4); __pyx_t_4 = 0;
-  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_7 = <span class='pyx_c_api'>__Pyx_PyFloat_AsFloat</span>(__pyx_t_2); if (unlikely((__pyx_t_7 == (float)-1) &amp;&amp; <span class='py_c_api'>PyErr_Occurred</span>())) <span class='error_goto'>__PYX_ERR(0, 135, __pyx_L1_error)</span>
-  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_r = __pyx_t_7;
+<pre class='cython code score-0 '>  __pyx_t_7 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_get_elevation(__pyx_v_self, __pyx_v_end);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 133, __pyx_L1_error)</span>
+</pre><pre class="cython line score-0">&#xA0;<span class="">134</span>:             ) * self._elevation_weight</pre>
+<pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">135</span>:         ) * self._greediness</pre>
+<pre class='cython code score-0 '>  __pyx_r = ((((fabs((((float)__pyx_t_2) - ((float)__pyx_t_3))) + fabs((((float)__pyx_t_4) - ((float)__pyx_t_5)))) * __pyx_v_self-&gt;_straight_weight) + (fabs((__pyx_t_6 - __pyx_t_7)) * __pyx_v_self-&gt;_elevation_weight)) * __pyx_v_self-&gt;_greediness);
   <span class='trace'>__Pyx_TraceReturnCValue</span>(__pyx_r, PyFloat_FromDouble, 2, 0, <span class='error_goto'>__PYX_ERR(0, 127, __pyx_L1_error)</span>);
   goto __pyx_L0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">136</span>: </pre>
@@ -1799,7 +1764,7 @@ static int __pyx_pf_8pathfind_10Pathfinder_10greediness_2__set__(struct __pyx_ob
 <pre class='cython code score-8 '>static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, PyObject *__pyx_v_node, int *__pyx_v_offset, int __pyx_v_elevation, PyObject *__pyx_v_neighbor, float __pyx_v_climb) {
   PyObject *__pyx_v_data = 0;
   float __pyx_v_bottom;
-  PyObject *__pyx_v_tile = 0;
+  int __pyx_v_tile[2];
   double __pyx_v_weight;
   float __pyx_v_difference;
   float __pyx_r;
@@ -1809,8 +1774,9 @@ static int __pyx_pf_8pathfind_10Pathfinder_10greediness_2__set__(struct __pyx_ob
 /* … */
   /* function exit code */
   __pyx_L1_error:;
-  <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_2);
   <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_3);
+  <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_4);
+  <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_t_7);
   <span class='trace'>__Pyx_TraceException</span>(__pyx_lineno, 0, 0);
   #if CYTHON_USE_SYS_MONITORING
   <span class='trace'>__Pyx_TraceExceptionUnwind</span>(0, 0);
@@ -1821,7 +1787,6 @@ static int __pyx_pf_8pathfind_10Pathfinder_10greediness_2__set__(struct __pyx_ob
   __pyx_r = 0;
   __pyx_L0:;
   <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_v_data);
-  <span class='pyx_macro_api'>__Pyx_XDECREF</span>(__pyx_v_tile);
   <span class='pyx_c_api'>__Pyx_PyMonitoring_ExitScope</span>(0);
   <span class='refnanny'>__Pyx_RefNannyFinishContext</span>();
   return __pyx_r;
@@ -1836,16 +1801,13 @@ static int __pyx_pf_8pathfind_10Pathfinder_10greediness_2__set__(struct __pyx_ob
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">171</span>:             float bottom = self._get_elevation(node)</pre>
 <pre class='cython code score-0 '>  __pyx_t_1 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_get_elevation(__pyx_v_self, __pyx_v_node);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 171, __pyx_L1_error)</span>
   __pyx_v_bottom = __pyx_t_1;
-</pre><pre class="cython line score-15" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">172</span>:             tuple tile = node[0]</pre>
-<pre class='cython code score-15 '>  if (unlikely(__pyx_v_node == Py_None)) {
+</pre><pre class="cython line score-7" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">172</span>:             int[2] tile = node[0]</pre>
+<pre class='cython code score-7 '>  if (unlikely(__pyx_v_node == Py_None)) {
     <span class='py_c_api'>PyErr_SetString</span>(PyExc_TypeError, "'NoneType' object is not subscriptable");
     <span class='error_goto'>__PYX_ERR(0, 172, __pyx_L1_error)</span>
   }
-  __pyx_t_2 = <span class='pyx_c_api'>__Pyx_PyTuple_GET_ITEM</span>(__pyx_v_node, 0);
-  <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_2);
-  if (!(likely(<span class='py_c_api'>PyTuple_CheckExact</span>(__pyx_t_2))||((__pyx_t_2) == Py_None) || <span class='pyx_c_api'>__Pyx_RaiseUnexpectedTypeError</span>("tuple", __pyx_t_2))) <span class='error_goto'>__PYX_ERR(0, 172, __pyx_L1_error)</span>
-  __pyx_v_tile = ((PyObject*)__pyx_t_2);
-  __pyx_t_2 = 0;
+  if (unlikely((__Pyx_carray_from_py_int(<span class='pyx_c_api'>__Pyx_PyTuple_GET_ITEM</span>(__pyx_v_node, 0), __pyx_t_2, 2) &lt; 0))) <span class='error_goto'>__PYX_ERR(0, 172, __pyx_L1_error)</span>
+  memcpy(&amp;(__pyx_v_tile[0]), __pyx_t_2, sizeof(__pyx_v_tile[0]) * (2));
 </pre><pre class="cython line score-0">&#xA0;<span class="">173</span>:         # i know neighbor can be calculated here</pre>
 <pre class="cython line score-0">&#xA0;<span class="">174</span>:         # but it is faster if it is calculated in the for loop</pre>
 <pre class="cython line score-0">&#xA0;<span class="">175</span>:         # I'm aware of how weird this looks but it works</pre>
@@ -1858,19 +1820,19 @@ static int __pyx_pf_8pathfind_10Pathfinder_10greediness_2__set__(struct __pyx_ob
     <span class='py_c_api'>PyErr_SetString</span>(PyExc_TypeError, "'NoneType' object is not subscriptable");
     <span class='error_goto'>__PYX_ERR(0, 176, __pyx_L1_error)</span>
   }
-  __pyx_t_2 = <span class='pyx_c_api'>__Pyx_PyTuple_GET_ITEM</span>(__pyx_v_neighbor, 0);
-  <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_2);
-  __pyx_t_3 = __pyx_f_8pathfind_gen_tile_key(__pyx_t_2);<span class='error_goto'> if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 176, __pyx_L1_error)</span>
-  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_3);
-  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = <span class='pyx_c_api'>__Pyx_PyDict_GetItemDefault</span>(__pyx_v_self-&gt;_tilemap, __pyx_t_3, Py_None);<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 176, __pyx_L1_error)</span>
-  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_2);
+  __pyx_t_3 = <span class='pyx_c_api'>__Pyx_PyTuple_GET_ITEM</span>(__pyx_v_neighbor, 0);
+  <span class='pyx_macro_api'>__Pyx_INCREF</span>(__pyx_t_3);
+  __pyx_t_4 = __pyx_f_8pathfind_gen_tile_key(__pyx_t_3);<span class='error_goto'> if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 176, __pyx_L1_error)</span>
+  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
   <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_v_data = __pyx_t_2;
-  __pyx_t_2 = 0;
+  __pyx_t_3 = <span class='pyx_c_api'>__Pyx_PyDict_GetItemDefault</span>(__pyx_v_self-&gt;_tilemap, __pyx_t_4, Py_None);<span class='error_goto'> if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 176, __pyx_L1_error)</span>
+  <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_3);
+  <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_v_data = __pyx_t_3;
+  __pyx_t_3 = 0;
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">177</span>:         if self._cant(data, elevation, bottom, climb):</pre>
-<pre class='cython code score-0 '>  __pyx_t_4 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_cant(__pyx_v_self, __pyx_v_data, __pyx_v_elevation, __pyx_v_bottom, __pyx_v_climb);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 177, __pyx_L1_error)</span>
-  if (__pyx_t_4) {
+<pre class='cython code score-0 '>  __pyx_t_5 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_cant(__pyx_v_self, __pyx_v_data, __pyx_v_elevation, __pyx_v_bottom, __pyx_v_climb);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 177, __pyx_L1_error)</span>
+  if (__pyx_t_5) {
 /* … */
   }
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">178</span>:             return 2147483647</pre>
@@ -1878,16 +1840,16 @@ static int __pyx_pf_8pathfind_10Pathfinder_10greediness_2__set__(struct __pyx_ob
     <span class='trace'>__Pyx_TraceReturnCValue</span>(__pyx_r, PyFloat_FromDouble, 29, 0, <span class='error_goto'>__PYX_ERR(0, 178, __pyx_L1_error)</span>);
     goto __pyx_L0;
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">179</span>:         elif offset[0] and offset[1]:</pre>
-<pre class='cython code score-0 '>  __pyx_t_5 = ((__pyx_v_offset[0]) != 0);
-  if (__pyx_t_5) {
+<pre class='cython code score-0 '>  __pyx_t_6 = ((__pyx_v_offset[0]) != 0);
+  if (__pyx_t_6) {
   } else {
-    __pyx_t_4 = __pyx_t_5;
+    __pyx_t_5 = __pyx_t_6;
     goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_5 = ((__pyx_v_offset[1]) != 0);
-  __pyx_t_4 = __pyx_t_5;
+  __pyx_t_6 = ((__pyx_v_offset[1]) != 0);
+  __pyx_t_5 = __pyx_t_6;
   __pyx_L4_bool_binop_done:;
-  if (__pyx_t_4) {
+  if (__pyx_t_5) {
 /* … */
     goto __pyx_L3;
   }
@@ -1897,40 +1859,31 @@ static int __pyx_pf_8pathfind_10Pathfinder_10greediness_2__set__(struct __pyx_ob
       <span class='error_goto'>__PYX_ERR(0, 180, __pyx_L1_error)</span>
     }
 /* … */
-    __pyx_t_2 = <span class='pyx_c_api'>__Pyx_PyDict_GetItemDefault</span>(__pyx_v_self-&gt;_tilemap, __pyx_t_3, Py_None);<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 180, __pyx_L1_error)</span>
-    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_2);
-    <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_3); __pyx_t_3 = 0;
-    <span class='pyx_macro_api'>__Pyx_DECREF_SET</span>(__pyx_v_data, __pyx_t_2);
-    __pyx_t_2 = 0;
-</pre><pre class="cython line score-37" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">181</span>:                 gen_tile_key((tile[0], tile[1] + offset[1])),</pre>
-<pre class='cython code score-37 '>    if (unlikely(__pyx_v_tile == Py_None)) {
-      <span class='py_c_api'>PyErr_SetString</span>(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      <span class='error_goto'>__PYX_ERR(0, 181, __pyx_L1_error)</span>
-    }
-    if (unlikely(__pyx_v_tile == Py_None)) {
-      <span class='py_c_api'>PyErr_SetString</span>(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      <span class='error_goto'>__PYX_ERR(0, 181, __pyx_L1_error)</span>
-    }
-    __pyx_t_2 = <span class='pyx_c_api'>__Pyx_PyLong_From_int</span>((__pyx_v_offset[1]));<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 181, __pyx_L1_error)</span>
-    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_2);
-    __pyx_t_3 = <span class='py_c_api'>PyNumber_Add</span>(<span class='pyx_c_api'>__Pyx_PyTuple_GET_ITEM</span>(__pyx_v_tile, 1), __pyx_t_2);<span class='error_goto'> if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 181, __pyx_L1_error)</span>
+    __pyx_t_7 = <span class='pyx_c_api'>__Pyx_PyDict_GetItemDefault</span>(__pyx_v_self-&gt;_tilemap, __pyx_t_4, Py_None);<span class='error_goto'> if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 180, __pyx_L1_error)</span>
+    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_7);
+    <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_4); __pyx_t_4 = 0;
+    <span class='pyx_macro_api'>__Pyx_DECREF_SET</span>(__pyx_v_data, __pyx_t_7);
+    __pyx_t_7 = 0;
+</pre><pre class="cython line score-14" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">181</span>:                 gen_tile_key((tile[0], tile[1] + offset[1])),</pre>
+<pre class='cython code score-14 '>    __pyx_t_3 = <span class='pyx_c_api'>__Pyx_PyLong_From_int</span>((__pyx_v_tile[0]));<span class='error_goto'> if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 181, __pyx_L1_error)</span>
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_3);
-    <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = <span class='py_c_api'>PyTuple_New</span>(2);<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 181, __pyx_L1_error)</span>
-    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_2);
-    <span class='pyx_macro_api'>__Pyx_INCREF</span>(<span class='pyx_c_api'>__Pyx_PyTuple_GET_ITEM</span>(__pyx_v_tile, 0));
-    <span class='refnanny'>__Pyx_GIVEREF</span>(<span class='pyx_c_api'>__Pyx_PyTuple_GET_ITEM</span>(__pyx_v_tile, 0));
-    if (<span class='pyx_c_api'>__Pyx_PyTuple_SET_ITEM</span>(__pyx_t_2, 0, <span class='pyx_c_api'>__Pyx_PyTuple_GET_ITEM</span>(__pyx_v_tile, 0)) != (0)) <span class='error_goto'>__PYX_ERR(0, 181, __pyx_L1_error)</span>;
+    __pyx_t_4 = <span class='pyx_c_api'>__Pyx_PyLong_From_int</span>(((__pyx_v_tile[1]) + (__pyx_v_offset[1])));<span class='error_goto'> if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 181, __pyx_L1_error)</span>
+    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
+    __pyx_t_7 = <span class='py_c_api'>PyTuple_New</span>(2);<span class='error_goto'> if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 181, __pyx_L1_error)</span>
+    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_7);
     <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_t_3);
-    if (<span class='pyx_c_api'>__Pyx_PyTuple_SET_ITEM</span>(__pyx_t_2, 1, __pyx_t_3) != (0)) <span class='error_goto'>__PYX_ERR(0, 181, __pyx_L1_error)</span>;
+    if (<span class='pyx_c_api'>__Pyx_PyTuple_SET_ITEM</span>(__pyx_t_7, 0, __pyx_t_3) != (0)) <span class='error_goto'>__PYX_ERR(0, 181, __pyx_L1_error)</span>;
+    <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_t_4);
+    if (<span class='pyx_c_api'>__Pyx_PyTuple_SET_ITEM</span>(__pyx_t_7, 1, __pyx_t_4) != (0)) <span class='error_goto'>__PYX_ERR(0, 181, __pyx_L1_error)</span>;
     __pyx_t_3 = 0;
-    __pyx_t_3 = __pyx_f_8pathfind_gen_tile_key(__pyx_t_2);<span class='error_goto'> if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 181, __pyx_L1_error)</span>
-    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_3);
-    <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
+    __pyx_t_4 = 0;
+    __pyx_t_4 = __pyx_f_8pathfind_gen_tile_key(__pyx_t_7);<span class='error_goto'> if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 181, __pyx_L1_error)</span>
+    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
+    <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_7); __pyx_t_7 = 0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">182</span>:             )</pre>
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">183</span>:             if self._cant(data, elevation, bottom, climb):</pre>
-<pre class='cython code score-0 '>    __pyx_t_4 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_cant(__pyx_v_self, __pyx_v_data, __pyx_v_elevation, __pyx_v_bottom, __pyx_v_climb);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 183, __pyx_L1_error)</span>
-    if (__pyx_t_4) {
+<pre class='cython code score-0 '>    __pyx_t_5 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_cant(__pyx_v_self, __pyx_v_data, __pyx_v_elevation, __pyx_v_bottom, __pyx_v_climb);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 183, __pyx_L1_error)</span>
+    if (__pyx_t_5) {
 /* … */
     }
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">184</span>:                 return 2147483647</pre>
@@ -1943,40 +1896,31 @@ static int __pyx_pf_8pathfind_10Pathfinder_10greediness_2__set__(struct __pyx_ob
       <span class='error_goto'>__PYX_ERR(0, 185, __pyx_L1_error)</span>
     }
 /* … */
-    __pyx_t_2 = <span class='pyx_c_api'>__Pyx_PyDict_GetItemDefault</span>(__pyx_v_self-&gt;_tilemap, __pyx_t_3, Py_None);<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 185, __pyx_L1_error)</span>
-    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_2);
-    <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_3); __pyx_t_3 = 0;
-    <span class='pyx_macro_api'>__Pyx_DECREF_SET</span>(__pyx_v_data, __pyx_t_2);
-    __pyx_t_2 = 0;
-</pre><pre class="cython line score-37" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">186</span>:                 gen_tile_key((tile[0] + offset[0], tile[1])),</pre>
-<pre class='cython code score-37 '>    if (unlikely(__pyx_v_tile == Py_None)) {
-      <span class='py_c_api'>PyErr_SetString</span>(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      <span class='error_goto'>__PYX_ERR(0, 186, __pyx_L1_error)</span>
-    }
-    __pyx_t_2 = <span class='pyx_c_api'>__Pyx_PyLong_From_int</span>((__pyx_v_offset[0]));<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 186, __pyx_L1_error)</span>
-    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_2);
-    __pyx_t_3 = <span class='py_c_api'>PyNumber_Add</span>(<span class='pyx_c_api'>__Pyx_PyTuple_GET_ITEM</span>(__pyx_v_tile, 0), __pyx_t_2);<span class='error_goto'> if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 186, __pyx_L1_error)</span>
+    __pyx_t_3 = <span class='pyx_c_api'>__Pyx_PyDict_GetItemDefault</span>(__pyx_v_self-&gt;_tilemap, __pyx_t_4, Py_None);<span class='error_goto'> if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 185, __pyx_L1_error)</span>
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_3);
-    <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(__pyx_v_tile == Py_None)) {
-      <span class='py_c_api'>PyErr_SetString</span>(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      <span class='error_goto'>__PYX_ERR(0, 186, __pyx_L1_error)</span>
-    }
-    __pyx_t_2 = <span class='py_c_api'>PyTuple_New</span>(2);<span class='error_goto'> if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 186, __pyx_L1_error)</span>
-    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_2);
-    <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_t_3);
-    if (<span class='pyx_c_api'>__Pyx_PyTuple_SET_ITEM</span>(__pyx_t_2, 0, __pyx_t_3) != (0)) <span class='error_goto'>__PYX_ERR(0, 186, __pyx_L1_error)</span>;
-    <span class='pyx_macro_api'>__Pyx_INCREF</span>(<span class='pyx_c_api'>__Pyx_PyTuple_GET_ITEM</span>(__pyx_v_tile, 1));
-    <span class='refnanny'>__Pyx_GIVEREF</span>(<span class='pyx_c_api'>__Pyx_PyTuple_GET_ITEM</span>(__pyx_v_tile, 1));
-    if (<span class='pyx_c_api'>__Pyx_PyTuple_SET_ITEM</span>(__pyx_t_2, 1, <span class='pyx_c_api'>__Pyx_PyTuple_GET_ITEM</span>(__pyx_v_tile, 1)) != (0)) <span class='error_goto'>__PYX_ERR(0, 186, __pyx_L1_error)</span>;
+    <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_4); __pyx_t_4 = 0;
+    <span class='pyx_macro_api'>__Pyx_DECREF_SET</span>(__pyx_v_data, __pyx_t_3);
     __pyx_t_3 = 0;
-    __pyx_t_3 = __pyx_f_8pathfind_gen_tile_key(__pyx_t_2);<span class='error_goto'> if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 186, __pyx_L1_error)</span>
+</pre><pre class="cython line score-14" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">186</span>:                 gen_tile_key((tile[0] + offset[0], tile[1])),</pre>
+<pre class='cython code score-14 '>    __pyx_t_7 = <span class='pyx_c_api'>__Pyx_PyLong_From_int</span>(((__pyx_v_tile[0]) + (__pyx_v_offset[0])));<span class='error_goto'> if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 186, __pyx_L1_error)</span>
+    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_7);
+    __pyx_t_4 = <span class='pyx_c_api'>__Pyx_PyLong_From_int</span>((__pyx_v_tile[1]));<span class='error_goto'> if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 186, __pyx_L1_error)</span>
+    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
+    __pyx_t_3 = <span class='py_c_api'>PyTuple_New</span>(2);<span class='error_goto'> if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 186, __pyx_L1_error)</span>
     <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_3);
-    <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_2); __pyx_t_2 = 0;
+    <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_t_7);
+    if (<span class='pyx_c_api'>__Pyx_PyTuple_SET_ITEM</span>(__pyx_t_3, 0, __pyx_t_7) != (0)) <span class='error_goto'>__PYX_ERR(0, 186, __pyx_L1_error)</span>;
+    <span class='refnanny'>__Pyx_GIVEREF</span>(__pyx_t_4);
+    if (<span class='pyx_c_api'>__Pyx_PyTuple_SET_ITEM</span>(__pyx_t_3, 1, __pyx_t_4) != (0)) <span class='error_goto'>__PYX_ERR(0, 186, __pyx_L1_error)</span>;
+    __pyx_t_7 = 0;
+    __pyx_t_4 = 0;
+    __pyx_t_4 = __pyx_f_8pathfind_gen_tile_key(__pyx_t_3);<span class='error_goto'> if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 186, __pyx_L1_error)</span>
+    <span class='refnanny'>__Pyx_GOTREF</span>(__pyx_t_4);
+    <span class='pyx_macro_api'>__Pyx_DECREF</span>(__pyx_t_3); __pyx_t_3 = 0;
 </pre><pre class="cython line score-0">&#xA0;<span class="">187</span>:             )</pre>
 <pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">188</span>:             if self._cant(data, elevation, bottom, climb):</pre>
-<pre class='cython code score-0 '>    __pyx_t_4 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_cant(__pyx_v_self, __pyx_v_data, __pyx_v_elevation, __pyx_v_bottom, __pyx_v_climb);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 188, __pyx_L1_error)</span>
-    if (__pyx_t_4) {
+<pre class='cython code score-0 '>    __pyx_t_5 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_cant(__pyx_v_self, __pyx_v_data, __pyx_v_elevation, __pyx_v_bottom, __pyx_v_climb);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 188, __pyx_L1_error)</span>
+    if (__pyx_t_5) {
 /* … */
     }
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">189</span>:                 return 2147483647</pre>
@@ -1997,16 +1941,16 @@ static int __pyx_pf_8pathfind_10Pathfinder_10greediness_2__set__(struct __pyx_ob
 <pre class='cython code score-0 '>  __pyx_t_1 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self-&gt;__pyx_vtab)-&gt;_get_elevation(__pyx_v_self, __pyx_v_neighbor);<span class='error_goto'> if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 193, __pyx_L1_error)</span>
   __pyx_v_difference = (__pyx_t_1 - __pyx_v_bottom);
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">194</span>:         if difference &lt; 0:</pre>
-<pre class='cython code score-0 '>  __pyx_t_4 = (__pyx_v_difference &lt; 0.0);
-  if (__pyx_t_4) {
+<pre class='cython code score-0 '>  __pyx_t_5 = (__pyx_v_difference &lt; 0.0);
+  if (__pyx_t_5) {
 /* … */
     goto __pyx_L8;
   }
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">195</span>:             weight -= difference * self._elevation_weight</pre>
 <pre class='cython code score-0 '>    __pyx_v_weight = (__pyx_v_weight - (__pyx_v_difference * __pyx_v_self-&gt;_elevation_weight));
 </pre><pre class="cython line score-0" onclick="(function(f,s,c){c=f.nodeValue=='+';s.display=c?'block':'none';f.nodeValue=c?'−':'+'})(this.firstChild,this.nextElementSibling.style)">+<span class="">196</span>:         elif difference &gt; self._climb:</pre>
-<pre class='cython code score-0 '>  __pyx_t_4 = (__pyx_v_difference &gt; __pyx_v_self-&gt;_climb);
-  if (__pyx_t_4) {
+<pre class='cython code score-0 '>  __pyx_t_5 = (__pyx_v_difference &gt; __pyx_v_self-&gt;_climb);
+  if (__pyx_t_5) {
 /* … */
   }
   __pyx_L8:;

@@ -2,7 +2,7 @@
 
 cimport cython
 
-from libc.math cimport abs
+from libc.math cimport fabs
 from libc.math cimport floorf
 
 from typing import Self
@@ -125,10 +125,10 @@ cdef class Pathfinder:
         # Won't give perfect path if I use this heuristic
         # But it is fast
         return (
-            (abs(node[0][0] - end[0][0])
-             + abs(node[0][1] - end[0][1]))
+            (fabs(<float>node[0][0] - <float>end[0][0])
+             + fabs(<float>node[0][1] - <float>end[0][1]))
             * self._straight_weight
-            + abs(
+            + fabs(
                 self._get_elevation(node)
                 - self._get_elevation(end)
             ) * self._elevation_weight
@@ -169,7 +169,7 @@ cdef class Pathfinder:
         cdef:
             object data
             float bottom = self._get_elevation(node)
-            tuple tile = node[0]
+            int[2] tile = node[0]
         # i know neighbor can be calculated here
         # but it is faster if it is calculated in the for loop
         # I'm aware of how weird this looks but it works

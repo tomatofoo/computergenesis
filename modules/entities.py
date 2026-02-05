@@ -326,7 +326,7 @@ class Entity(object):
             (self._yaw_value
              - (self._manager._player._pos - self._pos).angle
              + self._texture_angle / 2
-             - 90)
+             + 90)
             % 360
             // self._texture_angle
         )
@@ -717,7 +717,7 @@ class EntityEx(Entity):
             (self._yaw_value
              - (self._manager._player._pos - self._pos).angle
              + texture_angle / 2
-             - 90)
+             + 90)
             % 360
             // texture_angle
         )
@@ -731,6 +731,7 @@ class EntityEx(Entity):
  # 'stalking' is doom-style pathfinding, while 'approaching' is A*
 class Enemy(EntityEx):
     def __init__(self: Self,
+                 enemy: Optional[Entity] | int=-1, # -1 means player
                  pos: Point=(0, 0),
                  elevation: Real=0,
                  width: Real=0.5,
@@ -738,6 +739,12 @@ class Enemy(EntityEx):
                  health: Real=100,
                  climb: Real=0.2,
                  gravity: Real=0,
+                 stalk_speed: Real=0.02,
+                 stalk_time: Real=90,
+                 stalk_directions: int=8,
+                 max_stalk_turn: Real=60,
+                 min_approach_radius: Real=1,
+                 max_approach_radius: Real=2,
                  states: dict[str, EntityExState]={
                      'default': EntityExState(),
                      'stalking': EntityExState(),
@@ -763,12 +770,93 @@ class Enemy(EntityEx):
             render_width=render_width,
             render_height=render_height,
         )
+        self._enemy = enemy # the entity to stalk
+        self._stalk_speed = stalk_speed
+        self._stalk_time = 60
+        self._stalk_timer = 0
+        self._stalk_directions = stalk_directions
+        self._max_stalk_turn = max_stalk_turn
+        self._approach_radii = [min_approach_radius, max_approach_radius]
+
+    @property
+    def enemy(self: Self) -> Optional[Entity]:
+        return self._enemy
+
+    @enemy.setter
+    def enemy(self: Self, value: Optional[Entity]) -> None:
+        self._enemy = value
+
+    @property
+    def stalk_speed(self: Self) -> Real:
+        return self._stalk_speed
+
+    @stalk_speed.setter
+    def stalk_speed(self: Self, value: Real) -> None:
+        self._stalk_speed = value
+
+    @property
+    def stalk_time(self: Self) -> Real:
+        return self._stalk_time
+
+    @stalk_time.setter
+    def stalk_time(self: Self, value: Real) -> None:
+        self._stalk_time = value
+
+    @property
+    def stalk_directions(self: Self) -> int:
+        return self._stalk_directions
+
+    @stalk_directions.setter
+    def stalk_directions(self: Self, value: int) -> None:
+        self._stalk_directions = value
+
+    @property
+    def max_stalk_turn(self: Self) -> Real:
+        return self._max_stalk_turn
+
+    @max_stalk_turn.setter
+    def max_stalk_turn(self: Self, value: Real) -> None:
+        self._max_stalk_turn = value
+
+    @property
+    def min_approach_radius(self: Self) -> Real:
+        return self._approach_radii[0]
+
+    @min_approach_radius.setter
+    def min_approach_radius(self: Self, value: Real) -> None:
+        self._approach_radii[0] = value
+
+    @property
+    def max_approach_radius(self: Self) -> Real:
+        return self._approach_radii[1]
+
+    @max_approach_radius.setter
+    def max_approach_radius(self: Self, value: Real) -> None:
+        self._approach_radii[1] = value
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
-        if self._state == 'stalking':
-            pass
-        elif self._state == 'approaching':
-            pass
+        if self._enemy is not None:
+            enemy = self._enemy
+            if enemy == -1:
+                enemy = self._manager._player
+            if self._state == 'stalking': # doom-style movement
+                # choose one of the set directions
+                self._stalk_timer -= rel_game_speed
+                if self._stalk_timer <= 0:
+                    stalk_angle = 360 / self._stalk_directions
+                    turn = pg.math.clamp(
+                        ((self._pos - enemy._pos).angle
+                         + stalk_angle / 2
+                         + 90
+                         - self._yaw_value),
+                        -self._max_stalk_turn,
+                        self._max_stalk_turn,
+                    ) // stalk_angle * stalk_angle
+                    self.yaw = (self._yaw_value + turn) % 360
+                    self._velocity2 = self._yaw * self._stalk_speed
+                    self._stalk_timer = self._stalk_time
+            elif self._state == 'approaching': # A* pathfinding
+                pass
         super().update(rel_game_speed, level_timer)
 
 

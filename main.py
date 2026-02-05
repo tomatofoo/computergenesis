@@ -13,6 +13,7 @@ from data.weapons import SOUNDS
 from data.weapons import WEAPONS
 from data.levels import LEVELS
 from data.levels import TEST
+from data.levels import ENEMY
 from modules.camera import Camera
 from modules.hud import HUDElement
 from modules.hud import HUD
@@ -238,6 +239,9 @@ class Game(object):
         sliding = 0
         crouching = 0
         
+        # ENEMY
+        ENEMY.state = 'stalking'
+
         # PATH
         path = []
 

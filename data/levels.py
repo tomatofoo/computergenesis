@@ -14,6 +14,7 @@ from modules.level import Level
 from modules.entities import Entity
 from modules.entities import EntityExState
 from modules.entities import EntityEx
+from modules.entities import Enemy
 from modules.entities import WeaponItem
 from modules.entities import Player
 from modules.entities import EntityManager
@@ -80,12 +81,28 @@ for animation in textures:
 TEST = EntityEx( # FOR PATHFINDING
     pos=(6.5, 0.5),
     elevation=1,
-    width=0.25,
+    width=0.4,
     height=0.6,
     climb=0.5,
     attack_width=0.4,
     render_width=0.6,
     states={'default': EntityExState(textures, 60)},
+)
+
+ENEMY = Enemy(
+    pos=(8.5, 0.5),
+    elevation=1,
+    width=0.4,
+    height=0.6,
+    climb=0.5,
+    attack_width=0.4,
+    render_width=0.6,
+    states={
+        'default': EntityExState(textures, 60),
+        'stalking': EntityExState(textures, 60),
+        'approaching': EntityExState(textures, 60),
+    },
+    gravity=0.004,
 )
 
 entities = {
@@ -150,6 +167,7 @@ entities = {
         textures=[pg.image.load(gen_img_path('GrenadeZombie.png'))],
     ),
     TEST,
+    ENEMY,
     WeaponItem(
         weapon=WEAPONS['shotgun'],
         number=5,

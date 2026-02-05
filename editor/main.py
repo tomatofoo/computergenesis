@@ -1,5 +1,3 @@
-import os
-import sys
 import time
 import math
 import json
@@ -8,7 +6,6 @@ from typing import Self
 
 import pygame as pg
 
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from data.levels import LEVELS
 from modules.utils import FALLBACK_SURF
 from modules.utils import gen_tile_key

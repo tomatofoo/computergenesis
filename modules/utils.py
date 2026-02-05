@@ -1,3 +1,4 @@
+import os
 import math
 from numbers import Number
 from numbers import Real
@@ -223,14 +224,14 @@ class Box(object): # 3D Box
 def gen_tile_key(obj: Point):
     return f'{int(math.floor(obj[0]))};{int(math.floor(obj[1]))}'
 
-def gen_img_path(path: str):
-    return f'data/images/{path}'
+def gen_img_path(*args: str):
+    return os.path.join('data', 'images', *args)
 
-def gen_sfx_path(path: str):
-    return f'data/audio/sfx/{path}'
+def gen_sfx_path(*args: str):
+    return os.path.join('data', 'audio', 'sfx', *args)
 
-def gen_mus_path(path: str):
-    return f'data/audio/music/{path}'
+def gen_mus_path(*args: strs):
+    return os.path.join('data', 'audio', 'music', *args)
 
 
 def generate_composite(tilemap: dict[str, int],

@@ -242,6 +242,11 @@ def gen_sfx_path(*args: str):
 def gen_mus_path(*args: strs):
     return gen_data_path('audio', 'music', *args)
 
+def normalize_degrees(angle: Real) -> Real:
+    return (angle + 180) % 360 - 180
+
+def normalize_radians(angle: Real) -> Real:
+    return (angle + math.pi) % math.tau - math.pi
 
 def generate_composite(tilemap: dict[str, int],
                        textures: tuple[pg.Surface],

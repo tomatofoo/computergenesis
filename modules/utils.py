@@ -1,4 +1,5 @@
 import os
+import sys
 import math
 from numbers import Number
 from numbers import Real
@@ -229,7 +230,7 @@ def gen_data_path(*args: str):
     if getattr(sys, 'frozen', False):
         directory = sys.prefix
     else:
-        directory = os.path.dirname(__file__)
+        directory = os.getcwd()
     return os.path.join(directory, 'data', *args)
 
 def gen_img_path(*args: str):

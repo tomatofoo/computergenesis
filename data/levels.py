@@ -14,7 +14,6 @@ from modules.level import Level
 from modules.entities import Entity
 from modules.entities import EntityExState
 from modules.entities import EntityEx
-from modules.entities import PathfinderEntity
 from modules.entities import WeaponItem
 from modules.entities import Player
 from modules.entities import EntityManager

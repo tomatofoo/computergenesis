@@ -729,7 +729,7 @@ class EntityEx(Entity):
 
 
  # 'stalking' is doom-style pathfinding, while 'approaching' is A*
-class Enemy(EntiytEx):
+class Enemy(EntityEx):
     def __init__(self: Self,
                  pos: Point=(0, 0),
                  elevation: Real=0,

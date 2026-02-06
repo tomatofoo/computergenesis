@@ -201,9 +201,9 @@ class Toggle(_Widget):
         toggled_hover = pg.Surface(text.size)
         toggled_hover.fill((255, 0, 0))
         self._surfs = (untoggled, untoggled_hover, toggled, toggled_hover)
-
-        for surf in self._surfs:
-            surf.blit(text, (0, 0))
+        
+        toggled.blit(text, (0, 0))
+        toggled_hover.blit(text, (0, 0))
 
     def handle_event(self: Self, event: pg.Event) -> None:
         if (event.type == pg.MOUSEBUTTONDOWN

@@ -145,6 +145,79 @@ class Button(_Widget): # Text Button
         if mouse_pressed[0] and collision:
             self._surf = self._surfs[2]
 
+class Toggle(_Widget):
+    # COLORS
+    # default: outline red
+    # hover: outline blue
+    # click: blue
+
+    def __init__(self: Self,
+                 pos: Point,
+                 font: pg.Font,
+                 text: str=' X ') -> None:
+
+        super().__init__(pos)
+        self._font = font
+        self.text = text
+        self._surf = self._surfs[0]
+        self._state = False
+
+    @property
+    def state(self: Self) -> bool:
+        return self._state
+
+    @state.setter
+    def state(self: Self, value: bool) -> None:
+        self._state = value
+
+    @property
+    def text(self: Self) -> str:
+        return self._text
+
+    @text.setter
+    def text(self: Self, value: str) -> None:
+        self._text = value
+        text = self._font.render(value, 1, (255, 255, 255))
+        self._rect = pg.Rect(self._pos, text.size)
+        self._rect.y = self._pos[1] + self._scroll
+        
+        # Surfs
+        untoggled = pg.Surface(text.size)
+        pg.draw.rect(
+            untoggled,
+            (0, 0, 255),
+            (0, 0, text.width, text.height),
+            width=2,
+        )
+        untoggled_hover = pg.Surface(text.size)
+        pg.draw.rect(
+            untoggled_hover,
+            (255, 0, 0),
+            (0, 0, text.width, text.height),
+            width=2,
+        )
+        toggled = pg.Surface(text.size)
+        toggled.fill((0, 0, 255))
+        toggled_hover = pg.Surface(text.size)
+        toggled_hover.fill((255, 0, 0))
+        self._surfs = (untoggled, untoggled_hover, toggled, toggled_hover)
+
+        for surf in self._surfs:
+            surf.blit(text, (0, 0))
+
+    def handle_event(self: Self, event: pg.Event) -> None:
+        if (event.type == pg.MOUSEBUTTONDOWN
+            and self._rect.collidepoint(event.pos)):
+                self._state = not self._state
+
+    def update(self: Self,
+               mouse_pos: Point,
+               mouse_pressed: tuple[bool]) -> None:
+        # slick boolean index
+        collision = self._rect.collidepoint(mouse_pos)
+        self._surf = self._surfs[collision]
+        if self._state:
+            self._surf = self._surfs[2 + collision]
 
 class Input(_Widget): # Text Input
     def __init__(self: Self,

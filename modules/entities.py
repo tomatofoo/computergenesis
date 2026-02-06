@@ -751,10 +751,6 @@ class Enemy(EntityEx):
                  stalk_time: Real=90,
                  stalk_directions: int=8,
                  max_stalk_turn: Real=60,
-                 approach_update_dist: Real=0.5,
-                 max_approach_nodes: int=50,
-                 approach_speed: Real=0.1,
-                 approach_path_rigidity: Real=0.5,
                  states: dict[str, EntityExState]={
                      'default': EntityExState(),
                      'stalking': EntityExState(),
@@ -788,12 +784,6 @@ class Enemy(EntityEx):
         self._max_stalk_turn = max_stalk_turn
 
         # how far enemy moves to update path
-        self._approach_update_dist = approach_update_dist
-        self._approach_speed = approach_speed
-        self._approach_path_rigidity = approach_path_rigidity
-        self._max_approach_nodes = max_approach_nodes
-        self._enemy_pos = (0, 0)
-        self._path = None
         self._pathfinder = Pathfinder({}, self._height, self._climb)
 
     @property
@@ -853,46 +843,6 @@ class Enemy(EntityEx):
     @max_stalk_turn.setter
     def max_stalk_turn(self: Self, value: Real) -> None:
         self._max_stalk_turn = value
-
-    @property
-    def max_approach_radius(self: Self) -> Real:
-        return self._approach_radii[1]
-
-    @max_approach_radius.setter
-    def max_approach_radius(self: Self, value: Real) -> None:
-        self._approach_radii[1] = value
-
-    @property
-    def approach_update_dist(self: Self) -> Real:
-        return self._approach_update_dist
-
-    @approach_update_dist.setter
-    def approach_update_dist(self: Self, value: Real) -> None:
-        self._approach_update_dist = value
-
-    @property
-    def max_approach_nodes(self: Self) -> int:
-        return self._max_approach_nodes
-
-    @max_approach_nodes.setter
-    def max_approach_nodes(self: Self, value: int) -> None:
-        self._max_approach_nodes = value
-
-    @property
-    def approach_speed(self: Self) -> Real:
-        return self._approach_speed
-
-    @approach_speed.setter
-    def approach_speed(self: Self, value: Real) -> None:
-        self._approach_speed = value
-
-    @property
-    def approach_path_rigidity(self: Self) -> Real:
-        return self._approach_path_rigidity
-
-    @approach_path_rigidity.setter
-    def approach_path_rigidity(self: Self, value: Real) -> None:
-        self._approach_path_rigidity = value
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         if self._enemy is not None:

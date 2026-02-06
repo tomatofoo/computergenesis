@@ -240,7 +240,7 @@ class Game(object):
         crouching = 0
         
         # ENEMY
-        ENEMY.state = 'approaching'
+        ENEMY.state = 'stalking'
 
         # PATH
         path = []

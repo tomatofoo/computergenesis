@@ -921,33 +921,7 @@ class Enemy(EntityEx):
                     self._velocity2 = self._yaw * self._stalk_speed
                     self._stalk_timer = self._stalk_time
             elif self._state == 'approaching': # A* pathfinding
-                if (enemy._pos.distance_to(self._enemy_pos)
-                    >= self._approach_update_dist):
-                    # Recalculte Path
-                    tilemap = self._manager._level._walls._tilemap
-                    self._pathfinder.tilemap = tilemap
-                    self._path = self._pathfinder.pathfind(
-                        self.node, enemy.node,
-                        max_nodes=self._max_approach_nodes,
-                    )
-                    self._enemy_pos = enemy._pos.copy()
-                # Follow Path
-                if self._path:
-                    vector = (
-                        pg.Vector2(self._path[-1][0])
-                        + (0.5, 0.5)
-                        - self._pos
-                    )
-                    if vector.magnitude() > self._approach_path_rigidity:
-                        self._velocity2 = (
-                            vector.normalize() * self._approach_speed
-                        )
-                    else:
-                        del self._path[-1]
-                        if not self._path:
-                            self._velocity2 = pg.Vector2(0, 0)
-                            self._path = None
-                    self._yaw_velocity = 0
+                pass
         super().update(rel_game_speed, level_timer)
 
 

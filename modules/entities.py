@@ -843,17 +843,20 @@ class Enemy(EntityEx):
                 self._stalk_timer -= rel_game_speed
                 if self._stalk_timer <= 0:
                     stalk_angle = 360 / self._stalk_directions
-                    angle = pg.math.clamp(
-                        normalize_degrees(
-                            (self._pos - enemy._pos).angle
-                            + stalk_angle / 2
-                            + 90
-                            - self._yaw_value
-                        ),
-                        -self._max_stalk_turn,
-                        self._max_stalk_turn,
+                    angle = (
+                        self._yaw_value
+                        + pg.math.clamp(
+                            normalize_degrees(
+                                (self._pos - enemy._pos).angle
+                                + stalk_angle / 2
+                                + 90
+                                - self._yaw_value
+                            ),
+                            -self._max_stalk_turn,
+                            self._max_stalk_turn,
+                        )
                     ) // stalk_angle * stalk_angle
-                    self.yaw += angle
+                    self.yaw = angle
                     self._velocity2 = self._yaw * self._stalk_speed
                     self._stalk_timer = self._stalk_time
             elif self._state == 'approaching': # A* pathfinding

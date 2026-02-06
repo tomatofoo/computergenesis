@@ -144,6 +144,15 @@ class Entity(object):
         return gen_tile_key(self._pos)
 
     @property
+    def node(self: Self) -> tuple[Point, int]:
+        elevation = 0
+        data = self._manager._level._walls._tilemap.get(self.tile_key)
+        if (data is not None
+            and self._elevation >= data['elevation'] + data['height']):
+            elevation = 1
+        return (self.tile, elevation)
+
+    @property
     def vector3(self: Self) -> pg.Vector3:
         return pg.Vector3(self._pos[0], self._elevation, self._pos[1])
 
@@ -742,8 +751,10 @@ class Enemy(EntityEx):
                  stalk_time: Real=90,
                  stalk_directions: int=8,
                  max_stalk_turn: Real=60,
-                 min_approach_radius: Real=1,
-                 max_approach_radius: Real=2,
+                 approach_update_dist: Real=0.5,
+                 max_approach_nodes: int=50,
+                 approach_speed: Real=0.1,
+                 approach_path_rigidity: Real=0.5,
                  states: dict[str, EntityExState]={
                      'default': EntityExState(),
                      'stalking': EntityExState(),
@@ -775,7 +786,33 @@ class Enemy(EntityEx):
         self._stalk_timer = 0
         self._stalk_directions = stalk_directions
         self._max_stalk_turn = max_stalk_turn
-        self._approach_radii = [min_approach_radius, max_approach_radius]
+
+        # how far enemy moves to update path
+        self._approach_update_dist = approach_update_dist
+        self._approach_speed = approach_speed
+        self._approach_path_rigidity = approach_path_rigidity
+        self._max_approach_nodes = max_approach_nodes
+        self._enemy_pos = (0, 0)
+        self._path = None
+        self._pathfinder = Pathfinder({}, self._height, self._climb)
+
+    @property
+    def height(self: Self) -> Real:
+        return self._height
+
+    @height.setter
+    def height(self: Self, value: Real) -> None:
+        self._height = value
+        self._pathfinder.height = value
+
+    @property
+    def climb(self: Self) -> Real:
+        return self._climb
+
+    @climb.setter
+    def climb(self: Self, value: Real) -> None:
+        self._climb = value
+        self._pathfinder.climb = value
 
     @property
     def enemy(self: Self) -> Optional[Entity]:
@@ -818,20 +855,44 @@ class Enemy(EntityEx):
         self._max_stalk_turn = value
 
     @property
-    def min_approach_radius(self: Self) -> Real:
-        return self._approach_radii[0]
-
-    @min_approach_radius.setter
-    def min_approach_radius(self: Self, value: Real) -> None:
-        self._approach_radii[0] = value
-
-    @property
     def max_approach_radius(self: Self) -> Real:
         return self._approach_radii[1]
 
     @max_approach_radius.setter
     def max_approach_radius(self: Self, value: Real) -> None:
         self._approach_radii[1] = value
+
+    @property
+    def approach_update_dist(self: Self) -> Real:
+        return self._approach_update_dist
+
+    @approach_update_dist.setter
+    def approach_update_dist(self: Self, value: Real) -> None:
+        self._approach_update_dist = value
+
+    @property
+    def max_approach_nodes(self: Self) -> int:
+        return self._max_approach_nodes
+
+    @max_approach_nodes.setter
+    def max_approach_nodes(self: Self, value: int) -> None:
+        self._max_approach_nodes = value
+
+    @property
+    def approach_speed(self: Self) -> Real:
+        return self._approach_speed
+
+    @approach_speed.setter
+    def approach_speed(self: Self, value: Real) -> None:
+        self._approach_speed = value
+
+    @property
+    def approach_path_rigidity(self: Self) -> Real:
+        return self._approach_path_rigidity
+
+    @approach_path_rigidity.setter
+    def approach_path_rigidity(self: Self, value: Real) -> None:
+        self._approach_path_rigidity = value
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         if self._enemy is not None:
@@ -860,7 +921,33 @@ class Enemy(EntityEx):
                     self._velocity2 = self._yaw * self._stalk_speed
                     self._stalk_timer = self._stalk_time
             elif self._state == 'approaching': # A* pathfinding
-                pass
+                if (enemy._pos.distance_to(self._enemy_pos)
+                    >= self._approach_update_dist):
+                    # Recalculte Path
+                    tilemap = self._manager._level._walls._tilemap
+                    self._pathfinder.tilemap = tilemap
+                    self._path = self._pathfinder.pathfind(
+                        self.node, enemy.node,
+                        max_nodes=self._max_approach_nodes,
+                    )
+                    self._enemy_pos = enemy._pos.copy()
+                # Follow Path
+                if self._path:
+                    vector = (
+                        pg.Vector2(self._path[-1][0])
+                        + (0.5, 0.5)
+                        - self._pos
+                    )
+                    if vector.magnitude() > self._approach_path_rigidity:
+                        self._velocity2 = (
+                            vector.normalize() * self._approach_speed
+                        )
+                    else:
+                        del self._path[-1]
+                        if not self._path:
+                            self._velocity2 = pg.Vector2(0, 0)
+                            self._path = None
+                    self._yaw_velocity = 0
         super().update(rel_game_speed, level_timer)
 
 

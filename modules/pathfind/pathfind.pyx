@@ -25,6 +25,7 @@ cdef class Pathfinder:
         dict _elevations
         float _height
         float _climb
+        float _fall
         float _straight_weight
         float _diagonal_weight
         float _elevation_weight
@@ -34,6 +35,7 @@ cdef class Pathfinder:
                  dict tilemap,
                  float height=1,
                  float climb=0.2,
+                 float fall=-1,
                  float straight_weight=1,
                  float diagonal_weight=1.414,
                  float elevation_weight=1,
@@ -48,6 +50,7 @@ cdef class Pathfinder:
         self._tilemap = tilemap
         self._height = height
         self._climb = climb
+        self._fall = fall
         self._straight_weight = straight_weight
         self._diagonal_weight = diagonal_weight
         self._elevation_weight = elevation_weight
@@ -76,7 +79,15 @@ cdef class Pathfinder:
     @climb.setter
     def climb(self: Self, float value):
         self._climb = value
-        
+
+    @property
+    def fall(self: Self):
+        return self._fall
+
+    @fall.setter
+    def fall(self: Self, float value):
+        self._fall = value
+
     @property
     def straight_weight(self: Self):
         return self._straight_weight
@@ -153,12 +164,20 @@ cdef class Pathfinder:
         if data is None:
             if elevation:
                 return True
-            return False
+            return self._fall != -1 and bottom > self._fall
         cdef float tile_elevation = data['elevation']
-        return (
-            tile_elevation < bottom + self._height if not elevation
-            else tile_elevation + float(data['height']) - bottom > climb
-        )
+        cdef float tile_height = data['height']
+        if elevation:
+            return (
+                tile_elevation + tile_height - bottom > climb
+                or (self._fall != -1
+                    and bottom - tile_elevation - tile_height > self._fall)
+            )
+        else:
+            return (
+                tile_elevation < bottom + self._height
+                or (self._fall != -1 and bottom > self._fall)
+            )
 
     cdef float _calculate(self: Self,
                           tuple node,

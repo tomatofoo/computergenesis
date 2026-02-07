@@ -754,7 +754,7 @@ class Enemy(EntityEx):
                  states: dict[str, EntityExState]={
                      'default': EntityExState(),
                      'stalking': EntityExState(),
-                     'approaching': EntityExState(),
+                     'attacking': EntityExState(),
                  },
                  state: str='default',
                  attack_width: Optional[Real]=None,

@@ -23,7 +23,6 @@ from modules.utils import SMALL
 from modules.utils import gen_tile_key
 from modules.utils import gen_img_path
 
-FIX FALL
 PATHFINDER = Pathfinder(
     TEST._manager._level._walls._tilemap,
     TEST._height,

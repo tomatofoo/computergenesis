@@ -27,6 +27,8 @@ class Box(object): # 3D Box
         
         self._left = left
         self._bottom = bottom
+
+
         self._near = near
         self._width = width
         self._height = height
@@ -239,7 +241,7 @@ def gen_img_path(*args: str):
 def gen_sfx_path(*args: str):
     return gen_data_path('audio', 'sfx', *args)
 
-def gen_mus_path(*args: strs):
+def gen_mus_path(*args: str):
     return gen_data_path('audio', 'music', *args)
 
 def normalize_degrees(angle: Real) -> Real:

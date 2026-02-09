@@ -220,18 +220,22 @@ cdef class Pathfinder:
                         tuple start,
                         tuple end,
                         float climb=-1,
-                        int max_nodes=100):
+                        int max_nodes=100,
+                        bint force=0):
         # Setup
         self._reset_cache()
         cdef:
             list path # final path
-            dict parent = {}
+            dict parent = {start: start}
             dict will = {start: self._h(start, end)} # open
             set visited = set() # closed
             int elevation
             float f
+            float h
             float least
+            float least_h = 2147483647
             float tentative_g
+            tuple closest_node
             tuple tentative
             tuple node
             tuple neighbor
@@ -259,7 +263,12 @@ cdef class Pathfinder:
                     node = parent[node]
                     path.append(node)
                 return path
-            will.pop(node)
+            f = will.pop(node)
+            if force:
+                h = f - self._gs[node]
+                if h < least_h:
+                    least_h = h
+                    closest_node = node
             visited.add(node)
 
             # Check Neighbor
@@ -285,12 +294,20 @@ cdef class Pathfinder:
                     self._gs[neighbor] = tentative_g
                     parent[neighbor] = node
                     will[neighbor] = tentative_g + self._h(neighbor, end)
+        if force:
+            node = parent[closest_node]
+            path = [node]
+            while node != start:
+                node = parent[node]
+                path.append(node)
+            return path
         return []
 
     def pathfind(self: Self,
                  tuple start,
                  tuple end,
                  float climb=-1,
-                 int max_nodes=100) -> list:
-        return self._pathfind(start, end, climb, max_nodes)
+                 int max_nodes=100,
+                 bint force=0) -> list:
+        return self._pathfind(start, end, climb, max_nodes, force)
 

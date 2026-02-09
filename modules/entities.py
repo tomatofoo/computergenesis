@@ -24,6 +24,8 @@ from .utils import FALLBACK_SURF
 from .utils import gen_tile_key
 from .utils import normalize_degrees
 
+import time
+
 
 class Entity(object):
 
@@ -751,7 +753,8 @@ class Stalker(EntityEx):
                  stalk_time: Real=90,
                  max_stalk_turn: Real=60,
                  stalk_tolerance: Real=0.5,
-                 max_nodes: int=50,
+                 max_stalk_nodes: int=50,
+                 stalk_force_astar: bool=False,
                  states: dict[str, EntityExState]={
                      'default': EntityExState(),
                      'stalking': EntityExState(),
@@ -782,7 +785,8 @@ class Stalker(EntityEx):
         self._stalk_timer = 0
         self._stalk_tolerance = stalk_tolerance # only applicable with A*
         self._max_stalk_turn = max_stalk_turn
-        self._max_nodes = max_nodes
+        self._max_stalk_nodes = max_stalk_nodes
+        self._stalk_force_astar = stalk_force_astar
 
         # how far enemy moves to update path
         self._pathfinder = Pathfinder({}, self._height, self._climb)
@@ -846,12 +850,20 @@ class Stalker(EntityEx):
         self._max_stalk_turn = value
 
     @property
-    def max_nodes(self: Self) -> int:
-        return self._max_nodes
+    def max_stalk_nodes(self: Self) -> int:
+        return self._max_stalk_nodes
 
-    @max_nodes.setter
-    def max_nodes(self: Self, value: int) -> None:
-        self._max_nodes = value
+    @max_stalk_nodes.setter
+    def max_stalk_nodes(self: Self, value: int) -> None:
+        self._max_stalk_nodes = value
+
+    @property
+    def stalk_force_astar(self: Self) -> bool:
+        return self._stalk_force_astar
+
+    @stalk_force_astar.setter
+    def stalk_force_astar(self: Self, value: bool) -> None:
+        self._stalk_force_astar = value
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         if self._enemy is not None:
@@ -865,10 +877,12 @@ class Stalker(EntityEx):
                     self._pathfinder.tilemap = (
                         self._manager._level._walls._tilemap
                     )
+                    start = time.time()
                     self._path = self._pathfinder.pathfind(
                         self.node,
                         enemy.node,
-                        max_nodes=self._max_nodes,
+                        max_nodes=self._max_stalk_nodes,
+                        force=self._stalk_force_astar,
                     )
                     if not self._path:
                         angle = (

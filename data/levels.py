@@ -14,7 +14,7 @@ from modules.level import Level
 from modules.entities import Entity
 from modules.entities import EntityExState
 from modules.entities import EntityEx
-from modules.entities import Enemy
+from modules.entities import Stalker
 from modules.entities import WeaponItem
 from modules.entities import Player
 from modules.entities import EntityManager
@@ -89,7 +89,7 @@ TEST = EntityEx( # FOR PATHFINDING
     states={'default': EntityExState(textures, 60)},
 )
 
-ENEMY = Enemy(
+ENEMY = Stalker(
     pos=(8.5, 0.5),
     elevation=1,
     width=0.4,
@@ -100,7 +100,6 @@ ENEMY = Enemy(
     states={
         'default': EntityExState(textures, 60),
         'stalking': EntityExState(textures, 60),
-        'approaching': EntityExState(textures, 60),
     },
     gravity=0.004,
 )

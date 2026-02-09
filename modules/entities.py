@@ -737,7 +737,7 @@ class EntityEx(Entity):
 
 
  # 'stalking' is doom-style pathfinding, while 'approaching' is A*
-class Enemy(EntityEx):
+class Stalker(EntityEx):
     def __init__(self: Self,
                  enemy: Optional[Entity] | int=-1, # -1 means player
                  pos: Point=(0, 0),
@@ -749,12 +749,12 @@ class Enemy(EntityEx):
                  gravity: Real=0,
                  stalk_speed: Real=0.02,
                  stalk_time: Real=90,
-                 stalk_directions: int=8,
                  max_stalk_turn: Real=60,
+                 stalk_tolerance: Real=0.5,
+                 max_nodes: int=50,
                  states: dict[str, EntityExState]={
                      'default': EntityExState(),
                      'stalking': EntityExState(),
-                     'attacking': EntityExState(),
                  },
                  state: str='default',
                  attack_width: Optional[Real]=None,
@@ -780,8 +780,9 @@ class Enemy(EntityEx):
         self._stalk_speed = stalk_speed
         self._stalk_time = 60
         self._stalk_timer = 0
-        self._stalk_directions = stalk_directions
+        self._stalk_tolerance = stalk_tolerance # only applicable with A*
         self._max_stalk_turn = max_stalk_turn
+        self._max_nodes = max_nodes
 
         # how far enemy moves to update path
         self._pathfinder = Pathfinder({}, self._height, self._climb)
@@ -829,12 +830,12 @@ class Enemy(EntityEx):
         self._stalk_time = value
 
     @property
-    def stalk_directions(self: Self) -> int:
-        return self._stalk_directions
+    def stalk_tolerance(self: Self) -> Real:
+        return self._stalk_tolerance
 
-    @stalk_directions.setter
-    def stalk_directions(self: Self, value: int) -> None:
-        self._stalk_directions = value
+    @stalk_tolerance.setter
+    def stalk_tolerance(self: Self, value: Real) -> None:
+        self._stalk_tolerance = value
 
     @property
     def max_stalk_turn(self: Self) -> Real:
@@ -843,6 +844,14 @@ class Enemy(EntityEx):
     @max_stalk_turn.setter
     def max_stalk_turn(self: Self, value: Real) -> None:
         self._max_stalk_turn = value
+
+    @property
+    def max_nodes(self: Self) -> int:
+        return self._max_nodes
+
+    @max_nodes.setter
+    def max_nodes(self: Self, value: int) -> None:
+        self._max_nodes = value
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
         if self._enemy is not None:
@@ -853,25 +862,41 @@ class Enemy(EntityEx):
                 # choose one of the set directions
                 self._stalk_timer -= rel_game_speed
                 if self._stalk_timer <= 0:
-                    stalk_angle = 360 / self._stalk_directions
-                    angle = (
-                        self._yaw_value
-                        + pg.math.clamp(
-                            normalize_degrees(
-                                (self._pos - enemy._pos).angle
-                                + stalk_angle / 2
-                                + 90
-                                - self._yaw_value
-                            ),
-                            -self._max_stalk_turn,
-                            self._max_stalk_turn,
-                        )
-                    ) // stalk_angle * stalk_angle
-                    self.yaw = angle
-                    self._velocity2 = self._yaw * self._stalk_speed
+                    self._pathfinder.tilemap = (
+                        self._manager._level._walls._tilemap
+                    )
+                    self._path = self._pathfinder.pathfind(
+                        self.node,
+                        enemy.node,
+                        max_nodes=self._max_nodes,
+                    )
+                    if not self._path:
+                        angle = (
+                            self._yaw_value
+                            + pg.math.clamp(
+                                normalize_degrees(
+                                    (self._pos - enemy._pos).angle
+                                    + 45 / 2
+                                    + 90
+                                    - self._yaw_value
+                                ),
+                                -self._max_stalk_turn,
+                                self._max_stalk_turn,
+                            )
+                        ) // 45 * 45
+                        self.yaw = angle
+                        self._velocity2 = self._yaw * self._stalk_speed
                     self._stalk_timer = self._stalk_time
-            elif self._state == 'approaching': # A* pathfinding
-                pass
+                if self._path:
+                    tile = self._path[-1][0]
+                    vector = (tile[0] + 0.5, tile[1] + 0.5) - self._pos
+                    if vector:
+                        self.yaw = vector.angle - 90
+                        self._velocity2 = (
+                            vector.normalize() * self._stalk_speed
+                        )
+                    if vector.magnitude() <= self._stalk_tolerance:
+                        del self._path[-1]
         super().update(rel_game_speed, level_timer)
 
 

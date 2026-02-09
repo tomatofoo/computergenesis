@@ -751,7 +751,7 @@ class Stalker(EntityEx):
                  gravity: Real=0,
                  stalk_speed: Real=0.02,
                  stalk_time: Real=90,
-                 max_stalk_turn: Real=60,
+                 max_stalk_turn: Real=90,
                  stalk_tolerance: Real=0.5,
                  max_stalk_nodes: int=50,
                  stalk_force_astar: bool=False,
@@ -789,7 +789,9 @@ class Stalker(EntityEx):
         self._stalk_force_astar = stalk_force_astar
 
         # how far enemy moves to update path
-        self._pathfinder = Pathfinder({}, self._height, self._climb)
+        self._pathfinder = Pathfinder(
+            {}, self._height, self._climb, max_turn=self._max_stalk_turn,
+        )
 
     @property
     def height(self: Self) -> Real:
@@ -848,6 +850,7 @@ class Stalker(EntityEx):
     @max_stalk_turn.setter
     def max_stalk_turn(self: Self, value: Real) -> None:
         self._max_stalk_turn = value
+        self._pathfinder.max_turn = value
 
     @property
     def max_stalk_nodes(self: Self) -> int:

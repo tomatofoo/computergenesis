@@ -39,7 +39,8 @@ cdef class Pathfinder:
                  float straight_weight=1,
                  float diagonal_weight=1.414,
                  float elevation_weight=1,
-                 float greediness=1) -> None:
+                 float greediness=1,
+                 float max_turn=90) -> None:
         
         self._TILE_OFFSETS = [
             [-1,  1], [0,  1], [1,  1],
@@ -55,6 +56,7 @@ cdef class Pathfinder:
         self._diagonal_weight = diagonal_weight
         self._elevation_weight = elevation_weight
         self._greediness = greediness
+        self._max_turn = max_turn
 
     @property
     def tilemap(self: Self):
@@ -119,6 +121,14 @@ cdef class Pathfinder:
     @greediness.setter
     def greediness(self: Self, float value):
         self._greediness = value
+
+    @property
+    def max_turn(self: Self):
+        return self._max_turn
+
+    @max_turn.setter
+    def max_turn(self: Self, float value):
+        self._max_turn = value
 
     cdef void _reset_cache(self: Self):
         self._gs = {}
@@ -217,6 +227,7 @@ cdef class Pathfinder:
         return weight
 
     cdef list _pathfind(self: Self,
+                        float yaw,
                         tuple start,
                         tuple end,
                         float climb=-1,
@@ -273,8 +284,6 @@ cdef class Pathfinder:
 
             # Check Neighbor
             for offset in self._TILE_OFFSETS:
-                if not (offset[0] or offset[1]):
-                    continue
                 for elevation in range(2): # 0 is ground; 1 is atop tile
                     neighbor = (
                         (<int>node[0][0] + offset[0],

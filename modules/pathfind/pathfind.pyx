@@ -56,9 +56,9 @@ cdef class Pathfinder:
         ]
 
         self._ANGLES = [
-            -45,   0,   45,
-            -90,        90,
-            -135, -180, 135,
+            45,   0,   -45,
+            90,        -90,
+            135, -180, -135,
         ]
         
         self._tilemap = tilemap
@@ -280,6 +280,7 @@ cdef class Pathfinder:
                 if f < least:
                     least = f
                     node = tentative
+            print(node, least, parent[node])
             if node == end:
                 # Trace path back
                 node = parent.get(end)
@@ -290,22 +291,20 @@ cdef class Pathfinder:
                     node = parent[node]
                     path.append(node)
                 return path
-            f = will.pop(node)
+            will.pop(node)
             if force:
-                h = f - self._gs[node]
+                h = least - self._gs[node]
                 if h < least_h:
                     least_h = h
                     closest_node = node
             visited.add(node)
-
+            yaw = yaws[node]
             # Check Neighbor
             for i in range(8):
                 offset = self._TILE_OFFSETS[i]
-                turn = fabs(
-                    normalize_degrees(self._ANGLES[i] - <float>yaws[node[0]])
-                )
+                turn = fabs(normalize_degrees(self._ANGLES[i] - yaw))
                 if turn > self._max_turn:
-                    continue 
+                    continue
                 for elevation in range(2): # 0 is ground; 1 is atop tile
                     neighbor = (
                         (<int>node[0][0] + offset[0],
@@ -320,11 +319,12 @@ cdef class Pathfinder:
                             node, offset, elevation, neighbor, climb,
                         )
                     )
+                    print(tentative_g, self._g(neighbor), offset, node, neighbor, yaw, turn, tentative_g + self._h(neighbor, end))
                     if tentative_g >= self._g(neighbor):
                         continue
                     self._gs[neighbor] = tentative_g
                     parent[neighbor] = node
-                    yaws[neighbor[0]] = self._ANGLES[i]
+                    yaws[neighbor] = self._ANGLES[i]
                     will[neighbor] = tentative_g + self._h(neighbor, end)
         if force:
             node = parent[closest_node]

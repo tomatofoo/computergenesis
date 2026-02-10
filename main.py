@@ -289,7 +289,7 @@ class Game(object):
                                 test_elevation = 0
                             start = time.time()
                             path = PATHFINDER.pathfind(
-                                PATHFINDER.yaw,
+                                TEST.yaw,
                                 (TEST.tile, test_elevation),
                                 (self._player.tile, elevation),
                                 max_nodes=100,
@@ -297,6 +297,7 @@ class Game(object):
                             print(time.time() - start)
                         elif event.key == self._settings['keys']['interact']:
                             self._player.interact()
+                            print(self._player.yaw)
                         elif not sliding:
                             if (event.key == self._settings['keys']['slide']
                                 and jumping):

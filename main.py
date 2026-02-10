@@ -297,7 +297,6 @@ class Game(object):
                             print(time.time() - start)
                         elif event.key == self._settings['keys']['interact']:
                             self._player.interact()
-                            print(self._player.yaw)
                         elif not sliding:
                             if (event.key == self._settings['keys']['slide']
                                 and jumping):

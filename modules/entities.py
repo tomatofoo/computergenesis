@@ -24,8 +24,6 @@ from .utils import FALLBACK_SURF
 from .utils import gen_tile_key
 from .utils import normalize_degrees
 
-import time
-
 
 class Entity(object):
 
@@ -880,7 +878,6 @@ class Stalker(EntityEx):
                     self._pathfinder.tilemap = (
                         self._manager._level._walls._tilemap
                     )
-                    start = time.time()
                     self._path = self._pathfinder.pathfind(
                         self._yaw_value,
                         self.node,

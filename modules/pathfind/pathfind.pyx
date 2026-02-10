@@ -54,7 +54,10 @@ cdef class Pathfinder:
             [-1,  0],          [1,  0],
             [-1, -1], [0, -1], [1, -1],
         ]
-
+        
+        # TILE_OFFSETS is swapped;
+        # positive 1 should be on left
+        # keeping though for consistency
         self._ANGLES = [
             45,   0,   -45,
             90,        -90,

@@ -739,7 +739,7 @@ class EntityEx(Entity):
  # 'stalking' is doom-style pathfinding, while 'approaching' is A*
 class Stalker(EntityEx):
     def __init__(self: Self,
-                 enemy: Optional[Entity] | int=-1, # -1 means player
+                 enemy: Optional[Entity]=None, # None means player
                  pos: Point=(0, 0),
                  elevation: Real=0,
                  width: Real=0.5,
@@ -867,51 +867,50 @@ class Stalker(EntityEx):
         self._stalk_force_astar = value
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
-        if self._enemy is not None:
-            enemy = self._enemy
-            if enemy == -1:
-                enemy = self._manager._player
-            if self._state == 'stalking': # doom-style movement
-                # choose one of the set directions
-                self._stalk_timer -= rel_game_speed
-                if self._stalk_timer <= 0:
-                    self._pathfinder.tilemap = (
-                        self._manager._level._walls._tilemap
-                    )
-                    self._path = self._pathfinder.pathfind(
-                        self._yaw_value,
-                        self.node,
-                        enemy.node,
-                        max_nodes=self._max_stalk_nodes,
-                        force=self._stalk_force_astar,
-                    )
-                    if not self._path:
-                        angle = (
-                            self._yaw_value
-                            + pg.math.clamp(
-                                normalize_degrees(
-                                    (self._pos - enemy._pos).angle
-                                    + 45 / 2
-                                    + 90
-                                    - self._yaw_value
-                                ),
-                                -self._max_stalk_turn,
-                                self._max_stalk_turn,
-                            )
-                        ) // 45 * 45
-                        self.yaw = angle
-                        self._velocity2 = self._yaw * self._stalk_speed
-                    self._stalk_timer = self._stalk_time
-                if self._path:
-                    tile = self._path[-1][0]
-                    vector = (tile[0] + 0.5, tile[1] + 0.5) - self._pos
-                    if vector:
-                        self.yaw = vector.angle - 90
-                        self._velocity2 = (
-                            vector.normalize() * self._stalk_speed
+        enemy = self._enemy
+        if enemy is None:
+            enemy = self._manager._player
+        if self._state == 'stalking': # doom-style movement
+            # choose one of the set directions
+            self._stalk_timer -= rel_game_speed
+            if self._stalk_timer <= 0:
+                self._pathfinder.tilemap = (
+                    self._manager._level._walls._tilemap
+                )
+                self._path = self._pathfinder.pathfind(
+                    self._yaw_value,
+                    self.node,
+                    enemy.node,
+                    max_nodes=self._max_stalk_nodes,
+                    force=self._stalk_force_astar,
+                )
+                if not self._path:
+                    angle = (
+                        self._yaw_value
+                        + pg.math.clamp(
+                            normalize_degrees(
+                                (self._pos - enemy._pos).angle
+                                + 45 / 2
+                                + 90
+                                - self._yaw_value
+                            ),
+                            -self._max_stalk_turn,
+                            self._max_stalk_turn,
                         )
-                    if vector.magnitude() <= self._stalk_tolerance:
-                        del self._path[-1]
+                    ) // 45 * 45
+                    self.yaw = angle
+                    self._velocity2 = self._yaw * self._stalk_speed
+                self._stalk_timer = self._stalk_time
+            if self._path:
+                tile = self._path[-1][0]
+                vector = (tile[0] + 0.5, tile[1] + 0.5) - self._pos
+                if vector:
+                    self.yaw = vector.angle - 90
+                    self._velocity2 = (
+                        vector.normalize() * self._stalk_speed
+                    )
+                if vector.magnitude() <= self._stalk_tolerance:
+                    del self._path[-1]
         super().update(rel_game_speed, level_timer)
 
 

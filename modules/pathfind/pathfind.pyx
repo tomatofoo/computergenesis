@@ -10,14 +10,18 @@ from typing import Self
 from pygame.typing import Point
 
 
-# is getting called a lot so not using python implementation
-cdef str gen_tile_key(obj: Point):
+# Pyobj
+cdef str gen_tile_key_py(obj: Point):
     # <int> faster than int()
     return f'{<int>floorf(obj[0])};{<int>floorf(obj[1])}'
 
+# cython
+cdef str gen_tile_key(int x, int y):
+    return f'{<int>floorf(x)};{<int>floorf(y)}'
 
+# Use cython implementation for speed
 cdef float normalize_degrees(float angle):
-    # + 180, then + 360
+    # + 180, then + 360 because of cdivison
     return (angle + 540) % 360 - 180
 
 
@@ -176,7 +180,7 @@ cdef class Pathfinder:
         if elevation is None:
             elevation = 0
             if node[1]: 
-                data = self._tilemap.get(gen_tile_key(node[0]))
+                data = self._tilemap.get(gen_tile_key_py(node[0]))
                 if data is not None:
                     elevation = data['height'] + data['elevation']
             self._elevations[node] = elevation
@@ -218,17 +222,17 @@ cdef class Pathfinder:
         # i know neighbor can be calculated here
         # but it is faster if it is calculated in the for loop
         # I'm aware of how weird this looks but it works
-        data = self._tilemap.get(gen_tile_key(neighbor[0]))
+        data = self._tilemap.get(gen_tile_key_py(neighbor[0]))
         if self._cant(data, elevation, bottom, climb):
             return 2147483647
         elif offset[0] and offset[1]:
             data = self._tilemap.get(
-                gen_tile_key((tile[0], tile[1] + offset[1])),
+                gen_tile_key(tile[0], tile[1] + offset[1]),
             )
             if self._cant(data, elevation, bottom, climb):
                 return 2147483647
             data = self._tilemap.get(
-                gen_tile_key((tile[0] + offset[0], tile[1])),
+                gen_tile_key(tile[0] + offset[0], tile[1]),
             )
             if self._cant(data, elevation, bottom, climb):
                 return 2147483647

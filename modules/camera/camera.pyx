@@ -31,7 +31,7 @@ from .entities import Player
 
 
 # is getting called a lot so not using python implementation
-cdef str gen_tile_key(obj: Point):
+cdef str gen_tile_key(float[2] obj):
     # <int> faster than int()
     return f'{<int>floorf(obj[0])};{<int>floorf(obj[1])}'
 

@@ -882,6 +882,7 @@ class Stalker(EntityEx):
                     )
                     start = time.time()
                     self._path = self._pathfinder.pathfind(
+                        self._yaw_value,
                         self.node,
                         enemy.node,
                         max_nodes=self._max_stalk_nodes,

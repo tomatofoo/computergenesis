@@ -289,6 +289,7 @@ class Game(object):
                                 test_elevation = 0
                             start = time.time()
                             path = PATHFINDER.pathfind(
+                                PATHFINDER.yaw,
                                 (TEST.tile, test_elevation),
                                 (self._player.tile, elevation),
                                 max_nodes=100,

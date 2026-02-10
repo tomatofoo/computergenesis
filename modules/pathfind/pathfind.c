@@ -1568,12 +1568,12 @@ static const char* const __pyx_f[] = {
 struct __pyx_obj_8pathfind_Pathfinder;
 struct __pyx_opt_args_8pathfind_10Pathfinder__pathfind;
 
-/* "pathfind.pyx":219
+/* "pathfind.pyx":242
  *         return weight
  * 
  *     cdef list _pathfind(self: Self,             # <<<<<<<<<<<<<<
+ *                         float yaw,
  *                         tuple start,
- *                         tuple end,
 */
 struct __pyx_opt_args_8pathfind_10Pathfinder__pathfind {
   int __pyx_n;
@@ -1582,7 +1582,7 @@ struct __pyx_opt_args_8pathfind_10Pathfinder__pathfind {
   int force;
 };
 
-/* "pathfind.pyx":20
+/* "pathfind.pyx":25
  * 
  * # A* pathfinder; points are in the format tuple[Point, int]
  * cdef class Pathfinder:             # <<<<<<<<<<<<<<
@@ -1593,6 +1593,7 @@ struct __pyx_obj_8pathfind_Pathfinder {
   PyObject_HEAD
   struct __pyx_vtabstruct_8pathfind_Pathfinder *__pyx_vtab;
   int _TILE_OFFSETS[8][2];
+  float _ANGLES[8];
   PyObject *_tilemap;
   PyObject *_gs;
   PyObject *_elevations;
@@ -1603,6 +1604,7 @@ struct __pyx_obj_8pathfind_Pathfinder {
   float _diagonal_weight;
   float _elevation_weight;
   float _greediness;
+  float _max_turn;
 };
 
 
@@ -1614,7 +1616,7 @@ struct __pyx_vtabstruct_8pathfind_Pathfinder {
   float (*_get_elevation)(struct __pyx_obj_8pathfind_Pathfinder *, PyObject *);
   int (*_cant)(struct __pyx_obj_8pathfind_Pathfinder *, PyObject *, int, float, float);
   float (*_calculate)(struct __pyx_obj_8pathfind_Pathfinder *, PyObject *, int *, int, PyObject *, float);
-  PyObject *(*_pathfind)(struct __pyx_obj_8pathfind_Pathfinder *, PyObject *, PyObject *, struct __pyx_opt_args_8pathfind_10Pathfinder__pathfind *__pyx_optional_args);
+  PyObject *(*_pathfind)(struct __pyx_obj_8pathfind_Pathfinder *, float, PyObject *, PyObject *, struct __pyx_opt_args_8pathfind_10Pathfinder__pathfind *__pyx_optional_args);
 };
 static struct __pyx_vtabstruct_8pathfind_Pathfinder *__pyx_vtabptr_8pathfind_Pathfinder;
 /* #### Code section: utility_code_proto ### */
@@ -2994,7 +2996,7 @@ static float __pyx_f_8pathfind_10Pathfinder__h(struct __pyx_obj_8pathfind_Pathfi
 static float __pyx_f_8pathfind_10Pathfinder__get_elevation(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, PyObject *__pyx_v_node); /* proto*/
 static int __pyx_f_8pathfind_10Pathfinder__cant(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, PyObject *__pyx_v_data, int __pyx_v_elevation, float __pyx_v_bottom, float __pyx_v_climb); /* proto*/
 static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, PyObject *__pyx_v_node, int *__pyx_v_offset, int __pyx_v_elevation, PyObject *__pyx_v_neighbor, float __pyx_v_climb); /* proto*/
-static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, PyObject *__pyx_v_start, PyObject *__pyx_v_end, struct __pyx_opt_args_8pathfind_10Pathfinder__pathfind *__pyx_optional_args); /* proto*/
+static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, float __pyx_v_yaw, PyObject *__pyx_v_start, PyObject *__pyx_v_end, struct __pyx_opt_args_8pathfind_10Pathfinder__pathfind *__pyx_optional_args); /* proto*/
 
 /* Module declarations from "cython" */
 
@@ -3002,7 +3004,11 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
 
 /* Module declarations from "pathfind" */
 static PyObject *__pyx_f_8pathfind_gen_tile_key(PyObject *); /*proto*/
+static float __pyx_f_8pathfind_normalize_degrees(float); /*proto*/
 static PyObject *__pyx_f_8pathfind___pyx_unpickle_Pathfinder__set_state(struct __pyx_obj_8pathfind_Pathfinder *, PyObject *); /*proto*/
+static CYTHON_INLINE PyObject *__Pyx_carray_to_py_float(float *, Py_ssize_t); /*proto*/
+static CYTHON_INLINE PyObject *__Pyx_carray_to_tuple_float(float *, Py_ssize_t); /*proto*/
+static int __Pyx_carray_from_py_float(PyObject *, float *, Py_ssize_t); /*proto*/
 static CYTHON_INLINE PyObject *__Pyx_carray_to_py_int(int *, Py_ssize_t); /*proto*/
 static CYTHON_INLINE PyObject *__Pyx_carray_to_tuple_int(int *, Py_ssize_t); /*proto*/
 static CYTHON_INLINE PyObject *__Pyx_carray_to_py_int___5b_2_5d_(int (*)[2], Py_ssize_t); /*proto*/
@@ -3019,11 +3025,11 @@ int __pyx_module_is_main_pathfind = 0;
 /* #### Code section: global_var ### */
 static PyObject *__pyx_builtin_enumerate;
 /* #### Code section: string_decls ### */
-static const char __pyx_k_TILE_OFFSETS__climb__diagonal_w[] = "_TILE_OFFSETS, _climb, _diagonal_weight, _elevation_weight, _elevations, _fall, _greediness, _gs, _height, _straight_weight, _tilemap";
+static const char __pyx_k_ANGLES__TILE_OFFSETS__climb__di[] = "_ANGLES, _TILE_OFFSETS, _climb, _diagonal_weight, _elevation_weight, _elevations, _fall, _greediness, _gs, _height, _max_turn, _straight_weight, _tilemap";
 static const char __pyx_k_not_enough_values_found_during_a[] = "not enough values found during array assignment, expected %zd, got %zd";
 static const char __pyx_k_too_many_values_found_during_arr[] = "too many values found during array assignment, expected %zd";
 /* #### Code section: decls ### */
-static int __pyx_pf_8pathfind_10Pathfinder___init__(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, PyObject *__pyx_v_tilemap, float __pyx_v_height, float __pyx_v_climb, float __pyx_v_fall, float __pyx_v_straight_weight, float __pyx_v_diagonal_weight, float __pyx_v_elevation_weight, float __pyx_v_greediness); /* proto */
+static int __pyx_pf_8pathfind_10Pathfinder___init__(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, PyObject *__pyx_v_tilemap, float __pyx_v_height, float __pyx_v_climb, float __pyx_v_fall, float __pyx_v_straight_weight, float __pyx_v_diagonal_weight, float __pyx_v_elevation_weight, float __pyx_v_greediness, float __pyx_v_max_turn); /* proto */
 static PyObject *__pyx_pf_8pathfind_10Pathfinder_7tilemap___get__(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self); /* proto */
 static int __pyx_pf_8pathfind_10Pathfinder_7tilemap_2__set__(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
 static PyObject *__pyx_pf_8pathfind_10Pathfinder_6height___get__(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self); /* proto */
@@ -3040,7 +3046,9 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_16elevation_weight___get__(stru
 static int __pyx_pf_8pathfind_10Pathfinder_16elevation_weight_2__set__(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, float __pyx_v_value); /* proto */
 static PyObject *__pyx_pf_8pathfind_10Pathfinder_10greediness___get__(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self); /* proto */
 static int __pyx_pf_8pathfind_10Pathfinder_10greediness_2__set__(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, float __pyx_v_value); /* proto */
-static PyObject *__pyx_pf_8pathfind_10Pathfinder_2pathfind(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, PyObject *__pyx_v_start, PyObject *__pyx_v_end, float __pyx_v_climb, int __pyx_v_max_nodes, int __pyx_v_force); /* proto */
+static PyObject *__pyx_pf_8pathfind_10Pathfinder_8max_turn___get__(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self); /* proto */
+static int __pyx_pf_8pathfind_10Pathfinder_8max_turn_2__set__(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, float __pyx_v_value); /* proto */
+static PyObject *__pyx_pf_8pathfind_10Pathfinder_2pathfind(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, float __pyx_v_yaw, PyObject *__pyx_v_start, PyObject *__pyx_v_end, float __pyx_v_climb, int __pyx_v_max_nodes, int __pyx_v_force); /* proto */
 static PyObject *__pyx_pf_8pathfind_10Pathfinder_4__reduce_cython__(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_8pathfind_10Pathfinder_6__setstate_cython__(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_pf_8pathfind___pyx_unpickle_Pathfinder(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v___pyx_type, long __pyx_v___pyx_checksum, PyObject *__pyx_v___pyx_state); /* proto */
@@ -3072,8 +3080,8 @@ typedef struct {
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_pop;
   __Pyx_CachedCFunction __pyx_umethod_PyDict_Type_values;
   PyObject *__pyx_tuple[2];
-  PyObject *__pyx_codeobj_tab[36];
-  PyObject *__pyx_string_tab[144];
+  PyObject *__pyx_codeobj_tab[42];
+  PyObject *__pyx_string_tab[157];
   PyObject *__pyx_number_tab[5];
 /* #### Code section: module_state_contents ### */
 /* CommonTypesMetaclass.module_state_decls */
@@ -3127,142 +3135,155 @@ static __pyx_mstatetype * const __pyx_mstate_global = &__pyx_mstate_global_stati
 #define __pyx_kp_u_pathfind_pyx __pyx_string_tab[9]
 #define __pyx_kp_u_self__elevations_is_not_None_or __pyx_string_tab[10]
 #define __pyx_kp_u_stringsource __pyx_string_tab[11]
-#define __pyx_n_u_Pathfinder __pyx_string_tab[12]
-#define __pyx_n_u_Pathfinder___reduce_cython __pyx_string_tab[13]
-#define __pyx_n_u_Pathfinder___setstate_cython __pyx_string_tab[14]
-#define __pyx_n_u_Pathfinder_pathfind __pyx_string_tab[15]
-#define __pyx_n_u_Point __pyx_string_tab[16]
-#define __pyx_n_u_Pyx_PyDict_NextRef __pyx_string_tab[17]
-#define __pyx_n_u_Pyx_carray_from_py_int __pyx_string_tab[18]
-#define __pyx_n_u_Pyx_carray_from_py_int___5b_2 __pyx_string_tab[19]
-#define __pyx_n_u_Pyx_carray_to_py_int __pyx_string_tab[20]
-#define __pyx_n_u_Pyx_carray_to_py_int___5b_2_5d __pyx_string_tab[21]
-#define __pyx_n_u_Pyx_carray_to_tuple_int __pyx_string_tab[22]
-#define __pyx_n_u_Pyx_carray_to_tuple_int___5b_2 __pyx_string_tab[23]
-#define __pyx_n_u_Self __pyx_string_tab[24]
-#define __pyx_n_u_TILE_OFFSETS __pyx_string_tab[25]
-#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[26]
-#define __pyx_n_u_bottom __pyx_string_tab[27]
-#define __pyx_n_u_calculate __pyx_string_tab[28]
-#define __pyx_n_u_cant __pyx_string_tab[29]
-#define __pyx_n_u_climb __pyx_string_tab[30]
-#define __pyx_n_u_climb_2 __pyx_string_tab[31]
-#define __pyx_n_u_cline_in_traceback __pyx_string_tab[32]
-#define __pyx_n_u_data __pyx_string_tab[33]
-#define __pyx_n_u_diagonal_weight __pyx_string_tab[34]
-#define __pyx_n_u_diagonal_weight_2 __pyx_string_tab[35]
-#define __pyx_n_u_dict __pyx_string_tab[36]
-#define __pyx_n_u_dict_2 __pyx_string_tab[37]
-#define __pyx_n_u_elevation __pyx_string_tab[38]
-#define __pyx_n_u_elevation_weight __pyx_string_tab[39]
-#define __pyx_n_u_elevation_weight_2 __pyx_string_tab[40]
-#define __pyx_n_u_elevations __pyx_string_tab[41]
-#define __pyx_n_u_end __pyx_string_tab[42]
-#define __pyx_n_u_enumerate __pyx_string_tab[43]
-#define __pyx_n_u_fall __pyx_string_tab[44]
-#define __pyx_n_u_fall_2 __pyx_string_tab[45]
-#define __pyx_n_u_force __pyx_string_tab[46]
-#define __pyx_n_u_func __pyx_string_tab[47]
-#define __pyx_n_u_g __pyx_string_tab[48]
-#define __pyx_n_u_gen_tile_key __pyx_string_tab[49]
-#define __pyx_n_u_get __pyx_string_tab[50]
-#define __pyx_n_u_get_2 __pyx_string_tab[51]
-#define __pyx_n_u_get_elevation __pyx_string_tab[52]
-#define __pyx_n_u_getstate __pyx_string_tab[53]
-#define __pyx_n_u_greediness __pyx_string_tab[54]
-#define __pyx_n_u_greediness_2 __pyx_string_tab[55]
-#define __pyx_n_u_gs __pyx_string_tab[56]
-#define __pyx_n_u_h __pyx_string_tab[57]
-#define __pyx_n_u_height __pyx_string_tab[58]
-#define __pyx_n_u_height_2 __pyx_string_tab[59]
-#define __pyx_n_u_init __pyx_string_tab[60]
-#define __pyx_n_u_is_coroutine __pyx_string_tab[61]
-#define __pyx_n_u_items __pyx_string_tab[62]
-#define __pyx_n_u_length __pyx_string_tab[63]
-#define __pyx_n_u_list __pyx_string_tab[64]
-#define __pyx_n_u_main __pyx_string_tab[65]
-#define __pyx_n_u_max_nodes __pyx_string_tab[66]
-#define __pyx_n_u_module __pyx_string_tab[67]
-#define __pyx_n_u_name __pyx_string_tab[68]
-#define __pyx_n_u_neighbor __pyx_string_tab[69]
-#define __pyx_n_u_new __pyx_string_tab[70]
-#define __pyx_n_u_node __pyx_string_tab[71]
-#define __pyx_n_u_o __pyx_string_tab[72]
-#define __pyx_n_u_obj __pyx_string_tab[73]
-#define __pyx_n_u_offset __pyx_string_tab[74]
-#define __pyx_n_u_pathfind __pyx_string_tab[75]
-#define __pyx_n_u_pathfind_2 __pyx_string_tab[76]
-#define __pyx_n_u_pop __pyx_string_tab[77]
-#define __pyx_n_u_pygame_typing __pyx_string_tab[78]
-#define __pyx_n_u_pyx_checksum __pyx_string_tab[79]
-#define __pyx_n_u_pyx_result __pyx_string_tab[80]
-#define __pyx_n_u_pyx_state __pyx_string_tab[81]
-#define __pyx_n_u_pyx_type __pyx_string_tab[82]
-#define __pyx_n_u_pyx_unpickle_Pathfinder __pyx_string_tab[83]
-#define __pyx_n_u_pyx_unpickle_Pathfinder__set_s __pyx_string_tab[84]
-#define __pyx_n_u_pyx_vtable __pyx_string_tab[85]
-#define __pyx_n_u_qualname __pyx_string_tab[86]
-#define __pyx_n_u_reduce __pyx_string_tab[87]
-#define __pyx_n_u_reduce_cython __pyx_string_tab[88]
-#define __pyx_n_u_reduce_ex __pyx_string_tab[89]
-#define __pyx_n_u_reset_cache __pyx_string_tab[90]
-#define __pyx_n_u_return __pyx_string_tab[91]
-#define __pyx_n_u_self __pyx_string_tab[92]
-#define __pyx_n_u_set __pyx_string_tab[93]
-#define __pyx_n_u_set_name __pyx_string_tab[94]
-#define __pyx_n_u_setdefault __pyx_string_tab[95]
-#define __pyx_n_u_setstate __pyx_string_tab[96]
-#define __pyx_n_u_setstate_cython __pyx_string_tab[97]
-#define __pyx_n_u_start __pyx_string_tab[98]
-#define __pyx_n_u_state __pyx_string_tab[99]
-#define __pyx_n_u_straight_weight __pyx_string_tab[100]
-#define __pyx_n_u_straight_weight_2 __pyx_string_tab[101]
-#define __pyx_n_u_test __pyx_string_tab[102]
-#define __pyx_n_u_tilemap __pyx_string_tab[103]
-#define __pyx_n_u_tilemap_2 __pyx_string_tab[104]
-#define __pyx_n_u_typing __pyx_string_tab[105]
-#define __pyx_n_u_update __pyx_string_tab[106]
-#define __pyx_n_u_use_setstate __pyx_string_tab[107]
-#define __pyx_n_u_v __pyx_string_tab[108]
-#define __pyx_n_u_value __pyx_string_tab[109]
-#define __pyx_n_u_values __pyx_string_tab[110]
-#define __pyx_kp_b_iso88591_1A_U_1_1_as_Q_1 __pyx_string_tab[111]
-#define __pyx_kp_b_iso88591_1_2Qe6_Qe1E_q_1A __pyx_string_tab[112]
-#define __pyx_kp_b_iso88591_1_U_1_1_Qc_A_1 __pyx_string_tab[113]
-#define __pyx_kp_b_iso88591_4_aq_aq_t9D_Qhaq_4vQfKxq_1_1Ct6 __pyx_string_tab[114]
-#define __pyx_kp_b_iso88591_5_1_q_q_4wd_D_r_Q_D_Qa_1_r_Rwb __pyx_string_tab[115]
-#define __pyx_kp_b_iso88591_A __pyx_string_tab[116]
-#define __pyx_kp_b_iso88591_A_2 __pyx_string_tab[117]
-#define __pyx_kp_b_iso88591_A_IQ __pyx_string_tab[118]
-#define __pyx_kp_b_iso88591_A_Ja __pyx_string_tab[119]
-#define __pyx_kp_b_iso88591_A_Kq __pyx_string_tab[120]
-#define __pyx_kp_b_iso88591_A_L __pyx_string_tab[121]
-#define __pyx_kp_b_iso88591_A_L_AQ_S_t1A_t9D_Qd_1_5_q_AZr_Q __pyx_string_tab[122]
-#define __pyx_kp_b_iso88591_A_O1 __pyx_string_tab[123]
-#define __pyx_kp_b_iso88591_A_q_t1 __pyx_string_tab[124]
-#define __pyx_kp_b_iso88591_A_t1 __pyx_string_tab[125]
-#define __pyx_kp_b_iso88591_A_t1_2 __pyx_string_tab[126]
-#define __pyx_kp_b_iso88591_A_t1_3 __pyx_string_tab[127]
-#define __pyx_kp_b_iso88591_A_t1_4 __pyx_string_tab[128]
-#define __pyx_kp_b_iso88591_A_t1_5 __pyx_string_tab[129]
-#define __pyx_kp_b_iso88591_A_t1_6 __pyx_string_tab[130]
-#define __pyx_kp_b_iso88591_A_t1_7 __pyx_string_tab[131]
-#define __pyx_kp_b_iso88591_D_AQ_2S_AXQ_q __pyx_string_tab[132]
-#define __pyx_kp_b_iso88591_G1_O1 __pyx_string_tab[133]
-#define __pyx_kp_b_iso88591_PPQ_AT_Z_RSSWWccw_x_C_C_D_D_H_H __pyx_string_tab[134]
-#define __pyx_kp_b_iso88591_Qb_BgS_1A_t1G4q_3b_s_2Qa_d_d_O1 __pyx_string_tab[135]
-#define __pyx_kp_b_iso88591_T_Yd2ETI_aaooss_N_N_R_R_X_X_f_f __pyx_string_tab[136]
-#define __pyx_kp_b_iso88591_UV_Cq_q_r_A_Cxy_r_A_Qe1_r_A_q_c __pyx_string_tab[137]
-#define __pyx_kp_b_iso88591_a_Cq_q_r_A_Cxy_r_A_Qe1_r_A_q_c __pyx_string_tab[138]
-#define __pyx_kp_b_iso88591_a_M_7_Cq_q_Q_A_6_Q_D_D_e4s_9Cq __pyx_string_tab[139]
-#define __pyx_kp_b_iso88591_q __pyx_string_tab[140]
-#define __pyx_kp_b_iso88591_q_0_kQR_XQa_7_A_1 __pyx_string_tab[141]
-#define __pyx_kp_b_iso88591_q_Q_d_at4q_A_d_q_A_d_at4q_A_L_K __pyx_string_tab[142]
-#define __pyx_kp_b_iso88591_q_t_QgU_A __pyx_string_tab[143]
+#define __pyx_n_u_ANGLES __pyx_string_tab[12]
+#define __pyx_n_u_Pathfinder __pyx_string_tab[13]
+#define __pyx_n_u_Pathfinder___reduce_cython __pyx_string_tab[14]
+#define __pyx_n_u_Pathfinder___setstate_cython __pyx_string_tab[15]
+#define __pyx_n_u_Pathfinder_pathfind __pyx_string_tab[16]
+#define __pyx_n_u_Point __pyx_string_tab[17]
+#define __pyx_n_u_Pyx_PyDict_NextRef __pyx_string_tab[18]
+#define __pyx_n_u_Pyx_carray_from_py_float __pyx_string_tab[19]
+#define __pyx_n_u_Pyx_carray_from_py_int __pyx_string_tab[20]
+#define __pyx_n_u_Pyx_carray_from_py_int___5b_2 __pyx_string_tab[21]
+#define __pyx_n_u_Pyx_carray_to_py_float __pyx_string_tab[22]
+#define __pyx_n_u_Pyx_carray_to_py_int __pyx_string_tab[23]
+#define __pyx_n_u_Pyx_carray_to_py_int___5b_2_5d __pyx_string_tab[24]
+#define __pyx_n_u_Pyx_carray_to_tuple_float __pyx_string_tab[25]
+#define __pyx_n_u_Pyx_carray_to_tuple_int __pyx_string_tab[26]
+#define __pyx_n_u_Pyx_carray_to_tuple_int___5b_2 __pyx_string_tab[27]
+#define __pyx_n_u_Self __pyx_string_tab[28]
+#define __pyx_n_u_TILE_OFFSETS __pyx_string_tab[29]
+#define __pyx_n_u_angle __pyx_string_tab[30]
+#define __pyx_n_u_asyncio_coroutines __pyx_string_tab[31]
+#define __pyx_n_u_bottom __pyx_string_tab[32]
+#define __pyx_n_u_calculate __pyx_string_tab[33]
+#define __pyx_n_u_cant __pyx_string_tab[34]
+#define __pyx_n_u_climb __pyx_string_tab[35]
+#define __pyx_n_u_climb_2 __pyx_string_tab[36]
+#define __pyx_n_u_cline_in_traceback __pyx_string_tab[37]
+#define __pyx_n_u_data __pyx_string_tab[38]
+#define __pyx_n_u_diagonal_weight __pyx_string_tab[39]
+#define __pyx_n_u_diagonal_weight_2 __pyx_string_tab[40]
+#define __pyx_n_u_dict __pyx_string_tab[41]
+#define __pyx_n_u_dict_2 __pyx_string_tab[42]
+#define __pyx_n_u_elevation __pyx_string_tab[43]
+#define __pyx_n_u_elevation_weight __pyx_string_tab[44]
+#define __pyx_n_u_elevation_weight_2 __pyx_string_tab[45]
+#define __pyx_n_u_elevations __pyx_string_tab[46]
+#define __pyx_n_u_end __pyx_string_tab[47]
+#define __pyx_n_u_enumerate __pyx_string_tab[48]
+#define __pyx_n_u_fall __pyx_string_tab[49]
+#define __pyx_n_u_fall_2 __pyx_string_tab[50]
+#define __pyx_n_u_force __pyx_string_tab[51]
+#define __pyx_n_u_func __pyx_string_tab[52]
+#define __pyx_n_u_g __pyx_string_tab[53]
+#define __pyx_n_u_gen_tile_key __pyx_string_tab[54]
+#define __pyx_n_u_get __pyx_string_tab[55]
+#define __pyx_n_u_get_2 __pyx_string_tab[56]
+#define __pyx_n_u_get_elevation __pyx_string_tab[57]
+#define __pyx_n_u_getstate __pyx_string_tab[58]
+#define __pyx_n_u_greediness __pyx_string_tab[59]
+#define __pyx_n_u_greediness_2 __pyx_string_tab[60]
+#define __pyx_n_u_gs __pyx_string_tab[61]
+#define __pyx_n_u_h __pyx_string_tab[62]
+#define __pyx_n_u_height __pyx_string_tab[63]
+#define __pyx_n_u_height_2 __pyx_string_tab[64]
+#define __pyx_n_u_init __pyx_string_tab[65]
+#define __pyx_n_u_is_coroutine __pyx_string_tab[66]
+#define __pyx_n_u_items __pyx_string_tab[67]
+#define __pyx_n_u_length __pyx_string_tab[68]
+#define __pyx_n_u_list __pyx_string_tab[69]
+#define __pyx_n_u_main __pyx_string_tab[70]
+#define __pyx_n_u_max_nodes __pyx_string_tab[71]
+#define __pyx_n_u_max_turn __pyx_string_tab[72]
+#define __pyx_n_u_max_turn_2 __pyx_string_tab[73]
+#define __pyx_n_u_module __pyx_string_tab[74]
+#define __pyx_n_u_name __pyx_string_tab[75]
+#define __pyx_n_u_neighbor __pyx_string_tab[76]
+#define __pyx_n_u_new __pyx_string_tab[77]
+#define __pyx_n_u_node __pyx_string_tab[78]
+#define __pyx_n_u_normalize_degrees __pyx_string_tab[79]
+#define __pyx_n_u_o __pyx_string_tab[80]
+#define __pyx_n_u_obj __pyx_string_tab[81]
+#define __pyx_n_u_offset __pyx_string_tab[82]
+#define __pyx_n_u_pathfind __pyx_string_tab[83]
+#define __pyx_n_u_pathfind_2 __pyx_string_tab[84]
+#define __pyx_n_u_pop __pyx_string_tab[85]
+#define __pyx_n_u_pygame_typing __pyx_string_tab[86]
+#define __pyx_n_u_pyx_checksum __pyx_string_tab[87]
+#define __pyx_n_u_pyx_result __pyx_string_tab[88]
+#define __pyx_n_u_pyx_state __pyx_string_tab[89]
+#define __pyx_n_u_pyx_type __pyx_string_tab[90]
+#define __pyx_n_u_pyx_unpickle_Pathfinder __pyx_string_tab[91]
+#define __pyx_n_u_pyx_unpickle_Pathfinder__set_s __pyx_string_tab[92]
+#define __pyx_n_u_pyx_vtable __pyx_string_tab[93]
+#define __pyx_n_u_qualname __pyx_string_tab[94]
+#define __pyx_n_u_reduce __pyx_string_tab[95]
+#define __pyx_n_u_reduce_cython __pyx_string_tab[96]
+#define __pyx_n_u_reduce_ex __pyx_string_tab[97]
+#define __pyx_n_u_reset_cache __pyx_string_tab[98]
+#define __pyx_n_u_return __pyx_string_tab[99]
+#define __pyx_n_u_self __pyx_string_tab[100]
+#define __pyx_n_u_set __pyx_string_tab[101]
+#define __pyx_n_u_set_name __pyx_string_tab[102]
+#define __pyx_n_u_setdefault __pyx_string_tab[103]
+#define __pyx_n_u_setstate __pyx_string_tab[104]
+#define __pyx_n_u_setstate_cython __pyx_string_tab[105]
+#define __pyx_n_u_start __pyx_string_tab[106]
+#define __pyx_n_u_state __pyx_string_tab[107]
+#define __pyx_n_u_straight_weight __pyx_string_tab[108]
+#define __pyx_n_u_straight_weight_2 __pyx_string_tab[109]
+#define __pyx_n_u_test __pyx_string_tab[110]
+#define __pyx_n_u_tilemap __pyx_string_tab[111]
+#define __pyx_n_u_tilemap_2 __pyx_string_tab[112]
+#define __pyx_n_u_typing __pyx_string_tab[113]
+#define __pyx_n_u_update __pyx_string_tab[114]
+#define __pyx_n_u_use_setstate __pyx_string_tab[115]
+#define __pyx_n_u_v __pyx_string_tab[116]
+#define __pyx_n_u_value __pyx_string_tab[117]
+#define __pyx_n_u_values __pyx_string_tab[118]
+#define __pyx_n_u_yaw __pyx_string_tab[119]
+#define __pyx_kp_b_iso88591_1A_U_1_1_as_Q_1 __pyx_string_tab[120]
+#define __pyx_kp_b_iso88591_1_2Qe6_Qe1E_q_1A __pyx_string_tab[121]
+#define __pyx_kp_b_iso88591_1_U_1_1_Qc_A_1 __pyx_string_tab[122]
+#define __pyx_kp_b_iso88591_4_aq_aq_t9D_Qhaq_4vQfKxq_1_1Ct6 __pyx_string_tab[123]
+#define __pyx_kp_b_iso88591_5_1_q_q_4wd_D_r_Q_D_Qa_1_r_Rwb __pyx_string_tab[124]
+#define __pyx_kp_b_iso88591_A __pyx_string_tab[125]
+#define __pyx_kp_b_iso88591_A_2 __pyx_string_tab[126]
+#define __pyx_kp_b_iso88591_A_F_E_4r __pyx_string_tab[127]
+#define __pyx_kp_b_iso88591_A_IQ __pyx_string_tab[128]
+#define __pyx_kp_b_iso88591_A_Ja __pyx_string_tab[129]
+#define __pyx_kp_b_iso88591_A_Kq __pyx_string_tab[130]
+#define __pyx_kp_b_iso88591_A_L __pyx_string_tab[131]
+#define __pyx_kp_b_iso88591_A_L_AQ_S_t1A_t9D_Qd_1_5_q_AZr_Q __pyx_string_tab[132]
+#define __pyx_kp_b_iso88591_A_M __pyx_string_tab[133]
+#define __pyx_kp_b_iso88591_A_O1 __pyx_string_tab[134]
+#define __pyx_kp_b_iso88591_A_q_t1 __pyx_string_tab[135]
+#define __pyx_kp_b_iso88591_A_t1 __pyx_string_tab[136]
+#define __pyx_kp_b_iso88591_A_t1_2 __pyx_string_tab[137]
+#define __pyx_kp_b_iso88591_A_t1_3 __pyx_string_tab[138]
+#define __pyx_kp_b_iso88591_A_t1_4 __pyx_string_tab[139]
+#define __pyx_kp_b_iso88591_A_t1_5 __pyx_string_tab[140]
+#define __pyx_kp_b_iso88591_A_t1_6 __pyx_string_tab[141]
+#define __pyx_kp_b_iso88591_A_t1_7 __pyx_string_tab[142]
+#define __pyx_kp_b_iso88591_A_t1_8 __pyx_string_tab[143]
+#define __pyx_kp_b_iso88591_D_AQ_2S_AXQ_q __pyx_string_tab[144]
+#define __pyx_kp_b_iso88591_G1_O1 __pyx_string_tab[145]
+#define __pyx_kp_b_iso88591_PPQ_at_7H_STTXXddnnyyzz_K_K __pyx_string_tab[146]
+#define __pyx_kp_b_iso88591_Qb_BgS_1A_t1G4q_3b_s_2Qa_d_d_O1 __pyx_string_tab[147]
+#define __pyx_kp_b_iso88591_T_4_t9D_SSWWkkoo_B_B_J_J_N_N_f __pyx_string_tab[148]
+#define __pyx_kp_b_iso88591_UV_Cq_q_r_A_Cxy_r_A_Qe1_r_A_q_c __pyx_string_tab[149]
+#define __pyx_kp_b_iso88591_WX_Cq_q_r_A_Cxy_r_A_Qe1_r_A_q_c __pyx_string_tab[150]
+#define __pyx_kp_b_iso88591_a_Cq_q_r_A_Cxy_r_A_Qe1_r_A_q_c __pyx_string_tab[151]
+#define __pyx_kp_b_iso88591_a_M_7_Cq_q_Q_A_6_Q_D_D_e4s_9Cq __pyx_string_tab[152]
+#define __pyx_kp_b_iso88591_q __pyx_string_tab[153]
+#define __pyx_kp_b_iso88591_q_0_kQR_XQa_7_A_1 __pyx_string_tab[154]
+#define __pyx_kp_b_iso88591_q_q_Q_d_at4q_A_d_q_A_d_at4q_A_K __pyx_string_tab[155]
+#define __pyx_kp_b_iso88591_q_t_Qe7_wk __pyx_string_tab[156]
 #define __pyx_float_neg_1_0 __pyx_number_tab[0]
 #define __pyx_int_0 __pyx_number_tab[1]
 #define __pyx_int_100 __pyx_number_tab[2]
-#define __pyx_int_182674040 __pyx_number_tab[3]
+#define __pyx_int_154910771 __pyx_number_tab[3]
 #define __pyx_int_2147483647 __pyx_number_tab[4]
 /* #### Code section: module_state_clear ### */
 #if CYTHON_USE_MODULE_STATE
@@ -3281,8 +3302,8 @@ static CYTHON_SMALL_CODE int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_ptype_8pathfind_Pathfinder);
   Py_CLEAR(clear_module_state->__pyx_type_8pathfind_Pathfinder);
   for (int i=0; i<2; ++i) { Py_CLEAR(clear_module_state->__pyx_tuple[i]); }
-  for (int i=0; i<36; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<144; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<42; ++i) { Py_CLEAR(clear_module_state->__pyx_codeobj_tab[i]); }
+  for (int i=0; i<157; ++i) { Py_CLEAR(clear_module_state->__pyx_string_tab[i]); }
   for (int i=0; i<5; ++i) { Py_CLEAR(clear_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_clear_contents ### */
 /* CommonTypesMetaclass.module_state_clear */
@@ -3309,8 +3330,8 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
   Py_VISIT(traverse_module_state->__pyx_ptype_8pathfind_Pathfinder);
   Py_VISIT(traverse_module_state->__pyx_type_8pathfind_Pathfinder);
   for (int i=0; i<2; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_tuple[i]); }
-  for (int i=0; i<36; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
-  for (int i=0; i<144; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
+  for (int i=0; i<42; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_codeobj_tab[i]); }
+  for (int i=0; i<157; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_string_tab[i]); }
   for (int i=0; i<5; ++i) { __Pyx_VISIT_CONST(traverse_module_state->__pyx_number_tab[i]); }
 /* #### Code section: module_state_traverse_contents ### */
 /* CommonTypesMetaclass.module_state_traverse */
@@ -3324,6 +3345,601 @@ return 0;
 }
 #endif
 /* #### Code section: module_code ### */
+
+/* "carray.to_py":113
+ * 
+ * 
+ * @cname("__Pyx_carray_to_py_float")             # <<<<<<<<<<<<<<
+ * cdef inline list __Pyx_carray_to_py_float(base_type *v, Py_ssize_t length):
+ *     cdef Py_ssize_t i
+*/
+
+static CYTHON_INLINE PyObject *__Pyx_carray_to_py_float(float *__pyx_v_v, Py_ssize_t __pyx_v_length) {
+  Py_ssize_t __pyx_v_i;
+  PyObject *__pyx_v_value = 0;
+  PyObject *__pyx_v_l = NULL;
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarationsFunc
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  Py_ssize_t __pyx_t_2;
+  Py_ssize_t __pyx_t_3;
+  Py_ssize_t __pyx_t_4;
+  int __pyx_t_5;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0]))
+  __Pyx_RefNannySetupContext("__Pyx_carray_to_py_float", 0);
+  __Pyx_TraceStartFunc("__Pyx_carray_to_py_float", __pyx_f[1], 113, 0, 0, 0, __PYX_ERR(1, 113, __pyx_L1_error));
+
+  /* "carray.to_py":117
+ *     cdef Py_ssize_t i
+ *     cdef object value
+ *     l = PyList_New(length)             # <<<<<<<<<<<<<<
+ *     for i in range(length):
+ *         value = v[<size_t> i]
+*/
+  __pyx_t_1 = PyList_New(__pyx_v_length); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 117, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_v_l = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* "carray.to_py":118
+ *     cdef object value
+ *     l = PyList_New(length)
+ *     for i in range(length):             # <<<<<<<<<<<<<<
+ *         value = v[<size_t> i]
+ *         Py_INCREF(value)
+*/
+  __pyx_t_2 = __pyx_v_length;
+  __pyx_t_3 = __pyx_t_2;
+  for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
+    __pyx_v_i = __pyx_t_4;
+
+    /* "carray.to_py":119
+ *     l = PyList_New(length)
+ *     for i in range(length):
+ *         value = v[<size_t> i]             # <<<<<<<<<<<<<<
+ *         Py_INCREF(value)
+ *         __Pyx_PyList_SET_ITEM(l, i, value)
+*/
+    __pyx_t_1 = PyFloat_FromDouble((__pyx_v_v[((size_t)__pyx_v_i)])); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 119, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_XDECREF_SET(__pyx_v_value, __pyx_t_1);
+    __pyx_t_1 = 0;
+
+    /* "carray.to_py":120
+ *     for i in range(length):
+ *         value = v[<size_t> i]
+ *         Py_INCREF(value)             # <<<<<<<<<<<<<<
+ *         __Pyx_PyList_SET_ITEM(l, i, value)
+ *     return l
+*/
+    Py_INCREF(__pyx_v_value);
+
+    /* "carray.to_py":121
+ *         value = v[<size_t> i]
+ *         Py_INCREF(value)
+ *         __Pyx_PyList_SET_ITEM(l, i, value)             # <<<<<<<<<<<<<<
+ *     return l
+ * 
+*/
+    __pyx_t_5 = __Pyx_PyList_SET_ITEM(__pyx_v_l, __pyx_v_i, __pyx_v_value); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(1, 121, __pyx_L1_error)
+  }
+
+  /* "carray.to_py":122
+ *         Py_INCREF(value)
+ *         __Pyx_PyList_SET_ITEM(l, i, value)
+ *     return l             # <<<<<<<<<<<<<<
+ * 
+ * 
+*/
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_l);
+  __pyx_r = __pyx_v_l;
+  __Pyx_TraceReturnValue(__pyx_r, 23, 0, __PYX_ERR(1, 122, __pyx_L1_error));
+  goto __pyx_L0;
+
+  /* "carray.to_py":113
+ * 
+ * 
+ * @cname("__Pyx_carray_to_py_float")             # <<<<<<<<<<<<<<
+ * cdef inline list __Pyx_carray_to_py_float(base_type *v, Py_ssize_t length):
+ *     cdef Py_ssize_t i
+*/
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_TraceException(__pyx_lineno, 0, 0);
+  #if CYTHON_USE_SYS_MONITORING
+  __Pyx_TraceExceptionUnwind(0, 0);
+  #else
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(1, 113, __pyx_L1_error));
+  #endif
+  __Pyx_AddTraceback("carray.to_py.__Pyx_carray_to_py_float", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = 0;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_value);
+  __Pyx_XDECREF(__pyx_v_l);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_PyMonitoring_ExitScope(0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "carray.to_py":125
+ * 
+ * 
+ * @cname("__Pyx_carray_to_tuple_float")             # <<<<<<<<<<<<<<
+ * cdef inline tuple __Pyx_carray_to_tuple_float(base_type *v, Py_ssize_t length):
+ *     cdef Py_ssize_t i
+*/
+
+static CYTHON_INLINE PyObject *__Pyx_carray_to_tuple_float(float *__pyx_v_v, Py_ssize_t __pyx_v_length) {
+  Py_ssize_t __pyx_v_i;
+  PyObject *__pyx_v_value = 0;
+  PyObject *__pyx_v_t = NULL;
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarationsFunc
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  Py_ssize_t __pyx_t_2;
+  Py_ssize_t __pyx_t_3;
+  Py_ssize_t __pyx_t_4;
+  int __pyx_t_5;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1]))
+  __Pyx_RefNannySetupContext("__Pyx_carray_to_tuple_float", 0);
+  __Pyx_TraceStartFunc("__Pyx_carray_to_tuple_float", __pyx_f[1], 125, 0, 0, 0, __PYX_ERR(1, 125, __pyx_L1_error));
+
+  /* "carray.to_py":129
+ *     cdef Py_ssize_t i
+ *     cdef object value
+ *     t = PyTuple_New(length)             # <<<<<<<<<<<<<<
+ *     for i in range(length):
+ *         value = v[<size_t> i]
+*/
+  __pyx_t_1 = PyTuple_New(__pyx_v_length); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 129, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_v_t = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* "carray.to_py":130
+ *     cdef object value
+ *     t = PyTuple_New(length)
+ *     for i in range(length):             # <<<<<<<<<<<<<<
+ *         value = v[<size_t> i]
+ *         Py_INCREF(value)
+*/
+  __pyx_t_2 = __pyx_v_length;
+  __pyx_t_3 = __pyx_t_2;
+  for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
+    __pyx_v_i = __pyx_t_4;
+
+    /* "carray.to_py":131
+ *     t = PyTuple_New(length)
+ *     for i in range(length):
+ *         value = v[<size_t> i]             # <<<<<<<<<<<<<<
+ *         Py_INCREF(value)
+ *         __Pyx_PyTuple_SET_ITEM(t, i, value)
+*/
+    __pyx_t_1 = PyFloat_FromDouble((__pyx_v_v[((size_t)__pyx_v_i)])); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 131, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_XDECREF_SET(__pyx_v_value, __pyx_t_1);
+    __pyx_t_1 = 0;
+
+    /* "carray.to_py":132
+ *     for i in range(length):
+ *         value = v[<size_t> i]
+ *         Py_INCREF(value)             # <<<<<<<<<<<<<<
+ *         __Pyx_PyTuple_SET_ITEM(t, i, value)
+ *     return t
+*/
+    Py_INCREF(__pyx_v_value);
+
+    /* "carray.to_py":133
+ *         value = v[<size_t> i]
+ *         Py_INCREF(value)
+ *         __Pyx_PyTuple_SET_ITEM(t, i, value)             # <<<<<<<<<<<<<<
+ *     return t
+*/
+    __pyx_t_5 = __Pyx_PyTuple_SET_ITEM(__pyx_v_t, __pyx_v_i, __pyx_v_value); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(1, 133, __pyx_L1_error)
+  }
+
+  /* "carray.to_py":134
+ *         Py_INCREF(value)
+ *         __Pyx_PyTuple_SET_ITEM(t, i, value)
+ *     return t             # <<<<<<<<<<<<<<
+*/
+  __Pyx_XDECREF(__pyx_r);
+  __Pyx_INCREF(__pyx_v_t);
+  __pyx_r = __pyx_v_t;
+  __Pyx_TraceReturnValue(__pyx_r, 23, 0, __PYX_ERR(1, 134, __pyx_L1_error));
+  goto __pyx_L0;
+
+  /* "carray.to_py":125
+ * 
+ * 
+ * @cname("__Pyx_carray_to_tuple_float")             # <<<<<<<<<<<<<<
+ * cdef inline tuple __Pyx_carray_to_tuple_float(base_type *v, Py_ssize_t length):
+ *     cdef Py_ssize_t i
+*/
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_TraceException(__pyx_lineno, 0, 0);
+  #if CYTHON_USE_SYS_MONITORING
+  __Pyx_TraceExceptionUnwind(0, 0);
+  #else
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(1, 125, __pyx_L1_error));
+  #endif
+  __Pyx_AddTraceback("carray.to_py.__Pyx_carray_to_tuple_float", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = 0;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_value);
+  __Pyx_XDECREF(__pyx_v_t);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_PyMonitoring_ExitScope(0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "carray.from_py":78
+ *     object PyErr_Format(exc, const char *format, ...)
+ * 
+ * @cname("__Pyx_carray_from_py_float")             # <<<<<<<<<<<<<<
+ * cdef int __Pyx_carray_from_py_float(object o, base_type *v, Py_ssize_t length) except -1:
+ *     cdef Py_ssize_t i = length
+*/
+
+static int __Pyx_carray_from_py_float(PyObject *__pyx_v_o, float *__pyx_v_v, Py_ssize_t __pyx_v_length) {
+  Py_ssize_t __pyx_v_i;
+  PyObject *__pyx_v_item = NULL;
+  int __pyx_r;
+  __Pyx_TraceDeclarationsFunc
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  Py_ssize_t __pyx_t_4;
+  int __pyx_t_5;
+  int __pyx_t_6;
+  PyObject *__pyx_t_7 = NULL;
+  Py_ssize_t __pyx_t_8;
+  PyObject *(*__pyx_t_9)(PyObject *);
+  PyObject *__pyx_t_10 = NULL;
+  float __pyx_t_11;
+  char const *__pyx_t_12;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[2]))
+  __Pyx_RefNannySetupContext("__Pyx_carray_from_py_float", 0);
+  __Pyx_TraceStartFunc("__Pyx_carray_from_py_float", __pyx_f[1], 78, 0, 0, 0, __PYX_ERR(1, 78, __pyx_L1_error));
+
+  /* "carray.from_py":80
+ * @cname("__Pyx_carray_from_py_float")
+ * cdef int __Pyx_carray_from_py_float(object o, base_type *v, Py_ssize_t length) except -1:
+ *     cdef Py_ssize_t i = length             # <<<<<<<<<<<<<<
+ *     try:
+ *         i = len(o)
+*/
+  __pyx_v_i = __pyx_v_length;
+
+  /* "carray.from_py":81
+ * cdef int __Pyx_carray_from_py_float(object o, base_type *v, Py_ssize_t length) except -1:
+ *     cdef Py_ssize_t i = length
+ *     try:             # <<<<<<<<<<<<<<
+ *         i = len(o)
+ *     except (TypeError, OverflowError):
+*/
+  {
+    __Pyx_PyThreadState_declare
+    __Pyx_PyThreadState_assign
+    __Pyx_ExceptionSave(&__pyx_t_1, &__pyx_t_2, &__pyx_t_3);
+    __Pyx_XGOTREF(__pyx_t_1);
+    __Pyx_XGOTREF(__pyx_t_2);
+    __Pyx_XGOTREF(__pyx_t_3);
+    /*try:*/ {
+
+      /* "carray.from_py":82
+ *     cdef Py_ssize_t i = length
+ *     try:
+ *         i = len(o)             # <<<<<<<<<<<<<<
+ *     except (TypeError, OverflowError):
+ *         pass
+*/
+      __pyx_t_4 = PyObject_Length(__pyx_v_o); if (unlikely(__pyx_t_4 == ((Py_ssize_t)-1))) __PYX_ERR(1, 82, __pyx_L3_error)
+      __pyx_v_i = __pyx_t_4;
+
+      /* "carray.from_py":81
+ * cdef int __Pyx_carray_from_py_float(object o, base_type *v, Py_ssize_t length) except -1:
+ *     cdef Py_ssize_t i = length
+ *     try:             # <<<<<<<<<<<<<<
+ *         i = len(o)
+ *     except (TypeError, OverflowError):
+*/
+    }
+    __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    goto __pyx_L8_try_end;
+    __pyx_L3_error:;
+    __Pyx_TraceException(__pyx_lineno, 0, 0);
+
+    /* "carray.from_py":83
+ *     try:
+ *         i = len(o)
+ *     except (TypeError, OverflowError):             # <<<<<<<<<<<<<<
+ *         pass
+ *     if i == length:
+*/
+    __pyx_t_5 = __Pyx_PyErr_ExceptionMatches2(((PyObject *)(((PyTypeObject*)PyExc_TypeError))), ((PyObject *)(((PyTypeObject*)PyExc_OverflowError))));
+    if (__pyx_t_5) {
+      __Pyx_AddTraceback("carray.from_py.__Pyx_carray_from_py_float", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_TraceExceptionHandled(0);
+      __Pyx_ErrRestore(0,0,0);
+      __Pyx_TraceExceptionDone();
+      goto __pyx_L4_exception_handled;
+    }
+    goto __pyx_L5_except_error;
+
+    /* "carray.from_py":81
+ * cdef int __Pyx_carray_from_py_float(object o, base_type *v, Py_ssize_t length) except -1:
+ *     cdef Py_ssize_t i = length
+ *     try:             # <<<<<<<<<<<<<<
+ *         i = len(o)
+ *     except (TypeError, OverflowError):
+*/
+    __pyx_L5_except_error:;
+    __Pyx_XGIVEREF(__pyx_t_1);
+    __Pyx_XGIVEREF(__pyx_t_2);
+    __Pyx_XGIVEREF(__pyx_t_3);
+    __Pyx_ExceptionReset(__pyx_t_1, __pyx_t_2, __pyx_t_3);
+    goto __pyx_L1_error;
+    __pyx_L4_exception_handled:;
+    __Pyx_XGIVEREF(__pyx_t_1);
+    __Pyx_XGIVEREF(__pyx_t_2);
+    __Pyx_XGIVEREF(__pyx_t_3);
+    __Pyx_ExceptionReset(__pyx_t_1, __pyx_t_2, __pyx_t_3);
+    __pyx_L8_try_end:;
+  }
+
+  /* "carray.from_py":85
+ *     except (TypeError, OverflowError):
+ *         pass
+ *     if i == length:             # <<<<<<<<<<<<<<
+ *         for i, item in enumerate(o):
+ *             if i >= length:
+*/
+  __pyx_t_6 = (__pyx_v_i == __pyx_v_length);
+  if (__pyx_t_6) {
+
+    /* "carray.from_py":86
+ *         pass
+ *     if i == length:
+ *         for i, item in enumerate(o):             # <<<<<<<<<<<<<<
+ *             if i >= length:
+ *                 break
+*/
+    __pyx_t_4 = 0;
+    if (likely(PyList_CheckExact(__pyx_v_o)) || PyTuple_CheckExact(__pyx_v_o)) {
+      __pyx_t_7 = __pyx_v_o; __Pyx_INCREF(__pyx_t_7);
+      __pyx_t_8 = 0;
+      __pyx_t_9 = NULL;
+    } else {
+      __pyx_t_8 = -1; __pyx_t_7 = PyObject_GetIter(__pyx_v_o); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 86, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_7);
+      __pyx_t_9 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_7); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 86, __pyx_L1_error)
+    }
+    for (;;) {
+      if (likely(!__pyx_t_9)) {
+        if (likely(PyList_CheckExact(__pyx_t_7))) {
+          {
+            Py_ssize_t __pyx_temp = __Pyx_PyList_GET_SIZE(__pyx_t_7);
+            #if !CYTHON_ASSUME_SAFE_SIZE
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 86, __pyx_L1_error)
+            #endif
+            if (__pyx_t_8 >= __pyx_temp) break;
+          }
+          __pyx_t_10 = __Pyx_PyList_GetItemRefFast(__pyx_t_7, __pyx_t_8, __Pyx_ReferenceSharing_OwnStrongReference);
+          ++__pyx_t_8;
+        } else {
+          {
+            Py_ssize_t __pyx_temp = __Pyx_PyTuple_GET_SIZE(__pyx_t_7);
+            #if !CYTHON_ASSUME_SAFE_SIZE
+            if (unlikely((__pyx_temp < 0))) __PYX_ERR(1, 86, __pyx_L1_error)
+            #endif
+            if (__pyx_t_8 >= __pyx_temp) break;
+          }
+          #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+          __pyx_t_10 = __Pyx_NewRef(PyTuple_GET_ITEM(__pyx_t_7, __pyx_t_8));
+          #else
+          __pyx_t_10 = __Pyx_PySequence_ITEM(__pyx_t_7, __pyx_t_8);
+          #endif
+          ++__pyx_t_8;
+        }
+        if (unlikely(!__pyx_t_10)) __PYX_ERR(1, 86, __pyx_L1_error)
+      } else {
+        __pyx_t_10 = __pyx_t_9(__pyx_t_7);
+        if (unlikely(!__pyx_t_10)) {
+          PyObject* exc_type = PyErr_Occurred();
+          if (exc_type) {
+            if (unlikely(!__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) __PYX_ERR(1, 86, __pyx_L1_error)
+            PyErr_Clear();
+          }
+          break;
+        }
+      }
+      __Pyx_GOTREF(__pyx_t_10);
+      __Pyx_XDECREF_SET(__pyx_v_item, __pyx_t_10);
+      __pyx_t_10 = 0;
+      __pyx_v_i = __pyx_t_4;
+      __pyx_t_4 = (__pyx_t_4 + 1);
+
+      /* "carray.from_py":87
+ *     if i == length:
+ *         for i, item in enumerate(o):
+ *             if i >= length:             # <<<<<<<<<<<<<<
+ *                 break
+ *             v[i] = item
+*/
+      __pyx_t_6 = (__pyx_v_i >= __pyx_v_length);
+      if (__pyx_t_6) {
+
+        /* "carray.from_py":88
+ *         for i, item in enumerate(o):
+ *             if i >= length:
+ *                 break             # <<<<<<<<<<<<<<
+ *             v[i] = item
+ *         else:
+*/
+        goto __pyx_L13_break;
+
+        /* "carray.from_py":87
+ *     if i == length:
+ *         for i, item in enumerate(o):
+ *             if i >= length:             # <<<<<<<<<<<<<<
+ *                 break
+ *             v[i] = item
+*/
+      }
+
+      /* "carray.from_py":89
+ *             if i >= length:
+ *                 break
+ *             v[i] = item             # <<<<<<<<<<<<<<
+ *         else:
+ *             i += 1  # convert index to length
+*/
+      __pyx_t_11 = __Pyx_PyFloat_AsFloat(__pyx_v_item); if (unlikely((__pyx_t_11 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 89, __pyx_L1_error)
+      (__pyx_v_v[__pyx_v_i]) = __pyx_t_11;
+
+      /* "carray.from_py":86
+ *         pass
+ *     if i == length:
+ *         for i, item in enumerate(o):             # <<<<<<<<<<<<<<
+ *             if i >= length:
+ *                 break
+*/
+    }
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    goto __pyx_L15_for_else;
+    __pyx_L13_break:;
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    goto __pyx_L16_for_end;
+    /*else*/ {
+      __pyx_L15_for_else:;
+
+      /* "carray.from_py":91
+ *             v[i] = item
+ *         else:
+ *             i += 1  # convert index to length             # <<<<<<<<<<<<<<
+ *             if i == length:
+ *                 return 0
+*/
+      __pyx_v_i = (__pyx_v_i + 1);
+
+      /* "carray.from_py":92
+ *         else:
+ *             i += 1  # convert index to length
+ *             if i == length:             # <<<<<<<<<<<<<<
+ *                 return 0
+ * 
+*/
+      __pyx_t_6 = (__pyx_v_i == __pyx_v_length);
+      if (__pyx_t_6) {
+
+        /* "carray.from_py":93
+ *             i += 1  # convert index to length
+ *             if i == length:
+ *                 return 0             # <<<<<<<<<<<<<<
+ * 
+ *     PyErr_Format(
+*/
+        __pyx_r = 0;
+        __Pyx_TraceReturnCValue(__pyx_r, __Pyx_PyLong_From_int, 36, 0, __PYX_ERR(1, 93, __pyx_L1_error));
+        goto __pyx_L0;
+
+        /* "carray.from_py":92
+ *         else:
+ *             i += 1  # convert index to length
+ *             if i == length:             # <<<<<<<<<<<<<<
+ *                 return 0
+ * 
+*/
+      }
+    }
+    __pyx_L16_for_end:;
+
+    /* "carray.from_py":85
+ *     except (TypeError, OverflowError):
+ *         pass
+ *     if i == length:             # <<<<<<<<<<<<<<
+ *         for i, item in enumerate(o):
+ *             if i >= length:
+*/
+  }
+
+  /* "carray.from_py":98
+ *         IndexError,
+ *         ("too many values found during array assignment, expected %zd"
+ *          if i >= length else             # <<<<<<<<<<<<<<
+ *          "not enough values found during array assignment, expected %zd, got %zd"),
+ *         length, i)
+*/
+  __pyx_t_6 = (__pyx_v_i >= __pyx_v_length);
+  if (__pyx_t_6) {
+    __pyx_t_12 = __pyx_k_too_many_values_found_during_arr;
+  } else {
+    __pyx_t_12 = __pyx_k_not_enough_values_found_during_a;
+  }
+
+  /* "carray.from_py":95
+ *                 return 0
+ * 
+ *     PyErr_Format(             # <<<<<<<<<<<<<<
+ *         IndexError,
+ *         ("too many values found during array assignment, expected %zd"
+*/
+  __pyx_t_7 = PyErr_Format(((PyObject *)(((PyTypeObject*)PyExc_IndexError))), __pyx_t_12, __pyx_v_length, __pyx_v_i); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 95, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+
+  /* "carray.from_py":78
+ *     object PyErr_Format(exc, const char *format, ...)
+ * 
+ * @cname("__Pyx_carray_from_py_float")             # <<<<<<<<<<<<<<
+ * cdef int __Pyx_carray_from_py_float(object o, base_type *v, Py_ssize_t length) except -1:
+ *     cdef Py_ssize_t i = length
+*/
+
+  /* function exit code */
+  __pyx_r = 0;
+  __Pyx_TraceReturnCValue(__pyx_r, __Pyx_PyLong_From_int, 0, 0, __PYX_ERR(1, 78, __pyx_L1_error));
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_7);
+  __Pyx_XDECREF(__pyx_t_10);
+  __Pyx_TraceException(__pyx_lineno, 0, 0);
+  #if CYTHON_USE_SYS_MONITORING
+  __Pyx_TraceExceptionUnwind(0, 0);
+  #else
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(1, 78, __pyx_L1_error));
+  #endif
+  __Pyx_AddTraceback("carray.from_py.__Pyx_carray_from_py_float", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_item);
+  __Pyx_PyMonitoring_ExitScope(0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
 
 /* "carray.to_py":113
  * 
@@ -3348,7 +3964,7 @@ static CYTHON_INLINE PyObject *__Pyx_carray_to_py_int(int *__pyx_v_v, Py_ssize_t
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[3]))
   __Pyx_RefNannySetupContext("__Pyx_carray_to_py_int", 0);
   __Pyx_TraceStartFunc("__Pyx_carray_to_py_int", __pyx_f[1], 113, 0, 0, 0, __PYX_ERR(1, 113, __pyx_L1_error));
 
@@ -3471,7 +4087,7 @@ static CYTHON_INLINE PyObject *__Pyx_carray_to_tuple_int(int *__pyx_v_v, Py_ssiz
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[4]))
   __Pyx_RefNannySetupContext("__Pyx_carray_to_tuple_int", 0);
   __Pyx_TraceStartFunc("__Pyx_carray_to_tuple_int", __pyx_f[1], 125, 0, 0, 0, __PYX_ERR(1, 125, __pyx_L1_error));
 
@@ -3591,7 +4207,7 @@ static CYTHON_INLINE PyObject *__Pyx_carray_to_py_int___5b_2_5d_(int (*__pyx_v_v
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[2]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[5]))
   __Pyx_RefNannySetupContext("__Pyx_carray_to_py_int___5b_2_5d_", 0);
   __Pyx_TraceStartFunc("__Pyx_carray_to_py_int___5b_2_5d_", __pyx_f[1], 113, 0, 0, 0, __PYX_ERR(1, 113, __pyx_L1_error));
 
@@ -3714,7 +4330,7 @@ static CYTHON_INLINE PyObject *__Pyx_carray_to_tuple_int___5b_2_5d_(int (*__pyx_
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[3]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[6]))
   __Pyx_RefNannySetupContext("__Pyx_carray_to_tuple_int___5b_2_5d_", 0);
   __Pyx_TraceStartFunc("__Pyx_carray_to_tuple_int___5b_2_5d_", __pyx_f[1], 125, 0, 0, 0, __PYX_ERR(1, 125, __pyx_L1_error));
 
@@ -3839,7 +4455,7 @@ static int __Pyx_carray_from_py_int(PyObject *__pyx_v_o, int *__pyx_v_v, Py_ssiz
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[4]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[7]))
   __Pyx_RefNannySetupContext("__Pyx_carray_from_py_int", 0);
   __Pyx_TraceStartFunc("__Pyx_carray_from_py_int", __pyx_f[1], 78, 0, 0, 0, __PYX_ERR(1, 78, __pyx_L1_error));
 
@@ -4183,7 +4799,7 @@ static int __Pyx_carray_from_py_int___5b_2_5d_(PyObject *__pyx_v_o, int (*__pyx_
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[5]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[8]))
   __Pyx_RefNannySetupContext("__Pyx_carray_from_py_int___5b_2_5d_", 0);
   __Pyx_TraceStartFunc("__Pyx_carray_from_py_int___5b_2_5d_", __pyx_f[1], 78, 0, 0, 0, __PYX_ERR(1, 78, __pyx_L1_error));
 
@@ -4526,7 +5142,7 @@ static PyObject *__pyx_f_8pathfind_gen_tile_key(PyObject *__pyx_v_obj) {
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[6]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[9]))
   __Pyx_RefNannySetupContext("gen_tile_key", 0);
   __Pyx_TraceStartFunc("gen_tile_key", __pyx_f[0], 14, 0, 0, 0, __PYX_ERR(0, 14, __pyx_L1_error));
 
@@ -4591,8 +5207,59 @@ static PyObject *__pyx_f_8pathfind_gen_tile_key(PyObject *__pyx_v_obj) {
   return __pyx_r;
 }
 
-/* "pathfind.pyx":34
- *         float _greediness
+/* "pathfind.pyx":19
+ * 
+ * 
+ * cdef float normalize_degrees(float angle):             # <<<<<<<<<<<<<<
+ *     # + 180, then + 360
+ *     return (angle + 540) % 360 - 180
+*/
+
+static float __pyx_f_8pathfind_normalize_degrees(float __pyx_v_angle) {
+  float __pyx_r;
+  __Pyx_TraceDeclarationsFunc
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[10]))
+  __Pyx_TraceStartFunc("normalize_degrees", __pyx_f[0], 19, 0, 0, 0, __PYX_ERR(0, 19, __pyx_L1_error));
+
+  /* "pathfind.pyx":21
+ * cdef float normalize_degrees(float angle):
+ *     # + 180, then + 360
+ *     return (angle + 540) % 360 - 180             # <<<<<<<<<<<<<<
+ * 
+ * 
+*/
+  __pyx_r = (fmodf((__pyx_v_angle + 540.0), 360.0) - 180.0);
+  __Pyx_TraceReturnCValue(__pyx_r, PyFloat_FromDouble, 2, 0, __PYX_ERR(0, 21, __pyx_L1_error));
+  goto __pyx_L0;
+
+  /* "pathfind.pyx":19
+ * 
+ * 
+ * cdef float normalize_degrees(float angle):             # <<<<<<<<<<<<<<
+ *     # + 180, then + 360
+ *     return (angle + 540) % 360 - 180
+*/
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_TraceException(__pyx_lineno, 0, 0);
+  #if CYTHON_USE_SYS_MONITORING
+  __Pyx_TraceExceptionUnwind(0, 0);
+  #else
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 19, __pyx_L1_error));
+  #endif
+  __Pyx_AddTraceback("pathfind.normalize_degrees", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_PyMonitoring_ExitScope(0);
+  return __pyx_r;
+}
+
+/* "pathfind.pyx":41
+ *         float _max_turn
  * 
  *     def __init__(self: Self,             # <<<<<<<<<<<<<<
  *                  dict tilemap,
@@ -4610,9 +5277,10 @@ static int __pyx_pw_8pathfind_10Pathfinder_1__init__(PyObject *__pyx_v_self, PyO
   float __pyx_v_diagonal_weight;
   float __pyx_v_elevation_weight;
   float __pyx_v_greediness;
+  float __pyx_v_max_turn;
   CYTHON_UNUSED Py_ssize_t __pyx_nargs;
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
-  PyObject* values[8] = {0,0,0,0,0,0,0,0};
+  PyObject* values[9] = {0,0,0,0,0,0,0,0,0};
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -4626,128 +5294,141 @@ static int __pyx_pw_8pathfind_10Pathfinder_1__init__(PyObject *__pyx_v_self, PyO
   #endif
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
   {
-    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_tilemap,&__pyx_mstate_global->__pyx_n_u_height,&__pyx_mstate_global->__pyx_n_u_climb,&__pyx_mstate_global->__pyx_n_u_fall,&__pyx_mstate_global->__pyx_n_u_straight_weight,&__pyx_mstate_global->__pyx_n_u_diagonal_weight,&__pyx_mstate_global->__pyx_n_u_elevation_weight,&__pyx_mstate_global->__pyx_n_u_greediness,0};
+    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_tilemap,&__pyx_mstate_global->__pyx_n_u_height,&__pyx_mstate_global->__pyx_n_u_climb,&__pyx_mstate_global->__pyx_n_u_fall,&__pyx_mstate_global->__pyx_n_u_straight_weight,&__pyx_mstate_global->__pyx_n_u_diagonal_weight,&__pyx_mstate_global->__pyx_n_u_elevation_weight,&__pyx_mstate_global->__pyx_n_u_greediness,&__pyx_mstate_global->__pyx_n_u_max_turn,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_VARARGS(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 34, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 41, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
+        case  9:
+        values[8] = __Pyx_ArgRef_VARARGS(__pyx_args, 8);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 41, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
         case  8:
         values[7] = __Pyx_ArgRef_VARARGS(__pyx_args, 7);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 34, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 41, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  7:
         values[6] = __Pyx_ArgRef_VARARGS(__pyx_args, 6);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 34, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 41, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  6:
         values[5] = __Pyx_ArgRef_VARARGS(__pyx_args, 5);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 34, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 41, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  5:
         values[4] = __Pyx_ArgRef_VARARGS(__pyx_args, 4);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 34, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 41, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  4:
         values[3] = __Pyx_ArgRef_VARARGS(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 34, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 41, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  3:
         values[2] = __Pyx_ArgRef_VARARGS(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 34, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 41, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_VARARGS(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 34, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 41, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_VARARGS(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 34, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 41, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "__init__", 0) < (0)) __PYX_ERR(0, 34, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "__init__", 0) < (0)) __PYX_ERR(0, 41, __pyx_L3_error)
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("__init__", 0, 1, 8, i); __PYX_ERR(0, 34, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("__init__", 0, 1, 9, i); __PYX_ERR(0, 41, __pyx_L3_error) }
       }
     } else {
       switch (__pyx_nargs) {
+        case  9:
+        values[8] = __Pyx_ArgRef_VARARGS(__pyx_args, 8);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[8])) __PYX_ERR(0, 41, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
         case  8:
         values[7] = __Pyx_ArgRef_VARARGS(__pyx_args, 7);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 34, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 41, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  7:
         values[6] = __Pyx_ArgRef_VARARGS(__pyx_args, 6);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 34, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 41, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  6:
         values[5] = __Pyx_ArgRef_VARARGS(__pyx_args, 5);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 34, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 41, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  5:
         values[4] = __Pyx_ArgRef_VARARGS(__pyx_args, 4);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 34, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 41, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  4:
         values[3] = __Pyx_ArgRef_VARARGS(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 34, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 41, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  3:
         values[2] = __Pyx_ArgRef_VARARGS(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 34, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 41, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_VARARGS(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 34, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 41, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_VARARGS(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 34, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 41, __pyx_L3_error)
         break;
         default: goto __pyx_L5_argtuple_error;
       }
     }
     __pyx_v_tilemap = ((PyObject*)values[0]);
     if (values[1]) {
-      __pyx_v_height = __Pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v_height == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 36, __pyx_L3_error)
+      __pyx_v_height = __Pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v_height == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 43, __pyx_L3_error)
     } else {
       __pyx_v_height = ((float)1.0);
     }
     if (values[2]) {
-      __pyx_v_climb = __Pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v_climb == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 37, __pyx_L3_error)
+      __pyx_v_climb = __Pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v_climb == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 44, __pyx_L3_error)
     } else {
       __pyx_v_climb = ((float)0.2);
     }
     if (values[3]) {
-      __pyx_v_fall = __Pyx_PyFloat_AsFloat(values[3]); if (unlikely((__pyx_v_fall == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 38, __pyx_L3_error)
+      __pyx_v_fall = __Pyx_PyFloat_AsFloat(values[3]); if (unlikely((__pyx_v_fall == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 45, __pyx_L3_error)
     } else {
       __pyx_v_fall = ((float)-1.0);
     }
     if (values[4]) {
-      __pyx_v_straight_weight = __Pyx_PyFloat_AsFloat(values[4]); if (unlikely((__pyx_v_straight_weight == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 39, __pyx_L3_error)
+      __pyx_v_straight_weight = __Pyx_PyFloat_AsFloat(values[4]); if (unlikely((__pyx_v_straight_weight == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 46, __pyx_L3_error)
     } else {
       __pyx_v_straight_weight = ((float)1.0);
     }
     if (values[5]) {
-      __pyx_v_diagonal_weight = __Pyx_PyFloat_AsFloat(values[5]); if (unlikely((__pyx_v_diagonal_weight == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 40, __pyx_L3_error)
+      __pyx_v_diagonal_weight = __Pyx_PyFloat_AsFloat(values[5]); if (unlikely((__pyx_v_diagonal_weight == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 47, __pyx_L3_error)
     } else {
       __pyx_v_diagonal_weight = ((float)1.414);
     }
     if (values[6]) {
-      __pyx_v_elevation_weight = __Pyx_PyFloat_AsFloat(values[6]); if (unlikely((__pyx_v_elevation_weight == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 41, __pyx_L3_error)
+      __pyx_v_elevation_weight = __Pyx_PyFloat_AsFloat(values[6]); if (unlikely((__pyx_v_elevation_weight == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 48, __pyx_L3_error)
     } else {
       __pyx_v_elevation_weight = ((float)1.0);
     }
     if (values[7]) {
-      __pyx_v_greediness = __Pyx_PyFloat_AsFloat(values[7]); if (unlikely((__pyx_v_greediness == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 42, __pyx_L3_error)
+      __pyx_v_greediness = __Pyx_PyFloat_AsFloat(values[7]); if (unlikely((__pyx_v_greediness == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 49, __pyx_L3_error)
     } else {
       __pyx_v_greediness = ((float)1.0);
+    }
+    if (values[8]) {
+      __pyx_v_max_turn = __Pyx_PyFloat_AsFloat(values[8]); if (unlikely((__pyx_v_max_turn == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 50, __pyx_L3_error)
+    } else {
+      __pyx_v_max_turn = ((float)90.0);
     }
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 0, 1, 8, __pyx_nargs); __PYX_ERR(0, 34, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__init__", 0, 1, 9, __pyx_nargs); __PYX_ERR(0, 41, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -4758,8 +5439,8 @@ static int __pyx_pw_8pathfind_10Pathfinder_1__init__(PyObject *__pyx_v_self, PyO
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_tilemap), (&PyDict_Type), 1, "tilemap", 1))) __PYX_ERR(0, 35, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8pathfind_10Pathfinder___init__(((struct __pyx_obj_8pathfind_Pathfinder *)__pyx_v_self), __pyx_v_tilemap, __pyx_v_height, __pyx_v_climb, __pyx_v_fall, __pyx_v_straight_weight, __pyx_v_diagonal_weight, __pyx_v_elevation_weight, __pyx_v_greediness);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_tilemap), (&PyDict_Type), 1, "tilemap", 1))) __PYX_ERR(0, 42, __pyx_L1_error)
+  __pyx_r = __pyx_pf_8pathfind_10Pathfinder___init__(((struct __pyx_obj_8pathfind_Pathfinder *)__pyx_v_self), __pyx_v_tilemap, __pyx_v_height, __pyx_v_climb, __pyx_v_fall, __pyx_v_straight_weight, __pyx_v_diagonal_weight, __pyx_v_elevation_weight, __pyx_v_greediness, __pyx_v_max_turn);
 
   /* function exit code */
   goto __pyx_L0;
@@ -4778,7 +5459,7 @@ static int __pyx_pw_8pathfind_10Pathfinder_1__init__(PyObject *__pyx_v_self, PyO
   return __pyx_r;
 }
 
-static int __pyx_pf_8pathfind_10Pathfinder___init__(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, PyObject *__pyx_v_tilemap, float __pyx_v_height, float __pyx_v_climb, float __pyx_v_fall, float __pyx_v_straight_weight, float __pyx_v_diagonal_weight, float __pyx_v_elevation_weight, float __pyx_v_greediness) {
+static int __pyx_pf_8pathfind_10Pathfinder___init__(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, PyObject *__pyx_v_tilemap, float __pyx_v_height, float __pyx_v_climb, float __pyx_v_fall, float __pyx_v_straight_weight, float __pyx_v_diagonal_weight, float __pyx_v_elevation_weight, float __pyx_v_greediness, float __pyx_v_max_turn) {
   int __pyx_r;
   __Pyx_TraceDeclarationsFunc
   __Pyx_RefNannyDeclarations
@@ -4791,14 +5472,15 @@ static int __pyx_pf_8pathfind_10Pathfinder___init__(struct __pyx_obj_8pathfind_P
   int __pyx_t_7[2];
   int __pyx_t_8[2];
   int __pyx_t_9[8][2];
+  float __pyx_t_10[8];
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[7]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[11]))
   __Pyx_RefNannySetupContext("__init__", 0);
-  __Pyx_TraceStartFunc("__init__", __pyx_f[0], 34, 0, 0, 0, __PYX_ERR(0, 34, __pyx_L1_error));
+  __Pyx_TraceStartFunc("__init__", __pyx_f[0], 41, 0, 0, 0, __PYX_ERR(0, 41, __pyx_L1_error));
 
-  /* "pathfind.pyx":45
+  /* "pathfind.pyx":53
  * 
  *         self._TILE_OFFSETS = [
  *             [-1,  1], [0,  1], [1,  1],             # <<<<<<<<<<<<<<
@@ -4812,7 +5494,7 @@ static int __pyx_pf_8pathfind_10Pathfinder___init__(struct __pyx_obj_8pathfind_P
   __pyx_t_3[0] = 1;
   __pyx_t_3[1] = 1;
 
-  /* "pathfind.pyx":46
+  /* "pathfind.pyx":54
  *         self._TILE_OFFSETS = [
  *             [-1,  1], [0,  1], [1,  1],
  *             [-1,  0],          [1,  0],             # <<<<<<<<<<<<<<
@@ -4824,7 +5506,7 @@ static int __pyx_pf_8pathfind_10Pathfinder___init__(struct __pyx_obj_8pathfind_P
   __pyx_t_5[0] = 1;
   __pyx_t_5[1] = 0;
 
-  /* "pathfind.pyx":47
+  /* "pathfind.pyx":55
  *             [-1,  1], [0,  1], [1,  1],
  *             [-1,  0],          [1,  0],
  *             [-1, -1], [0, -1], [1, -1],             # <<<<<<<<<<<<<<
@@ -4838,8 +5520,8 @@ static int __pyx_pf_8pathfind_10Pathfinder___init__(struct __pyx_obj_8pathfind_P
   __pyx_t_8[0] = 1;
   __pyx_t_8[1] = -1;
 
-  /* "pathfind.pyx":44
- *                  float greediness=1) -> None:
+  /* "pathfind.pyx":52
+ *                  float max_turn=90) -> None:
  * 
  *         self._TILE_OFFSETS = [             # <<<<<<<<<<<<<<
  *             [-1,  1], [0,  1], [1,  1],
@@ -4855,7 +5537,24 @@ static int __pyx_pf_8pathfind_10Pathfinder___init__(struct __pyx_obj_8pathfind_P
   memcpy(&(__pyx_t_9[7]), __pyx_t_8, sizeof(__pyx_t_9[0]));
   memcpy(&(__pyx_v_self->_TILE_OFFSETS[0]), __pyx_t_9, sizeof(__pyx_v_self->_TILE_OFFSETS[0]) * (8));
 
-  /* "pathfind.pyx":50
+  /* "pathfind.pyx":58
+ *         ]
+ * 
+ *         self._ANGLES = [             # <<<<<<<<<<<<<<
+ *             -45,   0,   45,
+ *             -90,        90,
+*/
+  __pyx_t_10[0] = -45.0;
+  __pyx_t_10[1] = 0.0;
+  __pyx_t_10[2] = 45.0;
+  __pyx_t_10[3] = -90.0;
+  __pyx_t_10[4] = 90.0;
+  __pyx_t_10[5] = -135.0;
+  __pyx_t_10[6] = -180.0;
+  __pyx_t_10[7] = 135.0;
+  memcpy(&(__pyx_v_self->_ANGLES[0]), __pyx_t_10, sizeof(__pyx_v_self->_ANGLES[0]) * (8));
+
+  /* "pathfind.pyx":64
  *         ]
  * 
  *         self._tilemap = tilemap             # <<<<<<<<<<<<<<
@@ -4868,7 +5567,7 @@ static int __pyx_pf_8pathfind_10Pathfinder___init__(struct __pyx_obj_8pathfind_P
   __Pyx_DECREF(__pyx_v_self->_tilemap);
   __pyx_v_self->_tilemap = __pyx_v_tilemap;
 
-  /* "pathfind.pyx":51
+  /* "pathfind.pyx":65
  * 
  *         self._tilemap = tilemap
  *         self._height = height             # <<<<<<<<<<<<<<
@@ -4877,7 +5576,7 @@ static int __pyx_pf_8pathfind_10Pathfinder___init__(struct __pyx_obj_8pathfind_P
 */
   __pyx_v_self->_height = __pyx_v_height;
 
-  /* "pathfind.pyx":52
+  /* "pathfind.pyx":66
  *         self._tilemap = tilemap
  *         self._height = height
  *         self._climb = climb             # <<<<<<<<<<<<<<
@@ -4886,7 +5585,7 @@ static int __pyx_pf_8pathfind_10Pathfinder___init__(struct __pyx_obj_8pathfind_P
 */
   __pyx_v_self->_climb = __pyx_v_climb;
 
-  /* "pathfind.pyx":53
+  /* "pathfind.pyx":67
  *         self._height = height
  *         self._climb = climb
  *         self._fall = fall             # <<<<<<<<<<<<<<
@@ -4895,7 +5594,7 @@ static int __pyx_pf_8pathfind_10Pathfinder___init__(struct __pyx_obj_8pathfind_P
 */
   __pyx_v_self->_fall = __pyx_v_fall;
 
-  /* "pathfind.pyx":54
+  /* "pathfind.pyx":68
  *         self._climb = climb
  *         self._fall = fall
  *         self._straight_weight = straight_weight             # <<<<<<<<<<<<<<
@@ -4904,7 +5603,7 @@ static int __pyx_pf_8pathfind_10Pathfinder___init__(struct __pyx_obj_8pathfind_P
 */
   __pyx_v_self->_straight_weight = __pyx_v_straight_weight;
 
-  /* "pathfind.pyx":55
+  /* "pathfind.pyx":69
  *         self._fall = fall
  *         self._straight_weight = straight_weight
  *         self._diagonal_weight = diagonal_weight             # <<<<<<<<<<<<<<
@@ -4913,26 +5612,35 @@ static int __pyx_pf_8pathfind_10Pathfinder___init__(struct __pyx_obj_8pathfind_P
 */
   __pyx_v_self->_diagonal_weight = __pyx_v_diagonal_weight;
 
-  /* "pathfind.pyx":56
+  /* "pathfind.pyx":70
  *         self._straight_weight = straight_weight
  *         self._diagonal_weight = diagonal_weight
  *         self._elevation_weight = elevation_weight             # <<<<<<<<<<<<<<
  *         self._greediness = greediness
- * 
+ *         self._max_turn = max_turn
 */
   __pyx_v_self->_elevation_weight = __pyx_v_elevation_weight;
 
-  /* "pathfind.pyx":57
+  /* "pathfind.pyx":71
  *         self._diagonal_weight = diagonal_weight
  *         self._elevation_weight = elevation_weight
  *         self._greediness = greediness             # <<<<<<<<<<<<<<
+ *         self._max_turn = max_turn
  * 
- *     @property
 */
   __pyx_v_self->_greediness = __pyx_v_greediness;
 
-  /* "pathfind.pyx":34
- *         float _greediness
+  /* "pathfind.pyx":72
+ *         self._elevation_weight = elevation_weight
+ *         self._greediness = greediness
+ *         self._max_turn = max_turn             # <<<<<<<<<<<<<<
+ * 
+ *     @property
+*/
+  __pyx_v_self->_max_turn = __pyx_v_max_turn;
+
+  /* "pathfind.pyx":41
+ *         float _max_turn
  * 
  *     def __init__(self: Self,             # <<<<<<<<<<<<<<
  *                  dict tilemap,
@@ -4941,14 +5649,14 @@ static int __pyx_pf_8pathfind_10Pathfinder___init__(struct __pyx_obj_8pathfind_P
 
   /* function exit code */
   __pyx_r = 0;
-  __Pyx_TraceReturnCValue(__pyx_r, __Pyx_Owned_Py_None, 0, 0, __PYX_ERR(0, 34, __pyx_L1_error));
+  __Pyx_TraceReturnCValue(__pyx_r, __Pyx_Owned_Py_None, 0, 0, __PYX_ERR(0, 41, __pyx_L1_error));
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_TraceException(__pyx_lineno, 0, 0);
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 34, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 41, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
@@ -4958,8 +5666,8 @@ static int __pyx_pf_8pathfind_10Pathfinder___init__(struct __pyx_obj_8pathfind_P
   return __pyx_r;
 }
 
-/* "pathfind.pyx":59
- *         self._greediness = greediness
+/* "pathfind.pyx":74
+ *         self._max_turn = max_turn
  * 
  *     @property             # <<<<<<<<<<<<<<
  *     def tilemap(self: Self):
@@ -4988,11 +5696,11 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_7tilemap___get__(struct __pyx_o
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[8]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[12]))
   __Pyx_RefNannySetupContext("__get__", 0);
-  __Pyx_TraceStartFunc("__get__", __pyx_f[0], 59, 0, 0, 0, __PYX_ERR(0, 59, __pyx_L1_error));
+  __Pyx_TraceStartFunc("__get__", __pyx_f[0], 74, 0, 0, 0, __PYX_ERR(0, 74, __pyx_L1_error));
 
-  /* "pathfind.pyx":61
+  /* "pathfind.pyx":76
  *     @property
  *     def tilemap(self: Self):
  *         return self._tilemap             # <<<<<<<<<<<<<<
@@ -5002,11 +5710,11 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_7tilemap___get__(struct __pyx_o
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v_self->_tilemap);
   __pyx_r = __pyx_v_self->_tilemap;
-  __Pyx_TraceReturnValue(__pyx_r, 2, 0, __PYX_ERR(0, 61, __pyx_L1_error));
+  __Pyx_TraceReturnValue(__pyx_r, 2, 0, __PYX_ERR(0, 76, __pyx_L1_error));
   goto __pyx_L0;
 
-  /* "pathfind.pyx":59
- *         self._greediness = greediness
+  /* "pathfind.pyx":74
+ *         self._max_turn = max_turn
  * 
  *     @property             # <<<<<<<<<<<<<<
  *     def tilemap(self: Self):
@@ -5019,7 +5727,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_7tilemap___get__(struct __pyx_o
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 59, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 74, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder.tilemap.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
@@ -5030,7 +5738,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_7tilemap___get__(struct __pyx_o
   return __pyx_r;
 }
 
-/* "pathfind.pyx":63
+/* "pathfind.pyx":78
  *         return self._tilemap
  * 
  *     @tilemap.setter             # <<<<<<<<<<<<<<
@@ -5049,7 +5757,7 @@ static int __pyx_pw_8pathfind_10Pathfinder_7tilemap_3__set__(PyObject *__pyx_v_s
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_value), (&PyDict_Type), 1, "value", 1))) __PYX_ERR(0, 64, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_value), (&PyDict_Type), 1, "value", 1))) __PYX_ERR(0, 79, __pyx_L1_error)
   __pyx_r = __pyx_pf_8pathfind_10Pathfinder_7tilemap_2__set__(((struct __pyx_obj_8pathfind_Pathfinder *)__pyx_v_self), ((PyObject*)__pyx_v_value));
 
   /* function exit code */
@@ -5070,11 +5778,11 @@ static int __pyx_pf_8pathfind_10Pathfinder_7tilemap_2__set__(struct __pyx_obj_8p
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[9]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[13]))
   __Pyx_RefNannySetupContext("__set__", 0);
-  __Pyx_TraceStartFunc("__set__", __pyx_f[0], 63, 0, 0, 0, __PYX_ERR(0, 63, __pyx_L1_error));
+  __Pyx_TraceStartFunc("__set__", __pyx_f[0], 78, 0, 0, 0, __PYX_ERR(0, 78, __pyx_L1_error));
 
-  /* "pathfind.pyx":65
+  /* "pathfind.pyx":80
  *     @tilemap.setter
  *     def tilemap(self: Self, dict value):
  *         self._tilemap = value             # <<<<<<<<<<<<<<
@@ -5087,7 +5795,7 @@ static int __pyx_pf_8pathfind_10Pathfinder_7tilemap_2__set__(struct __pyx_obj_8p
   __Pyx_DECREF(__pyx_v_self->_tilemap);
   __pyx_v_self->_tilemap = __pyx_v_value;
 
-  /* "pathfind.pyx":63
+  /* "pathfind.pyx":78
  *         return self._tilemap
  * 
  *     @tilemap.setter             # <<<<<<<<<<<<<<
@@ -5097,14 +5805,14 @@ static int __pyx_pf_8pathfind_10Pathfinder_7tilemap_2__set__(struct __pyx_obj_8p
 
   /* function exit code */
   __pyx_r = 0;
-  __Pyx_TraceReturnCValue(__pyx_r, __Pyx_Owned_Py_None, 0, 0, __PYX_ERR(0, 63, __pyx_L1_error));
+  __Pyx_TraceReturnCValue(__pyx_r, __Pyx_Owned_Py_None, 0, 0, __PYX_ERR(0, 78, __pyx_L1_error));
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_TraceException(__pyx_lineno, 0, 0);
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 63, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 78, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder.tilemap.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
@@ -5114,7 +5822,7 @@ static int __pyx_pf_8pathfind_10Pathfinder_7tilemap_2__set__(struct __pyx_obj_8p
   return __pyx_r;
 }
 
-/* "pathfind.pyx":67
+/* "pathfind.pyx":82
  *         self._tilemap = value
  * 
  *     @property             # <<<<<<<<<<<<<<
@@ -5145,11 +5853,11 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_6height___get__(struct __pyx_ob
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[10]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[14]))
   __Pyx_RefNannySetupContext("__get__", 0);
-  __Pyx_TraceStartFunc("__get__", __pyx_f[0], 67, 0, 0, 0, __PYX_ERR(0, 67, __pyx_L1_error));
+  __Pyx_TraceStartFunc("__get__", __pyx_f[0], 82, 0, 0, 0, __PYX_ERR(0, 82, __pyx_L1_error));
 
-  /* "pathfind.pyx":69
+  /* "pathfind.pyx":84
  *     @property
  *     def height(self: Self):
  *         return self._height             # <<<<<<<<<<<<<<
@@ -5157,14 +5865,14 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_6height___get__(struct __pyx_ob
  *     @height.setter
 */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_height); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 69, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_height); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 84, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
-  __Pyx_TraceReturnValue(__pyx_r, 2, 0, __PYX_ERR(0, 69, __pyx_L1_error));
+  __Pyx_TraceReturnValue(__pyx_r, 2, 0, __PYX_ERR(0, 84, __pyx_L1_error));
   goto __pyx_L0;
 
-  /* "pathfind.pyx":67
+  /* "pathfind.pyx":82
  *         self._tilemap = value
  * 
  *     @property             # <<<<<<<<<<<<<<
@@ -5179,7 +5887,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_6height___get__(struct __pyx_ob
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 67, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 82, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder.height.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
@@ -5190,7 +5898,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_6height___get__(struct __pyx_ob
   return __pyx_r;
 }
 
-/* "pathfind.pyx":71
+/* "pathfind.pyx":86
  *         return self._height
  * 
  *     @height.setter             # <<<<<<<<<<<<<<
@@ -5211,7 +5919,7 @@ static int __pyx_pw_8pathfind_10Pathfinder_6height_3__set__(PyObject *__pyx_v_se
   __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
   assert(__pyx_arg_value); {
-    __pyx_v_value = __Pyx_PyFloat_AsFloat(__pyx_arg_value); if (unlikely((__pyx_v_value == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 72, __pyx_L3_error)
+    __pyx_v_value = __Pyx_PyFloat_AsFloat(__pyx_arg_value); if (unlikely((__pyx_v_value == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 87, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -5232,10 +5940,10 @@ static int __pyx_pf_8pathfind_10Pathfinder_6height_2__set__(struct __pyx_obj_8pa
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[11]))
-  __Pyx_TraceStartFunc("__set__", __pyx_f[0], 71, 0, 0, 0, __PYX_ERR(0, 71, __pyx_L1_error));
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[15]))
+  __Pyx_TraceStartFunc("__set__", __pyx_f[0], 86, 0, 0, 0, __PYX_ERR(0, 86, __pyx_L1_error));
 
-  /* "pathfind.pyx":73
+  /* "pathfind.pyx":88
  *     @height.setter
  *     def height(self: Self, float value):
  *         self._height = value             # <<<<<<<<<<<<<<
@@ -5244,7 +5952,7 @@ static int __pyx_pf_8pathfind_10Pathfinder_6height_2__set__(struct __pyx_obj_8pa
 */
   __pyx_v_self->_height = __pyx_v_value;
 
-  /* "pathfind.pyx":71
+  /* "pathfind.pyx":86
  *         return self._height
  * 
  *     @height.setter             # <<<<<<<<<<<<<<
@@ -5254,14 +5962,14 @@ static int __pyx_pf_8pathfind_10Pathfinder_6height_2__set__(struct __pyx_obj_8pa
 
   /* function exit code */
   __pyx_r = 0;
-  __Pyx_TraceReturnCValue(__pyx_r, __Pyx_Owned_Py_None, 0, 0, __PYX_ERR(0, 71, __pyx_L1_error));
+  __Pyx_TraceReturnCValue(__pyx_r, __Pyx_Owned_Py_None, 0, 0, __PYX_ERR(0, 86, __pyx_L1_error));
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_TraceException(__pyx_lineno, 0, 0);
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 71, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 86, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder.height.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
@@ -5270,7 +5978,7 @@ static int __pyx_pf_8pathfind_10Pathfinder_6height_2__set__(struct __pyx_obj_8pa
   return __pyx_r;
 }
 
-/* "pathfind.pyx":75
+/* "pathfind.pyx":90
  *         self._height = value
  * 
  *     @property             # <<<<<<<<<<<<<<
@@ -5301,11 +6009,11 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_5climb___get__(struct __pyx_obj
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[12]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[16]))
   __Pyx_RefNannySetupContext("__get__", 0);
-  __Pyx_TraceStartFunc("__get__", __pyx_f[0], 75, 0, 0, 0, __PYX_ERR(0, 75, __pyx_L1_error));
+  __Pyx_TraceStartFunc("__get__", __pyx_f[0], 90, 0, 0, 0, __PYX_ERR(0, 90, __pyx_L1_error));
 
-  /* "pathfind.pyx":77
+  /* "pathfind.pyx":92
  *     @property
  *     def climb(self: Self):
  *         return self._climb             # <<<<<<<<<<<<<<
@@ -5313,14 +6021,14 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_5climb___get__(struct __pyx_obj
  *     @climb.setter
 */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_climb); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 77, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_climb); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 92, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
-  __Pyx_TraceReturnValue(__pyx_r, 2, 0, __PYX_ERR(0, 77, __pyx_L1_error));
+  __Pyx_TraceReturnValue(__pyx_r, 2, 0, __PYX_ERR(0, 92, __pyx_L1_error));
   goto __pyx_L0;
 
-  /* "pathfind.pyx":75
+  /* "pathfind.pyx":90
  *         self._height = value
  * 
  *     @property             # <<<<<<<<<<<<<<
@@ -5335,7 +6043,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_5climb___get__(struct __pyx_obj
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 75, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 90, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder.climb.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
@@ -5346,7 +6054,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_5climb___get__(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "pathfind.pyx":79
+/* "pathfind.pyx":94
  *         return self._climb
  * 
  *     @climb.setter             # <<<<<<<<<<<<<<
@@ -5367,7 +6075,7 @@ static int __pyx_pw_8pathfind_10Pathfinder_5climb_3__set__(PyObject *__pyx_v_sel
   __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
   assert(__pyx_arg_value); {
-    __pyx_v_value = __Pyx_PyFloat_AsFloat(__pyx_arg_value); if (unlikely((__pyx_v_value == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 80, __pyx_L3_error)
+    __pyx_v_value = __Pyx_PyFloat_AsFloat(__pyx_arg_value); if (unlikely((__pyx_v_value == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 95, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -5388,10 +6096,10 @@ static int __pyx_pf_8pathfind_10Pathfinder_5climb_2__set__(struct __pyx_obj_8pat
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[13]))
-  __Pyx_TraceStartFunc("__set__", __pyx_f[0], 79, 0, 0, 0, __PYX_ERR(0, 79, __pyx_L1_error));
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[17]))
+  __Pyx_TraceStartFunc("__set__", __pyx_f[0], 94, 0, 0, 0, __PYX_ERR(0, 94, __pyx_L1_error));
 
-  /* "pathfind.pyx":81
+  /* "pathfind.pyx":96
  *     @climb.setter
  *     def climb(self: Self, float value):
  *         self._climb = value             # <<<<<<<<<<<<<<
@@ -5400,7 +6108,7 @@ static int __pyx_pf_8pathfind_10Pathfinder_5climb_2__set__(struct __pyx_obj_8pat
 */
   __pyx_v_self->_climb = __pyx_v_value;
 
-  /* "pathfind.pyx":79
+  /* "pathfind.pyx":94
  *         return self._climb
  * 
  *     @climb.setter             # <<<<<<<<<<<<<<
@@ -5410,14 +6118,14 @@ static int __pyx_pf_8pathfind_10Pathfinder_5climb_2__set__(struct __pyx_obj_8pat
 
   /* function exit code */
   __pyx_r = 0;
-  __Pyx_TraceReturnCValue(__pyx_r, __Pyx_Owned_Py_None, 0, 0, __PYX_ERR(0, 79, __pyx_L1_error));
+  __Pyx_TraceReturnCValue(__pyx_r, __Pyx_Owned_Py_None, 0, 0, __PYX_ERR(0, 94, __pyx_L1_error));
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_TraceException(__pyx_lineno, 0, 0);
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 79, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 94, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder.climb.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
@@ -5426,7 +6134,7 @@ static int __pyx_pf_8pathfind_10Pathfinder_5climb_2__set__(struct __pyx_obj_8pat
   return __pyx_r;
 }
 
-/* "pathfind.pyx":83
+/* "pathfind.pyx":98
  *         self._climb = value
  * 
  *     @property             # <<<<<<<<<<<<<<
@@ -5457,11 +6165,11 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_4fall___get__(struct __pyx_obj_
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[14]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[18]))
   __Pyx_RefNannySetupContext("__get__", 0);
-  __Pyx_TraceStartFunc("__get__", __pyx_f[0], 83, 0, 0, 0, __PYX_ERR(0, 83, __pyx_L1_error));
+  __Pyx_TraceStartFunc("__get__", __pyx_f[0], 98, 0, 0, 0, __PYX_ERR(0, 98, __pyx_L1_error));
 
-  /* "pathfind.pyx":85
+  /* "pathfind.pyx":100
  *     @property
  *     def fall(self: Self):
  *         return self._fall             # <<<<<<<<<<<<<<
@@ -5469,14 +6177,14 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_4fall___get__(struct __pyx_obj_
  *     @fall.setter
 */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_fall); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 85, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_fall); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 100, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
-  __Pyx_TraceReturnValue(__pyx_r, 2, 0, __PYX_ERR(0, 85, __pyx_L1_error));
+  __Pyx_TraceReturnValue(__pyx_r, 2, 0, __PYX_ERR(0, 100, __pyx_L1_error));
   goto __pyx_L0;
 
-  /* "pathfind.pyx":83
+  /* "pathfind.pyx":98
  *         self._climb = value
  * 
  *     @property             # <<<<<<<<<<<<<<
@@ -5491,7 +6199,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_4fall___get__(struct __pyx_obj_
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 83, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 98, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder.fall.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
@@ -5502,7 +6210,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_4fall___get__(struct __pyx_obj_
   return __pyx_r;
 }
 
-/* "pathfind.pyx":87
+/* "pathfind.pyx":102
  *         return self._fall
  * 
  *     @fall.setter             # <<<<<<<<<<<<<<
@@ -5523,7 +6231,7 @@ static int __pyx_pw_8pathfind_10Pathfinder_4fall_3__set__(PyObject *__pyx_v_self
   __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
   assert(__pyx_arg_value); {
-    __pyx_v_value = __Pyx_PyFloat_AsFloat(__pyx_arg_value); if (unlikely((__pyx_v_value == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 88, __pyx_L3_error)
+    __pyx_v_value = __Pyx_PyFloat_AsFloat(__pyx_arg_value); if (unlikely((__pyx_v_value == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 103, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -5544,10 +6252,10 @@ static int __pyx_pf_8pathfind_10Pathfinder_4fall_2__set__(struct __pyx_obj_8path
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[15]))
-  __Pyx_TraceStartFunc("__set__", __pyx_f[0], 87, 0, 0, 0, __PYX_ERR(0, 87, __pyx_L1_error));
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[19]))
+  __Pyx_TraceStartFunc("__set__", __pyx_f[0], 102, 0, 0, 0, __PYX_ERR(0, 102, __pyx_L1_error));
 
-  /* "pathfind.pyx":89
+  /* "pathfind.pyx":104
  *     @fall.setter
  *     def fall(self: Self, float value):
  *         self._fall = value             # <<<<<<<<<<<<<<
@@ -5556,7 +6264,7 @@ static int __pyx_pf_8pathfind_10Pathfinder_4fall_2__set__(struct __pyx_obj_8path
 */
   __pyx_v_self->_fall = __pyx_v_value;
 
-  /* "pathfind.pyx":87
+  /* "pathfind.pyx":102
  *         return self._fall
  * 
  *     @fall.setter             # <<<<<<<<<<<<<<
@@ -5566,14 +6274,14 @@ static int __pyx_pf_8pathfind_10Pathfinder_4fall_2__set__(struct __pyx_obj_8path
 
   /* function exit code */
   __pyx_r = 0;
-  __Pyx_TraceReturnCValue(__pyx_r, __Pyx_Owned_Py_None, 0, 0, __PYX_ERR(0, 87, __pyx_L1_error));
+  __Pyx_TraceReturnCValue(__pyx_r, __Pyx_Owned_Py_None, 0, 0, __PYX_ERR(0, 102, __pyx_L1_error));
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_TraceException(__pyx_lineno, 0, 0);
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 87, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 102, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder.fall.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
@@ -5582,7 +6290,7 @@ static int __pyx_pf_8pathfind_10Pathfinder_4fall_2__set__(struct __pyx_obj_8path
   return __pyx_r;
 }
 
-/* "pathfind.pyx":91
+/* "pathfind.pyx":106
  *         self._fall = value
  * 
  *     @property             # <<<<<<<<<<<<<<
@@ -5613,11 +6321,11 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_15straight_weight___get__(struc
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[16]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[20]))
   __Pyx_RefNannySetupContext("__get__", 0);
-  __Pyx_TraceStartFunc("__get__", __pyx_f[0], 91, 0, 0, 0, __PYX_ERR(0, 91, __pyx_L1_error));
+  __Pyx_TraceStartFunc("__get__", __pyx_f[0], 106, 0, 0, 0, __PYX_ERR(0, 106, __pyx_L1_error));
 
-  /* "pathfind.pyx":93
+  /* "pathfind.pyx":108
  *     @property
  *     def straight_weight(self: Self):
  *         return self._straight_weight             # <<<<<<<<<<<<<<
@@ -5625,14 +6333,14 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_15straight_weight___get__(struc
  *     @straight_weight.setter
 */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_straight_weight); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 93, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_straight_weight); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 108, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
-  __Pyx_TraceReturnValue(__pyx_r, 2, 0, __PYX_ERR(0, 93, __pyx_L1_error));
+  __Pyx_TraceReturnValue(__pyx_r, 2, 0, __PYX_ERR(0, 108, __pyx_L1_error));
   goto __pyx_L0;
 
-  /* "pathfind.pyx":91
+  /* "pathfind.pyx":106
  *         self._fall = value
  * 
  *     @property             # <<<<<<<<<<<<<<
@@ -5647,7 +6355,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_15straight_weight___get__(struc
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 91, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 106, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder.straight_weight.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
@@ -5658,7 +6366,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_15straight_weight___get__(struc
   return __pyx_r;
 }
 
-/* "pathfind.pyx":95
+/* "pathfind.pyx":110
  *         return self._straight_weight
  * 
  *     @straight_weight.setter             # <<<<<<<<<<<<<<
@@ -5679,7 +6387,7 @@ static int __pyx_pw_8pathfind_10Pathfinder_15straight_weight_3__set__(PyObject *
   __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
   assert(__pyx_arg_value); {
-    __pyx_v_value = __Pyx_PyFloat_AsFloat(__pyx_arg_value); if (unlikely((__pyx_v_value == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 96, __pyx_L3_error)
+    __pyx_v_value = __Pyx_PyFloat_AsFloat(__pyx_arg_value); if (unlikely((__pyx_v_value == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 111, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -5700,10 +6408,10 @@ static int __pyx_pf_8pathfind_10Pathfinder_15straight_weight_2__set__(struct __p
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[17]))
-  __Pyx_TraceStartFunc("__set__", __pyx_f[0], 95, 0, 0, 0, __PYX_ERR(0, 95, __pyx_L1_error));
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[21]))
+  __Pyx_TraceStartFunc("__set__", __pyx_f[0], 110, 0, 0, 0, __PYX_ERR(0, 110, __pyx_L1_error));
 
-  /* "pathfind.pyx":97
+  /* "pathfind.pyx":112
  *     @straight_weight.setter
  *     def straight_weight(self: Self, float value):
  *         self._straight_weight = value             # <<<<<<<<<<<<<<
@@ -5712,7 +6420,7 @@ static int __pyx_pf_8pathfind_10Pathfinder_15straight_weight_2__set__(struct __p
 */
   __pyx_v_self->_straight_weight = __pyx_v_value;
 
-  /* "pathfind.pyx":95
+  /* "pathfind.pyx":110
  *         return self._straight_weight
  * 
  *     @straight_weight.setter             # <<<<<<<<<<<<<<
@@ -5722,14 +6430,14 @@ static int __pyx_pf_8pathfind_10Pathfinder_15straight_weight_2__set__(struct __p
 
   /* function exit code */
   __pyx_r = 0;
-  __Pyx_TraceReturnCValue(__pyx_r, __Pyx_Owned_Py_None, 0, 0, __PYX_ERR(0, 95, __pyx_L1_error));
+  __Pyx_TraceReturnCValue(__pyx_r, __Pyx_Owned_Py_None, 0, 0, __PYX_ERR(0, 110, __pyx_L1_error));
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_TraceException(__pyx_lineno, 0, 0);
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 95, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 110, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder.straight_weight.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
@@ -5738,7 +6446,7 @@ static int __pyx_pf_8pathfind_10Pathfinder_15straight_weight_2__set__(struct __p
   return __pyx_r;
 }
 
-/* "pathfind.pyx":99
+/* "pathfind.pyx":114
  *         self._straight_weight = value
  * 
  *     @property             # <<<<<<<<<<<<<<
@@ -5769,11 +6477,11 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_15diagonal_weight___get__(struc
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[18]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[22]))
   __Pyx_RefNannySetupContext("__get__", 0);
-  __Pyx_TraceStartFunc("__get__", __pyx_f[0], 99, 0, 0, 0, __PYX_ERR(0, 99, __pyx_L1_error));
+  __Pyx_TraceStartFunc("__get__", __pyx_f[0], 114, 0, 0, 0, __PYX_ERR(0, 114, __pyx_L1_error));
 
-  /* "pathfind.pyx":101
+  /* "pathfind.pyx":116
  *     @property
  *     def diagonal_weight(self: Self) -> Real:
  *         return self._diagonal_weight             # <<<<<<<<<<<<<<
@@ -5781,14 +6489,14 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_15diagonal_weight___get__(struc
  *     @diagonal_weight.setter
 */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_diagonal_weight); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 101, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_diagonal_weight); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 116, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
-  __Pyx_TraceReturnValue(__pyx_r, 3, 0, __PYX_ERR(0, 101, __pyx_L1_error));
+  __Pyx_TraceReturnValue(__pyx_r, 3, 0, __PYX_ERR(0, 116, __pyx_L1_error));
   goto __pyx_L0;
 
-  /* "pathfind.pyx":99
+  /* "pathfind.pyx":114
  *         self._straight_weight = value
  * 
  *     @property             # <<<<<<<<<<<<<<
@@ -5803,7 +6511,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_15diagonal_weight___get__(struc
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 99, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 114, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder.diagonal_weight.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
@@ -5814,7 +6522,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_15diagonal_weight___get__(struc
   return __pyx_r;
 }
 
-/* "pathfind.pyx":103
+/* "pathfind.pyx":118
  *         return self._diagonal_weight
  * 
  *     @diagonal_weight.setter             # <<<<<<<<<<<<<<
@@ -5835,7 +6543,7 @@ static int __pyx_pw_8pathfind_10Pathfinder_15diagonal_weight_3__set__(PyObject *
   __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
   assert(__pyx_arg_value); {
-    __pyx_v_value = __Pyx_PyFloat_AsFloat(__pyx_arg_value); if (unlikely((__pyx_v_value == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 104, __pyx_L3_error)
+    __pyx_v_value = __Pyx_PyFloat_AsFloat(__pyx_arg_value); if (unlikely((__pyx_v_value == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 119, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -5856,10 +6564,10 @@ static int __pyx_pf_8pathfind_10Pathfinder_15diagonal_weight_2__set__(struct __p
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[19]))
-  __Pyx_TraceStartFunc("__set__", __pyx_f[0], 103, 0, 0, 0, __PYX_ERR(0, 103, __pyx_L1_error));
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[23]))
+  __Pyx_TraceStartFunc("__set__", __pyx_f[0], 118, 0, 0, 0, __PYX_ERR(0, 118, __pyx_L1_error));
 
-  /* "pathfind.pyx":105
+  /* "pathfind.pyx":120
  *     @diagonal_weight.setter
  *     def diagonal_weight(self: Self, float value):
  *         self._diagonal_weight = value             # <<<<<<<<<<<<<<
@@ -5868,7 +6576,7 @@ static int __pyx_pf_8pathfind_10Pathfinder_15diagonal_weight_2__set__(struct __p
 */
   __pyx_v_self->_diagonal_weight = __pyx_v_value;
 
-  /* "pathfind.pyx":103
+  /* "pathfind.pyx":118
  *         return self._diagonal_weight
  * 
  *     @diagonal_weight.setter             # <<<<<<<<<<<<<<
@@ -5878,14 +6586,14 @@ static int __pyx_pf_8pathfind_10Pathfinder_15diagonal_weight_2__set__(struct __p
 
   /* function exit code */
   __pyx_r = 0;
-  __Pyx_TraceReturnCValue(__pyx_r, __Pyx_Owned_Py_None, 0, 0, __PYX_ERR(0, 103, __pyx_L1_error));
+  __Pyx_TraceReturnCValue(__pyx_r, __Pyx_Owned_Py_None, 0, 0, __PYX_ERR(0, 118, __pyx_L1_error));
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_TraceException(__pyx_lineno, 0, 0);
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 103, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 118, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder.diagonal_weight.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
@@ -5894,7 +6602,7 @@ static int __pyx_pf_8pathfind_10Pathfinder_15diagonal_weight_2__set__(struct __p
   return __pyx_r;
 }
 
-/* "pathfind.pyx":107
+/* "pathfind.pyx":122
  *         self._diagonal_weight = value
  * 
  *     @property             # <<<<<<<<<<<<<<
@@ -5925,11 +6633,11 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_16elevation_weight___get__(stru
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[20]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[24]))
   __Pyx_RefNannySetupContext("__get__", 0);
-  __Pyx_TraceStartFunc("__get__", __pyx_f[0], 107, 0, 0, 0, __PYX_ERR(0, 107, __pyx_L1_error));
+  __Pyx_TraceStartFunc("__get__", __pyx_f[0], 122, 0, 0, 0, __PYX_ERR(0, 122, __pyx_L1_error));
 
-  /* "pathfind.pyx":109
+  /* "pathfind.pyx":124
  *     @property
  *     def elevation_weight(self: Self):
  *         return self._elevation_weight             # <<<<<<<<<<<<<<
@@ -5937,14 +6645,14 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_16elevation_weight___get__(stru
  *     @elevation_weight.setter
 */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_elevation_weight); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 109, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_elevation_weight); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 124, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
-  __Pyx_TraceReturnValue(__pyx_r, 2, 0, __PYX_ERR(0, 109, __pyx_L1_error));
+  __Pyx_TraceReturnValue(__pyx_r, 2, 0, __PYX_ERR(0, 124, __pyx_L1_error));
   goto __pyx_L0;
 
-  /* "pathfind.pyx":107
+  /* "pathfind.pyx":122
  *         self._diagonal_weight = value
  * 
  *     @property             # <<<<<<<<<<<<<<
@@ -5959,7 +6667,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_16elevation_weight___get__(stru
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 107, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 122, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder.elevation_weight.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
@@ -5970,7 +6678,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_16elevation_weight___get__(stru
   return __pyx_r;
 }
 
-/* "pathfind.pyx":111
+/* "pathfind.pyx":126
  *         return self._elevation_weight
  * 
  *     @elevation_weight.setter             # <<<<<<<<<<<<<<
@@ -5991,7 +6699,7 @@ static int __pyx_pw_8pathfind_10Pathfinder_16elevation_weight_3__set__(PyObject 
   __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
   assert(__pyx_arg_value); {
-    __pyx_v_value = __Pyx_PyFloat_AsFloat(__pyx_arg_value); if (unlikely((__pyx_v_value == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 112, __pyx_L3_error)
+    __pyx_v_value = __Pyx_PyFloat_AsFloat(__pyx_arg_value); if (unlikely((__pyx_v_value == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 127, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -6012,10 +6720,10 @@ static int __pyx_pf_8pathfind_10Pathfinder_16elevation_weight_2__set__(struct __
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[21]))
-  __Pyx_TraceStartFunc("__set__", __pyx_f[0], 111, 0, 0, 0, __PYX_ERR(0, 111, __pyx_L1_error));
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[25]))
+  __Pyx_TraceStartFunc("__set__", __pyx_f[0], 126, 0, 0, 0, __PYX_ERR(0, 126, __pyx_L1_error));
 
-  /* "pathfind.pyx":113
+  /* "pathfind.pyx":128
  *     @elevation_weight.setter
  *     def elevation_weight(self: Self, float value):
  *         self._elevation_weight = value             # <<<<<<<<<<<<<<
@@ -6024,7 +6732,7 @@ static int __pyx_pf_8pathfind_10Pathfinder_16elevation_weight_2__set__(struct __
 */
   __pyx_v_self->_elevation_weight = __pyx_v_value;
 
-  /* "pathfind.pyx":111
+  /* "pathfind.pyx":126
  *         return self._elevation_weight
  * 
  *     @elevation_weight.setter             # <<<<<<<<<<<<<<
@@ -6034,14 +6742,14 @@ static int __pyx_pf_8pathfind_10Pathfinder_16elevation_weight_2__set__(struct __
 
   /* function exit code */
   __pyx_r = 0;
-  __Pyx_TraceReturnCValue(__pyx_r, __Pyx_Owned_Py_None, 0, 0, __PYX_ERR(0, 111, __pyx_L1_error));
+  __Pyx_TraceReturnCValue(__pyx_r, __Pyx_Owned_Py_None, 0, 0, __PYX_ERR(0, 126, __pyx_L1_error));
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_TraceException(__pyx_lineno, 0, 0);
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 111, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 126, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder.elevation_weight.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
@@ -6050,7 +6758,7 @@ static int __pyx_pf_8pathfind_10Pathfinder_16elevation_weight_2__set__(struct __
   return __pyx_r;
 }
 
-/* "pathfind.pyx":115
+/* "pathfind.pyx":130
  *         self._elevation_weight = value
  * 
  *     @property             # <<<<<<<<<<<<<<
@@ -6081,11 +6789,11 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_10greediness___get__(struct __p
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[22]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[26]))
   __Pyx_RefNannySetupContext("__get__", 0);
-  __Pyx_TraceStartFunc("__get__", __pyx_f[0], 115, 0, 0, 0, __PYX_ERR(0, 115, __pyx_L1_error));
+  __Pyx_TraceStartFunc("__get__", __pyx_f[0], 130, 0, 0, 0, __PYX_ERR(0, 130, __pyx_L1_error));
 
-  /* "pathfind.pyx":117
+  /* "pathfind.pyx":132
  *     @property
  *     def greediness(self: Self):
  *         return self._greediness             # <<<<<<<<<<<<<<
@@ -6093,14 +6801,14 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_10greediness___get__(struct __p
  *     @greediness.setter
 */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_greediness); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_greediness); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 132, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
-  __Pyx_TraceReturnValue(__pyx_r, 2, 0, __PYX_ERR(0, 117, __pyx_L1_error));
+  __Pyx_TraceReturnValue(__pyx_r, 2, 0, __PYX_ERR(0, 132, __pyx_L1_error));
   goto __pyx_L0;
 
-  /* "pathfind.pyx":115
+  /* "pathfind.pyx":130
  *         self._elevation_weight = value
  * 
  *     @property             # <<<<<<<<<<<<<<
@@ -6115,7 +6823,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_10greediness___get__(struct __p
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 115, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 130, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder.greediness.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
@@ -6126,7 +6834,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_10greediness___get__(struct __p
   return __pyx_r;
 }
 
-/* "pathfind.pyx":119
+/* "pathfind.pyx":134
  *         return self._greediness
  * 
  *     @greediness.setter             # <<<<<<<<<<<<<<
@@ -6147,7 +6855,7 @@ static int __pyx_pw_8pathfind_10Pathfinder_10greediness_3__set__(PyObject *__pyx
   __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
   __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
   assert(__pyx_arg_value); {
-    __pyx_v_value = __Pyx_PyFloat_AsFloat(__pyx_arg_value); if (unlikely((__pyx_v_value == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 120, __pyx_L3_error)
+    __pyx_v_value = __Pyx_PyFloat_AsFloat(__pyx_arg_value); if (unlikely((__pyx_v_value == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 135, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -6168,19 +6876,19 @@ static int __pyx_pf_8pathfind_10Pathfinder_10greediness_2__set__(struct __pyx_ob
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[23]))
-  __Pyx_TraceStartFunc("__set__", __pyx_f[0], 119, 0, 0, 0, __PYX_ERR(0, 119, __pyx_L1_error));
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[27]))
+  __Pyx_TraceStartFunc("__set__", __pyx_f[0], 134, 0, 0, 0, __PYX_ERR(0, 134, __pyx_L1_error));
 
-  /* "pathfind.pyx":121
+  /* "pathfind.pyx":136
  *     @greediness.setter
  *     def greediness(self: Self, float value):
  *         self._greediness = value             # <<<<<<<<<<<<<<
  * 
- *     cdef void _reset_cache(self: Self):
+ *     @property
 */
   __pyx_v_self->_greediness = __pyx_v_value;
 
-  /* "pathfind.pyx":119
+  /* "pathfind.pyx":134
  *         return self._greediness
  * 
  *     @greediness.setter             # <<<<<<<<<<<<<<
@@ -6190,14 +6898,14 @@ static int __pyx_pf_8pathfind_10Pathfinder_10greediness_2__set__(struct __pyx_ob
 
   /* function exit code */
   __pyx_r = 0;
-  __Pyx_TraceReturnCValue(__pyx_r, __Pyx_Owned_Py_None, 0, 0, __PYX_ERR(0, 119, __pyx_L1_error));
+  __Pyx_TraceReturnCValue(__pyx_r, __Pyx_Owned_Py_None, 0, 0, __PYX_ERR(0, 134, __pyx_L1_error));
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_TraceException(__pyx_lineno, 0, 0);
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 119, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 134, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder.greediness.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = -1;
@@ -6206,8 +6914,164 @@ static int __pyx_pf_8pathfind_10Pathfinder_10greediness_2__set__(struct __pyx_ob
   return __pyx_r;
 }
 
-/* "pathfind.pyx":123
+/* "pathfind.pyx":138
  *         self._greediness = value
+ * 
+ *     @property             # <<<<<<<<<<<<<<
+ *     def max_turn(self: Self):
+ *         return self._max_turn
+*/
+
+/* Python wrapper */
+static PyObject *__pyx_pw_8pathfind_10Pathfinder_8max_turn_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_8pathfind_10Pathfinder_8max_turn_1__get__(PyObject *__pyx_v_self) {
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  __pyx_r = __pyx_pf_8pathfind_10Pathfinder_8max_turn___get__(((struct __pyx_obj_8pathfind_Pathfinder *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_8pathfind_10Pathfinder_8max_turn___get__(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_TraceDeclarationsFunc
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[28]))
+  __Pyx_RefNannySetupContext("__get__", 0);
+  __Pyx_TraceStartFunc("__get__", __pyx_f[0], 138, 0, 0, 0, __PYX_ERR(0, 138, __pyx_L1_error));
+
+  /* "pathfind.pyx":140
+ *     @property
+ *     def max_turn(self: Self):
+ *         return self._max_turn             # <<<<<<<<<<<<<<
+ * 
+ *     @max_turn.setter
+*/
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->_max_turn); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 140, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  __Pyx_TraceReturnValue(__pyx_r, 2, 0, __PYX_ERR(0, 140, __pyx_L1_error));
+  goto __pyx_L0;
+
+  /* "pathfind.pyx":138
+ *         self._greediness = value
+ * 
+ *     @property             # <<<<<<<<<<<<<<
+ *     def max_turn(self: Self):
+ *         return self._max_turn
+*/
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_TraceException(__pyx_lineno, 0, 0);
+  #if CYTHON_USE_SYS_MONITORING
+  __Pyx_TraceExceptionUnwind(0, 0);
+  #else
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 138, __pyx_L1_error));
+  #endif
+  __Pyx_AddTraceback("pathfind.Pathfinder.max_turn.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_PyMonitoring_ExitScope(0);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "pathfind.pyx":142
+ *         return self._max_turn
+ * 
+ *     @max_turn.setter             # <<<<<<<<<<<<<<
+ *     def max_turn(self: Self, float value):
+ *         self._max_turn = value
+*/
+
+/* Python wrapper */
+static int __pyx_pw_8pathfind_10Pathfinder_8max_turn_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value); /*proto*/
+static int __pyx_pw_8pathfind_10Pathfinder_8max_turn_3__set__(PyObject *__pyx_v_self, PyObject *__pyx_arg_value) {
+  float __pyx_v_value;
+  CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__set__ (wrapper)", 0);
+  __pyx_kwvalues = __Pyx_KwValues_VARARGS(__pyx_args, __pyx_nargs);
+  assert(__pyx_arg_value); {
+    __pyx_v_value = __Pyx_PyFloat_AsFloat(__pyx_arg_value); if (unlikely((__pyx_v_value == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 143, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("pathfind.Pathfinder.max_turn.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return -1;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_8pathfind_10Pathfinder_8max_turn_2__set__(((struct __pyx_obj_8pathfind_Pathfinder *)__pyx_v_self), ((float)__pyx_v_value));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_pf_8pathfind_10Pathfinder_8max_turn_2__set__(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, float __pyx_v_value) {
+  int __pyx_r;
+  __Pyx_TraceDeclarationsFunc
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[29]))
+  __Pyx_TraceStartFunc("__set__", __pyx_f[0], 142, 0, 0, 0, __PYX_ERR(0, 142, __pyx_L1_error));
+
+  /* "pathfind.pyx":144
+ *     @max_turn.setter
+ *     def max_turn(self: Self, float value):
+ *         self._max_turn = value             # <<<<<<<<<<<<<<
+ * 
+ *     cdef void _reset_cache(self: Self):
+*/
+  __pyx_v_self->_max_turn = __pyx_v_value;
+
+  /* "pathfind.pyx":142
+ *         return self._max_turn
+ * 
+ *     @max_turn.setter             # <<<<<<<<<<<<<<
+ *     def max_turn(self: Self, float value):
+ *         self._max_turn = value
+*/
+
+  /* function exit code */
+  __pyx_r = 0;
+  __Pyx_TraceReturnCValue(__pyx_r, __Pyx_Owned_Py_None, 0, 0, __PYX_ERR(0, 142, __pyx_L1_error));
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_TraceException(__pyx_lineno, 0, 0);
+  #if CYTHON_USE_SYS_MONITORING
+  __Pyx_TraceExceptionUnwind(0, 0);
+  #else
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 142, __pyx_L1_error));
+  #endif
+  __Pyx_AddTraceback("pathfind.Pathfinder.max_turn.__set__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_PyMonitoring_ExitScope(0);
+  return __pyx_r;
+}
+
+/* "pathfind.pyx":146
+ *         self._max_turn = value
  * 
  *     cdef void _reset_cache(self: Self):             # <<<<<<<<<<<<<<
  *         self._gs = {}
@@ -6221,18 +7085,18 @@ static void __pyx_f_8pathfind_10Pathfinder__reset_cache(struct __pyx_obj_8pathfi
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[24]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[30]))
   __Pyx_RefNannySetupContext("_reset_cache", 0);
-  __Pyx_TraceStartFunc("_reset_cache", __pyx_f[0], 123, 0, 0, 0, __PYX_ERR(0, 123, __pyx_L1_error));
+  __Pyx_TraceStartFunc("_reset_cache", __pyx_f[0], 146, 0, 0, 0, __PYX_ERR(0, 146, __pyx_L1_error));
 
-  /* "pathfind.pyx":124
+  /* "pathfind.pyx":147
  * 
  *     cdef void _reset_cache(self: Self):
  *         self._gs = {}             # <<<<<<<<<<<<<<
  *         self._elevations = {}
  * 
 */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 124, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 147, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF(__pyx_v_self->_gs);
@@ -6240,14 +7104,14 @@ static void __pyx_f_8pathfind_10Pathfinder__reset_cache(struct __pyx_obj_8pathfi
   __pyx_v_self->_gs = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "pathfind.pyx":125
+  /* "pathfind.pyx":148
  *     cdef void _reset_cache(self: Self):
  *         self._gs = {}
  *         self._elevations = {}             # <<<<<<<<<<<<<<
  * 
  *     cdef float _g(self: Self, tuple node):
 */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 125, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 148, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF(__pyx_v_self->_elevations);
@@ -6255,8 +7119,8 @@ static void __pyx_f_8pathfind_10Pathfinder__reset_cache(struct __pyx_obj_8pathfi
   __pyx_v_self->_elevations = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "pathfind.pyx":123
- *         self._greediness = value
+  /* "pathfind.pyx":146
+ *         self._max_turn = value
  * 
  *     cdef void _reset_cache(self: Self):             # <<<<<<<<<<<<<<
  *         self._gs = {}
@@ -6264,7 +7128,7 @@ static void __pyx_f_8pathfind_10Pathfinder__reset_cache(struct __pyx_obj_8pathfi
 */
 
   /* function exit code */
-  __Pyx_TraceReturnValue(Py_None, 0, 0, __PYX_ERR(0, 123, __pyx_L1_error));
+  __Pyx_TraceReturnValue(Py_None, 0, 0, __PYX_ERR(0, 146, __pyx_L1_error));
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
@@ -6272,7 +7136,7 @@ static void __pyx_f_8pathfind_10Pathfinder__reset_cache(struct __pyx_obj_8pathfi
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 123, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 146, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder._reset_cache", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_L0:;
@@ -6280,7 +7144,7 @@ static void __pyx_f_8pathfind_10Pathfinder__reset_cache(struct __pyx_obj_8pathfi
   __Pyx_RefNannyFinishContext();
 }
 
-/* "pathfind.pyx":127
+/* "pathfind.pyx":150
  *         self._elevations = {}
  * 
  *     cdef float _g(self: Self, tuple node):             # <<<<<<<<<<<<<<
@@ -6299,11 +7163,11 @@ static float __pyx_f_8pathfind_10Pathfinder__g(struct __pyx_obj_8pathfind_Pathfi
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[25]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[31]))
   __Pyx_RefNannySetupContext("_g", 0);
-  __Pyx_TraceStartFunc("_g", __pyx_f[0], 127, 0, 0, 0, __PYX_ERR(0, 127, __pyx_L1_error));
+  __Pyx_TraceStartFunc("_g", __pyx_f[0], 150, 0, 0, 0, __PYX_ERR(0, 150, __pyx_L1_error));
 
-  /* "pathfind.pyx":128
+  /* "pathfind.pyx":151
  * 
  *     cdef float _g(self: Self, tuple node):
  *         cdef object g = self._gs.get(node)             # <<<<<<<<<<<<<<
@@ -6312,14 +7176,14 @@ static float __pyx_f_8pathfind_10Pathfinder__g(struct __pyx_obj_8pathfind_Pathfi
 */
   if (unlikely(__pyx_v_self->_gs == Py_None)) {
     PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "get");
-    __PYX_ERR(0, 128, __pyx_L1_error)
+    __PYX_ERR(0, 151, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_PyDict_GetItemDefault(__pyx_v_self->_gs, __pyx_v_node, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 128, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_GetItemDefault(__pyx_v_self->_gs, __pyx_v_node, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 151, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_g = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "pathfind.pyx":129
+  /* "pathfind.pyx":152
  *     cdef float _g(self: Self, tuple node):
  *         cdef object g = self._gs.get(node)
  *         if g is None:             # <<<<<<<<<<<<<<
@@ -6329,7 +7193,7 @@ static float __pyx_f_8pathfind_10Pathfinder__g(struct __pyx_obj_8pathfind_Pathfi
   __pyx_t_2 = (__pyx_v_g == Py_None);
   if (__pyx_t_2) {
 
-    /* "pathfind.pyx":130
+    /* "pathfind.pyx":153
  *         cdef object g = self._gs.get(node)
  *         if g is None:
  *             g = 2147483647             # <<<<<<<<<<<<<<
@@ -6339,7 +7203,7 @@ static float __pyx_f_8pathfind_10Pathfinder__g(struct __pyx_obj_8pathfind_Pathfi
     __Pyx_INCREF(__pyx_mstate_global->__pyx_int_2147483647);
     __Pyx_DECREF_SET(__pyx_v_g, __pyx_mstate_global->__pyx_int_2147483647);
 
-    /* "pathfind.pyx":131
+    /* "pathfind.pyx":154
  *         if g is None:
  *             g = 2147483647
  *             self._gs[node] = g             # <<<<<<<<<<<<<<
@@ -6348,11 +7212,11 @@ static float __pyx_f_8pathfind_10Pathfinder__g(struct __pyx_obj_8pathfind_Pathfi
 */
     if (unlikely(__pyx_v_self->_gs == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 131, __pyx_L1_error)
+      __PYX_ERR(0, 154, __pyx_L1_error)
     }
-    if (unlikely((PyDict_SetItem(__pyx_v_self->_gs, __pyx_v_node, __pyx_v_g) < 0))) __PYX_ERR(0, 131, __pyx_L1_error)
+    if (unlikely((PyDict_SetItem(__pyx_v_self->_gs, __pyx_v_node, __pyx_v_g) < 0))) __PYX_ERR(0, 154, __pyx_L1_error)
 
-    /* "pathfind.pyx":129
+    /* "pathfind.pyx":152
  *     cdef float _g(self: Self, tuple node):
  *         cdef object g = self._gs.get(node)
  *         if g is None:             # <<<<<<<<<<<<<<
@@ -6361,19 +7225,19 @@ static float __pyx_f_8pathfind_10Pathfinder__g(struct __pyx_obj_8pathfind_Pathfi
 */
   }
 
-  /* "pathfind.pyx":132
+  /* "pathfind.pyx":155
  *             g = 2147483647
  *             self._gs[node] = g
  *         return g             # <<<<<<<<<<<<<<
  * 
  *     cdef float _h(self: Self, tuple node, tuple end):
 */
-  __pyx_t_3 = __Pyx_PyFloat_AsFloat(__pyx_v_g); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 132, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyFloat_AsFloat(__pyx_v_g); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 155, __pyx_L1_error)
   __pyx_r = __pyx_t_3;
-  __Pyx_TraceReturnCValue(__pyx_r, PyFloat_FromDouble, 19, 0, __PYX_ERR(0, 132, __pyx_L1_error));
+  __Pyx_TraceReturnCValue(__pyx_r, PyFloat_FromDouble, 19, 0, __PYX_ERR(0, 155, __pyx_L1_error));
   goto __pyx_L0;
 
-  /* "pathfind.pyx":127
+  /* "pathfind.pyx":150
  *         self._elevations = {}
  * 
  *     cdef float _g(self: Self, tuple node):             # <<<<<<<<<<<<<<
@@ -6388,7 +7252,7 @@ static float __pyx_f_8pathfind_10Pathfinder__g(struct __pyx_obj_8pathfind_Pathfi
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 127, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 150, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder._g", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
@@ -6399,7 +7263,7 @@ static float __pyx_f_8pathfind_10Pathfinder__g(struct __pyx_obj_8pathfind_Pathfi
   return __pyx_r;
 }
 
-/* "pathfind.pyx":134
+/* "pathfind.pyx":157
  *         return g
  * 
  *     cdef float _h(self: Self, tuple node, tuple end):             # <<<<<<<<<<<<<<
@@ -6421,11 +7285,11 @@ static float __pyx_f_8pathfind_10Pathfinder__h(struct __pyx_obj_8pathfind_Pathfi
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[26]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[32]))
   __Pyx_RefNannySetupContext("_h", 0);
-  __Pyx_TraceStartFunc("_h", __pyx_f[0], 134, 0, 0, 0, __PYX_ERR(0, 134, __pyx_L1_error));
+  __Pyx_TraceStartFunc("_h", __pyx_f[0], 157, 0, 0, 0, __PYX_ERR(0, 157, __pyx_L1_error));
 
-  /* "pathfind.pyx":139
+  /* "pathfind.pyx":162
  *         # But it is fast
  *         return (
  *             (fabs(<float>node[0][0] - <float>end[0][0])             # <<<<<<<<<<<<<<
@@ -6434,22 +7298,22 @@ static float __pyx_f_8pathfind_10Pathfinder__h(struct __pyx_obj_8pathfind_Pathfi
 */
   if (unlikely(__pyx_v_node == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 139, __pyx_L1_error)
+    __PYX_ERR(0, 162, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt(__Pyx_PyTuple_GET_ITEM(__pyx_v_node, 0), 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_SharedReference); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 139, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__Pyx_PyTuple_GET_ITEM(__pyx_v_node, 0), 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_SharedReference); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 162, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 139, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 162, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (unlikely(__pyx_v_end == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 139, __pyx_L1_error)
+    __PYX_ERR(0, 162, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt(__Pyx_PyTuple_GET_ITEM(__pyx_v_end, 0), 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_SharedReference); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 139, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__Pyx_PyTuple_GET_ITEM(__pyx_v_end, 0), 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_SharedReference); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 162, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 139, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 162, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "pathfind.pyx":140
+  /* "pathfind.pyx":163
  *         return (
  *             (fabs(<float>node[0][0] - <float>end[0][0])
  *              + fabs(<float>node[0][1] - <float>end[0][1]))             # <<<<<<<<<<<<<<
@@ -6458,40 +7322,40 @@ static float __pyx_f_8pathfind_10Pathfinder__h(struct __pyx_obj_8pathfind_Pathfi
 */
   if (unlikely(__pyx_v_node == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 140, __pyx_L1_error)
+    __PYX_ERR(0, 163, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt(__Pyx_PyTuple_GET_ITEM(__pyx_v_node, 0), 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_SharedReference); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 140, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__Pyx_PyTuple_GET_ITEM(__pyx_v_node, 0), 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_SharedReference); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 163, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_4 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 140, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_4 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 163, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (unlikely(__pyx_v_end == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 140, __pyx_L1_error)
+    __PYX_ERR(0, 163, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt(__Pyx_PyTuple_GET_ITEM(__pyx_v_end, 0), 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_SharedReference); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 140, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__Pyx_PyTuple_GET_ITEM(__pyx_v_end, 0), 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_SharedReference); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 163, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_5 = __Pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_5 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 140, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_5 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 163, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "pathfind.pyx":143
+  /* "pathfind.pyx":166
  *             * self._straight_weight
  *             + fabs(
  *                 self._get_elevation(node)             # <<<<<<<<<<<<<<
  *                 - self._get_elevation(end)
  *             ) * self._elevation_weight
 */
-  __pyx_t_6 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_get_elevation(__pyx_v_self, __pyx_v_node); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 143, __pyx_L1_error)
+  __pyx_t_6 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_get_elevation(__pyx_v_self, __pyx_v_node); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 166, __pyx_L1_error)
 
-  /* "pathfind.pyx":144
+  /* "pathfind.pyx":167
  *             + fabs(
  *                 self._get_elevation(node)
  *                 - self._get_elevation(end)             # <<<<<<<<<<<<<<
  *             ) * self._elevation_weight
  *         ) * self._greediness
 */
-  __pyx_t_7 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_get_elevation(__pyx_v_self, __pyx_v_end); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 144, __pyx_L1_error)
+  __pyx_t_7 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_get_elevation(__pyx_v_self, __pyx_v_end); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 167, __pyx_L1_error)
 
-  /* "pathfind.pyx":146
+  /* "pathfind.pyx":169
  *                 - self._get_elevation(end)
  *             ) * self._elevation_weight
  *         ) * self._greediness             # <<<<<<<<<<<<<<
@@ -6499,10 +7363,10 @@ static float __pyx_f_8pathfind_10Pathfinder__h(struct __pyx_obj_8pathfind_Pathfi
  *     cdef float _get_elevation(self: Self, tuple node):
 */
   __pyx_r = ((((fabs((((float)__pyx_t_2) - ((float)__pyx_t_3))) + fabs((((float)__pyx_t_4) - ((float)__pyx_t_5)))) * __pyx_v_self->_straight_weight) + (fabs((__pyx_t_6 - __pyx_t_7)) * __pyx_v_self->_elevation_weight)) * __pyx_v_self->_greediness);
-  __Pyx_TraceReturnCValue(__pyx_r, PyFloat_FromDouble, 2, 0, __PYX_ERR(0, 138, __pyx_L1_error));
+  __Pyx_TraceReturnCValue(__pyx_r, PyFloat_FromDouble, 2, 0, __PYX_ERR(0, 161, __pyx_L1_error));
   goto __pyx_L0;
 
-  /* "pathfind.pyx":134
+  /* "pathfind.pyx":157
  *         return g
  * 
  *     cdef float _h(self: Self, tuple node, tuple end):             # <<<<<<<<<<<<<<
@@ -6517,7 +7381,7 @@ static float __pyx_f_8pathfind_10Pathfinder__h(struct __pyx_obj_8pathfind_Pathfi
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 134, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 157, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder._h", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
@@ -6527,7 +7391,7 @@ static float __pyx_f_8pathfind_10Pathfinder__h(struct __pyx_obj_8pathfind_Pathfi
   return __pyx_r;
 }
 
-/* "pathfind.pyx":148
+/* "pathfind.pyx":171
  *         ) * self._greediness
  * 
  *     cdef float _get_elevation(self: Self, tuple node):             # <<<<<<<<<<<<<<
@@ -6549,11 +7413,11 @@ static float __pyx_f_8pathfind_10Pathfinder__get_elevation(struct __pyx_obj_8pat
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[27]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[33]))
   __Pyx_RefNannySetupContext("_get_elevation", 0);
-  __Pyx_TraceStartFunc("_get_elevation", __pyx_f[0], 148, 0, 0, 0, __PYX_ERR(0, 148, __pyx_L1_error));
+  __Pyx_TraceStartFunc("_get_elevation", __pyx_f[0], 171, 0, 0, 0, __PYX_ERR(0, 171, __pyx_L1_error));
 
-  /* "pathfind.pyx":149
+  /* "pathfind.pyx":172
  * 
  *     cdef float _get_elevation(self: Self, tuple node):
  *         cdef object elevation = self._elevations.get(node)             # <<<<<<<<<<<<<<
@@ -6562,14 +7426,14 @@ static float __pyx_f_8pathfind_10Pathfinder__get_elevation(struct __pyx_obj_8pat
 */
   if (unlikely(__pyx_v_self->_elevations == Py_None)) {
     PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "get");
-    __PYX_ERR(0, 149, __pyx_L1_error)
+    __PYX_ERR(0, 172, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_PyDict_GetItemDefault(__pyx_v_self->_elevations, __pyx_v_node, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 149, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_GetItemDefault(__pyx_v_self->_elevations, __pyx_v_node, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 172, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_elevation = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "pathfind.pyx":150
+  /* "pathfind.pyx":173
  *     cdef float _get_elevation(self: Self, tuple node):
  *         cdef object elevation = self._elevations.get(node)
  *         if elevation is None:             # <<<<<<<<<<<<<<
@@ -6579,7 +7443,7 @@ static float __pyx_f_8pathfind_10Pathfinder__get_elevation(struct __pyx_obj_8pat
   __pyx_t_2 = (__pyx_v_elevation == Py_None);
   if (__pyx_t_2) {
 
-    /* "pathfind.pyx":151
+    /* "pathfind.pyx":174
  *         cdef object elevation = self._elevations.get(node)
  *         if elevation is None:
  *             elevation = 0             # <<<<<<<<<<<<<<
@@ -6589,7 +7453,7 @@ static float __pyx_f_8pathfind_10Pathfinder__get_elevation(struct __pyx_obj_8pat
     __Pyx_INCREF(__pyx_mstate_global->__pyx_int_0);
     __Pyx_DECREF_SET(__pyx_v_elevation, __pyx_mstate_global->__pyx_int_0);
 
-    /* "pathfind.pyx":152
+    /* "pathfind.pyx":175
  *         if elevation is None:
  *             elevation = 0
  *             if node[1]:             # <<<<<<<<<<<<<<
@@ -6598,12 +7462,12 @@ static float __pyx_f_8pathfind_10Pathfinder__get_elevation(struct __pyx_obj_8pat
 */
     if (unlikely(__pyx_v_node == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 152, __pyx_L1_error)
+      __PYX_ERR(0, 175, __pyx_L1_error)
     }
-    __pyx_t_2 = __Pyx_PyObject_IsTrue(__Pyx_PyTuple_GET_ITEM(__pyx_v_node, 1)); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 152, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__Pyx_PyTuple_GET_ITEM(__pyx_v_node, 1)); if (unlikely((__pyx_t_2 < 0))) __PYX_ERR(0, 175, __pyx_L1_error)
     if (__pyx_t_2) {
 
-      /* "pathfind.pyx":153
+      /* "pathfind.pyx":176
  *             elevation = 0
  *             if node[1]:
  *                 data = self._tilemap.get(gen_tile_key(node[0]))             # <<<<<<<<<<<<<<
@@ -6612,24 +7476,24 @@ static float __pyx_f_8pathfind_10Pathfinder__get_elevation(struct __pyx_obj_8pat
 */
       if (unlikely(__pyx_v_self->_tilemap == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "get");
-        __PYX_ERR(0, 153, __pyx_L1_error)
+        __PYX_ERR(0, 176, __pyx_L1_error)
       }
       if (unlikely(__pyx_v_node == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 153, __pyx_L1_error)
+        __PYX_ERR(0, 176, __pyx_L1_error)
       }
       __pyx_t_1 = __Pyx_PyTuple_GET_ITEM(__pyx_v_node, 0);
       __Pyx_INCREF(__pyx_t_1);
-      __pyx_t_3 = __pyx_f_8pathfind_gen_tile_key(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 153, __pyx_L1_error)
+      __pyx_t_3 = __pyx_f_8pathfind_gen_tile_key(__pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 176, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_1 = __Pyx_PyDict_GetItemDefault(__pyx_v_self->_tilemap, __pyx_t_3, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 153, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyDict_GetItemDefault(__pyx_v_self->_tilemap, __pyx_t_3, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 176, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_v_data = __pyx_t_1;
       __pyx_t_1 = 0;
 
-      /* "pathfind.pyx":154
+      /* "pathfind.pyx":177
  *             if node[1]:
  *                 data = self._tilemap.get(gen_tile_key(node[0]))
  *                 if data is not None:             # <<<<<<<<<<<<<<
@@ -6639,25 +7503,25 @@ static float __pyx_f_8pathfind_10Pathfinder__get_elevation(struct __pyx_obj_8pat
       __pyx_t_2 = (__pyx_v_data != Py_None);
       if (__pyx_t_2) {
 
-        /* "pathfind.pyx":155
+        /* "pathfind.pyx":178
  *                 data = self._tilemap.get(gen_tile_key(node[0]))
  *                 if data is not None:
  *                     elevation = data['height'] + data['elevation']             # <<<<<<<<<<<<<<
  *             self._elevations[node] = elevation
  *         return elevation
 */
-        __pyx_t_1 = __Pyx_PyObject_Dict_GetItem(__pyx_v_data, __pyx_mstate_global->__pyx_n_u_height); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 155, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_Dict_GetItem(__pyx_v_data, __pyx_mstate_global->__pyx_n_u_height); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 178, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_3 = __Pyx_PyObject_Dict_GetItem(__pyx_v_data, __pyx_mstate_global->__pyx_n_u_elevation); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 155, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyObject_Dict_GetItem(__pyx_v_data, __pyx_mstate_global->__pyx_n_u_elevation); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 178, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
-        __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 155, __pyx_L1_error)
+        __pyx_t_4 = PyNumber_Add(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 178, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __Pyx_DECREF_SET(__pyx_v_elevation, __pyx_t_4);
         __pyx_t_4 = 0;
 
-        /* "pathfind.pyx":154
+        /* "pathfind.pyx":177
  *             if node[1]:
  *                 data = self._tilemap.get(gen_tile_key(node[0]))
  *                 if data is not None:             # <<<<<<<<<<<<<<
@@ -6666,7 +7530,7 @@ static float __pyx_f_8pathfind_10Pathfinder__get_elevation(struct __pyx_obj_8pat
 */
       }
 
-      /* "pathfind.pyx":152
+      /* "pathfind.pyx":175
  *         if elevation is None:
  *             elevation = 0
  *             if node[1]:             # <<<<<<<<<<<<<<
@@ -6675,7 +7539,7 @@ static float __pyx_f_8pathfind_10Pathfinder__get_elevation(struct __pyx_obj_8pat
 */
     }
 
-    /* "pathfind.pyx":156
+    /* "pathfind.pyx":179
  *                 if data is not None:
  *                     elevation = data['height'] + data['elevation']
  *             self._elevations[node] = elevation             # <<<<<<<<<<<<<<
@@ -6684,11 +7548,11 @@ static float __pyx_f_8pathfind_10Pathfinder__get_elevation(struct __pyx_obj_8pat
 */
     if (unlikely(__pyx_v_self->_elevations == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 156, __pyx_L1_error)
+      __PYX_ERR(0, 179, __pyx_L1_error)
     }
-    if (unlikely((PyDict_SetItem(__pyx_v_self->_elevations, __pyx_v_node, __pyx_v_elevation) < 0))) __PYX_ERR(0, 156, __pyx_L1_error)
+    if (unlikely((PyDict_SetItem(__pyx_v_self->_elevations, __pyx_v_node, __pyx_v_elevation) < 0))) __PYX_ERR(0, 179, __pyx_L1_error)
 
-    /* "pathfind.pyx":150
+    /* "pathfind.pyx":173
  *     cdef float _get_elevation(self: Self, tuple node):
  *         cdef object elevation = self._elevations.get(node)
  *         if elevation is None:             # <<<<<<<<<<<<<<
@@ -6697,19 +7561,19 @@ static float __pyx_f_8pathfind_10Pathfinder__get_elevation(struct __pyx_obj_8pat
 */
   }
 
-  /* "pathfind.pyx":157
+  /* "pathfind.pyx":180
  *                     elevation = data['height'] + data['elevation']
  *             self._elevations[node] = elevation
  *         return elevation             # <<<<<<<<<<<<<<
  * 
  *     cdef bint _cant(self: Self,
 */
-  __pyx_t_5 = __Pyx_PyFloat_AsFloat(__pyx_v_elevation); if (unlikely((__pyx_t_5 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 157, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyFloat_AsFloat(__pyx_v_elevation); if (unlikely((__pyx_t_5 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 180, __pyx_L1_error)
   __pyx_r = __pyx_t_5;
-  __Pyx_TraceReturnCValue(__pyx_r, PyFloat_FromDouble, 45, 0, __PYX_ERR(0, 157, __pyx_L1_error));
+  __Pyx_TraceReturnCValue(__pyx_r, PyFloat_FromDouble, 45, 0, __PYX_ERR(0, 180, __pyx_L1_error));
   goto __pyx_L0;
 
-  /* "pathfind.pyx":148
+  /* "pathfind.pyx":171
  *         ) * self._greediness
  * 
  *     cdef float _get_elevation(self: Self, tuple node):             # <<<<<<<<<<<<<<
@@ -6726,7 +7590,7 @@ static float __pyx_f_8pathfind_10Pathfinder__get_elevation(struct __pyx_obj_8pat
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 148, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 171, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder._get_elevation", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
@@ -6738,7 +7602,7 @@ static float __pyx_f_8pathfind_10Pathfinder__get_elevation(struct __pyx_obj_8pat
   return __pyx_r;
 }
 
-/* "pathfind.pyx":159
+/* "pathfind.pyx":182
  *         return elevation
  * 
  *     cdef bint _cant(self: Self,             # <<<<<<<<<<<<<<
@@ -6759,11 +7623,11 @@ static int __pyx_f_8pathfind_10Pathfinder__cant(struct __pyx_obj_8pathfind_Pathf
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[28]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[34]))
   __Pyx_RefNannySetupContext("_cant", 0);
-  __Pyx_TraceStartFunc("_cant", __pyx_f[0], 159, 0, 0, 0, __PYX_ERR(0, 159, __pyx_L1_error));
+  __Pyx_TraceStartFunc("_cant", __pyx_f[0], 182, 0, 0, 0, __PYX_ERR(0, 182, __pyx_L1_error));
 
-  /* "pathfind.pyx":164
+  /* "pathfind.pyx":187
  *                     float bottom,
  *                     float climb):
  *         if data is None:             # <<<<<<<<<<<<<<
@@ -6773,7 +7637,7 @@ static int __pyx_f_8pathfind_10Pathfinder__cant(struct __pyx_obj_8pathfind_Pathf
   __pyx_t_1 = (__pyx_v_data == Py_None);
   if (__pyx_t_1) {
 
-    /* "pathfind.pyx":165
+    /* "pathfind.pyx":188
  *                     float climb):
  *         if data is None:
  *             if elevation:             # <<<<<<<<<<<<<<
@@ -6783,7 +7647,7 @@ static int __pyx_f_8pathfind_10Pathfinder__cant(struct __pyx_obj_8pathfind_Pathf
     __pyx_t_1 = (__pyx_v_elevation != 0);
     if (__pyx_t_1) {
 
-      /* "pathfind.pyx":166
+      /* "pathfind.pyx":189
  *         if data is None:
  *             if elevation:
  *                 return True             # <<<<<<<<<<<<<<
@@ -6791,10 +7655,10 @@ static int __pyx_f_8pathfind_10Pathfinder__cant(struct __pyx_obj_8pathfind_Pathf
  *         cdef float tile_elevation = data['elevation']
 */
       __pyx_r = 1;
-      __Pyx_TraceReturnCValue(__pyx_r, __Pyx_PyBool_FromLong, 8, 0, __PYX_ERR(0, 166, __pyx_L1_error));
+      __Pyx_TraceReturnCValue(__pyx_r, __Pyx_PyBool_FromLong, 8, 0, __PYX_ERR(0, 189, __pyx_L1_error));
       goto __pyx_L0;
 
-      /* "pathfind.pyx":165
+      /* "pathfind.pyx":188
  *                     float climb):
  *         if data is None:
  *             if elevation:             # <<<<<<<<<<<<<<
@@ -6803,7 +7667,7 @@ static int __pyx_f_8pathfind_10Pathfinder__cant(struct __pyx_obj_8pathfind_Pathf
 */
     }
 
-    /* "pathfind.pyx":167
+    /* "pathfind.pyx":190
  *             if elevation:
  *                 return True
  *             return self._fall != -1 and bottom > self._fall             # <<<<<<<<<<<<<<
@@ -6820,10 +7684,10 @@ static int __pyx_f_8pathfind_10Pathfinder__cant(struct __pyx_obj_8pathfind_Pathf
     __pyx_t_1 = __pyx_t_2;
     __pyx_L5_bool_binop_done:;
     __pyx_r = __pyx_t_1;
-    __Pyx_TraceReturnCValue(__pyx_r, __Pyx_PyBool_FromLong, 10, 0, __PYX_ERR(0, 167, __pyx_L1_error));
+    __Pyx_TraceReturnCValue(__pyx_r, __Pyx_PyBool_FromLong, 10, 0, __PYX_ERR(0, 190, __pyx_L1_error));
     goto __pyx_L0;
 
-    /* "pathfind.pyx":164
+    /* "pathfind.pyx":187
  *                     float bottom,
  *                     float climb):
  *         if data is None:             # <<<<<<<<<<<<<<
@@ -6832,33 +7696,33 @@ static int __pyx_f_8pathfind_10Pathfinder__cant(struct __pyx_obj_8pathfind_Pathf
 */
   }
 
-  /* "pathfind.pyx":168
+  /* "pathfind.pyx":191
  *                 return True
  *             return self._fall != -1 and bottom > self._fall
  *         cdef float tile_elevation = data['elevation']             # <<<<<<<<<<<<<<
  *         cdef float tile_height = data['height']
  *         if elevation:
 */
-  __pyx_t_3 = __Pyx_PyObject_Dict_GetItem(__pyx_v_data, __pyx_mstate_global->__pyx_n_u_elevation); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 168, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_Dict_GetItem(__pyx_v_data, __pyx_mstate_global->__pyx_n_u_elevation); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 191, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyFloat_AsFloat(__pyx_t_3); if (unlikely((__pyx_t_4 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 168, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyFloat_AsFloat(__pyx_t_3); if (unlikely((__pyx_t_4 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 191, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_tile_elevation = __pyx_t_4;
 
-  /* "pathfind.pyx":169
+  /* "pathfind.pyx":192
  *             return self._fall != -1 and bottom > self._fall
  *         cdef float tile_elevation = data['elevation']
  *         cdef float tile_height = data['height']             # <<<<<<<<<<<<<<
  *         if elevation:
  *             return (
 */
-  __pyx_t_3 = __Pyx_PyObject_Dict_GetItem(__pyx_v_data, __pyx_mstate_global->__pyx_n_u_height); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_Dict_GetItem(__pyx_v_data, __pyx_mstate_global->__pyx_n_u_height); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 192, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyFloat_AsFloat(__pyx_t_3); if (unlikely((__pyx_t_4 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyFloat_AsFloat(__pyx_t_3); if (unlikely((__pyx_t_4 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 192, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_tile_height = __pyx_t_4;
 
-  /* "pathfind.pyx":170
+  /* "pathfind.pyx":193
  *         cdef float tile_elevation = data['elevation']
  *         cdef float tile_height = data['height']
  *         if elevation:             # <<<<<<<<<<<<<<
@@ -6868,7 +7732,7 @@ static int __pyx_f_8pathfind_10Pathfinder__cant(struct __pyx_obj_8pathfind_Pathf
   __pyx_t_1 = (__pyx_v_elevation != 0);
   if (__pyx_t_1) {
 
-    /* "pathfind.pyx":172
+    /* "pathfind.pyx":195
  *         if elevation:
  *             return (
  *                 tile_elevation + tile_height - bottom > climb             # <<<<<<<<<<<<<<
@@ -6882,7 +7746,7 @@ static int __pyx_f_8pathfind_10Pathfinder__cant(struct __pyx_obj_8pathfind_Pathf
       goto __pyx_L8_bool_binop_done;
     }
 
-    /* "pathfind.pyx":173
+    /* "pathfind.pyx":196
  *             return (
  *                 tile_elevation + tile_height - bottom > climb
  *                 or (self._fall != -1             # <<<<<<<<<<<<<<
@@ -6896,7 +7760,7 @@ static int __pyx_f_8pathfind_10Pathfinder__cant(struct __pyx_obj_8pathfind_Pathf
       goto __pyx_L8_bool_binop_done;
     }
 
-    /* "pathfind.pyx":174
+    /* "pathfind.pyx":197
  *                 tile_elevation + tile_height - bottom > climb
  *                 or (self._fall != -1
  *                     and bottom - tile_elevation - tile_height > self._fall)             # <<<<<<<<<<<<<<
@@ -6907,10 +7771,10 @@ static int __pyx_f_8pathfind_10Pathfinder__cant(struct __pyx_obj_8pathfind_Pathf
     __pyx_t_1 = __pyx_t_2;
     __pyx_L8_bool_binop_done:;
     __pyx_r = __pyx_t_1;
-    __Pyx_TraceReturnCValue(__pyx_r, __Pyx_PyBool_FromLong, 30, 0, __PYX_ERR(0, 171, __pyx_L1_error));
+    __Pyx_TraceReturnCValue(__pyx_r, __Pyx_PyBool_FromLong, 30, 0, __PYX_ERR(0, 194, __pyx_L1_error));
     goto __pyx_L0;
 
-    /* "pathfind.pyx":170
+    /* "pathfind.pyx":193
  *         cdef float tile_elevation = data['elevation']
  *         cdef float tile_height = data['height']
  *         if elevation:             # <<<<<<<<<<<<<<
@@ -6919,7 +7783,7 @@ static int __pyx_f_8pathfind_10Pathfinder__cant(struct __pyx_obj_8pathfind_Pathf
 */
   }
 
-  /* "pathfind.pyx":177
+  /* "pathfind.pyx":200
  *             )
  *         else:
  *             return (             # <<<<<<<<<<<<<<
@@ -6928,7 +7792,7 @@ static int __pyx_f_8pathfind_10Pathfinder__cant(struct __pyx_obj_8pathfind_Pathf
 */
   /*else*/ {
 
-    /* "pathfind.pyx":178
+    /* "pathfind.pyx":201
  *         else:
  *             return (
  *                 tile_elevation < bottom + self._height             # <<<<<<<<<<<<<<
@@ -6942,7 +7806,7 @@ static int __pyx_f_8pathfind_10Pathfinder__cant(struct __pyx_obj_8pathfind_Pathf
       goto __pyx_L11_bool_binop_done;
     }
 
-    /* "pathfind.pyx":179
+    /* "pathfind.pyx":202
  *             return (
  *                 tile_elevation < bottom + self._height
  *                 or (self._fall != -1 and bottom > self._fall)             # <<<<<<<<<<<<<<
@@ -6959,11 +7823,11 @@ static int __pyx_f_8pathfind_10Pathfinder__cant(struct __pyx_obj_8pathfind_Pathf
     __pyx_t_1 = __pyx_t_2;
     __pyx_L11_bool_binop_done:;
     __pyx_r = __pyx_t_1;
-    __Pyx_TraceReturnCValue(__pyx_r, __Pyx_PyBool_FromLong, 52, 0, __PYX_ERR(0, 177, __pyx_L1_error));
+    __Pyx_TraceReturnCValue(__pyx_r, __Pyx_PyBool_FromLong, 52, 0, __PYX_ERR(0, 200, __pyx_L1_error));
     goto __pyx_L0;
   }
 
-  /* "pathfind.pyx":159
+  /* "pathfind.pyx":182
  *         return elevation
  * 
  *     cdef bint _cant(self: Self,             # <<<<<<<<<<<<<<
@@ -6978,7 +7842,7 @@ static int __pyx_f_8pathfind_10Pathfinder__cant(struct __pyx_obj_8pathfind_Pathf
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 159, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 182, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder._cant", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
@@ -6988,7 +7852,7 @@ static int __pyx_f_8pathfind_10Pathfinder__cant(struct __pyx_obj_8pathfind_Pathf
   return __pyx_r;
 }
 
-/* "pathfind.pyx":182
+/* "pathfind.pyx":205
  *             )
  * 
  *     cdef float _calculate(self: Self,             # <<<<<<<<<<<<<<
@@ -7015,21 +7879,21 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[29]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[35]))
   __Pyx_RefNannySetupContext("_calculate", 0);
-  __Pyx_TraceStartFunc("_calculate", __pyx_f[0], 182, 0, 0, 0, __PYX_ERR(0, 182, __pyx_L1_error));
+  __Pyx_TraceStartFunc("_calculate", __pyx_f[0], 205, 0, 0, 0, __PYX_ERR(0, 205, __pyx_L1_error));
 
-  /* "pathfind.pyx":190
+  /* "pathfind.pyx":213
  *         cdef:
  *             object data
  *             float bottom = self._get_elevation(node)             # <<<<<<<<<<<<<<
  *             int[2] tile = node[0]
  *         # i know neighbor can be calculated here
 */
-  __pyx_t_1 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_get_elevation(__pyx_v_self, __pyx_v_node); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 190, __pyx_L1_error)
+  __pyx_t_1 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_get_elevation(__pyx_v_self, __pyx_v_node); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 213, __pyx_L1_error)
   __pyx_v_bottom = __pyx_t_1;
 
-  /* "pathfind.pyx":191
+  /* "pathfind.pyx":214
  *             object data
  *             float bottom = self._get_elevation(node)
  *             int[2] tile = node[0]             # <<<<<<<<<<<<<<
@@ -7038,12 +7902,12 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
 */
   if (unlikely(__pyx_v_node == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 191, __pyx_L1_error)
+    __PYX_ERR(0, 214, __pyx_L1_error)
   }
-  if (unlikely((__Pyx_carray_from_py_int(__Pyx_PyTuple_GET_ITEM(__pyx_v_node, 0), __pyx_t_2, 2) < 0))) __PYX_ERR(0, 191, __pyx_L1_error)
+  if (unlikely((__Pyx_carray_from_py_int(__Pyx_PyTuple_GET_ITEM(__pyx_v_node, 0), __pyx_t_2, 2) < 0))) __PYX_ERR(0, 214, __pyx_L1_error)
   memcpy(&(__pyx_v_tile[0]), __pyx_t_2, sizeof(__pyx_v_tile[0]) * (2));
 
-  /* "pathfind.pyx":195
+  /* "pathfind.pyx":218
  *         # but it is faster if it is calculated in the for loop
  *         # I'm aware of how weird this looks but it works
  *         data = self._tilemap.get(gen_tile_key(neighbor[0]))             # <<<<<<<<<<<<<<
@@ -7052,34 +7916,34 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
 */
   if (unlikely(__pyx_v_self->_tilemap == Py_None)) {
     PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "get");
-    __PYX_ERR(0, 195, __pyx_L1_error)
+    __PYX_ERR(0, 218, __pyx_L1_error)
   }
   if (unlikely(__pyx_v_neighbor == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 195, __pyx_L1_error)
+    __PYX_ERR(0, 218, __pyx_L1_error)
   }
   __pyx_t_3 = __Pyx_PyTuple_GET_ITEM(__pyx_v_neighbor, 0);
   __Pyx_INCREF(__pyx_t_3);
-  __pyx_t_4 = __pyx_f_8pathfind_gen_tile_key(__pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 195, __pyx_L1_error)
+  __pyx_t_4 = __pyx_f_8pathfind_gen_tile_key(__pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 218, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyDict_GetItemDefault(__pyx_v_self->_tilemap, __pyx_t_4, Py_None); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 195, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyDict_GetItemDefault(__pyx_v_self->_tilemap, __pyx_t_4, Py_None); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 218, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_data = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "pathfind.pyx":196
+  /* "pathfind.pyx":219
  *         # I'm aware of how weird this looks but it works
  *         data = self._tilemap.get(gen_tile_key(neighbor[0]))
  *         if self._cant(data, elevation, bottom, climb):             # <<<<<<<<<<<<<<
  *             return 2147483647
  *         elif offset[0] and offset[1]:
 */
-  __pyx_t_5 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_cant(__pyx_v_self, __pyx_v_data, __pyx_v_elevation, __pyx_v_bottom, __pyx_v_climb); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 196, __pyx_L1_error)
+  __pyx_t_5 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_cant(__pyx_v_self, __pyx_v_data, __pyx_v_elevation, __pyx_v_bottom, __pyx_v_climb); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 219, __pyx_L1_error)
   if (__pyx_t_5) {
 
-    /* "pathfind.pyx":197
+    /* "pathfind.pyx":220
  *         data = self._tilemap.get(gen_tile_key(neighbor[0]))
  *         if self._cant(data, elevation, bottom, climb):
  *             return 2147483647             # <<<<<<<<<<<<<<
@@ -7087,10 +7951,10 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
  *             data = self._tilemap.get(
 */
     __pyx_r = 2147483647.0;
-    __Pyx_TraceReturnCValue(__pyx_r, PyFloat_FromDouble, 29, 0, __PYX_ERR(0, 197, __pyx_L1_error));
+    __Pyx_TraceReturnCValue(__pyx_r, PyFloat_FromDouble, 29, 0, __PYX_ERR(0, 220, __pyx_L1_error));
     goto __pyx_L0;
 
-    /* "pathfind.pyx":196
+    /* "pathfind.pyx":219
  *         # I'm aware of how weird this looks but it works
  *         data = self._tilemap.get(gen_tile_key(neighbor[0]))
  *         if self._cant(data, elevation, bottom, climb):             # <<<<<<<<<<<<<<
@@ -7099,7 +7963,7 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
 */
   }
 
-  /* "pathfind.pyx":198
+  /* "pathfind.pyx":221
  *         if self._cant(data, elevation, bottom, climb):
  *             return 2147483647
  *         elif offset[0] and offset[1]:             # <<<<<<<<<<<<<<
@@ -7117,7 +7981,7 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_5) {
 
-    /* "pathfind.pyx":199
+    /* "pathfind.pyx":222
  *             return 2147483647
  *         elif offset[0] and offset[1]:
  *             data = self._tilemap.get(             # <<<<<<<<<<<<<<
@@ -7126,56 +7990,56 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
 */
     if (unlikely(__pyx_v_self->_tilemap == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "get");
-      __PYX_ERR(0, 199, __pyx_L1_error)
+      __PYX_ERR(0, 222, __pyx_L1_error)
     }
 
-    /* "pathfind.pyx":200
+    /* "pathfind.pyx":223
  *         elif offset[0] and offset[1]:
  *             data = self._tilemap.get(
  *                 gen_tile_key((tile[0], tile[1] + offset[1])),             # <<<<<<<<<<<<<<
  *             )
  *             if self._cant(data, elevation, bottom, climb):
 */
-    __pyx_t_3 = __Pyx_PyLong_From_int((__pyx_v_tile[0])); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 200, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyLong_From_int((__pyx_v_tile[0])); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 223, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = __Pyx_PyLong_From_int(((__pyx_v_tile[1]) + (__pyx_v_offset[1]))); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 200, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyLong_From_int(((__pyx_v_tile[1]) + (__pyx_v_offset[1]))); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 223, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_7 = PyTuple_New(2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 200, __pyx_L1_error)
+    __pyx_t_7 = PyTuple_New(2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 223, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_GIVEREF(__pyx_t_3);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_3) != (0)) __PYX_ERR(0, 200, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_3) != (0)) __PYX_ERR(0, 223, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_4);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_7, 1, __pyx_t_4) != (0)) __PYX_ERR(0, 200, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_7, 1, __pyx_t_4) != (0)) __PYX_ERR(0, 223, __pyx_L1_error);
     __pyx_t_3 = 0;
     __pyx_t_4 = 0;
-    __pyx_t_4 = __pyx_f_8pathfind_gen_tile_key(__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 200, __pyx_L1_error)
+    __pyx_t_4 = __pyx_f_8pathfind_gen_tile_key(__pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 223, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-    /* "pathfind.pyx":199
+    /* "pathfind.pyx":222
  *             return 2147483647
  *         elif offset[0] and offset[1]:
  *             data = self._tilemap.get(             # <<<<<<<<<<<<<<
  *                 gen_tile_key((tile[0], tile[1] + offset[1])),
  *             )
 */
-    __pyx_t_7 = __Pyx_PyDict_GetItemDefault(__pyx_v_self->_tilemap, __pyx_t_4, Py_None); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 199, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyDict_GetItemDefault(__pyx_v_self->_tilemap, __pyx_t_4, Py_None); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 222, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF_SET(__pyx_v_data, __pyx_t_7);
     __pyx_t_7 = 0;
 
-    /* "pathfind.pyx":202
+    /* "pathfind.pyx":225
  *                 gen_tile_key((tile[0], tile[1] + offset[1])),
  *             )
  *             if self._cant(data, elevation, bottom, climb):             # <<<<<<<<<<<<<<
  *                 return 2147483647
  *             data = self._tilemap.get(
 */
-    __pyx_t_5 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_cant(__pyx_v_self, __pyx_v_data, __pyx_v_elevation, __pyx_v_bottom, __pyx_v_climb); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 202, __pyx_L1_error)
+    __pyx_t_5 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_cant(__pyx_v_self, __pyx_v_data, __pyx_v_elevation, __pyx_v_bottom, __pyx_v_climb); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 225, __pyx_L1_error)
     if (__pyx_t_5) {
 
-      /* "pathfind.pyx":203
+      /* "pathfind.pyx":226
  *             )
  *             if self._cant(data, elevation, bottom, climb):
  *                 return 2147483647             # <<<<<<<<<<<<<<
@@ -7183,10 +8047,10 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
  *                 gen_tile_key((tile[0] + offset[0], tile[1])),
 */
       __pyx_r = 2147483647.0;
-      __Pyx_TraceReturnCValue(__pyx_r, PyFloat_FromDouble, 63, 0, __PYX_ERR(0, 203, __pyx_L1_error));
+      __Pyx_TraceReturnCValue(__pyx_r, PyFloat_FromDouble, 63, 0, __PYX_ERR(0, 226, __pyx_L1_error));
       goto __pyx_L0;
 
-      /* "pathfind.pyx":202
+      /* "pathfind.pyx":225
  *                 gen_tile_key((tile[0], tile[1] + offset[1])),
  *             )
  *             if self._cant(data, elevation, bottom, climb):             # <<<<<<<<<<<<<<
@@ -7195,7 +8059,7 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
 */
     }
 
-    /* "pathfind.pyx":204
+    /* "pathfind.pyx":227
  *             if self._cant(data, elevation, bottom, climb):
  *                 return 2147483647
  *             data = self._tilemap.get(             # <<<<<<<<<<<<<<
@@ -7204,56 +8068,56 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
 */
     if (unlikely(__pyx_v_self->_tilemap == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "get");
-      __PYX_ERR(0, 204, __pyx_L1_error)
+      __PYX_ERR(0, 227, __pyx_L1_error)
     }
 
-    /* "pathfind.pyx":205
+    /* "pathfind.pyx":228
  *                 return 2147483647
  *             data = self._tilemap.get(
  *                 gen_tile_key((tile[0] + offset[0], tile[1])),             # <<<<<<<<<<<<<<
  *             )
  *             if self._cant(data, elevation, bottom, climb):
 */
-    __pyx_t_7 = __Pyx_PyLong_From_int(((__pyx_v_tile[0]) + (__pyx_v_offset[0]))); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 205, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyLong_From_int(((__pyx_v_tile[0]) + (__pyx_v_offset[0]))); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 228, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_4 = __Pyx_PyLong_From_int((__pyx_v_tile[1])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 205, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyLong_From_int((__pyx_v_tile[1])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 228, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 205, __pyx_L1_error)
+    __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 228, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_GIVEREF(__pyx_t_7);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_7) != (0)) __PYX_ERR(0, 205, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_7) != (0)) __PYX_ERR(0, 228, __pyx_L1_error);
     __Pyx_GIVEREF(__pyx_t_4);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_4) != (0)) __PYX_ERR(0, 205, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_4) != (0)) __PYX_ERR(0, 228, __pyx_L1_error);
     __pyx_t_7 = 0;
     __pyx_t_4 = 0;
-    __pyx_t_4 = __pyx_f_8pathfind_gen_tile_key(__pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 205, __pyx_L1_error)
+    __pyx_t_4 = __pyx_f_8pathfind_gen_tile_key(__pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 228, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "pathfind.pyx":204
+    /* "pathfind.pyx":227
  *             if self._cant(data, elevation, bottom, climb):
  *                 return 2147483647
  *             data = self._tilemap.get(             # <<<<<<<<<<<<<<
  *                 gen_tile_key((tile[0] + offset[0], tile[1])),
  *             )
 */
-    __pyx_t_3 = __Pyx_PyDict_GetItemDefault(__pyx_v_self->_tilemap, __pyx_t_4, Py_None); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 204, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyDict_GetItemDefault(__pyx_v_self->_tilemap, __pyx_t_4, Py_None); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 227, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF_SET(__pyx_v_data, __pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "pathfind.pyx":207
+    /* "pathfind.pyx":230
  *                 gen_tile_key((tile[0] + offset[0], tile[1])),
  *             )
  *             if self._cant(data, elevation, bottom, climb):             # <<<<<<<<<<<<<<
  *                 return 2147483647
  *             weight = self._diagonal_weight
 */
-    __pyx_t_5 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_cant(__pyx_v_self, __pyx_v_data, __pyx_v_elevation, __pyx_v_bottom, __pyx_v_climb); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 207, __pyx_L1_error)
+    __pyx_t_5 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_cant(__pyx_v_self, __pyx_v_data, __pyx_v_elevation, __pyx_v_bottom, __pyx_v_climb); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 230, __pyx_L1_error)
     if (__pyx_t_5) {
 
-      /* "pathfind.pyx":208
+      /* "pathfind.pyx":231
  *             )
  *             if self._cant(data, elevation, bottom, climb):
  *                 return 2147483647             # <<<<<<<<<<<<<<
@@ -7261,10 +8125,10 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
  *         else:
 */
       __pyx_r = 2147483647.0;
-      __Pyx_TraceReturnCValue(__pyx_r, PyFloat_FromDouble, 90, 0, __PYX_ERR(0, 208, __pyx_L1_error));
+      __Pyx_TraceReturnCValue(__pyx_r, PyFloat_FromDouble, 90, 0, __PYX_ERR(0, 231, __pyx_L1_error));
       goto __pyx_L0;
 
-      /* "pathfind.pyx":207
+      /* "pathfind.pyx":230
  *                 gen_tile_key((tile[0] + offset[0], tile[1])),
  *             )
  *             if self._cant(data, elevation, bottom, climb):             # <<<<<<<<<<<<<<
@@ -7273,7 +8137,7 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
 */
     }
 
-    /* "pathfind.pyx":209
+    /* "pathfind.pyx":232
  *             if self._cant(data, elevation, bottom, climb):
  *                 return 2147483647
  *             weight = self._diagonal_weight             # <<<<<<<<<<<<<<
@@ -7283,7 +8147,7 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
     __pyx_t_1 = __pyx_v_self->_diagonal_weight;
     __pyx_v_weight = __pyx_t_1;
 
-    /* "pathfind.pyx":198
+    /* "pathfind.pyx":221
  *         if self._cant(data, elevation, bottom, climb):
  *             return 2147483647
  *         elif offset[0] and offset[1]:             # <<<<<<<<<<<<<<
@@ -7293,7 +8157,7 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
     goto __pyx_L3;
   }
 
-  /* "pathfind.pyx":211
+  /* "pathfind.pyx":234
  *             weight = self._diagonal_weight
  *         else:
  *             weight = self._straight_weight             # <<<<<<<<<<<<<<
@@ -7306,17 +8170,17 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
   }
   __pyx_L3:;
 
-  /* "pathfind.pyx":212
+  /* "pathfind.pyx":235
  *         else:
  *             weight = self._straight_weight
  *         cdef float difference = self._get_elevation(neighbor) - bottom             # <<<<<<<<<<<<<<
  *         if difference < 0:
  *             weight -= difference * self._elevation_weight
 */
-  __pyx_t_1 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_get_elevation(__pyx_v_self, __pyx_v_neighbor); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 212, __pyx_L1_error)
+  __pyx_t_1 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_get_elevation(__pyx_v_self, __pyx_v_neighbor); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 235, __pyx_L1_error)
   __pyx_v_difference = (__pyx_t_1 - __pyx_v_bottom);
 
-  /* "pathfind.pyx":213
+  /* "pathfind.pyx":236
  *             weight = self._straight_weight
  *         cdef float difference = self._get_elevation(neighbor) - bottom
  *         if difference < 0:             # <<<<<<<<<<<<<<
@@ -7326,7 +8190,7 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
   __pyx_t_5 = (__pyx_v_difference < 0.0);
   if (__pyx_t_5) {
 
-    /* "pathfind.pyx":214
+    /* "pathfind.pyx":237
  *         cdef float difference = self._get_elevation(neighbor) - bottom
  *         if difference < 0:
  *             weight -= difference * self._elevation_weight             # <<<<<<<<<<<<<<
@@ -7335,7 +8199,7 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
 */
     __pyx_v_weight = (__pyx_v_weight - (__pyx_v_difference * __pyx_v_self->_elevation_weight));
 
-    /* "pathfind.pyx":213
+    /* "pathfind.pyx":236
  *             weight = self._straight_weight
  *         cdef float difference = self._get_elevation(neighbor) - bottom
  *         if difference < 0:             # <<<<<<<<<<<<<<
@@ -7345,7 +8209,7 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
     goto __pyx_L8;
   }
 
-  /* "pathfind.pyx":215
+  /* "pathfind.pyx":238
  *         if difference < 0:
  *             weight -= difference * self._elevation_weight
  *         elif difference > self._climb:             # <<<<<<<<<<<<<<
@@ -7355,7 +8219,7 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
   __pyx_t_5 = (__pyx_v_difference > __pyx_v_self->_climb);
   if (__pyx_t_5) {
 
-    /* "pathfind.pyx":216
+    /* "pathfind.pyx":239
  *             weight -= difference * self._elevation_weight
  *         elif difference > self._climb:
  *             weight += (difference - self._climb) * self._elevation_weight             # <<<<<<<<<<<<<<
@@ -7364,7 +8228,7 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
 */
     __pyx_v_weight = (__pyx_v_weight + ((__pyx_v_difference - __pyx_v_self->_climb) * __pyx_v_self->_elevation_weight));
 
-    /* "pathfind.pyx":215
+    /* "pathfind.pyx":238
  *         if difference < 0:
  *             weight -= difference * self._elevation_weight
  *         elif difference > self._climb:             # <<<<<<<<<<<<<<
@@ -7374,7 +8238,7 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
   }
   __pyx_L8:;
 
-  /* "pathfind.pyx":217
+  /* "pathfind.pyx":240
  *         elif difference > self._climb:
  *             weight += (difference - self._climb) * self._elevation_weight
  *         return weight             # <<<<<<<<<<<<<<
@@ -7382,10 +8246,10 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
  *     cdef list _pathfind(self: Self,
 */
   __pyx_r = __pyx_v_weight;
-  __Pyx_TraceReturnCValue(__pyx_r, PyFloat_FromDouble, 126, 0, __PYX_ERR(0, 217, __pyx_L1_error));
+  __Pyx_TraceReturnCValue(__pyx_r, PyFloat_FromDouble, 126, 0, __PYX_ERR(0, 240, __pyx_L1_error));
   goto __pyx_L0;
 
-  /* "pathfind.pyx":182
+  /* "pathfind.pyx":205
  *             )
  * 
  *     cdef float _calculate(self: Self,             # <<<<<<<<<<<<<<
@@ -7402,7 +8266,7 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 182, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 205, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder._calculate", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
@@ -7413,23 +8277,26 @@ static float __pyx_f_8pathfind_10Pathfinder__calculate(struct __pyx_obj_8pathfin
   return __pyx_r;
 }
 
-/* "pathfind.pyx":219
+/* "pathfind.pyx":242
  *         return weight
  * 
  *     cdef list _pathfind(self: Self,             # <<<<<<<<<<<<<<
+ *                         float yaw,
  *                         tuple start,
- *                         tuple end,
 */
 
-static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, PyObject *__pyx_v_start, PyObject *__pyx_v_end, struct __pyx_opt_args_8pathfind_10Pathfinder__pathfind *__pyx_optional_args) {
+static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, float __pyx_v_yaw, PyObject *__pyx_v_start, PyObject *__pyx_v_end, struct __pyx_opt_args_8pathfind_10Pathfinder__pathfind *__pyx_optional_args) {
   float __pyx_v_climb = ((float)-1.0);
   int __pyx_v_max_nodes = ((int)0x64);
   int __pyx_v_force = ((int)0);
   PyObject *__pyx_v_path = 0;
+  PyObject *__pyx_v_yaws = 0;
   PyObject *__pyx_v_parent = 0;
   PyObject *__pyx_v_will = 0;
   PyObject *__pyx_v_visited = 0;
   int __pyx_v_elevation;
+  int __pyx_v_offset[2];
+  float __pyx_v_turn;
   float __pyx_v_f;
   float __pyx_v_h;
   float __pyx_v_least;
@@ -7439,13 +8306,13 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
   PyObject *__pyx_v_tentative = 0;
   PyObject *__pyx_v_node = 0;
   PyObject *__pyx_v_neighbor = 0;
-  int *__pyx_v_offset;
+  long __pyx_v_i;
   PyObject *__pyx_r = NULL;
   __Pyx_TraceDeclarationsFunc
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  float __pyx_t_2;
-  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  float __pyx_t_3;
   int __pyx_t_4;
   int __pyx_t_5;
   Py_ssize_t __pyx_t_6;
@@ -7454,16 +8321,14 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
   int __pyx_t_9;
   int __pyx_t_10;
   PyObject *__pyx_t_11 = NULL;
-  int (*__pyx_t_12)[2];
-  int (*__pyx_t_13)[2];
-  int (*__pyx_t_14)[2];
-  float __pyx_t_15;
+  long __pyx_t_12;
+  float __pyx_t_13;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[30]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[36]))
   __Pyx_RefNannySetupContext("_pathfind", 0);
-  __Pyx_TraceStartFunc("_pathfind", __pyx_f[0], 219, 0, 0, 0, __PYX_ERR(0, 219, __pyx_L1_error));
+  __Pyx_TraceStartFunc("_pathfind", __pyx_f[0], 242, 0, 0, 0, __PYX_ERR(0, 242, __pyx_L1_error));
   if (__pyx_optional_args) {
     if (__pyx_optional_args->__pyx_n > 0) {
       __pyx_v_climb = __pyx_optional_args->climb;
@@ -7476,58 +8341,74 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
     }
   }
 
-  /* "pathfind.pyx":226
+  /* "pathfind.pyx":250
  *                         bint force=0):
  *         # Setup
  *         self._reset_cache()             # <<<<<<<<<<<<<<
  *         cdef:
  *             list path # final path
 */
-  ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_reset_cache(__pyx_v_self); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 226, __pyx_L1_error)
+  ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_reset_cache(__pyx_v_self); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 250, __pyx_L1_error)
 
-  /* "pathfind.pyx":229
+  /* "pathfind.pyx":253
  *         cdef:
  *             list path # final path
+ *             dict yaws = {start: yaw}             # <<<<<<<<<<<<<<
+ *             dict parent = {start: start}
+ *             dict will = {start: self._h(start, end)} # open
+*/
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 253, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_yaw); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 253, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_t_1, __pyx_v_start, __pyx_t_2) < (0)) __PYX_ERR(0, 253, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_yaws = ((PyObject*)__pyx_t_1);
+  __pyx_t_1 = 0;
+
+  /* "pathfind.pyx":254
+ *             list path # final path
+ *             dict yaws = {start: yaw}
  *             dict parent = {start: start}             # <<<<<<<<<<<<<<
  *             dict will = {start: self._h(start, end)} # open
  *             set visited = set() # closed
 */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 229, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 254, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_v_start, __pyx_v_start) < (0)) __PYX_ERR(0, 229, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_v_start, __pyx_v_start) < (0)) __PYX_ERR(0, 254, __pyx_L1_error)
   __pyx_v_parent = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "pathfind.pyx":230
- *             list path # final path
+  /* "pathfind.pyx":255
+ *             dict yaws = {start: yaw}
  *             dict parent = {start: start}
  *             dict will = {start: self._h(start, end)} # open             # <<<<<<<<<<<<<<
  *             set visited = set() # closed
  *             int elevation
 */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 230, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 255, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_h(__pyx_v_self, __pyx_v_start, __pyx_v_end); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 230, __pyx_L1_error)
-  __pyx_t_3 = PyFloat_FromDouble(__pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 230, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_v_start, __pyx_t_3) < (0)) __PYX_ERR(0, 230, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_h(__pyx_v_self, __pyx_v_start, __pyx_v_end); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 255, __pyx_L1_error)
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 255, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_t_1, __pyx_v_start, __pyx_t_2) < (0)) __PYX_ERR(0, 255, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_will = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "pathfind.pyx":231
+  /* "pathfind.pyx":256
  *             dict parent = {start: start}
  *             dict will = {start: self._h(start, end)} # open
  *             set visited = set() # closed             # <<<<<<<<<<<<<<
  *             int elevation
- *             float f
+ *             int[2] offset
 */
-  __pyx_t_1 = PySet_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 231, __pyx_L1_error)
+  __pyx_t_1 = PySet_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 256, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_visited = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "pathfind.pyx":236
+  /* "pathfind.pyx":263
  *             float h
  *             float least
  *             float least_h = 2147483647             # <<<<<<<<<<<<<<
@@ -7536,7 +8417,7 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
 */
   __pyx_v_least_h = 2147483647.0;
 
-  /* "pathfind.pyx":243
+  /* "pathfind.pyx":270
  *             tuple neighbor
  * 
  *         if climb == -1:             # <<<<<<<<<<<<<<
@@ -7546,17 +8427,17 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
   __pyx_t_4 = (__pyx_v_climb == -1.0);
   if (__pyx_t_4) {
 
-    /* "pathfind.pyx":244
+    /* "pathfind.pyx":271
  * 
  *         if climb == -1:
  *             climb = self._climb             # <<<<<<<<<<<<<<
  *         self._gs[start] = 0
  * 
 */
-    __pyx_t_2 = __pyx_v_self->_climb;
-    __pyx_v_climb = __pyx_t_2;
+    __pyx_t_3 = __pyx_v_self->_climb;
+    __pyx_v_climb = __pyx_t_3;
 
-    /* "pathfind.pyx":243
+    /* "pathfind.pyx":270
  *             tuple neighbor
  * 
  *         if climb == -1:             # <<<<<<<<<<<<<<
@@ -7565,7 +8446,7 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
 */
   }
 
-  /* "pathfind.pyx":245
+  /* "pathfind.pyx":272
  *         if climb == -1:
  *             climb = self._climb
  *         self._gs[start] = 0             # <<<<<<<<<<<<<<
@@ -7574,11 +8455,11 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
 */
   if (unlikely(__pyx_v_self->_gs == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 245, __pyx_L1_error)
+    __PYX_ERR(0, 272, __pyx_L1_error)
   }
-  if (unlikely((PyDict_SetItem(__pyx_v_self->_gs, __pyx_v_start, __pyx_mstate_global->__pyx_int_0) < 0))) __PYX_ERR(0, 245, __pyx_L1_error)
+  if (unlikely((PyDict_SetItem(__pyx_v_self->_gs, __pyx_v_start, __pyx_mstate_global->__pyx_int_0) < 0))) __PYX_ERR(0, 272, __pyx_L1_error)
 
-  /* "pathfind.pyx":248
+  /* "pathfind.pyx":275
  * 
  *         # Algorithm
  *         while will and len(visited) <= max_nodes:             # <<<<<<<<<<<<<<
@@ -7586,19 +8467,19 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
  *             least = 2147483647
 */
   while (1) {
-    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_will); if (unlikely((__pyx_t_5 < 0))) __PYX_ERR(0, 248, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_will); if (unlikely((__pyx_t_5 < 0))) __PYX_ERR(0, 275, __pyx_L1_error)
     if (__pyx_t_5) {
     } else {
       __pyx_t_4 = __pyx_t_5;
       goto __pyx_L6_bool_binop_done;
     }
-    __pyx_t_6 = __Pyx_PySet_GET_SIZE(__pyx_v_visited); if (unlikely(__pyx_t_6 == ((Py_ssize_t)-1))) __PYX_ERR(0, 248, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PySet_GET_SIZE(__pyx_v_visited); if (unlikely(__pyx_t_6 == ((Py_ssize_t)-1))) __PYX_ERR(0, 275, __pyx_L1_error)
     __pyx_t_5 = (__pyx_t_6 <= __pyx_v_max_nodes);
     __pyx_t_4 = __pyx_t_5;
     __pyx_L6_bool_binop_done:;
     if (!__pyx_t_4) break;
 
-    /* "pathfind.pyx":250
+    /* "pathfind.pyx":277
  *         while will and len(visited) <= max_nodes:
  *             # Find the node
  *             least = 2147483647             # <<<<<<<<<<<<<<
@@ -7607,7 +8488,7 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
 */
     __pyx_v_least = 2147483647.0;
 
-    /* "pathfind.pyx":251
+    /* "pathfind.pyx":278
  *             # Find the node
  *             least = 2147483647
  *             for tentative in will:             # <<<<<<<<<<<<<<
@@ -7615,34 +8496,34 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
  *                 if f < least:
 */
     __pyx_t_6 = 0;
-    __pyx_t_3 = __Pyx_dict_iterator(__pyx_v_will, 1, ((PyObject *)NULL), (&__pyx_t_7), (&__pyx_t_8)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 251, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
+    __pyx_t_2 = __Pyx_dict_iterator(__pyx_v_will, 1, ((PyObject *)NULL), (&__pyx_t_7), (&__pyx_t_8)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 278, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
     __Pyx_XDECREF(__pyx_t_1);
-    __pyx_t_1 = __pyx_t_3;
-    __pyx_t_3 = 0;
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_t_2 = 0;
     while (1) {
-      __pyx_t_9 = __Pyx_dict_iter_next(__pyx_t_1, __pyx_t_7, &__pyx_t_6, &__pyx_t_3, NULL, NULL, __pyx_t_8);
+      __pyx_t_9 = __Pyx_dict_iter_next(__pyx_t_1, __pyx_t_7, &__pyx_t_6, &__pyx_t_2, NULL, NULL, __pyx_t_8);
       if (unlikely(__pyx_t_9 == 0)) break;
-      if (unlikely(__pyx_t_9 == -1)) __PYX_ERR(0, 251, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      if (!(likely(PyTuple_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None) || __Pyx_RaiseUnexpectedTypeError("tuple", __pyx_t_3))) __PYX_ERR(0, 251, __pyx_L1_error)
-      __Pyx_XDECREF_SET(__pyx_v_tentative, ((PyObject*)__pyx_t_3));
-      __pyx_t_3 = 0;
+      if (unlikely(__pyx_t_9 == -1)) __PYX_ERR(0, 278, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      if (!(likely(PyTuple_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None) || __Pyx_RaiseUnexpectedTypeError("tuple", __pyx_t_2))) __PYX_ERR(0, 278, __pyx_L1_error)
+      __Pyx_XDECREF_SET(__pyx_v_tentative, ((PyObject*)__pyx_t_2));
+      __pyx_t_2 = 0;
 
-      /* "pathfind.pyx":252
+      /* "pathfind.pyx":279
  *             least = 2147483647
  *             for tentative in will:
  *                 f = will[tentative]             # <<<<<<<<<<<<<<
  *                 if f < least:
  *                     least = f
 */
-      __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_will, __pyx_v_tentative); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 252, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_2 = __Pyx_PyFloat_AsFloat(__pyx_t_3); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 252, __pyx_L1_error)
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_v_f = __pyx_t_2;
+      __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_will, __pyx_v_tentative); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 279, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      __pyx_t_3 = __Pyx_PyFloat_AsFloat(__pyx_t_2); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 279, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __pyx_v_f = __pyx_t_3;
 
-      /* "pathfind.pyx":253
+      /* "pathfind.pyx":280
  *             for tentative in will:
  *                 f = will[tentative]
  *                 if f < least:             # <<<<<<<<<<<<<<
@@ -7652,7 +8533,7 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
       __pyx_t_4 = (__pyx_v_f < __pyx_v_least);
       if (__pyx_t_4) {
 
-        /* "pathfind.pyx":254
+        /* "pathfind.pyx":281
  *                 f = will[tentative]
  *                 if f < least:
  *                     least = f             # <<<<<<<<<<<<<<
@@ -7661,7 +8542,7 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
 */
         __pyx_v_least = __pyx_v_f;
 
-        /* "pathfind.pyx":255
+        /* "pathfind.pyx":282
  *                 if f < least:
  *                     least = f
  *                     node = tentative             # <<<<<<<<<<<<<<
@@ -7671,7 +8552,7 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
         __Pyx_INCREF(__pyx_v_tentative);
         __Pyx_XDECREF_SET(__pyx_v_node, __pyx_v_tentative);
 
-        /* "pathfind.pyx":253
+        /* "pathfind.pyx":280
  *             for tentative in will:
  *                 f = will[tentative]
  *                 if f < least:             # <<<<<<<<<<<<<<
@@ -7682,33 +8563,33 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
     }
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "pathfind.pyx":256
+    /* "pathfind.pyx":283
  *                     least = f
  *                     node = tentative
  *             if node == end:             # <<<<<<<<<<<<<<
  *                 # Trace path back
  *                 node = parent.get(end)
 */
-    if (unlikely(!__pyx_v_node)) { __Pyx_RaiseUnboundLocalError("node"); __PYX_ERR(0, 256, __pyx_L1_error) }
-    __pyx_t_1 = PyObject_RichCompare(__pyx_v_node, __pyx_v_end, Py_EQ); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 256, __pyx_L1_error)
-    __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_4 < 0))) __PYX_ERR(0, 256, __pyx_L1_error)
+    if (unlikely(!__pyx_v_node)) { __Pyx_RaiseUnboundLocalError("node"); __PYX_ERR(0, 283, __pyx_L1_error) }
+    __pyx_t_1 = PyObject_RichCompare(__pyx_v_node, __pyx_v_end, Py_EQ); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 283, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_4 < 0))) __PYX_ERR(0, 283, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (__pyx_t_4) {
 
-      /* "pathfind.pyx":258
+      /* "pathfind.pyx":285
  *             if node == end:
  *                 # Trace path back
  *                 node = parent.get(end)             # <<<<<<<<<<<<<<
  *                 if node is None:
  *                     return []
 */
-      __pyx_t_1 = __Pyx_PyDict_GetItemDefault(__pyx_v_parent, __pyx_v_end, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 258, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyDict_GetItemDefault(__pyx_v_parent, __pyx_v_end, Py_None); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 285, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      if (!(likely(PyTuple_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None) || __Pyx_RaiseUnexpectedTypeError("tuple", __pyx_t_1))) __PYX_ERR(0, 258, __pyx_L1_error)
+      if (!(likely(PyTuple_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None) || __Pyx_RaiseUnexpectedTypeError("tuple", __pyx_t_1))) __PYX_ERR(0, 285, __pyx_L1_error)
       __Pyx_XDECREF_SET(__pyx_v_node, ((PyObject*)__pyx_t_1));
       __pyx_t_1 = 0;
 
-      /* "pathfind.pyx":259
+      /* "pathfind.pyx":286
  *                 # Trace path back
  *                 node = parent.get(end)
  *                 if node is None:             # <<<<<<<<<<<<<<
@@ -7718,7 +8599,7 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
       __pyx_t_4 = (__pyx_v_node == ((PyObject*)Py_None));
       if (__pyx_t_4) {
 
-        /* "pathfind.pyx":260
+        /* "pathfind.pyx":287
  *                 node = parent.get(end)
  *                 if node is None:
  *                     return []             # <<<<<<<<<<<<<<
@@ -7726,14 +8607,14 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
  *                 while node != start:
 */
         __Pyx_XDECREF(__pyx_r);
-        __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 260, __pyx_L1_error)
+        __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 287, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __pyx_r = ((PyObject*)__pyx_t_1);
         __pyx_t_1 = 0;
-        __Pyx_TraceReturnValue(__pyx_r, 72, 0, __PYX_ERR(0, 260, __pyx_L1_error));
+        __Pyx_TraceReturnValue(__pyx_r, 75, 0, __PYX_ERR(0, 287, __pyx_L1_error));
         goto __pyx_L0;
 
-        /* "pathfind.pyx":259
+        /* "pathfind.pyx":286
  *                 # Trace path back
  *                 node = parent.get(end)
  *                 if node is None:             # <<<<<<<<<<<<<<
@@ -7742,22 +8623,22 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
 */
       }
 
-      /* "pathfind.pyx":261
+      /* "pathfind.pyx":288
  *                 if node is None:
  *                     return []
  *                 path = [node]             # <<<<<<<<<<<<<<
  *                 while node != start:
  *                     node = parent[node]
 */
-      __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 261, __pyx_L1_error)
+      __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 288, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_INCREF(__pyx_v_node);
       __Pyx_GIVEREF(__pyx_v_node);
-      if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 0, __pyx_v_node) != (0)) __PYX_ERR(0, 261, __pyx_L1_error);
+      if (__Pyx_PyList_SET_ITEM(__pyx_t_1, 0, __pyx_v_node) != (0)) __PYX_ERR(0, 288, __pyx_L1_error);
       __pyx_v_path = ((PyObject*)__pyx_t_1);
       __pyx_t_1 = 0;
 
-      /* "pathfind.pyx":262
+      /* "pathfind.pyx":289
  *                     return []
  *                 path = [node]
  *                 while node != start:             # <<<<<<<<<<<<<<
@@ -7765,35 +8646,35 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
  *                     path.append(node)
 */
       while (1) {
-        __pyx_t_1 = PyObject_RichCompare(__pyx_v_node, __pyx_v_start, Py_NE); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 262, __pyx_L1_error)
-        __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_4 < 0))) __PYX_ERR(0, 262, __pyx_L1_error)
+        __pyx_t_1 = PyObject_RichCompare(__pyx_v_node, __pyx_v_start, Py_NE); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 289, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely((__pyx_t_4 < 0))) __PYX_ERR(0, 289, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         if (!__pyx_t_4) break;
 
-        /* "pathfind.pyx":263
+        /* "pathfind.pyx":290
  *                 path = [node]
  *                 while node != start:
  *                     node = parent[node]             # <<<<<<<<<<<<<<
  *                     path.append(node)
  *                 return path
 */
-        __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_v_parent, __pyx_v_node); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 263, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_v_parent, __pyx_v_node); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 290, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        if (!(likely(PyTuple_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None) || __Pyx_RaiseUnexpectedTypeError("tuple", __pyx_t_1))) __PYX_ERR(0, 263, __pyx_L1_error)
+        if (!(likely(PyTuple_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None) || __Pyx_RaiseUnexpectedTypeError("tuple", __pyx_t_1))) __PYX_ERR(0, 290, __pyx_L1_error)
         __Pyx_DECREF_SET(__pyx_v_node, ((PyObject*)__pyx_t_1));
         __pyx_t_1 = 0;
 
-        /* "pathfind.pyx":264
+        /* "pathfind.pyx":291
  *                 while node != start:
  *                     node = parent[node]
  *                     path.append(node)             # <<<<<<<<<<<<<<
  *                 return path
  *             f = will.pop(node)
 */
-        __pyx_t_10 = __Pyx_PyList_Append(__pyx_v_path, __pyx_v_node); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 264, __pyx_L1_error)
+        __pyx_t_10 = __Pyx_PyList_Append(__pyx_v_path, __pyx_v_node); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 291, __pyx_L1_error)
       }
 
-      /* "pathfind.pyx":265
+      /* "pathfind.pyx":292
  *                     node = parent[node]
  *                     path.append(node)
  *                 return path             # <<<<<<<<<<<<<<
@@ -7803,10 +8684,10 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
       __Pyx_XDECREF(__pyx_r);
       __Pyx_INCREF(__pyx_v_path);
       __pyx_r = __pyx_v_path;
-      __Pyx_TraceReturnValue(__pyx_r, 89, 0, __PYX_ERR(0, 265, __pyx_L1_error));
+      __Pyx_TraceReturnValue(__pyx_r, 92, 0, __PYX_ERR(0, 292, __pyx_L1_error));
       goto __pyx_L0;
 
-      /* "pathfind.pyx":256
+      /* "pathfind.pyx":283
  *                     least = f
  *                     node = tentative
  *             if node == end:             # <<<<<<<<<<<<<<
@@ -7815,21 +8696,21 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
 */
     }
 
-    /* "pathfind.pyx":266
+    /* "pathfind.pyx":293
  *                     path.append(node)
  *                 return path
  *             f = will.pop(node)             # <<<<<<<<<<<<<<
  *             if force:
  *                 h = f - self._gs[node]
 */
-    if (unlikely(!__pyx_v_node)) { __Pyx_RaiseUnboundLocalError("node"); __PYX_ERR(0, 266, __pyx_L1_error) }
-    __pyx_t_1 = __Pyx_PyDict_Pop(__pyx_v_will, __pyx_v_node, ((PyObject *)NULL)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 266, __pyx_L1_error)
+    if (unlikely(!__pyx_v_node)) { __Pyx_RaiseUnboundLocalError("node"); __PYX_ERR(0, 293, __pyx_L1_error) }
+    __pyx_t_1 = __Pyx_PyDict_Pop(__pyx_v_will, __pyx_v_node, ((PyObject *)NULL)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 293, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 266, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 293, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_v_f = __pyx_t_2;
+    __pyx_v_f = __pyx_t_3;
 
-    /* "pathfind.pyx":267
+    /* "pathfind.pyx":294
  *                 return path
  *             f = will.pop(node)
  *             if force:             # <<<<<<<<<<<<<<
@@ -7838,31 +8719,31 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
 */
     if (__pyx_v_force) {
 
-      /* "pathfind.pyx":268
+      /* "pathfind.pyx":295
  *             f = will.pop(node)
  *             if force:
  *                 h = f - self._gs[node]             # <<<<<<<<<<<<<<
  *                 if h < least_h:
  *                     least_h = h
 */
-      __pyx_t_1 = PyFloat_FromDouble(__pyx_v_f); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 268, __pyx_L1_error)
+      __pyx_t_1 = PyFloat_FromDouble(__pyx_v_f); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 295, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (unlikely(__pyx_v_self->_gs == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 268, __pyx_L1_error)
+        __PYX_ERR(0, 295, __pyx_L1_error)
       }
-      if (unlikely(!__pyx_v_node)) { __Pyx_RaiseUnboundLocalError("node"); __PYX_ERR(0, 268, __pyx_L1_error) }
-      __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_self->_gs, __pyx_v_node); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 268, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_11 = PyNumber_Subtract(__pyx_t_1, __pyx_t_3); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 268, __pyx_L1_error)
+      if (unlikely(!__pyx_v_node)) { __Pyx_RaiseUnboundLocalError("node"); __PYX_ERR(0, 295, __pyx_L1_error) }
+      __pyx_t_2 = __Pyx_PyDict_GetItem(__pyx_v_self->_gs, __pyx_v_node); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 295, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      __pyx_t_11 = PyNumber_Subtract(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 295, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_11);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_2 = __Pyx_PyFloat_AsFloat(__pyx_t_11); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 268, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __pyx_t_3 = __Pyx_PyFloat_AsFloat(__pyx_t_11); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 295, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-      __pyx_v_h = __pyx_t_2;
+      __pyx_v_h = __pyx_t_3;
 
-      /* "pathfind.pyx":269
+      /* "pathfind.pyx":296
  *             if force:
  *                 h = f - self._gs[node]
  *                 if h < least_h:             # <<<<<<<<<<<<<<
@@ -7872,7 +8753,7 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
       __pyx_t_4 = (__pyx_v_h < __pyx_v_least_h);
       if (__pyx_t_4) {
 
-        /* "pathfind.pyx":270
+        /* "pathfind.pyx":297
  *                 h = f - self._gs[node]
  *                 if h < least_h:
  *                     least_h = h             # <<<<<<<<<<<<<<
@@ -7881,18 +8762,18 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
 */
         __pyx_v_least_h = __pyx_v_h;
 
-        /* "pathfind.pyx":271
+        /* "pathfind.pyx":298
  *                 if h < least_h:
  *                     least_h = h
  *                     closest_node = node             # <<<<<<<<<<<<<<
  *             visited.add(node)
  * 
 */
-        if (unlikely(!__pyx_v_node)) { __Pyx_RaiseUnboundLocalError("node"); __PYX_ERR(0, 271, __pyx_L1_error) }
+        if (unlikely(!__pyx_v_node)) { __Pyx_RaiseUnboundLocalError("node"); __PYX_ERR(0, 298, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_v_node);
         __Pyx_XDECREF_SET(__pyx_v_closest_node, __pyx_v_node);
 
-        /* "pathfind.pyx":269
+        /* "pathfind.pyx":296
  *             if force:
  *                 h = f - self._gs[node]
  *                 if h < least_h:             # <<<<<<<<<<<<<<
@@ -7901,7 +8782,7 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
 */
       }
 
-      /* "pathfind.pyx":267
+      /* "pathfind.pyx":294
  *                 return path
  *             f = will.pop(node)
  *             if force:             # <<<<<<<<<<<<<<
@@ -7910,67 +8791,92 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
 */
     }
 
-    /* "pathfind.pyx":272
+    /* "pathfind.pyx":299
  *                     least_h = h
  *                     closest_node = node
  *             visited.add(node)             # <<<<<<<<<<<<<<
  * 
  *             # Check Neighbor
 */
-    if (unlikely(!__pyx_v_node)) { __Pyx_RaiseUnboundLocalError("node"); __PYX_ERR(0, 272, __pyx_L1_error) }
-    __pyx_t_10 = PySet_Add(__pyx_v_visited, __pyx_v_node); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 272, __pyx_L1_error)
+    if (unlikely(!__pyx_v_node)) { __Pyx_RaiseUnboundLocalError("node"); __PYX_ERR(0, 299, __pyx_L1_error) }
+    __pyx_t_10 = PySet_Add(__pyx_v_visited, __pyx_v_node); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 299, __pyx_L1_error)
 
-    /* "pathfind.pyx":275
+    /* "pathfind.pyx":302
  * 
  *             # Check Neighbor
- *             for offset in self._TILE_OFFSETS:             # <<<<<<<<<<<<<<
- *                 if not (offset[0] or offset[1]):
- *                     continue
+ *             for i in range(8):             # <<<<<<<<<<<<<<
+ *                 offset = self._TILE_OFFSETS[i]
+ *                 turn = fabs(
 */
-    __pyx_t_13 = (__pyx_v_self->_TILE_OFFSETS + 8);
-    for (__pyx_t_14 = __pyx_v_self->_TILE_OFFSETS; __pyx_t_14 < __pyx_t_13; __pyx_t_14++) {
-      __pyx_t_12 = __pyx_t_14;
-      __pyx_v_offset = (__pyx_t_12[0]);
+    for (__pyx_t_12 = 0; __pyx_t_12 < 8; __pyx_t_12+=1) {
+      __pyx_v_i = __pyx_t_12;
 
-      /* "pathfind.pyx":276
+      /* "pathfind.pyx":303
  *             # Check Neighbor
- *             for offset in self._TILE_OFFSETS:
- *                 if not (offset[0] or offset[1]):             # <<<<<<<<<<<<<<
+ *             for i in range(8):
+ *                 offset = self._TILE_OFFSETS[i]             # <<<<<<<<<<<<<<
+ *                 turn = fabs(
+ *                     normalize_degrees(self._ANGLES[i] - <float>yaws[node[0]])
+*/
+      memcpy(&(__pyx_v_offset[0]), (__pyx_v_self->_TILE_OFFSETS[__pyx_v_i]), sizeof(__pyx_v_offset[0]) * (2));
+
+      /* "pathfind.pyx":305
+ *                 offset = self._TILE_OFFSETS[i]
+ *                 turn = fabs(
+ *                     normalize_degrees(self._ANGLES[i] - <float>yaws[node[0]])             # <<<<<<<<<<<<<<
+ *                 )
+ *                 if turn > self._max_turn:
+*/
+      if (unlikely(!__pyx_v_node)) { __Pyx_RaiseUnboundLocalError("node"); __PYX_ERR(0, 305, __pyx_L1_error) }
+      if (unlikely(__pyx_v_node == Py_None)) {
+        PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
+        __PYX_ERR(0, 305, __pyx_L1_error)
+      }
+      __pyx_t_11 = __Pyx_PyDict_GetItem(__pyx_v_yaws, __Pyx_PyTuple_GET_ITEM(__pyx_v_node, 0)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 305, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_11);
+      __pyx_t_3 = __Pyx_PyFloat_AsFloat(__pyx_t_11); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 305, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+      __pyx_t_13 = __pyx_f_8pathfind_normalize_degrees(((__pyx_v_self->_ANGLES[__pyx_v_i]) - ((float)__pyx_t_3))); if (unlikely(__pyx_t_13 == ((float)-1) && PyErr_Occurred())) __PYX_ERR(0, 305, __pyx_L1_error)
+
+      /* "pathfind.pyx":304
+ *             for i in range(8):
+ *                 offset = self._TILE_OFFSETS[i]
+ *                 turn = fabs(             # <<<<<<<<<<<<<<
+ *                     normalize_degrees(self._ANGLES[i] - <float>yaws[node[0]])
+ *                 )
+*/
+      __pyx_v_turn = fabs(__pyx_t_13);
+
+      /* "pathfind.pyx":307
+ *                     normalize_degrees(self._ANGLES[i] - <float>yaws[node[0]])
+ *                 )
+ *                 if turn > self._max_turn:             # <<<<<<<<<<<<<<
  *                     continue
  *                 for elevation in range(2): # 0 is ground; 1 is atop tile
 */
-      __pyx_t_5 = ((__pyx_v_offset[0]) != 0);
-      if (!__pyx_t_5) {
-      } else {
-        __pyx_t_4 = __pyx_t_5;
-        goto __pyx_L20_bool_binop_done;
-      }
-      __pyx_t_5 = ((__pyx_v_offset[1]) != 0);
-      __pyx_t_4 = __pyx_t_5;
-      __pyx_L20_bool_binop_done:;
-      __pyx_t_5 = (!__pyx_t_4);
-      if (__pyx_t_5) {
+      __pyx_t_4 = (__pyx_v_turn > __pyx_v_self->_max_turn);
+      if (__pyx_t_4) {
 
-        /* "pathfind.pyx":277
- *             for offset in self._TILE_OFFSETS:
- *                 if not (offset[0] or offset[1]):
+        /* "pathfind.pyx":308
+ *                 )
+ *                 if turn > self._max_turn:
  *                     continue             # <<<<<<<<<<<<<<
  *                 for elevation in range(2): # 0 is ground; 1 is atop tile
  *                     neighbor = (
 */
         goto __pyx_L17_continue;
 
-        /* "pathfind.pyx":276
- *             # Check Neighbor
- *             for offset in self._TILE_OFFSETS:
- *                 if not (offset[0] or offset[1]):             # <<<<<<<<<<<<<<
+        /* "pathfind.pyx":307
+ *                     normalize_degrees(self._ANGLES[i] - <float>yaws[node[0]])
+ *                 )
+ *                 if turn > self._max_turn:             # <<<<<<<<<<<<<<
  *                     continue
  *                 for elevation in range(2): # 0 is ground; 1 is atop tile
 */
       }
 
-      /* "pathfind.pyx":278
- *                 if not (offset[0] or offset[1]):
+      /* "pathfind.pyx":309
+ *                 if turn > self._max_turn:
  *                     continue
  *                 for elevation in range(2): # 0 is ground; 1 is atop tile             # <<<<<<<<<<<<<<
  *                     neighbor = (
@@ -7979,108 +8885,108 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
       for (__pyx_t_8 = 0; __pyx_t_8 < 2; __pyx_t_8+=1) {
         __pyx_v_elevation = __pyx_t_8;
 
-        /* "pathfind.pyx":280
+        /* "pathfind.pyx":311
  *                 for elevation in range(2): # 0 is ground; 1 is atop tile
  *                     neighbor = (
  *                         (<int>node[0][0] + offset[0],             # <<<<<<<<<<<<<<
  *                          <int>node[0][1] + offset[1]),
  *                         elevation,
 */
-        if (unlikely(!__pyx_v_node)) { __Pyx_RaiseUnboundLocalError("node"); __PYX_ERR(0, 280, __pyx_L1_error) }
+        if (unlikely(!__pyx_v_node)) { __Pyx_RaiseUnboundLocalError("node"); __PYX_ERR(0, 311, __pyx_L1_error) }
         if (unlikely(__pyx_v_node == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 280, __pyx_L1_error)
+          __PYX_ERR(0, 311, __pyx_L1_error)
         }
-        __pyx_t_11 = __Pyx_GetItemInt(__Pyx_PyTuple_GET_ITEM(__pyx_v_node, 0), 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_SharedReference); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 280, __pyx_L1_error)
+        __pyx_t_11 = __Pyx_GetItemInt(__Pyx_PyTuple_GET_ITEM(__pyx_v_node, 0), 0, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_SharedReference); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 311, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
-        __pyx_t_9 = __Pyx_PyLong_As_int(__pyx_t_11); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 280, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_PyLong_As_int(__pyx_t_11); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 311, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-        __pyx_t_11 = __Pyx_PyLong_From_int((((int)__pyx_t_9) + (__pyx_v_offset[0]))); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 280, __pyx_L1_error)
+        __pyx_t_11 = __Pyx_PyLong_From_int((((int)__pyx_t_9) + (__pyx_v_offset[0]))); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 311, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
 
-        /* "pathfind.pyx":281
+        /* "pathfind.pyx":312
  *                     neighbor = (
  *                         (<int>node[0][0] + offset[0],
  *                          <int>node[0][1] + offset[1]),             # <<<<<<<<<<<<<<
  *                         elevation,
  *                     )
 */
-        if (unlikely(!__pyx_v_node)) { __Pyx_RaiseUnboundLocalError("node"); __PYX_ERR(0, 281, __pyx_L1_error) }
+        if (unlikely(!__pyx_v_node)) { __Pyx_RaiseUnboundLocalError("node"); __PYX_ERR(0, 312, __pyx_L1_error) }
         if (unlikely(__pyx_v_node == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 281, __pyx_L1_error)
+          __PYX_ERR(0, 312, __pyx_L1_error)
         }
-        __pyx_t_3 = __Pyx_GetItemInt(__Pyx_PyTuple_GET_ITEM(__pyx_v_node, 0), 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_SharedReference); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 281, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_3);
-        __pyx_t_9 = __Pyx_PyLong_As_int(__pyx_t_3); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 281, __pyx_L1_error)
-        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __pyx_t_3 = __Pyx_PyLong_From_int((((int)__pyx_t_9) + (__pyx_v_offset[1]))); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 281, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_3);
+        __pyx_t_2 = __Pyx_GetItemInt(__Pyx_PyTuple_GET_ITEM(__pyx_v_node, 0), 1, long, 1, __Pyx_PyLong_From_long, 0, 0, 0, 1, __Pyx_ReferenceSharing_SharedReference); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 312, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
+        __pyx_t_9 = __Pyx_PyLong_As_int(__pyx_t_2); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 312, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+        __pyx_t_2 = __Pyx_PyLong_From_int((((int)__pyx_t_9) + (__pyx_v_offset[1]))); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 312, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
 
-        /* "pathfind.pyx":280
+        /* "pathfind.pyx":311
  *                 for elevation in range(2): # 0 is ground; 1 is atop tile
  *                     neighbor = (
  *                         (<int>node[0][0] + offset[0],             # <<<<<<<<<<<<<<
  *                          <int>node[0][1] + offset[1]),
  *                         elevation,
 */
-        __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 280, __pyx_L1_error)
+        __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 311, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_GIVEREF(__pyx_t_11);
-        if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_11) != (0)) __PYX_ERR(0, 280, __pyx_L1_error);
-        __Pyx_GIVEREF(__pyx_t_3);
-        if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_3) != (0)) __PYX_ERR(0, 280, __pyx_L1_error);
+        if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_11) != (0)) __PYX_ERR(0, 311, __pyx_L1_error);
+        __Pyx_GIVEREF(__pyx_t_2);
+        if (__Pyx_PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_2) != (0)) __PYX_ERR(0, 311, __pyx_L1_error);
         __pyx_t_11 = 0;
-        __pyx_t_3 = 0;
+        __pyx_t_2 = 0;
 
-        /* "pathfind.pyx":282
+        /* "pathfind.pyx":313
  *                         (<int>node[0][0] + offset[0],
  *                          <int>node[0][1] + offset[1]),
  *                         elevation,             # <<<<<<<<<<<<<<
  *                     )
  *                     if neighbor in visited:
 */
-        __pyx_t_3 = __Pyx_PyLong_From_int(__pyx_v_elevation); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 282, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_3);
+        __pyx_t_2 = __Pyx_PyLong_From_int(__pyx_v_elevation); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 313, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_2);
 
-        /* "pathfind.pyx":280
+        /* "pathfind.pyx":311
  *                 for elevation in range(2): # 0 is ground; 1 is atop tile
  *                     neighbor = (
  *                         (<int>node[0][0] + offset[0],             # <<<<<<<<<<<<<<
  *                          <int>node[0][1] + offset[1]),
  *                         elevation,
 */
-        __pyx_t_11 = PyTuple_New(2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 280, __pyx_L1_error)
+        __pyx_t_11 = PyTuple_New(2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 311, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
         __Pyx_GIVEREF(__pyx_t_1);
-        if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_1) != (0)) __PYX_ERR(0, 280, __pyx_L1_error);
-        __Pyx_GIVEREF(__pyx_t_3);
-        if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 1, __pyx_t_3) != (0)) __PYX_ERR(0, 280, __pyx_L1_error);
+        if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_1) != (0)) __PYX_ERR(0, 311, __pyx_L1_error);
+        __Pyx_GIVEREF(__pyx_t_2);
+        if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 1, __pyx_t_2) != (0)) __PYX_ERR(0, 311, __pyx_L1_error);
         __pyx_t_1 = 0;
-        __pyx_t_3 = 0;
+        __pyx_t_2 = 0;
         __Pyx_XDECREF_SET(__pyx_v_neighbor, ((PyObject*)__pyx_t_11));
         __pyx_t_11 = 0;
 
-        /* "pathfind.pyx":284
+        /* "pathfind.pyx":315
  *                         elevation,
  *                     )
  *                     if neighbor in visited:             # <<<<<<<<<<<<<<
  *                         continue
  *                     tentative_g = (
 */
-        __pyx_t_5 = (__Pyx_PySet_ContainsTF(__pyx_v_neighbor, __pyx_v_visited, Py_EQ)); if (unlikely((__pyx_t_5 < 0))) __PYX_ERR(0, 284, __pyx_L1_error)
-        if (__pyx_t_5) {
+        __pyx_t_4 = (__Pyx_PySet_ContainsTF(__pyx_v_neighbor, __pyx_v_visited, Py_EQ)); if (unlikely((__pyx_t_4 < 0))) __PYX_ERR(0, 315, __pyx_L1_error)
+        if (__pyx_t_4) {
 
-          /* "pathfind.pyx":285
+          /* "pathfind.pyx":316
  *                     )
  *                     if neighbor in visited:
  *                         continue             # <<<<<<<<<<<<<<
  *                     tentative_g = (
  *                         self._g(node)
 */
-          goto __pyx_L22_continue;
+          goto __pyx_L20_continue;
 
-          /* "pathfind.pyx":284
+          /* "pathfind.pyx":315
  *                         elevation,
  *                     )
  *                     if neighbor in visited:             # <<<<<<<<<<<<<<
@@ -8089,56 +8995,56 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
 */
         }
 
-        /* "pathfind.pyx":287
+        /* "pathfind.pyx":318
  *                         continue
  *                     tentative_g = (
  *                         self._g(node)             # <<<<<<<<<<<<<<
  *                         + self._calculate(
  *                             node, offset, elevation, neighbor, climb,
 */
-        if (unlikely(!__pyx_v_node)) { __Pyx_RaiseUnboundLocalError("node"); __PYX_ERR(0, 287, __pyx_L1_error) }
-        __pyx_t_2 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_g(__pyx_v_self, __pyx_v_node); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 287, __pyx_L1_error)
+        if (unlikely(!__pyx_v_node)) { __Pyx_RaiseUnboundLocalError("node"); __PYX_ERR(0, 318, __pyx_L1_error) }
+        __pyx_t_13 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_g(__pyx_v_self, __pyx_v_node); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 318, __pyx_L1_error)
 
-        /* "pathfind.pyx":289
+        /* "pathfind.pyx":320
  *                         self._g(node)
  *                         + self._calculate(
  *                             node, offset, elevation, neighbor, climb,             # <<<<<<<<<<<<<<
  *                         )
  *                     )
 */
-        if (unlikely(!__pyx_v_node)) { __Pyx_RaiseUnboundLocalError("node"); __PYX_ERR(0, 289, __pyx_L1_error) }
+        if (unlikely(!__pyx_v_node)) { __Pyx_RaiseUnboundLocalError("node"); __PYX_ERR(0, 320, __pyx_L1_error) }
 
-        /* "pathfind.pyx":288
+        /* "pathfind.pyx":319
  *                     tentative_g = (
  *                         self._g(node)
  *                         + self._calculate(             # <<<<<<<<<<<<<<
  *                             node, offset, elevation, neighbor, climb,
  *                         )
 */
-        __pyx_t_15 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_calculate(__pyx_v_self, __pyx_v_node, __pyx_v_offset, __pyx_v_elevation, __pyx_v_neighbor, __pyx_v_climb); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 288, __pyx_L1_error)
-        __pyx_v_tentative_g = (__pyx_t_2 + __pyx_t_15);
+        __pyx_t_3 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_calculate(__pyx_v_self, __pyx_v_node, __pyx_v_offset, __pyx_v_elevation, __pyx_v_neighbor, __pyx_v_climb); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 319, __pyx_L1_error)
+        __pyx_v_tentative_g = (__pyx_t_13 + __pyx_t_3);
 
-        /* "pathfind.pyx":292
+        /* "pathfind.pyx":323
  *                         )
  *                     )
  *                     if tentative_g >= self._g(neighbor):             # <<<<<<<<<<<<<<
  *                         continue
  *                     self._gs[neighbor] = tentative_g
 */
-        __pyx_t_15 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_g(__pyx_v_self, __pyx_v_neighbor); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 292, __pyx_L1_error)
-        __pyx_t_5 = (__pyx_v_tentative_g >= __pyx_t_15);
-        if (__pyx_t_5) {
+        __pyx_t_3 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_g(__pyx_v_self, __pyx_v_neighbor); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 323, __pyx_L1_error)
+        __pyx_t_4 = (__pyx_v_tentative_g >= __pyx_t_3);
+        if (__pyx_t_4) {
 
-          /* "pathfind.pyx":293
+          /* "pathfind.pyx":324
  *                     )
  *                     if tentative_g >= self._g(neighbor):
  *                         continue             # <<<<<<<<<<<<<<
  *                     self._gs[neighbor] = tentative_g
  *                     parent[neighbor] = node
 */
-          goto __pyx_L22_continue;
+          goto __pyx_L20_continue;
 
-          /* "pathfind.pyx":292
+          /* "pathfind.pyx":323
  *                         )
  *                     )
  *                     if tentative_g >= self._g(neighbor):             # <<<<<<<<<<<<<<
@@ -8147,52 +9053,64 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
 */
         }
 
-        /* "pathfind.pyx":294
+        /* "pathfind.pyx":325
  *                     if tentative_g >= self._g(neighbor):
  *                         continue
  *                     self._gs[neighbor] = tentative_g             # <<<<<<<<<<<<<<
  *                     parent[neighbor] = node
- *                     will[neighbor] = tentative_g + self._h(neighbor, end)
+ *                     yaws[neighbor[0]] = self._ANGLES[i]
 */
-        __pyx_t_11 = PyFloat_FromDouble(__pyx_v_tentative_g); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 294, __pyx_L1_error)
+        __pyx_t_11 = PyFloat_FromDouble(__pyx_v_tentative_g); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 325, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
         if (unlikely(__pyx_v_self->_gs == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 294, __pyx_L1_error)
+          __PYX_ERR(0, 325, __pyx_L1_error)
         }
-        if (unlikely((PyDict_SetItem(__pyx_v_self->_gs, __pyx_v_neighbor, __pyx_t_11) < 0))) __PYX_ERR(0, 294, __pyx_L1_error)
+        if (unlikely((PyDict_SetItem(__pyx_v_self->_gs, __pyx_v_neighbor, __pyx_t_11) < 0))) __PYX_ERR(0, 325, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
 
-        /* "pathfind.pyx":295
+        /* "pathfind.pyx":326
  *                         continue
  *                     self._gs[neighbor] = tentative_g
  *                     parent[neighbor] = node             # <<<<<<<<<<<<<<
+ *                     yaws[neighbor[0]] = self._ANGLES[i]
+ *                     will[neighbor] = tentative_g + self._h(neighbor, end)
+*/
+        if (unlikely(!__pyx_v_node)) { __Pyx_RaiseUnboundLocalError("node"); __PYX_ERR(0, 326, __pyx_L1_error) }
+        if (unlikely((PyDict_SetItem(__pyx_v_parent, __pyx_v_neighbor, __pyx_v_node) < 0))) __PYX_ERR(0, 326, __pyx_L1_error)
+
+        /* "pathfind.pyx":327
+ *                     self._gs[neighbor] = tentative_g
+ *                     parent[neighbor] = node
+ *                     yaws[neighbor[0]] = self._ANGLES[i]             # <<<<<<<<<<<<<<
  *                     will[neighbor] = tentative_g + self._h(neighbor, end)
  *         if force:
 */
-        if (unlikely(!__pyx_v_node)) { __Pyx_RaiseUnboundLocalError("node"); __PYX_ERR(0, 295, __pyx_L1_error) }
-        if (unlikely((PyDict_SetItem(__pyx_v_parent, __pyx_v_neighbor, __pyx_v_node) < 0))) __PYX_ERR(0, 295, __pyx_L1_error)
+        __pyx_t_11 = PyFloat_FromDouble((__pyx_v_self->_ANGLES[__pyx_v_i])); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 327, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_11);
+        if (unlikely((PyDict_SetItem(__pyx_v_yaws, __Pyx_PyTuple_GET_ITEM(__pyx_v_neighbor, 0), __pyx_t_11) < 0))) __PYX_ERR(0, 327, __pyx_L1_error)
+        __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
 
-        /* "pathfind.pyx":296
- *                     self._gs[neighbor] = tentative_g
+        /* "pathfind.pyx":328
  *                     parent[neighbor] = node
+ *                     yaws[neighbor[0]] = self._ANGLES[i]
  *                     will[neighbor] = tentative_g + self._h(neighbor, end)             # <<<<<<<<<<<<<<
  *         if force:
  *             node = parent[closest_node]
 */
-        __pyx_t_15 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_h(__pyx_v_self, __pyx_v_neighbor, __pyx_v_end); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 296, __pyx_L1_error)
-        __pyx_t_11 = PyFloat_FromDouble((__pyx_v_tentative_g + __pyx_t_15)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 296, __pyx_L1_error)
+        __pyx_t_3 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_h(__pyx_v_self, __pyx_v_neighbor, __pyx_v_end); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 328, __pyx_L1_error)
+        __pyx_t_11 = PyFloat_FromDouble((__pyx_v_tentative_g + __pyx_t_3)); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 328, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
-        if (unlikely((PyDict_SetItem(__pyx_v_will, __pyx_v_neighbor, __pyx_t_11) < 0))) __PYX_ERR(0, 296, __pyx_L1_error)
+        if (unlikely((PyDict_SetItem(__pyx_v_will, __pyx_v_neighbor, __pyx_t_11) < 0))) __PYX_ERR(0, 328, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-        __pyx_L22_continue:;
+        __pyx_L20_continue:;
       }
       __pyx_L17_continue:;
     }
   }
 
-  /* "pathfind.pyx":297
- *                     parent[neighbor] = node
+  /* "pathfind.pyx":329
+ *                     yaws[neighbor[0]] = self._ANGLES[i]
  *                     will[neighbor] = tentative_g + self._h(neighbor, end)
  *         if force:             # <<<<<<<<<<<<<<
  *             node = parent[closest_node]
@@ -8200,36 +9118,36 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
 */
   if (__pyx_v_force) {
 
-    /* "pathfind.pyx":298
+    /* "pathfind.pyx":330
  *                     will[neighbor] = tentative_g + self._h(neighbor, end)
  *         if force:
  *             node = parent[closest_node]             # <<<<<<<<<<<<<<
  *             path = [node]
  *             while node != start:
 */
-    if (unlikely(!__pyx_v_closest_node)) { __Pyx_RaiseUnboundLocalError("closest_node"); __PYX_ERR(0, 298, __pyx_L1_error) }
-    __pyx_t_11 = __Pyx_PyDict_GetItem(__pyx_v_parent, __pyx_v_closest_node); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 298, __pyx_L1_error)
+    if (unlikely(!__pyx_v_closest_node)) { __Pyx_RaiseUnboundLocalError("closest_node"); __PYX_ERR(0, 330, __pyx_L1_error) }
+    __pyx_t_11 = __Pyx_PyDict_GetItem(__pyx_v_parent, __pyx_v_closest_node); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 330, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
-    if (!(likely(PyTuple_CheckExact(__pyx_t_11))||((__pyx_t_11) == Py_None) || __Pyx_RaiseUnexpectedTypeError("tuple", __pyx_t_11))) __PYX_ERR(0, 298, __pyx_L1_error)
+    if (!(likely(PyTuple_CheckExact(__pyx_t_11))||((__pyx_t_11) == Py_None) || __Pyx_RaiseUnexpectedTypeError("tuple", __pyx_t_11))) __PYX_ERR(0, 330, __pyx_L1_error)
     __Pyx_XDECREF_SET(__pyx_v_node, ((PyObject*)__pyx_t_11));
     __pyx_t_11 = 0;
 
-    /* "pathfind.pyx":299
+    /* "pathfind.pyx":331
  *         if force:
  *             node = parent[closest_node]
  *             path = [node]             # <<<<<<<<<<<<<<
  *             while node != start:
  *                 node = parent[node]
 */
-    __pyx_t_11 = PyList_New(1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 299, __pyx_L1_error)
+    __pyx_t_11 = PyList_New(1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 331, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
     __Pyx_INCREF(__pyx_v_node);
     __Pyx_GIVEREF(__pyx_v_node);
-    if (__Pyx_PyList_SET_ITEM(__pyx_t_11, 0, __pyx_v_node) != (0)) __PYX_ERR(0, 299, __pyx_L1_error);
+    if (__Pyx_PyList_SET_ITEM(__pyx_t_11, 0, __pyx_v_node) != (0)) __PYX_ERR(0, 331, __pyx_L1_error);
     __pyx_v_path = ((PyObject*)__pyx_t_11);
     __pyx_t_11 = 0;
 
-    /* "pathfind.pyx":300
+    /* "pathfind.pyx":332
  *             node = parent[closest_node]
  *             path = [node]
  *             while node != start:             # <<<<<<<<<<<<<<
@@ -8237,35 +9155,35 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
  *                 path.append(node)
 */
     while (1) {
-      __pyx_t_11 = PyObject_RichCompare(__pyx_v_node, __pyx_v_start, Py_NE); __Pyx_XGOTREF(__pyx_t_11); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 300, __pyx_L1_error)
-      __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_t_11); if (unlikely((__pyx_t_5 < 0))) __PYX_ERR(0, 300, __pyx_L1_error)
+      __pyx_t_11 = PyObject_RichCompare(__pyx_v_node, __pyx_v_start, Py_NE); __Pyx_XGOTREF(__pyx_t_11); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 332, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_11); if (unlikely((__pyx_t_4 < 0))) __PYX_ERR(0, 332, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-      if (!__pyx_t_5) break;
+      if (!__pyx_t_4) break;
 
-      /* "pathfind.pyx":301
+      /* "pathfind.pyx":333
  *             path = [node]
  *             while node != start:
  *                 node = parent[node]             # <<<<<<<<<<<<<<
  *                 path.append(node)
  *             return path
 */
-      __pyx_t_11 = __Pyx_PyDict_GetItem(__pyx_v_parent, __pyx_v_node); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 301, __pyx_L1_error)
+      __pyx_t_11 = __Pyx_PyDict_GetItem(__pyx_v_parent, __pyx_v_node); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 333, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_11);
-      if (!(likely(PyTuple_CheckExact(__pyx_t_11))||((__pyx_t_11) == Py_None) || __Pyx_RaiseUnexpectedTypeError("tuple", __pyx_t_11))) __PYX_ERR(0, 301, __pyx_L1_error)
+      if (!(likely(PyTuple_CheckExact(__pyx_t_11))||((__pyx_t_11) == Py_None) || __Pyx_RaiseUnexpectedTypeError("tuple", __pyx_t_11))) __PYX_ERR(0, 333, __pyx_L1_error)
       __Pyx_DECREF_SET(__pyx_v_node, ((PyObject*)__pyx_t_11));
       __pyx_t_11 = 0;
 
-      /* "pathfind.pyx":302
+      /* "pathfind.pyx":334
  *             while node != start:
  *                 node = parent[node]
  *                 path.append(node)             # <<<<<<<<<<<<<<
  *             return path
  *         return []
 */
-      __pyx_t_10 = __Pyx_PyList_Append(__pyx_v_path, __pyx_v_node); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 302, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyList_Append(__pyx_v_path, __pyx_v_node); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 334, __pyx_L1_error)
     }
 
-    /* "pathfind.pyx":303
+    /* "pathfind.pyx":335
  *                 node = parent[node]
  *                 path.append(node)
  *             return path             # <<<<<<<<<<<<<<
@@ -8275,11 +9193,11 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
     __Pyx_XDECREF(__pyx_r);
     __Pyx_INCREF(__pyx_v_path);
     __pyx_r = __pyx_v_path;
-    __Pyx_TraceReturnValue(__pyx_r, 226, 0, __PYX_ERR(0, 303, __pyx_L1_error));
+    __Pyx_TraceReturnValue(__pyx_r, 256, 0, __PYX_ERR(0, 335, __pyx_L1_error));
     goto __pyx_L0;
 
-    /* "pathfind.pyx":297
- *                     parent[neighbor] = node
+    /* "pathfind.pyx":329
+ *                     yaws[neighbor[0]] = self._ANGLES[i]
  *                     will[neighbor] = tentative_g + self._h(neighbor, end)
  *         if force:             # <<<<<<<<<<<<<<
  *             node = parent[closest_node]
@@ -8287,7 +9205,7 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
 */
   }
 
-  /* "pathfind.pyx":304
+  /* "pathfind.pyx":336
  *                 path.append(node)
  *             return path
  *         return []             # <<<<<<<<<<<<<<
@@ -8295,36 +9213,37 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
  *     def pathfind(self: Self,
 */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_11 = PyList_New(0); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 304, __pyx_L1_error)
+  __pyx_t_11 = PyList_New(0); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 336, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __pyx_r = ((PyObject*)__pyx_t_11);
   __pyx_t_11 = 0;
-  __Pyx_TraceReturnValue(__pyx_r, 228, 0, __PYX_ERR(0, 304, __pyx_L1_error));
+  __Pyx_TraceReturnValue(__pyx_r, 258, 0, __PYX_ERR(0, 336, __pyx_L1_error));
   goto __pyx_L0;
 
-  /* "pathfind.pyx":219
+  /* "pathfind.pyx":242
  *         return weight
  * 
  *     cdef list _pathfind(self: Self,             # <<<<<<<<<<<<<<
+ *                         float yaw,
  *                         tuple start,
- *                         tuple end,
 */
 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_11);
   __Pyx_TraceException(__pyx_lineno, 0, 0);
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 219, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 242, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder._pathfind", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_path);
+  __Pyx_XDECREF(__pyx_v_yaws);
   __Pyx_XDECREF(__pyx_v_parent);
   __Pyx_XDECREF(__pyx_v_will);
   __Pyx_XDECREF(__pyx_v_visited);
@@ -8338,12 +9257,12 @@ static PyObject *__pyx_f_8pathfind_10Pathfinder__pathfind(struct __pyx_obj_8path
   return __pyx_r;
 }
 
-/* "pathfind.pyx":306
+/* "pathfind.pyx":338
  *         return []
  * 
  *     def pathfind(self: Self,             # <<<<<<<<<<<<<<
+ *                  float yaw,
  *                  tuple start,
- *                  tuple end,
 */
 
 /* Python wrapper */
@@ -8362,6 +9281,7 @@ PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ) {
+  float __pyx_v_yaw;
   PyObject *__pyx_v_start = 0;
   PyObject *__pyx_v_end = 0;
   float __pyx_v_climb;
@@ -8371,7 +9291,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   CYTHON_UNUSED Py_ssize_t __pyx_nargs;
   #endif
   CYTHON_UNUSED PyObject *const *__pyx_kwvalues;
-  PyObject* values[5] = {0,0,0,0,0};
+  PyObject* values[6] = {0,0,0,0,0,0};
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -8387,83 +9307,90 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   #endif
   __pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
   {
-    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_start,&__pyx_mstate_global->__pyx_n_u_end,&__pyx_mstate_global->__pyx_n_u_climb,&__pyx_mstate_global->__pyx_n_u_max_nodes,&__pyx_mstate_global->__pyx_n_u_force,0};
+    PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_yaw,&__pyx_mstate_global->__pyx_n_u_start,&__pyx_mstate_global->__pyx_n_u_end,&__pyx_mstate_global->__pyx_n_u_climb,&__pyx_mstate_global->__pyx_n_u_max_nodes,&__pyx_mstate_global->__pyx_n_u_force,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_FASTCALL(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 306, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 338, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
+        case  6:
+        values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 338, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
         case  5:
         values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 306, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 338, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  4:
         values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 306, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 338, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  3:
         values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 306, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 338, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 306, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 338, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 306, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 338, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "pathfind", 0) < (0)) __PYX_ERR(0, 306, __pyx_L3_error)
-      for (Py_ssize_t i = __pyx_nargs; i < 2; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("pathfind", 0, 2, 5, i); __PYX_ERR(0, 306, __pyx_L3_error) }
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "pathfind", 0) < (0)) __PYX_ERR(0, 338, __pyx_L3_error)
+      for (Py_ssize_t i = __pyx_nargs; i < 3; i++) {
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("pathfind", 0, 3, 6, i); __PYX_ERR(0, 338, __pyx_L3_error) }
       }
     } else {
       switch (__pyx_nargs) {
+        case  6:
+        values[5] = __Pyx_ArgRef_FASTCALL(__pyx_args, 5);
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 338, __pyx_L3_error)
+        CYTHON_FALLTHROUGH;
         case  5:
         values[4] = __Pyx_ArgRef_FASTCALL(__pyx_args, 4);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 306, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 338, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  4:
         values[3] = __Pyx_ArgRef_FASTCALL(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 306, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 338, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  3:
         values[2] = __Pyx_ArgRef_FASTCALL(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 306, __pyx_L3_error)
-        CYTHON_FALLTHROUGH;
-        case  2:
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 338, __pyx_L3_error)
         values[1] = __Pyx_ArgRef_FASTCALL(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 306, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 338, __pyx_L3_error)
         values[0] = __Pyx_ArgRef_FASTCALL(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 306, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 338, __pyx_L3_error)
         break;
         default: goto __pyx_L5_argtuple_error;
       }
     }
-    __pyx_v_start = ((PyObject*)values[0]);
-    __pyx_v_end = ((PyObject*)values[1]);
-    if (values[2]) {
-      __pyx_v_climb = __Pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v_climb == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 309, __pyx_L3_error)
+    __pyx_v_yaw = __Pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v_yaw == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 339, __pyx_L3_error)
+    __pyx_v_start = ((PyObject*)values[1]);
+    __pyx_v_end = ((PyObject*)values[2]);
+    if (values[3]) {
+      __pyx_v_climb = __Pyx_PyFloat_AsFloat(values[3]); if (unlikely((__pyx_v_climb == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 342, __pyx_L3_error)
     } else {
       __pyx_v_climb = ((float)-1.0);
     }
-    if (values[3]) {
-      __pyx_v_max_nodes = __Pyx_PyLong_As_int(values[3]); if (unlikely((__pyx_v_max_nodes == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 310, __pyx_L3_error)
+    if (values[4]) {
+      __pyx_v_max_nodes = __Pyx_PyLong_As_int(values[4]); if (unlikely((__pyx_v_max_nodes == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 343, __pyx_L3_error)
     } else {
       __pyx_v_max_nodes = ((int)0x64);
     }
-    if (values[4]) {
-      __pyx_v_force = __Pyx_PyObject_IsTrue(values[4]); if (unlikely((__pyx_v_force == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 311, __pyx_L3_error)
+    if (values[5]) {
+      __pyx_v_force = __Pyx_PyObject_IsTrue(values[5]); if (unlikely((__pyx_v_force == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 344, __pyx_L3_error)
     } else {
       __pyx_v_force = ((int)0);
     }
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("pathfind", 0, 2, 5, __pyx_nargs); __PYX_ERR(0, 306, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("pathfind", 0, 3, 6, __pyx_nargs); __PYX_ERR(0, 338, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -8474,9 +9401,9 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_start), (&PyTuple_Type), 1, "start", 1))) __PYX_ERR(0, 307, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_end), (&PyTuple_Type), 1, "end", 1))) __PYX_ERR(0, 308, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8pathfind_10Pathfinder_2pathfind(((struct __pyx_obj_8pathfind_Pathfinder *)__pyx_v_self), __pyx_v_start, __pyx_v_end, __pyx_v_climb, __pyx_v_max_nodes, __pyx_v_force);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_start), (&PyTuple_Type), 1, "start", 1))) __PYX_ERR(0, 340, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_end), (&PyTuple_Type), 1, "end", 1))) __PYX_ERR(0, 341, __pyx_L1_error)
+  __pyx_r = __pyx_pf_8pathfind_10Pathfinder_2pathfind(((struct __pyx_obj_8pathfind_Pathfinder *)__pyx_v_self), __pyx_v_yaw, __pyx_v_start, __pyx_v_end, __pyx_v_climb, __pyx_v_max_nodes, __pyx_v_force);
 
   /* function exit code */
   goto __pyx_L0;
@@ -8495,7 +9422,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8pathfind_10Pathfinder_2pathfind(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, PyObject *__pyx_v_start, PyObject *__pyx_v_end, float __pyx_v_climb, int __pyx_v_max_nodes, int __pyx_v_force) {
+static PyObject *__pyx_pf_8pathfind_10Pathfinder_2pathfind(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v_self, float __pyx_v_yaw, PyObject *__pyx_v_start, PyObject *__pyx_v_end, float __pyx_v_climb, int __pyx_v_max_nodes, int __pyx_v_force) {
   PyObject *__pyx_r = NULL;
   __Pyx_TraceDeclarationsFunc
   __Pyx_RefNannyDeclarations
@@ -8504,14 +9431,14 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_2pathfind(struct __pyx_obj_8pat
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[31]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[37]))
   __Pyx_RefNannySetupContext("pathfind", 0);
-  __Pyx_TraceStartFunc("pathfind", __pyx_f[0], 306, 0, 0, 0, __PYX_ERR(0, 306, __pyx_L1_error));
+  __Pyx_TraceStartFunc("pathfind", __pyx_f[0], 338, 0, 0, 0, __PYX_ERR(0, 338, __pyx_L1_error));
 
-  /* "pathfind.pyx":312
+  /* "pathfind.pyx":345
  *                  int max_nodes=100,
  *                  bint force=0) -> list:
- *         return self._pathfind(start, end, climb, max_nodes, force)             # <<<<<<<<<<<<<<
+ *         return self._pathfind(yaw, start, end, climb, max_nodes, force)             # <<<<<<<<<<<<<<
  * 
 */
   __Pyx_XDECREF(__pyx_r);
@@ -8519,19 +9446,19 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_2pathfind(struct __pyx_obj_8pat
   __pyx_t_2.climb = __pyx_v_climb;
   __pyx_t_2.max_nodes = __pyx_v_max_nodes;
   __pyx_t_2.force = __pyx_v_force;
-  __pyx_t_1 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_pathfind(__pyx_v_self, __pyx_v_start, __pyx_v_end, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 312, __pyx_L1_error)
+  __pyx_t_1 = ((struct __pyx_vtabstruct_8pathfind_Pathfinder *)__pyx_v_self->__pyx_vtab)->_pathfind(__pyx_v_self, __pyx_v_yaw, __pyx_v_start, __pyx_v_end, &__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 345, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
-  __Pyx_TraceReturnValue(__pyx_r, 6, 0, __PYX_ERR(0, 312, __pyx_L1_error));
+  __Pyx_TraceReturnValue(__pyx_r, 6, 0, __PYX_ERR(0, 345, __pyx_L1_error));
   goto __pyx_L0;
 
-  /* "pathfind.pyx":306
+  /* "pathfind.pyx":338
  *         return []
  * 
  *     def pathfind(self: Self,             # <<<<<<<<<<<<<<
+ *                  float yaw,
  *                  tuple start,
- *                  tuple end,
 */
 
   /* function exit code */
@@ -8541,7 +9468,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_2pathfind(struct __pyx_obj_8pat
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
   #else
-  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 306, __pyx_L1_error));
+  __Pyx_TraceReturnValue(NULL, 0, 0, __PYX_ERR(0, 338, __pyx_L1_error));
   #endif
   __Pyx_AddTraceback("pathfind.Pathfinder.pathfind", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
@@ -8616,65 +9543,75 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_4__reduce_cython__(struct __pyx
   PyObject *__pyx_t_7 = NULL;
   PyObject *__pyx_t_8 = NULL;
   PyObject *__pyx_t_9 = NULL;
-  int __pyx_t_10;
-  int __pyx_t_11;
+  PyObject *__pyx_t_10 = NULL;
+  PyObject *__pyx_t_11 = NULL;
+  int __pyx_t_12;
+  int __pyx_t_13;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[32]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[38]))
   __Pyx_RefNannySetupContext("__reduce_cython__", 0);
   __Pyx_TraceStartFunc("__reduce_cython__", __pyx_f[1], 1, 0, 0, 0, __PYX_ERR(1, 1, __pyx_L1_error));
 
   /* "(tree fragment)":5
  *     cdef object _dict
  *     cdef bint use_setstate
- *     state = (self._TILE_OFFSETS, self._climb, self._diagonal_weight, self._elevation_weight, self._elevations, self._fall, self._greediness, self._gs, self._height, self._straight_weight, self._tilemap)             # <<<<<<<<<<<<<<
+ *     state = (self._ANGLES, self._TILE_OFFSETS, self._climb, self._diagonal_weight, self._elevation_weight, self._elevations, self._fall, self._greediness, self._gs, self._height, self._max_turn, self._straight_weight, self._tilemap)             # <<<<<<<<<<<<<<
  *     _dict = getattr(self, '__dict__', None)
  *     if _dict is not None and _dict:
 */
-  __pyx_t_1 = __Pyx_carray_to_py_int___5b_2_5d_(__pyx_v_self->_TILE_OFFSETS, 8); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_carray_to_py_float(__pyx_v_self->_ANGLES, 8); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 5, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_self->_climb); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_carray_to_py_int___5b_2_5d_(__pyx_v_self->_TILE_OFFSETS, 8); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 5, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_self->_diagonal_weight); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_self->_climb); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 5, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_self->_elevation_weight); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __pyx_t_4 = PyFloat_FromDouble(__pyx_v_self->_diagonal_weight); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 5, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_self->_fall); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_self->_elevation_weight); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 5, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = PyFloat_FromDouble(__pyx_v_self->_greediness); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __pyx_t_6 = PyFloat_FromDouble(__pyx_v_self->_fall); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 5, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_7 = PyFloat_FromDouble(__pyx_v_self->_height); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __pyx_t_7 = PyFloat_FromDouble(__pyx_v_self->_greediness); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 5, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_8 = PyFloat_FromDouble(__pyx_v_self->_straight_weight); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __pyx_t_8 = PyFloat_FromDouble(__pyx_v_self->_height); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 5, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_9 = PyTuple_New(11); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __pyx_t_9 = PyFloat_FromDouble(__pyx_v_self->_max_turn); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 5, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_10 = PyFloat_FromDouble(__pyx_v_self->_straight_weight); if (unlikely(!__pyx_t_10)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_10);
+  __pyx_t_11 = PyTuple_New(13); if (unlikely(!__pyx_t_11)) __PYX_ERR(1, 5, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
   __Pyx_GIVEREF(__pyx_t_1);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_1) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_1) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_2);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 1, __pyx_t_2) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 1, __pyx_t_2) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_3);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 2, __pyx_t_3) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 2, __pyx_t_3) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_4);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 3, __pyx_t_4) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 3, __pyx_t_4) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_5);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 4, __pyx_t_5) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
   __Pyx_INCREF(__pyx_v_self->_elevations);
   __Pyx_GIVEREF(__pyx_v_self->_elevations);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 4, __pyx_v_self->_elevations) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_5);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 5, __pyx_t_5) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 5, __pyx_v_self->_elevations) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_6);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 6, __pyx_t_6) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 6, __pyx_t_6) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_7);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 7, __pyx_t_7) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
   __Pyx_INCREF(__pyx_v_self->_gs);
   __Pyx_GIVEREF(__pyx_v_self->_gs);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 7, __pyx_v_self->_gs) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
-  __Pyx_GIVEREF(__pyx_t_7);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 8, __pyx_t_7) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 8, __pyx_v_self->_gs) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
   __Pyx_GIVEREF(__pyx_t_8);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 9, __pyx_t_8) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 9, __pyx_t_8) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_9);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 10, __pyx_t_9) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
+  __Pyx_GIVEREF(__pyx_t_10);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 11, __pyx_t_10) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
   __Pyx_INCREF(__pyx_v_self->_tilemap);
   __Pyx_GIVEREF(__pyx_v_self->_tilemap);
-  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 10, __pyx_v_self->_tilemap) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
+  if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 12, __pyx_v_self->_tilemap) != (0)) __PYX_ERR(1, 5, __pyx_L1_error);
   __pyx_t_1 = 0;
   __pyx_t_2 = 0;
   __pyx_t_3 = 0;
@@ -8683,38 +9620,40 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_4__reduce_cython__(struct __pyx
   __pyx_t_6 = 0;
   __pyx_t_7 = 0;
   __pyx_t_8 = 0;
-  __pyx_v_state = ((PyObject*)__pyx_t_9);
   __pyx_t_9 = 0;
+  __pyx_t_10 = 0;
+  __pyx_v_state = ((PyObject*)__pyx_t_11);
+  __pyx_t_11 = 0;
 
   /* "(tree fragment)":6
  *     cdef bint use_setstate
- *     state = (self._TILE_OFFSETS, self._climb, self._diagonal_weight, self._elevation_weight, self._elevations, self._fall, self._greediness, self._gs, self._height, self._straight_weight, self._tilemap)
+ *     state = (self._ANGLES, self._TILE_OFFSETS, self._climb, self._diagonal_weight, self._elevation_weight, self._elevations, self._fall, self._greediness, self._gs, self._height, self._max_turn, self._straight_weight, self._tilemap)
  *     _dict = getattr(self, '__dict__', None)             # <<<<<<<<<<<<<<
  *     if _dict is not None and _dict:
  *         state += (_dict,)
 */
-  __pyx_t_9 = __Pyx_GetAttr3(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_dict, Py_None); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 6, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_9);
-  __pyx_v__dict = __pyx_t_9;
-  __pyx_t_9 = 0;
+  __pyx_t_11 = __Pyx_GetAttr3(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_dict, Py_None); if (unlikely(!__pyx_t_11)) __PYX_ERR(1, 6, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+  __pyx_v__dict = __pyx_t_11;
+  __pyx_t_11 = 0;
 
   /* "(tree fragment)":7
- *     state = (self._TILE_OFFSETS, self._climb, self._diagonal_weight, self._elevation_weight, self._elevations, self._fall, self._greediness, self._gs, self._height, self._straight_weight, self._tilemap)
+ *     state = (self._ANGLES, self._TILE_OFFSETS, self._climb, self._diagonal_weight, self._elevation_weight, self._elevations, self._fall, self._greediness, self._gs, self._height, self._max_turn, self._straight_weight, self._tilemap)
  *     _dict = getattr(self, '__dict__', None)
  *     if _dict is not None and _dict:             # <<<<<<<<<<<<<<
  *         state += (_dict,)
  *         use_setstate = True
 */
-  __pyx_t_11 = (__pyx_v__dict != Py_None);
-  if (__pyx_t_11) {
+  __pyx_t_13 = (__pyx_v__dict != Py_None);
+  if (__pyx_t_13) {
   } else {
-    __pyx_t_10 = __pyx_t_11;
+    __pyx_t_12 = __pyx_t_13;
     goto __pyx_L4_bool_binop_done;
   }
-  __pyx_t_11 = __Pyx_PyObject_IsTrue(__pyx_v__dict); if (unlikely((__pyx_t_11 < 0))) __PYX_ERR(1, 7, __pyx_L1_error)
-  __pyx_t_10 = __pyx_t_11;
+  __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_v__dict); if (unlikely((__pyx_t_13 < 0))) __PYX_ERR(1, 7, __pyx_L1_error)
+  __pyx_t_12 = __pyx_t_13;
   __pyx_L4_bool_binop_done:;
-  if (__pyx_t_10) {
+  if (__pyx_t_12) {
 
     /* "(tree fragment)":8
  *     _dict = getattr(self, '__dict__', None)
@@ -8723,16 +9662,16 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_4__reduce_cython__(struct __pyx
  *         use_setstate = True
  *     else:
 */
-    __pyx_t_9 = PyTuple_New(1); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 8, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_9);
+    __pyx_t_11 = PyTuple_New(1); if (unlikely(!__pyx_t_11)) __PYX_ERR(1, 8, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_11);
     __Pyx_INCREF(__pyx_v__dict);
     __Pyx_GIVEREF(__pyx_v__dict);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_v__dict) != (0)) __PYX_ERR(1, 8, __pyx_L1_error);
-    __pyx_t_8 = PyNumber_InPlaceAdd(__pyx_v_state, __pyx_t_9); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 8, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
-    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __Pyx_DECREF_SET(__pyx_v_state, ((PyObject*)__pyx_t_8));
-    __pyx_t_8 = 0;
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_v__dict) != (0)) __PYX_ERR(1, 8, __pyx_L1_error);
+    __pyx_t_10 = PyNumber_InPlaceAdd(__pyx_v_state, __pyx_t_11); if (unlikely(!__pyx_t_10)) __PYX_ERR(1, 8, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_10);
+    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+    __Pyx_DECREF_SET(__pyx_v_state, ((PyObject*)__pyx_t_10));
+    __pyx_t_10 = 0;
 
     /* "(tree fragment)":9
  *     if _dict is not None and _dict:
@@ -8744,7 +9683,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_4__reduce_cython__(struct __pyx
     __pyx_v_use_setstate = 1;
 
     /* "(tree fragment)":7
- *     state = (self._TILE_OFFSETS, self._climb, self._diagonal_weight, self._elevation_weight, self._elevations, self._fall, self._greediness, self._gs, self._height, self._straight_weight, self._tilemap)
+ *     state = (self._ANGLES, self._TILE_OFFSETS, self._climb, self._diagonal_weight, self._elevation_weight, self._elevations, self._fall, self._greediness, self._gs, self._height, self._max_turn, self._straight_weight, self._tilemap)
  *     _dict = getattr(self, '__dict__', None)
  *     if _dict is not None and _dict:             # <<<<<<<<<<<<<<
  *         state += (_dict,)
@@ -8758,11 +9697,11 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_4__reduce_cython__(struct __pyx
  *     else:
  *         use_setstate = ('self._elevations is not None or self._gs is not None or self._tilemap is not None',)             # <<<<<<<<<<<<<<
  *     if use_setstate:
- *         return __pyx_unpickle_Pathfinder, (type(self), 0xae36278, None), state
+ *         return __pyx_unpickle_Pathfinder, (type(self), 0x93bc033, None), state
 */
   /*else*/ {
-    __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_mstate_global->__pyx_tuple[0]); if (unlikely((__pyx_t_10 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 11, __pyx_L1_error)
-    __pyx_v_use_setstate = __pyx_t_10;
+    __pyx_t_12 = __Pyx_PyObject_IsTrue(__pyx_mstate_global->__pyx_tuple[0]); if (unlikely((__pyx_t_12 == (int)-1) && PyErr_Occurred())) __PYX_ERR(1, 11, __pyx_L1_error)
+    __pyx_v_use_setstate = __pyx_t_12;
   }
   __pyx_L3:;
 
@@ -8770,7 +9709,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_4__reduce_cython__(struct __pyx
  *     else:
  *         use_setstate = ('self._elevations is not None or self._gs is not None or self._tilemap is not None',)
  *     if use_setstate:             # <<<<<<<<<<<<<<
- *         return __pyx_unpickle_Pathfinder, (type(self), 0xae36278, None), state
+ *         return __pyx_unpickle_Pathfinder, (type(self), 0x93bc033, None), state
  *     else:
 */
   if (__pyx_v_use_setstate) {
@@ -8778,82 +9717,82 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_4__reduce_cython__(struct __pyx
     /* "(tree fragment)":13
  *         use_setstate = ('self._elevations is not None or self._gs is not None or self._tilemap is not None',)
  *     if use_setstate:
- *         return __pyx_unpickle_Pathfinder, (type(self), 0xae36278, None), state             # <<<<<<<<<<<<<<
+ *         return __pyx_unpickle_Pathfinder, (type(self), 0x93bc033, None), state             # <<<<<<<<<<<<<<
  *     else:
- *         return __pyx_unpickle_Pathfinder, (type(self), 0xae36278, state)
+ *         return __pyx_unpickle_Pathfinder, (type(self), 0x93bc033, state)
 */
     __Pyx_XDECREF(__pyx_r);
-    __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_mstate_global->__pyx_n_u_pyx_unpickle_Pathfinder); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_9 = PyTuple_New(3); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_9);
+    __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_mstate_global->__pyx_n_u_pyx_unpickle_Pathfinder); if (unlikely(!__pyx_t_10)) __PYX_ERR(1, 13, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_10);
+    __pyx_t_11 = PyTuple_New(3); if (unlikely(!__pyx_t_11)) __PYX_ERR(1, 13, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_11);
     __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
     __Pyx_GIVEREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self)))) != (0)) __PYX_ERR(1, 13, __pyx_L1_error);
-    __Pyx_INCREF(__pyx_mstate_global->__pyx_int_182674040);
-    __Pyx_GIVEREF(__pyx_mstate_global->__pyx_int_182674040);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 1, __pyx_mstate_global->__pyx_int_182674040) != (0)) __PYX_ERR(1, 13, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self)))) != (0)) __PYX_ERR(1, 13, __pyx_L1_error);
+    __Pyx_INCREF(__pyx_mstate_global->__pyx_int_154910771);
+    __Pyx_GIVEREF(__pyx_mstate_global->__pyx_int_154910771);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 1, __pyx_mstate_global->__pyx_int_154910771) != (0)) __PYX_ERR(1, 13, __pyx_L1_error);
     __Pyx_INCREF(Py_None);
     __Pyx_GIVEREF(Py_None);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 2, Py_None) != (0)) __PYX_ERR(1, 13, __pyx_L1_error);
-    __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 13, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __Pyx_GIVEREF(__pyx_t_8);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_8) != (0)) __PYX_ERR(1, 13, __pyx_L1_error);
-    __Pyx_GIVEREF(__pyx_t_9);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_7, 1, __pyx_t_9) != (0)) __PYX_ERR(1, 13, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 2, Py_None) != (0)) __PYX_ERR(1, 13, __pyx_L1_error);
+    __pyx_t_9 = PyTuple_New(3); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 13, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __Pyx_GIVEREF(__pyx_t_10);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_10) != (0)) __PYX_ERR(1, 13, __pyx_L1_error);
+    __Pyx_GIVEREF(__pyx_t_11);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 1, __pyx_t_11) != (0)) __PYX_ERR(1, 13, __pyx_L1_error);
     __Pyx_INCREF(__pyx_v_state);
     __Pyx_GIVEREF(__pyx_v_state);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_7, 2, __pyx_v_state) != (0)) __PYX_ERR(1, 13, __pyx_L1_error);
-    __pyx_t_8 = 0;
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 2, __pyx_v_state) != (0)) __PYX_ERR(1, 13, __pyx_L1_error);
+    __pyx_t_10 = 0;
+    __pyx_t_11 = 0;
+    __pyx_r = __pyx_t_9;
     __pyx_t_9 = 0;
-    __pyx_r = __pyx_t_7;
-    __pyx_t_7 = 0;
-    __Pyx_TraceReturnValue(__pyx_r, 44, 0, __PYX_ERR(1, 13, __pyx_L1_error));
+    __Pyx_TraceReturnValue(__pyx_r, 48, 0, __PYX_ERR(1, 13, __pyx_L1_error));
     goto __pyx_L0;
 
     /* "(tree fragment)":12
  *     else:
  *         use_setstate = ('self._elevations is not None or self._gs is not None or self._tilemap is not None',)
  *     if use_setstate:             # <<<<<<<<<<<<<<
- *         return __pyx_unpickle_Pathfinder, (type(self), 0xae36278, None), state
+ *         return __pyx_unpickle_Pathfinder, (type(self), 0x93bc033, None), state
  *     else:
 */
   }
 
   /* "(tree fragment)":15
- *         return __pyx_unpickle_Pathfinder, (type(self), 0xae36278, None), state
+ *         return __pyx_unpickle_Pathfinder, (type(self), 0x93bc033, None), state
  *     else:
- *         return __pyx_unpickle_Pathfinder, (type(self), 0xae36278, state)             # <<<<<<<<<<<<<<
+ *         return __pyx_unpickle_Pathfinder, (type(self), 0x93bc033, state)             # <<<<<<<<<<<<<<
  * def __setstate_cython__(self, __pyx_state):
  *     __pyx_unpickle_Pathfinder__set_state(self, __pyx_state)
 */
   /*else*/ {
     __Pyx_XDECREF(__pyx_r);
-    __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_mstate_global->__pyx_n_u_pyx_unpickle_Pathfinder); if (unlikely(!__pyx_t_7)) __PYX_ERR(1, 15, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_9 = PyTuple_New(3); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 15, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_mstate_global->__pyx_n_u_pyx_unpickle_Pathfinder); if (unlikely(!__pyx_t_9)) __PYX_ERR(1, 15, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
+    __pyx_t_11 = PyTuple_New(3); if (unlikely(!__pyx_t_11)) __PYX_ERR(1, 15, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_11);
     __Pyx_INCREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
     __Pyx_GIVEREF(((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self))));
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self)))) != (0)) __PYX_ERR(1, 15, __pyx_L1_error);
-    __Pyx_INCREF(__pyx_mstate_global->__pyx_int_182674040);
-    __Pyx_GIVEREF(__pyx_mstate_global->__pyx_int_182674040);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 1, __pyx_mstate_global->__pyx_int_182674040) != (0)) __PYX_ERR(1, 15, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 0, ((PyObject *)Py_TYPE(((PyObject *)__pyx_v_self)))) != (0)) __PYX_ERR(1, 15, __pyx_L1_error);
+    __Pyx_INCREF(__pyx_mstate_global->__pyx_int_154910771);
+    __Pyx_GIVEREF(__pyx_mstate_global->__pyx_int_154910771);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 1, __pyx_mstate_global->__pyx_int_154910771) != (0)) __PYX_ERR(1, 15, __pyx_L1_error);
     __Pyx_INCREF(__pyx_v_state);
     __Pyx_GIVEREF(__pyx_v_state);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_9, 2, __pyx_v_state) != (0)) __PYX_ERR(1, 15, __pyx_L1_error);
-    __pyx_t_8 = PyTuple_New(2); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 15, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
-    __Pyx_GIVEREF(__pyx_t_7);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_7) != (0)) __PYX_ERR(1, 15, __pyx_L1_error);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_11, 2, __pyx_v_state) != (0)) __PYX_ERR(1, 15, __pyx_L1_error);
+    __pyx_t_10 = PyTuple_New(2); if (unlikely(!__pyx_t_10)) __PYX_ERR(1, 15, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_10);
     __Pyx_GIVEREF(__pyx_t_9);
-    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_8, 1, __pyx_t_9) != (0)) __PYX_ERR(1, 15, __pyx_L1_error);
-    __pyx_t_7 = 0;
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_9) != (0)) __PYX_ERR(1, 15, __pyx_L1_error);
+    __Pyx_GIVEREF(__pyx_t_11);
+    if (__Pyx_PyTuple_SET_ITEM(__pyx_t_10, 1, __pyx_t_11) != (0)) __PYX_ERR(1, 15, __pyx_L1_error);
     __pyx_t_9 = 0;
-    __pyx_r = __pyx_t_8;
-    __pyx_t_8 = 0;
-    __Pyx_TraceReturnValue(__pyx_r, 52, 0, __PYX_ERR(1, 15, __pyx_L1_error));
+    __pyx_t_11 = 0;
+    __pyx_r = __pyx_t_10;
+    __pyx_t_10 = 0;
+    __Pyx_TraceReturnValue(__pyx_r, 56, 0, __PYX_ERR(1, 15, __pyx_L1_error));
     goto __pyx_L0;
   }
 
@@ -8874,6 +9813,8 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_4__reduce_cython__(struct __pyx
   __Pyx_XDECREF(__pyx_t_7);
   __Pyx_XDECREF(__pyx_t_8);
   __Pyx_XDECREF(__pyx_t_9);
+  __Pyx_XDECREF(__pyx_t_10);
+  __Pyx_XDECREF(__pyx_t_11);
   __Pyx_TraceException(__pyx_lineno, 0, 0);
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
@@ -8893,7 +9834,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_4__reduce_cython__(struct __pyx
 
 /* "(tree fragment)":16
  *     else:
- *         return __pyx_unpickle_Pathfinder, (type(self), 0xae36278, state)
+ *         return __pyx_unpickle_Pathfinder, (type(self), 0x93bc033, state)
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     __pyx_unpickle_Pathfinder__set_state(self, __pyx_state)
 */
@@ -8992,12 +9933,12 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_6__setstate_cython__(struct __p
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[33]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[39]))
   __Pyx_RefNannySetupContext("__setstate_cython__", 0);
   __Pyx_TraceStartFunc("__setstate_cython__", __pyx_f[1], 16, 0, 0, 0, __PYX_ERR(1, 16, __pyx_L1_error));
 
   /* "(tree fragment)":17
- *         return __pyx_unpickle_Pathfinder, (type(self), 0xae36278, state)
+ *         return __pyx_unpickle_Pathfinder, (type(self), 0x93bc033, state)
  * def __setstate_cython__(self, __pyx_state):
  *     __pyx_unpickle_Pathfinder__set_state(self, __pyx_state)             # <<<<<<<<<<<<<<
 */
@@ -9015,7 +9956,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_6__setstate_cython__(struct __p
 
   /* "(tree fragment)":16
  *     else:
- *         return __pyx_unpickle_Pathfinder, (type(self), 0xae36278, state)
+ *         return __pyx_unpickle_Pathfinder, (type(self), 0x93bc033, state)
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     __pyx_unpickle_Pathfinder__set_state(self, __pyx_state)
 */
@@ -9047,7 +9988,7 @@ static PyObject *__pyx_pf_8pathfind_10Pathfinder_6__setstate_cython__(struct __p
  *     int __Pyx_UpdateUnpickledDict(object, object, Py_ssize_t) except -1
  * def __pyx_unpickle_Pathfinder(__pyx_type, long __pyx_checksum, tuple __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_result
- *     __Pyx_CheckUnpickleChecksum(__pyx_checksum, 0xae36278, 0xcb6325c, 0x3609495, b'_TILE_OFFSETS, _climb, _diagonal_weight, _elevation_weight, _elevations, _fall, _greediness, _gs, _height, _straight_weight, _tilemap')
+ *     __Pyx_CheckUnpickleChecksum(__pyx_checksum, 0x93bc033, 0xc75366b, 0x78c3bbe, b'_ANGLES, _TILE_OFFSETS, _climb, _diagonal_weight, _elevation_weight, _elevations, _fall, _greediness, _gs, _height, _max_turn, _straight_weight, _tilemap')
 */
 
 /* Python wrapper */
@@ -9174,22 +10115,22 @@ static PyObject *__pyx_pf_8pathfind___pyx_unpickle_Pathfinder(CYTHON_UNUSED PyOb
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[34]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[40]))
   __Pyx_RefNannySetupContext("__pyx_unpickle_Pathfinder", 0);
   __Pyx_TraceStartFunc("__pyx_unpickle_Pathfinder", __pyx_f[1], 4, 0, 0, 0, __PYX_ERR(1, 4, __pyx_L1_error));
 
   /* "(tree fragment)":6
  * def __pyx_unpickle_Pathfinder(__pyx_type, long __pyx_checksum, tuple __pyx_state):
  *     cdef object __pyx_result
- *     __Pyx_CheckUnpickleChecksum(__pyx_checksum, 0xae36278, 0xcb6325c, 0x3609495, b'_TILE_OFFSETS, _climb, _diagonal_weight, _elevation_weight, _elevations, _fall, _greediness, _gs, _height, _straight_weight, _tilemap')             # <<<<<<<<<<<<<<
+ *     __Pyx_CheckUnpickleChecksum(__pyx_checksum, 0x93bc033, 0xc75366b, 0x78c3bbe, b'_ANGLES, _TILE_OFFSETS, _climb, _diagonal_weight, _elevation_weight, _elevations, _fall, _greediness, _gs, _height, _max_turn, _straight_weight, _tilemap')             # <<<<<<<<<<<<<<
  *     __pyx_result = Pathfinder.__new__(__pyx_type)
  *     if __pyx_state is not None:
 */
-  __pyx_t_1 = __Pyx_CheckUnpickleChecksum(__pyx_v___pyx_checksum, 0xae36278, 0xcb6325c, 0x3609495, __pyx_k_TILE_OFFSETS__climb__diagonal_w); if (unlikely(__pyx_t_1 == ((int)-1))) __PYX_ERR(1, 6, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CheckUnpickleChecksum(__pyx_v___pyx_checksum, 0x93bc033, 0xc75366b, 0x78c3bbe, __pyx_k_ANGLES__TILE_OFFSETS__climb__di); if (unlikely(__pyx_t_1 == ((int)-1))) __PYX_ERR(1, 6, __pyx_L1_error)
 
   /* "(tree fragment)":7
  *     cdef object __pyx_result
- *     __Pyx_CheckUnpickleChecksum(__pyx_checksum, 0xae36278, 0xcb6325c, 0x3609495, b'_TILE_OFFSETS, _climb, _diagonal_weight, _elevation_weight, _elevations, _fall, _greediness, _gs, _height, _straight_weight, _tilemap')
+ *     __Pyx_CheckUnpickleChecksum(__pyx_checksum, 0x93bc033, 0xc75366b, 0x78c3bbe, b'_ANGLES, _TILE_OFFSETS, _climb, _diagonal_weight, _elevation_weight, _elevations, _fall, _greediness, _gs, _height, _max_turn, _straight_weight, _tilemap')
  *     __pyx_result = Pathfinder.__new__(__pyx_type)             # <<<<<<<<<<<<<<
  *     if __pyx_state is not None:
  *         __pyx_unpickle_Pathfinder__set_state(<Pathfinder> __pyx_result, __pyx_state)
@@ -9208,7 +10149,7 @@ static PyObject *__pyx_pf_8pathfind___pyx_unpickle_Pathfinder(CYTHON_UNUSED PyOb
   __pyx_t_2 = 0;
 
   /* "(tree fragment)":8
- *     __Pyx_CheckUnpickleChecksum(__pyx_checksum, 0xae36278, 0xcb6325c, 0x3609495, b'_TILE_OFFSETS, _climb, _diagonal_weight, _elevation_weight, _elevations, _fall, _greediness, _gs, _height, _straight_weight, _tilemap')
+ *     __Pyx_CheckUnpickleChecksum(__pyx_checksum, 0x93bc033, 0xc75366b, 0x78c3bbe, b'_ANGLES, _TILE_OFFSETS, _climb, _diagonal_weight, _elevation_weight, _elevations, _fall, _greediness, _gs, _height, _max_turn, _straight_weight, _tilemap')
  *     __pyx_result = Pathfinder.__new__(__pyx_type)
  *     if __pyx_state is not None:             # <<<<<<<<<<<<<<
  *         __pyx_unpickle_Pathfinder__set_state(<Pathfinder> __pyx_result, __pyx_state)
@@ -9233,7 +10174,7 @@ static PyObject *__pyx_pf_8pathfind___pyx_unpickle_Pathfinder(CYTHON_UNUSED PyOb
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
     /* "(tree fragment)":8
- *     __Pyx_CheckUnpickleChecksum(__pyx_checksum, 0xae36278, 0xcb6325c, 0x3609495, b'_TILE_OFFSETS, _climb, _diagonal_weight, _elevation_weight, _elevations, _fall, _greediness, _gs, _height, _straight_weight, _tilemap')
+ *     __Pyx_CheckUnpickleChecksum(__pyx_checksum, 0x93bc033, 0xc75366b, 0x78c3bbe, b'_ANGLES, _TILE_OFFSETS, _climb, _diagonal_weight, _elevation_weight, _elevations, _fall, _greediness, _gs, _height, _max_turn, _straight_weight, _tilemap')
  *     __pyx_result = Pathfinder.__new__(__pyx_type)
  *     if __pyx_state is not None:             # <<<<<<<<<<<<<<
  *         __pyx_unpickle_Pathfinder__set_state(<Pathfinder> __pyx_result, __pyx_state)
@@ -9246,7 +10187,7 @@ static PyObject *__pyx_pf_8pathfind___pyx_unpickle_Pathfinder(CYTHON_UNUSED PyOb
  *         __pyx_unpickle_Pathfinder__set_state(<Pathfinder> __pyx_result, __pyx_state)
  *     return __pyx_result             # <<<<<<<<<<<<<<
  * cdef __pyx_unpickle_Pathfinder__set_state(Pathfinder __pyx_result, __pyx_state: tuple):
- *     __pyx_result._TILE_OFFSETS = __pyx_state[0]; __pyx_result._climb = __pyx_state[1]; __pyx_result._diagonal_weight = __pyx_state[2]; __pyx_result._elevation_weight = __pyx_state[3]; __pyx_result._elevations = __pyx_state[4]; __pyx_result._fall = __pyx_state[5]; __pyx_result._greediness = __pyx_state[6]; __pyx_result._gs = __pyx_state[7]; __pyx_result._height = __pyx_state[8]; __pyx_result._straight_weight = __pyx_state[9]; __pyx_result._tilemap = __pyx_state[10]
+ *     __pyx_result._ANGLES = __pyx_state[0]; __pyx_result._TILE_OFFSETS = __pyx_state[1]; __pyx_result._climb = __pyx_state[2]; __pyx_result._diagonal_weight = __pyx_state[3]; __pyx_result._elevation_weight = __pyx_state[4]; __pyx_result._elevations = __pyx_state[5]; __pyx_result._fall = __pyx_state[6]; __pyx_result._greediness = __pyx_state[7]; __pyx_result._gs = __pyx_state[8]; __pyx_result._height = __pyx_state[9]; __pyx_result._max_turn = __pyx_state[10]; __pyx_result._straight_weight = __pyx_state[11]; __pyx_result._tilemap = __pyx_state[12]
 */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v___pyx_result);
@@ -9259,7 +10200,7 @@ static PyObject *__pyx_pf_8pathfind___pyx_unpickle_Pathfinder(CYTHON_UNUSED PyOb
  *     int __Pyx_UpdateUnpickledDict(object, object, Py_ssize_t) except -1
  * def __pyx_unpickle_Pathfinder(__pyx_type, long __pyx_checksum, tuple __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_result
- *     __Pyx_CheckUnpickleChecksum(__pyx_checksum, 0xae36278, 0xcb6325c, 0x3609495, b'_TILE_OFFSETS, _climb, _diagonal_weight, _elevation_weight, _elevations, _fall, _greediness, _gs, _height, _straight_weight, _tilemap')
+ *     __Pyx_CheckUnpickleChecksum(__pyx_checksum, 0x93bc033, 0xc75366b, 0x78c3bbe, b'_ANGLES, _TILE_OFFSETS, _climb, _diagonal_weight, _elevation_weight, _elevations, _fall, _greediness, _gs, _height, _max_turn, _straight_weight, _tilemap')
 */
 
   /* function exit code */
@@ -9286,85 +10227,90 @@ static PyObject *__pyx_pf_8pathfind___pyx_unpickle_Pathfinder(CYTHON_UNUSED PyOb
  *         __pyx_unpickle_Pathfinder__set_state(<Pathfinder> __pyx_result, __pyx_state)
  *     return __pyx_result
  * cdef __pyx_unpickle_Pathfinder__set_state(Pathfinder __pyx_result, __pyx_state: tuple):             # <<<<<<<<<<<<<<
- *     __pyx_result._TILE_OFFSETS = __pyx_state[0]; __pyx_result._climb = __pyx_state[1]; __pyx_result._diagonal_weight = __pyx_state[2]; __pyx_result._elevation_weight = __pyx_state[3]; __pyx_result._elevations = __pyx_state[4]; __pyx_result._fall = __pyx_state[5]; __pyx_result._greediness = __pyx_state[6]; __pyx_result._gs = __pyx_state[7]; __pyx_result._height = __pyx_state[8]; __pyx_result._straight_weight = __pyx_state[9]; __pyx_result._tilemap = __pyx_state[10]
- *     __Pyx_UpdateUnpickledDict(__pyx_result, __pyx_state, 11)
+ *     __pyx_result._ANGLES = __pyx_state[0]; __pyx_result._TILE_OFFSETS = __pyx_state[1]; __pyx_result._climb = __pyx_state[2]; __pyx_result._diagonal_weight = __pyx_state[3]; __pyx_result._elevation_weight = __pyx_state[4]; __pyx_result._elevations = __pyx_state[5]; __pyx_result._fall = __pyx_state[6]; __pyx_result._greediness = __pyx_state[7]; __pyx_result._gs = __pyx_state[8]; __pyx_result._height = __pyx_state[9]; __pyx_result._max_turn = __pyx_state[10]; __pyx_result._straight_weight = __pyx_state[11]; __pyx_result._tilemap = __pyx_state[12]
+ *     __Pyx_UpdateUnpickledDict(__pyx_result, __pyx_state, 13)
 */
 
 static PyObject *__pyx_f_8pathfind___pyx_unpickle_Pathfinder__set_state(struct __pyx_obj_8pathfind_Pathfinder *__pyx_v___pyx_result, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_TraceDeclarationsFunc
   __Pyx_RefNannyDeclarations
-  int __pyx_t_1[8][2];
-  float __pyx_t_2;
-  PyObject *__pyx_t_3 = NULL;
-  int __pyx_t_4;
+  float __pyx_t_1[8];
+  int __pyx_t_2[8][2];
+  float __pyx_t_3;
+  PyObject *__pyx_t_4 = NULL;
+  int __pyx_t_5;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[35]))
+  __Pyx_TraceFrameInit(((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[41]))
   __Pyx_RefNannySetupContext("__pyx_unpickle_Pathfinder__set_state", 0);
   __Pyx_TraceStartFunc("__pyx_unpickle_Pathfinder__set_state", __pyx_f[1], 11, 0, 0, 0, __PYX_ERR(1, 11, __pyx_L1_error));
 
   /* "(tree fragment)":12
  *     return __pyx_result
  * cdef __pyx_unpickle_Pathfinder__set_state(Pathfinder __pyx_result, __pyx_state: tuple):
- *     __pyx_result._TILE_OFFSETS = __pyx_state[0]; __pyx_result._climb = __pyx_state[1]; __pyx_result._diagonal_weight = __pyx_state[2]; __pyx_result._elevation_weight = __pyx_state[3]; __pyx_result._elevations = __pyx_state[4]; __pyx_result._fall = __pyx_state[5]; __pyx_result._greediness = __pyx_state[6]; __pyx_result._gs = __pyx_state[7]; __pyx_result._height = __pyx_state[8]; __pyx_result._straight_weight = __pyx_state[9]; __pyx_result._tilemap = __pyx_state[10]             # <<<<<<<<<<<<<<
- *     __Pyx_UpdateUnpickledDict(__pyx_result, __pyx_state, 11)
+ *     __pyx_result._ANGLES = __pyx_state[0]; __pyx_result._TILE_OFFSETS = __pyx_state[1]; __pyx_result._climb = __pyx_state[2]; __pyx_result._diagonal_weight = __pyx_state[3]; __pyx_result._elevation_weight = __pyx_state[4]; __pyx_result._elevations = __pyx_state[5]; __pyx_result._fall = __pyx_state[6]; __pyx_result._greediness = __pyx_state[7]; __pyx_result._gs = __pyx_state[8]; __pyx_result._height = __pyx_state[9]; __pyx_result._max_turn = __pyx_state[10]; __pyx_result._straight_weight = __pyx_state[11]; __pyx_result._tilemap = __pyx_state[12]             # <<<<<<<<<<<<<<
+ *     __Pyx_UpdateUnpickledDict(__pyx_result, __pyx_state, 13)
 */
-  if (unlikely((__Pyx_carray_from_py_int___5b_2_5d_(__Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 0), __pyx_t_1, 8) < 0))) __PYX_ERR(1, 12, __pyx_L1_error)
-  memcpy(&(__pyx_v___pyx_result->_TILE_OFFSETS[0]), __pyx_t_1, sizeof(__pyx_v___pyx_result->_TILE_OFFSETS[0]) * (8));
-  __pyx_t_2 = __Pyx_PyFloat_AsFloat(__Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 1)); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
-  __pyx_v___pyx_result->_climb = __pyx_t_2;
-  __pyx_t_2 = __Pyx_PyFloat_AsFloat(__Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 2)); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
-  __pyx_v___pyx_result->_diagonal_weight = __pyx_t_2;
-  __pyx_t_2 = __Pyx_PyFloat_AsFloat(__Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 3)); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
-  __pyx_v___pyx_result->_elevation_weight = __pyx_t_2;
-  __pyx_t_3 = __Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 4);
-  __Pyx_INCREF(__pyx_t_3);
-  if (!(likely(PyDict_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None) || __Pyx_RaiseUnexpectedTypeError("dict", __pyx_t_3))) __PYX_ERR(1, 12, __pyx_L1_error)
-  __Pyx_GIVEREF(__pyx_t_3);
+  if (unlikely((__Pyx_carray_from_py_float(__Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 0), __pyx_t_1, 8) < 0))) __PYX_ERR(1, 12, __pyx_L1_error)
+  memcpy(&(__pyx_v___pyx_result->_ANGLES[0]), __pyx_t_1, sizeof(__pyx_v___pyx_result->_ANGLES[0]) * (8));
+  if (unlikely((__Pyx_carray_from_py_int___5b_2_5d_(__Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 1), __pyx_t_2, 8) < 0))) __PYX_ERR(1, 12, __pyx_L1_error)
+  memcpy(&(__pyx_v___pyx_result->_TILE_OFFSETS[0]), __pyx_t_2, sizeof(__pyx_v___pyx_result->_TILE_OFFSETS[0]) * (8));
+  __pyx_t_3 = __Pyx_PyFloat_AsFloat(__Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 2)); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __pyx_v___pyx_result->_climb = __pyx_t_3;
+  __pyx_t_3 = __Pyx_PyFloat_AsFloat(__Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 3)); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __pyx_v___pyx_result->_diagonal_weight = __pyx_t_3;
+  __pyx_t_3 = __Pyx_PyFloat_AsFloat(__Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 4)); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __pyx_v___pyx_result->_elevation_weight = __pyx_t_3;
+  __pyx_t_4 = __Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 5);
+  __Pyx_INCREF(__pyx_t_4);
+  if (!(likely(PyDict_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None) || __Pyx_RaiseUnexpectedTypeError("dict", __pyx_t_4))) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GIVEREF(__pyx_t_4);
   __Pyx_GOTREF(__pyx_v___pyx_result->_elevations);
   __Pyx_DECREF(__pyx_v___pyx_result->_elevations);
-  __pyx_v___pyx_result->_elevations = ((PyObject*)__pyx_t_3);
-  __pyx_t_3 = 0;
-  __pyx_t_2 = __Pyx_PyFloat_AsFloat(__Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 5)); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
-  __pyx_v___pyx_result->_fall = __pyx_t_2;
-  __pyx_t_2 = __Pyx_PyFloat_AsFloat(__Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 6)); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
-  __pyx_v___pyx_result->_greediness = __pyx_t_2;
-  __pyx_t_3 = __Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 7);
-  __Pyx_INCREF(__pyx_t_3);
-  if (!(likely(PyDict_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None) || __Pyx_RaiseUnexpectedTypeError("dict", __pyx_t_3))) __PYX_ERR(1, 12, __pyx_L1_error)
-  __Pyx_GIVEREF(__pyx_t_3);
+  __pyx_v___pyx_result->_elevations = ((PyObject*)__pyx_t_4);
+  __pyx_t_4 = 0;
+  __pyx_t_3 = __Pyx_PyFloat_AsFloat(__Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 6)); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __pyx_v___pyx_result->_fall = __pyx_t_3;
+  __pyx_t_3 = __Pyx_PyFloat_AsFloat(__Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 7)); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __pyx_v___pyx_result->_greediness = __pyx_t_3;
+  __pyx_t_4 = __Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 8);
+  __Pyx_INCREF(__pyx_t_4);
+  if (!(likely(PyDict_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None) || __Pyx_RaiseUnexpectedTypeError("dict", __pyx_t_4))) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GIVEREF(__pyx_t_4);
   __Pyx_GOTREF(__pyx_v___pyx_result->_gs);
   __Pyx_DECREF(__pyx_v___pyx_result->_gs);
-  __pyx_v___pyx_result->_gs = ((PyObject*)__pyx_t_3);
-  __pyx_t_3 = 0;
-  __pyx_t_2 = __Pyx_PyFloat_AsFloat(__Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 8)); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
-  __pyx_v___pyx_result->_height = __pyx_t_2;
-  __pyx_t_2 = __Pyx_PyFloat_AsFloat(__Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 9)); if (unlikely((__pyx_t_2 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
-  __pyx_v___pyx_result->_straight_weight = __pyx_t_2;
-  __pyx_t_3 = __Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 10);
-  __Pyx_INCREF(__pyx_t_3);
-  if (!(likely(PyDict_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None) || __Pyx_RaiseUnexpectedTypeError("dict", __pyx_t_3))) __PYX_ERR(1, 12, __pyx_L1_error)
-  __Pyx_GIVEREF(__pyx_t_3);
+  __pyx_v___pyx_result->_gs = ((PyObject*)__pyx_t_4);
+  __pyx_t_4 = 0;
+  __pyx_t_3 = __Pyx_PyFloat_AsFloat(__Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 9)); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __pyx_v___pyx_result->_height = __pyx_t_3;
+  __pyx_t_3 = __Pyx_PyFloat_AsFloat(__Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 10)); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __pyx_v___pyx_result->_max_turn = __pyx_t_3;
+  __pyx_t_3 = __Pyx_PyFloat_AsFloat(__Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 11)); if (unlikely((__pyx_t_3 == (float)-1) && PyErr_Occurred())) __PYX_ERR(1, 12, __pyx_L1_error)
+  __pyx_v___pyx_result->_straight_weight = __pyx_t_3;
+  __pyx_t_4 = __Pyx_PyTuple_GET_ITEM(__pyx_v___pyx_state, 12);
+  __Pyx_INCREF(__pyx_t_4);
+  if (!(likely(PyDict_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None) || __Pyx_RaiseUnexpectedTypeError("dict", __pyx_t_4))) __PYX_ERR(1, 12, __pyx_L1_error)
+  __Pyx_GIVEREF(__pyx_t_4);
   __Pyx_GOTREF(__pyx_v___pyx_result->_tilemap);
   __Pyx_DECREF(__pyx_v___pyx_result->_tilemap);
-  __pyx_v___pyx_result->_tilemap = ((PyObject*)__pyx_t_3);
-  __pyx_t_3 = 0;
+  __pyx_v___pyx_result->_tilemap = ((PyObject*)__pyx_t_4);
+  __pyx_t_4 = 0;
 
   /* "(tree fragment)":13
  * cdef __pyx_unpickle_Pathfinder__set_state(Pathfinder __pyx_result, __pyx_state: tuple):
- *     __pyx_result._TILE_OFFSETS = __pyx_state[0]; __pyx_result._climb = __pyx_state[1]; __pyx_result._diagonal_weight = __pyx_state[2]; __pyx_result._elevation_weight = __pyx_state[3]; __pyx_result._elevations = __pyx_state[4]; __pyx_result._fall = __pyx_state[5]; __pyx_result._greediness = __pyx_state[6]; __pyx_result._gs = __pyx_state[7]; __pyx_result._height = __pyx_state[8]; __pyx_result._straight_weight = __pyx_state[9]; __pyx_result._tilemap = __pyx_state[10]
- *     __Pyx_UpdateUnpickledDict(__pyx_result, __pyx_state, 11)             # <<<<<<<<<<<<<<
+ *     __pyx_result._ANGLES = __pyx_state[0]; __pyx_result._TILE_OFFSETS = __pyx_state[1]; __pyx_result._climb = __pyx_state[2]; __pyx_result._diagonal_weight = __pyx_state[3]; __pyx_result._elevation_weight = __pyx_state[4]; __pyx_result._elevations = __pyx_state[5]; __pyx_result._fall = __pyx_state[6]; __pyx_result._greediness = __pyx_state[7]; __pyx_result._gs = __pyx_state[8]; __pyx_result._height = __pyx_state[9]; __pyx_result._max_turn = __pyx_state[10]; __pyx_result._straight_weight = __pyx_state[11]; __pyx_result._tilemap = __pyx_state[12]
+ *     __Pyx_UpdateUnpickledDict(__pyx_result, __pyx_state, 13)             # <<<<<<<<<<<<<<
 */
-  __pyx_t_4 = __Pyx_UpdateUnpickledDict(((PyObject *)__pyx_v___pyx_result), __pyx_v___pyx_state, 11); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 13, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_UpdateUnpickledDict(((PyObject *)__pyx_v___pyx_result), __pyx_v___pyx_state, 13); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(1, 13, __pyx_L1_error)
 
   /* "(tree fragment)":11
  *         __pyx_unpickle_Pathfinder__set_state(<Pathfinder> __pyx_result, __pyx_state)
  *     return __pyx_result
  * cdef __pyx_unpickle_Pathfinder__set_state(Pathfinder __pyx_result, __pyx_state: tuple):             # <<<<<<<<<<<<<<
- *     __pyx_result._TILE_OFFSETS = __pyx_state[0]; __pyx_result._climb = __pyx_state[1]; __pyx_result._diagonal_weight = __pyx_state[2]; __pyx_result._elevation_weight = __pyx_state[3]; __pyx_result._elevations = __pyx_state[4]; __pyx_result._fall = __pyx_state[5]; __pyx_result._greediness = __pyx_state[6]; __pyx_result._gs = __pyx_state[7]; __pyx_result._height = __pyx_state[8]; __pyx_result._straight_weight = __pyx_state[9]; __pyx_result._tilemap = __pyx_state[10]
- *     __Pyx_UpdateUnpickledDict(__pyx_result, __pyx_state, 11)
+ *     __pyx_result._ANGLES = __pyx_state[0]; __pyx_result._TILE_OFFSETS = __pyx_state[1]; __pyx_result._climb = __pyx_state[2]; __pyx_result._diagonal_weight = __pyx_state[3]; __pyx_result._elevation_weight = __pyx_state[4]; __pyx_result._elevations = __pyx_state[5]; __pyx_result._fall = __pyx_state[6]; __pyx_result._greediness = __pyx_state[7]; __pyx_result._gs = __pyx_state[8]; __pyx_result._height = __pyx_state[9]; __pyx_result._max_turn = __pyx_state[10]; __pyx_result._straight_weight = __pyx_state[11]; __pyx_result._tilemap = __pyx_state[12]
+ *     __Pyx_UpdateUnpickledDict(__pyx_result, __pyx_state, 13)
 */
 
   /* function exit code */
@@ -9372,7 +10318,7 @@ static PyObject *__pyx_f_8pathfind___pyx_unpickle_Pathfinder__set_state(struct _
   __Pyx_TraceReturnValue(__pyx_r, 0, 0, __PYX_ERR(1, 11, __pyx_L1_error));
   goto __pyx_L0;
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
   __Pyx_TraceException(__pyx_lineno, 0, 0);
   #if CYTHON_USE_SYS_MONITORING
   __Pyx_TraceExceptionUnwind(0, 0);
@@ -9576,6 +10522,20 @@ static int __pyx_setprop_8pathfind_10Pathfinder_greediness(PyObject *o, PyObject
   }
 }
 
+static PyObject *__pyx_getprop_8pathfind_10Pathfinder_max_turn(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_8pathfind_10Pathfinder_8max_turn_1__get__(o);
+}
+
+static int __pyx_setprop_8pathfind_10Pathfinder_max_turn(PyObject *o, PyObject *v, CYTHON_UNUSED void *x) {
+  if (v) {
+    return __pyx_pw_8pathfind_10Pathfinder_8max_turn_3__set__(o, v);
+  }
+  else {
+    PyErr_SetString(PyExc_NotImplementedError, "__del__");
+    return -1;
+  }
+}
+
 static PyMethodDef __pyx_methods_8pathfind_Pathfinder[] = {
   {"pathfind", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_8pathfind_10Pathfinder_3pathfind, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
   {"__reduce_cython__", (PyCFunction)(void(*)(void))(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_8pathfind_10Pathfinder_5__reduce_cython__, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0},
@@ -9592,6 +10552,7 @@ static struct PyGetSetDef __pyx_getsets_8pathfind_Pathfinder[] = {
   {"diagonal_weight", __pyx_getprop_8pathfind_10Pathfinder_diagonal_weight, __pyx_setprop_8pathfind_10Pathfinder_diagonal_weight, 0, 0},
   {"elevation_weight", __pyx_getprop_8pathfind_10Pathfinder_elevation_weight, __pyx_setprop_8pathfind_10Pathfinder_elevation_weight, 0, 0},
   {"greediness", __pyx_getprop_8pathfind_10Pathfinder_greediness, __pyx_setprop_8pathfind_10Pathfinder_greediness, 0, 0},
+  {"max_turn", __pyx_getprop_8pathfind_10Pathfinder_max_turn, __pyx_setprop_8pathfind_10Pathfinder_max_turn, 0, 0},
   {0, 0, 0, 0, 0}
 };
 #if CYTHON_USE_TYPE_SPECS
@@ -9747,17 +10708,17 @@ static int __Pyx_modinit_type_init_code(__pyx_mstatetype *__pyx_mstate) {
   __pyx_vtable_8pathfind_Pathfinder._get_elevation = (float (*)(struct __pyx_obj_8pathfind_Pathfinder *, PyObject *))__pyx_f_8pathfind_10Pathfinder__get_elevation;
   __pyx_vtable_8pathfind_Pathfinder._cant = (int (*)(struct __pyx_obj_8pathfind_Pathfinder *, PyObject *, int, float, float))__pyx_f_8pathfind_10Pathfinder__cant;
   __pyx_vtable_8pathfind_Pathfinder._calculate = (float (*)(struct __pyx_obj_8pathfind_Pathfinder *, PyObject *, int *, int, PyObject *, float))__pyx_f_8pathfind_10Pathfinder__calculate;
-  __pyx_vtable_8pathfind_Pathfinder._pathfind = (PyObject *(*)(struct __pyx_obj_8pathfind_Pathfinder *, PyObject *, PyObject *, struct __pyx_opt_args_8pathfind_10Pathfinder__pathfind *__pyx_optional_args))__pyx_f_8pathfind_10Pathfinder__pathfind;
+  __pyx_vtable_8pathfind_Pathfinder._pathfind = (PyObject *(*)(struct __pyx_obj_8pathfind_Pathfinder *, float, PyObject *, PyObject *, struct __pyx_opt_args_8pathfind_10Pathfinder__pathfind *__pyx_optional_args))__pyx_f_8pathfind_10Pathfinder__pathfind;
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_mstate->__pyx_ptype_8pathfind_Pathfinder = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8pathfind_Pathfinder_spec, NULL); if (unlikely(!__pyx_mstate->__pyx_ptype_8pathfind_Pathfinder)) __PYX_ERR(0, 20, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8pathfind_Pathfinder_spec, __pyx_mstate->__pyx_ptype_8pathfind_Pathfinder) < (0)) __PYX_ERR(0, 20, __pyx_L1_error)
+  __pyx_mstate->__pyx_ptype_8pathfind_Pathfinder = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_8pathfind_Pathfinder_spec, NULL); if (unlikely(!__pyx_mstate->__pyx_ptype_8pathfind_Pathfinder)) __PYX_ERR(0, 25, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_8pathfind_Pathfinder_spec, __pyx_mstate->__pyx_ptype_8pathfind_Pathfinder) < (0)) __PYX_ERR(0, 25, __pyx_L1_error)
   #else
   __pyx_mstate->__pyx_ptype_8pathfind_Pathfinder = &__pyx_type_8pathfind_Pathfinder;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_mstate->__pyx_ptype_8pathfind_Pathfinder) < (0)) __PYX_ERR(0, 20, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_mstate->__pyx_ptype_8pathfind_Pathfinder) < (0)) __PYX_ERR(0, 25, __pyx_L1_error)
   #endif
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount((PyObject*)__pyx_mstate->__pyx_ptype_8pathfind_Pathfinder);
@@ -9767,10 +10728,10 @@ static int __Pyx_modinit_type_init_code(__pyx_mstatetype *__pyx_mstate) {
     __pyx_mstate->__pyx_ptype_8pathfind_Pathfinder->tp_getattro = PyObject_GenericGetAttr;
   }
   #endif
-  if (__Pyx_SetVtable(__pyx_mstate->__pyx_ptype_8pathfind_Pathfinder, __pyx_vtabptr_8pathfind_Pathfinder) < (0)) __PYX_ERR(0, 20, __pyx_L1_error)
-  if (__Pyx_MergeVtables(__pyx_mstate->__pyx_ptype_8pathfind_Pathfinder) < (0)) __PYX_ERR(0, 20, __pyx_L1_error)
-  if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_Pathfinder, (PyObject *) __pyx_mstate->__pyx_ptype_8pathfind_Pathfinder) < (0)) __PYX_ERR(0, 20, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject *) __pyx_mstate->__pyx_ptype_8pathfind_Pathfinder) < (0)) __PYX_ERR(0, 20, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_mstate->__pyx_ptype_8pathfind_Pathfinder, __pyx_vtabptr_8pathfind_Pathfinder) < (0)) __PYX_ERR(0, 25, __pyx_L1_error)
+  if (__Pyx_MergeVtables(__pyx_mstate->__pyx_ptype_8pathfind_Pathfinder) < (0)) __PYX_ERR(0, 25, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_Pathfinder, (PyObject *) __pyx_mstate->__pyx_ptype_8pathfind_Pathfinder) < (0)) __PYX_ERR(0, 25, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_mstate->__pyx_ptype_8pathfind_Pathfinder) < (0)) __PYX_ERR(0, 25, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -10123,18 +11084,18 @@ __Pyx_RefNannySetupContext("PyInit_pathfind", 0);
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "pathfind.pyx":306
+  /* "pathfind.pyx":338
  *         return []
  * 
  *     def pathfind(self: Self,             # <<<<<<<<<<<<<<
+ *                  float yaw,
  *                  tuple start,
- *                  tuple end,
 */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 306, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 338, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_self, __pyx_mstate_global->__pyx_n_u_Self) < (0)) __PYX_ERR(0, 306, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_return, __pyx_mstate_global->__pyx_n_u_list) < (0)) __PYX_ERR(0, 306, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_8pathfind_10Pathfinder_3pathfind, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_Pathfinder_pathfind, NULL, __pyx_mstate_global->__pyx_n_u_pathfind, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[31])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 306, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_self, __pyx_mstate_global->__pyx_n_u_Self) < (0)) __PYX_ERR(0, 338, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_mstate_global->__pyx_n_u_return, __pyx_mstate_global->__pyx_n_u_list) < (0)) __PYX_ERR(0, 338, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_8pathfind_10Pathfinder_3pathfind, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_Pathfinder_pathfind, NULL, __pyx_mstate_global->__pyx_n_u_pathfind, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[37])); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 338, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_4);
@@ -10142,7 +11103,7 @@ __Pyx_RefNannySetupContext("PyInit_pathfind", 0);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_4, __pyx_mstate_global->__pyx_tuple[1]);
   __Pyx_CyFunction_SetAnnotationsDict(__pyx_t_4, __pyx_t_2);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_8pathfind_Pathfinder, __pyx_mstate_global->__pyx_n_u_pathfind, __pyx_t_4) < (0)) __PYX_ERR(0, 306, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_8pathfind_Pathfinder, __pyx_mstate_global->__pyx_n_u_pathfind, __pyx_t_4) < (0)) __PYX_ERR(0, 338, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
   /* "(tree fragment)":1
@@ -10150,7 +11111,7 @@ __Pyx_RefNannySetupContext("PyInit_pathfind", 0);
  *     cdef tuple state
  *     cdef object _dict
 */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_8pathfind_10Pathfinder_5__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_Pathfinder___reduce_cython, NULL, __pyx_mstate_global->__pyx_n_u_pathfind, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[32])); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_8pathfind_10Pathfinder_5__reduce_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_Pathfinder___reduce_cython, NULL, __pyx_mstate_global->__pyx_n_u_pathfind, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[38])); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_4);
@@ -10160,11 +11121,11 @@ __Pyx_RefNannySetupContext("PyInit_pathfind", 0);
 
   /* "(tree fragment)":16
  *     else:
- *         return __pyx_unpickle_Pathfinder, (type(self), 0xae36278, state)
+ *         return __pyx_unpickle_Pathfinder, (type(self), 0x93bc033, state)
  * def __setstate_cython__(self, __pyx_state):             # <<<<<<<<<<<<<<
  *     __pyx_unpickle_Pathfinder__set_state(self, __pyx_state)
 */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_8pathfind_10Pathfinder_7__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_Pathfinder___setstate_cython, NULL, __pyx_mstate_global->__pyx_n_u_pathfind, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[33])); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 16, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_8pathfind_10Pathfinder_7__setstate_cython__, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_Pathfinder___setstate_cython, NULL, __pyx_mstate_global->__pyx_n_u_pathfind, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[39])); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 16, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_4);
@@ -10177,9 +11138,9 @@ __Pyx_RefNannySetupContext("PyInit_pathfind", 0);
  *     int __Pyx_UpdateUnpickledDict(object, object, Py_ssize_t) except -1
  * def __pyx_unpickle_Pathfinder(__pyx_type, long __pyx_checksum, tuple __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_result
- *     __Pyx_CheckUnpickleChecksum(__pyx_checksum, 0xae36278, 0xcb6325c, 0x3609495, b'_TILE_OFFSETS, _climb, _diagonal_weight, _elevation_weight, _elevations, _fall, _greediness, _gs, _height, _straight_weight, _tilemap')
+ *     __Pyx_CheckUnpickleChecksum(__pyx_checksum, 0x93bc033, 0xc75366b, 0x78c3bbe, b'_ANGLES, _TILE_OFFSETS, _climb, _diagonal_weight, _elevation_weight, _elevations, _fall, _greediness, _gs, _height, _max_turn, _straight_weight, _tilemap')
 */
-  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_8pathfind_1__pyx_unpickle_Pathfinder, 0, __pyx_mstate_global->__pyx_n_u_pyx_unpickle_Pathfinder, NULL, __pyx_mstate_global->__pyx_n_u_pathfind, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[34])); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_CyFunction_New(&__pyx_mdef_8pathfind_1__pyx_unpickle_Pathfinder, 0, __pyx_mstate_global->__pyx_n_u_pyx_unpickle_Pathfinder, NULL, __pyx_mstate_global->__pyx_n_u_pathfind, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[40])); if (unlikely(!__pyx_t_4)) __PYX_ERR(1, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   #if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030E0000
   PyUnstable_Object_EnableDeferredRefcount(__pyx_t_4);
@@ -10265,20 +11226,20 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
  *     else:
  *         use_setstate = ('self._elevations is not None or self._gs is not None or self._tilemap is not None',)             # <<<<<<<<<<<<<<
  *     if use_setstate:
- *         return __pyx_unpickle_Pathfinder, (type(self), 0xae36278, None), state
+ *         return __pyx_unpickle_Pathfinder, (type(self), 0x93bc033, None), state
 */
   __pyx_mstate_global->__pyx_tuple[0] = PyTuple_Pack(1, __pyx_mstate_global->__pyx_kp_u_self__elevations_is_not_None_or); if (unlikely(!__pyx_mstate_global->__pyx_tuple[0])) __PYX_ERR(1, 11, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[0]);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[0]);
 
-  /* "pathfind.pyx":306
+  /* "pathfind.pyx":338
  *         return []
  * 
  *     def pathfind(self: Self,             # <<<<<<<<<<<<<<
+ *                  float yaw,
  *                  tuple start,
- *                  tuple end,
 */
-  __pyx_mstate_global->__pyx_tuple[1] = PyTuple_Pack(3, __pyx_mstate_global->__pyx_float_neg_1_0, __pyx_mstate_global->__pyx_int_100, __pyx_mstate_global->__pyx_int_0); if (unlikely(!__pyx_mstate_global->__pyx_tuple[1])) __PYX_ERR(0, 306, __pyx_L1_error)
+  __pyx_mstate_global->__pyx_tuple[1] = PyTuple_Pack(3, __pyx_mstate_global->__pyx_float_neg_1_0, __pyx_mstate_global->__pyx_int_100, __pyx_mstate_global->__pyx_int_0); if (unlikely(!__pyx_mstate_global->__pyx_tuple[1])) __PYX_ERR(0, 338, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_mstate_global->__pyx_tuple[1]);
   __Pyx_GIVEREF(__pyx_mstate_global->__pyx_tuple[1]);
   #if CYTHON_IMMORTAL_CONSTANTS
@@ -10304,39 +11265,39 @@ static int __Pyx_InitCachedConstants(__pyx_mstatetype *__pyx_mstate) {
 static int __Pyx_InitConstants(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
   {
-    const struct { const unsigned int length: 10; } index[] = {{1},{179},{1},{1},{8},{7},{6},{2},{9},{12},{81},{14},{10},{28},{30},{19},{5},{20},{24},{35},{22},{33},{25},{36},{4},{13},{18},{6},{10},{5},{5},{6},{18},{4},{15},{16},{8},{5},{9},{16},{17},{11},{3},{9},{4},{5},{5},{8},{2},{12},{3},{7},{14},{12},{10},{11},{3},{2},{6},{7},{8},{13},{5},{6},{4},{8},{9},{10},{8},{8},{7},{4},{1},{3},{6},{8},{9},{3},{13},{14},{12},{11},{10},{25},{36},{14},{12},{10},{17},{13},{12},{6},{4},{7},{12},{10},{12},{19},{5},{5},{15},{16},{8},{7},{8},{6},{6},{12},{1},{5},{6},{58},{38},{58},{283},{157},{13},{13},{12},{12},{12},{12},{104},{12},{14},{12},{12},{12},{12},{12},{12},{12},{48},{19},{348},{122},{184},{115},{115},{536},{11},{55},{148},{37}};
-    #if (CYTHON_COMPRESS_STRINGS) == 3 && __PYX_LIMITED_VERSION_HEX >= 0x030e0000 /* compression: zstd (2266 bytes) */
-const char* const cstring = "(\265/\375`\272\016\205F\000\032d\230\025;\000\231\033\374\377\367^\243N\375\253\356_\307\327p_\367u_\245\265\212Y7W\210\224+;\322)R&K\3704\321P\341\214\025\no|\243\360\313\023\246\322$\223\222\264\246t\313\0027\001D\001T\001HH\246\353\242{\267\0338\334J\346\272\201\300s}\177f\313\376LU\325\277\245w\335\256\311\221\200\351n2U\275\262@\235\242\232kT\351\324\276}\352\226\233\253\351[J\325\223\257Z}Ou\211\345\234\365\271{M\371\313\266\354\351\301\246\347:t5\257\027\303\223\221\3311cpjz&o\253\301\227\263\334DGL\020\3237b\232\303\240\271\304\266?s\250\333V\237\277\335\303\235\266\216\t\3434\344k\312\362\270\246y\232\373|\321\335\232\246G\273yV\366\331\276\254\013\\U\202zi\253)\007\226-[\356\225\325)]\246\255n\323\343\247n\327i\030\364@\327\364\207\304u\020u\323\023\270\356\255\372\264\233\242\333DQ\315\342\341\261]U\313l\246\264M\321\022\003\270\246\346\312\246\\sv]5F\311\267[\256\333\325\301\222\345%\272\367Z\276\354\260\374\325\224\036\356\016\016y\271\246\\M__\371cKw\273\256VO\337\353\226.?w\322nKt\325\245\210\211H\007O\014O\271\266\233\237i\313\335r\250n\256\333\355K\325\215\226nZ\256,\022\037\276\224\\#\361rsV'%\002Y8\337@\312Bb\201Hl\020\007\3000\177\342Cu\205\331<\372\005\332,4\370J=a6\267\274\257\247\264\254|E\233\235R6c\331|\257#\210\304\034\006\373~\210\260+\324\346\\l\002\017\374\013N,\230a\265\212\3028!n\341\0278\007\363/\362q\037\365.\376\241F\376a\027\301}\333'\361\274\277t\332\201\323\277\361\277\276\353LD\021\342\200l\026\306:F\202w\360\303o}\030\177\3229\261\026 \254\360\r\263Y\010k\230\312\213\370\007\032@-\253\365KR\367\017\376\t!\240\213s\261+\026\302\tp\314\317\375\355w\236\302\333<I\337\304\035\021\004+\347\035\000\344\034q\200\234w\237\342\273^\373\010\331\214\263y\215n\353\255^\223\315\271\216\353>\304\027QF\316\272\236\353\003\304\200\027\200,\253U\345\356W\325LL\333}\321\340k\232\272\345n\213\232k\373\362\335\352\323i\233\252~\205>\315\231\266\252t\246\301\365\345\352\353\356v\351u\225\316\215\0244M\017\3400\030d\203&\337\356\357\307&\371X\326lj""Y\337^\322\353\213\262\356F\331\325tZS\275\344\246*\022\007\256[u\2276OM\327\344i\261\013\307\306/\234\241\315\006q+\346\301\300\357\322\372\276\233\307\240\315\002\266b\016\274\222s\214\027\353\351\211\355v1\231\230\014\354\351\t\266\256\260\244$X\232\302\214\214`60\233\327\324\324\353\351\3515\034\276\326\365u\236/ \240\027\217\367\352\351y\315\314\274Z^-$\347d0H\262,\211\242\244\217\017YSC\2221$\t\343\032\016]\301\240\013E]GG.\323t\365z\256\030W\3148\034\216\357;r>\246\351\330\353\21544#\014\314\3702\276\264\234\000\000\262\232N\371\004\222\201x2\257G\206\262\032*>\304=X\007;|\\M\256\361\310<\271>c\373\270\235\017\352\272N\266:\017\306\223~AF\312\037#\347w\032\030v?\310\353\374\254\327\342\241\257\273\315\302\221~P\304\025\321x\027?\234x\276\300\353(\273X\027\2231\216\356W\220r\313\343($\010\373M\002\202\3566\010\267]\257!\336\016l\037WJ\314\344\231l\226\210\230uU:\256P\200{\037D\303\025\360\010+\020\320\000`Y:+\222#\036c\211\337.\334\346\334\347>\346a\372\2556\267\212\276\270\t\356i\275Dm\246\351\277\373\267\217\203[\025\262y\027\337b\250o\232\271\372\010q\026\000\020\272\242C\214\001\373| \n\216\326\301\273\356\025\362\304\254\221\221\201\021\001\321\272\362(\026q\310Jz\024J? \347\236\235\254d\225R\034\210?JY\350%H,8\001n\301\0319?\243\375n\266\350\0069\234\025\212K\364\037\274\212\277\021y\235\206w0\005\214F\365\005\004aq(\336\2003\376\304\203\322\302\213\177\310}\227\302\r+\202a\306\305\266\230\0046\200O\020\004\317\260 \374\372#\374\234\037\230@\267\345>E\004\351}\335\245\365\205\332\207\370\335\023j9\357\352y\246\227\376\372\207\336\323Al\276\265\3634\035\326\211\307y\267\213\024\004\340<C\237\315\273~\353$\004Y:\017A\213\301\302\377\242\340\031Jl>\007\253\202b\306\270 e}4\327d\266~\n\004\314\001\262n\233a\345h\007\275\265\r\273\223\216x@l\205\304\227\0279\377\370\314\255*\034\226\355\n\303\n*\216\211\300\033\005\262\014\313@6\307t \"SU\214\344\3602\235\234]..\235n\224\222\032\223\222\306\337o$\"\032\203\202\306\261g\324\031uF*(\031\312\225]Vf\265\254\213""\344\242\032\271g\025\003\"\243\260\220M\356\021\tZ\035\2068\023\230\t\330^\321\rr\177\007\327Q\"\001H\214\013\201\270\250\301\240\362\n\315\214\210\210$\005I\322\030\261\010q\214A\351\314\007\202*)R\241\021\031\221 \222\202\202\222\244\262\354g\t\207\301\352\320r`\244X\272@}Q-\023|z\242\036C\322\357\037\274\337p\027\333u\271\322\235\270\334\204\221\036\0042fGzrl@bp\223@i\0024\300\302ftG\n|\"\001\354\250\261m\022\001\324\326\014\330D\274)\206F\201l\\\232\203Z(\246cx\315$\206\340\374\303\3674v<\303\360]\014\027\3259:<'\2047\343\267\030\265\004\303E\237\230\230\006v\265=o@\0259\033\301}\250\3030\017\251\025E&\370'\236Q\026\377\263\230\222\022\325\023,\n\212|\310\253h\006>\357xM\202\003\375\375\216\214\255\206[Nj\253\246\355\320\265D\212'.\341Q\240#\357^;\313h>rq\243\373\034\325\327\006\270\210 \303\020i\034\315\252\242@#\352e\340\0379\215\020R_,\233\250I\277\326\002MK\253\342\347'\212\351.[\342\220\232\250\243\270\230)\203\370\010<\251\313\206\326\345\332]$e\022\317\005\245\\\023PH\312/;\273\327K`\253\326bRyT\026T*4SDa)\240NEC\333?O\240\\\002\260XT\352\001\203\\{b\321zl|\240\210\222\226\000O\033\235T\277\316%\334\273_S1\307\017}/\357.QN\315\320\017\224Eim\240{t\203\307I\232\277M\256\310h\037Q<\376\330\341\260+`\013\323\220\3241\031*\000\2050\031J\034\323A\025\214\356\274\303\226\237\024\025\200B\030\013\266\005\350\240\n\350&\340\211\257\374Z\243\264!1\010\376\035\003N`\244v\204\334\215&\237N\225rN\333?\250\374\347nf\267%\007\241\365\251\251\317\033a{\357j\202 \220\223\033\036\244n\261\352D\234\213\027(\220}\217\320\225\376~\0277\0342\036\274\\\264+_L\203\0167\204\rv\315%\264Y\010\260a\3508(\334\034\275Z\240*>I'\021\301\234\302}\337\223\006\010\251\021\337X|jCY4\037\364|\373\373s\310\341\271\333!\260\003\016\"\346a\0224\224\261\007\371\252\215\324\007?3\364[\022\036mo\021\341p\3233\026\\\214\003C\\4Vj\213S\0223\354G\255\220S\3614I\033\326\272\013\237L{6\346\234\330N\023\\\363D\254\301\374\272@\364I%\375t\245\362P\373\265d\322`\370!\232fT\016\257%\005\001W\357]S\037""\2162\017U\243t*n s\370ZK\247_i\254\347[\243\356|\216\250pp\374\006\231\003\222\353\275lb\2260\035\202\210I!$\217\320\232h\324;\000\220\225\322\334\361\231\023!\002\272\350\231\367\240\362\234\247\225\033w\333\031\002\\YF%X\361I\263\213\203\001\205[NBP\262Cr\014\201\030\300aQq\350\351)\327\t\250)\324\017\010c5\350\335\245\374$\030\000\300\016\376p\2744\rK\231\035\357\312a`\337\n\353\365\372\371\022\222\377\231\333.z\\\030\206\323\017\362\373\314\323\214+MG\253\016w\270\242\312\0072\322\225\021\243\335G\223\273Z\356\361\302w\212\331<\003\222P\r\t\367\020\010&\305*\350\\\tA:5";
-    PyObject *data = __Pyx_DecompressString(cstring, 2266, 3);
+    const struct { const unsigned int length: 10; } index[] = {{1},{179},{1},{1},{8},{7},{6},{2},{9},{12},{81},{14},{7},{10},{28},{30},{19},{5},{20},{26},{24},{35},{24},{22},{33},{27},{25},{36},{4},{13},{5},{18},{6},{10},{5},{5},{6},{18},{4},{15},{16},{8},{5},{9},{16},{17},{11},{3},{9},{4},{5},{5},{8},{2},{12},{3},{7},{14},{12},{10},{11},{3},{2},{6},{7},{8},{13},{5},{6},{4},{8},{9},{8},{9},{10},{8},{8},{7},{4},{17},{1},{3},{6},{8},{9},{3},{13},{14},{12},{11},{10},{25},{36},{14},{12},{10},{17},{13},{12},{6},{4},{7},{12},{10},{12},{19},{5},{5},{15},{16},{8},{7},{8},{6},{6},{12},{1},{5},{6},{3},{58},{38},{58},{283},{157},{13},{13},{22},{12},{12},{12},{12},{104},{12},{12},{14},{12},{12},{12},{12},{12},{12},{12},{12},{48},{19},{406},{122},{215},{115},{115},{115},{601},{11},{55},{186},{39}};
+    #if (CYTHON_COMPRESS_STRINGS) == 3 && __PYX_LIMITED_VERSION_HEX >= 0x030e0000 /* compression: zstd (2456 bytes) */
+const char* const cstring = "(\265/\375`\233\020uL\000\252m\250\027;\360\0327\314\300\031\200\244\002\336\211\003\013!\244\220\224A>\341,\034\314\001@@J\021\"Ew)B)R&0\201DH\022\200& \312\314\266\203a\000 \301\211\240\320=\023\"cU\001b\001z\001{}\2336W\317\367\344\352\322\322\371\276\351\336\356\366\r\367\357d\267\317\207\262\302\336\351\266\275s]u\257I\310\3567=O\276\344S\367\323\271j\266\365i5\325\\\247?T\3636\252]~\262'\257I]Q\316\352U\210\256M-\347-\357\335\254\312\205\255\333\242\037\255\212\262\303W\357\325\307\352\037 \231\237\231\031\236S&\307\006\350\374\331+P\310[~\246$\247\310\311#9Y\225\353v\005\236M\255\333;\207\332u5\332\333>\034j\357\2341PC\316\252m\017\327\374\345\373=O\364\334\2500\335\356y~\270\273\347G&\207fGw\262l\324\025\266\257\217]\001\352\246\275\252\334g\272\255\271\331v\307|\235\366\272\317\217\336\272_\250!\360#e\325\336\022\327\300\364UQ\037\273\367\312\323\257\232\3563Mu\313\307\307~W=\263\235TWM\315\014\037\253\236l\253r\315[\226\325\031&\337\257\311\356%\376j\240\331r3\335\2335\205\355\320\354\331\230\037\357\006\016\271\311\252|U\205<\263\327\232\357~_\275\242<\341k\276\034\335L\3335SV\233\271\223\234G\217L\217\311\272\233\243\252\313_s\270n\256\335\315S\327\235\232\257j\262\355\022\037\302\230\\/qs\363vG%\363L\377\335\267\375\033<Z\224\363.\266\305R\377${u\022\242L\000``\353\346\035H9H4(\347\203X\000\216\371\024_\252/\310f\227g\230\315\301\203\377\353\n\262y\364\274\2562b\361\2127<f9k\325<PO\310\305<\000\346\375\221`_\240\315\270\370\004&\370\030\234h \323\032\213\301X!va\030\030\007\363\237\373\267\237\372\027\017A#\377\260\347n\277\366K<\3570}\206\000\365q|\257\357\272\0231G$(\347`\254\343%x\007C\374\361\307x\224\316\2114\201\240\205w\220\315AX\303V>\347!f\000\264\255\361\233\244\356#|4b@\027\343\342W\034\204\025`\231\217\373\333\357|\205\257\371\222\276\211;\242\210\026\316?\000\3108\"\0019\357~\305\177\275\366\022\345|\253\371\215^\353c\247\2253\256\337z\020\021F,\311Y\327q\235\200(\000\003(\267\306\253'=|\267p\325NN\373\025\246@\341yj\227\277\356\233\236""\333\325(\324>W-\014\3624w\342\373\335\353\017U\201\254\220\257\302w\273M\302\367\207\356%\340y~\370\206@`\013<\371~{\275\226\211\327\266\357N\317\035\245\256\272\311m\331\363\311my\273I\263\302\264=YW\310\337\235\266\354\t\305\252\272\351U\327%\356c\003m\267\350\007\270\317s\353)\261@$\276\305/\034s\375 \315l>\210\307\370\007\366\375\227\361\363l>c6\017\324\212:0K\316\345.\323\264D\321\222\210\250\314\311)]J\227\230\224T,**\326\2661#\243\030\017O\354\346&f\023\263\t\250\252\n\010\006\003\366\016\320:@I) ((\340&\340\006VU\005\213\212\202\r\2070\226\205\371|0##\330\320\020LH\010\006\303!\247\246H \220\\W\362\367#\225\224\310\241!\022\007\207\244\241!g\310\231\227\224\324k]_JJ\257\243\243\227\221\321\253\347\325\343\222\222r\265\255\353\367s11\271\316\323\205\343\302\031\255\000\000\266\252\242\344\250\241<de6\225S\"\231\010H\006\372\221\t\262jL\344\025\375U<A\247\365\310=\270NS\373\267\235'\352\272N\216\375'\306\223\236\241$\345\237\201\363<\016\r^\207aa\367\211\274\316\313:-.\372:\333\034$\351\010\305[1\215w1\004\212\347\014?=e\027\353b2\316\321}\013R\036}\316\202B\260\343($\350~\223`\333u\033\242\r\241\226\363\007^\246S\364\031\242\214\324\322y\010\000\271\366o\346\204L\226\225\363\204\304\254\273\322\261\305\002\014\364E4l\001\273\340\205\202\031@\300\226\016\213\354\210]\361\304w\031l3\356s\037\3631\335F\233\307\"/~\202}\\?A\0135\254_\374\004_\300&)\267\331\234\360<9\263y\234\3153\017\336u\267\220\315\271\202b\336\320\320\310\220\210\030\263>\212H\260\016\356(M\372TJG g\237\235\374\303R)\022\304!\246\034\364\023\244\326\010k\340<\215\366\273\371\242\037\340nX)\357\321\207\250\201I\030\203\301\217\301\277\342`;\362:\r\357\340\212\221?\325\031\022\202\305\242\230\003\326\370\024\020?\006\030\017\201\373\257\005\233\226D\303|\213kq\t|\000\243\"\t\276\201!\230\360u\306\254\030,\034\026/\306F4\340\364\002\306\301I\r7\037\324a\275\206\373\025\022\177\344\365\227\361\007K\264\037\361\273+\320p\376\005\344\235`\272\320?\330\346\356\323Ej~\334\371\231N\013\305\337\374""\333s\006\0027\337\320e\363\256\333z\211\316G\314\000\n\266bp\360\303|\262\301\304?\374\005\357\240eQ1g`\220\262V\"\032\232ie\255\243\263@\331k2-\334\014\241\273\265a\207\322\021\021\210n\220\010\003#g\241\240y\274\272i\325\2622\260\244\342X\034\204s0\207\201\\j\035\224\263L\037\":]\305\310\016?\323\311\371<kj^11.((\027\347\275\236KI\311ut\344\332\331q\271n\\/\256\227\221\252\225\333\237\374\033\222\207~\344\037\0279\246\210\022s\030dB\316y\207\016D,\030{\014Q60\027\004\201\333\250\301$\006\226\231\021\021\221\024$)\2441\321\010q\214A\350\316\007BZ)H\250DD$\210\244 )I\226\3753F\353I\177F\350\003\037`\315\325\033\017\032\037M\314_\302\014{\177T\313\307\250.-\252M\342d\347=\312\347v\333\247B\335\017\225L\314\300\370\002\016\254bi\005H\275\351\321\216\"\206V\002\237\036\020t_\250~\367\222\306\353D\265\010s\010\016\020\371\214a\205Q\353\030ceOK\276\267?\306O'H\255\002\030\213p\223\217\202\204\346M\272>uZ\036Q\247\375b\233\007F\347x\315\313vL\246\376\270\226d\216Nk\351\037\3055)\003\236\031\324\337\210\247\377|:\340\275\260\200\222\241:^\2431m\274\027\035\252\277\267f\227X\366\331\271\261#\n3%\372\020(.\261\\d\020\205\257G\221m\234\303.\3655\341\005\306\315\237\336WQ'\345f9\033W\233\362\033\236\311C\257\334\342\226<\371\370o\305\032(\246}=(\3716\355\355\307\231\303n\222\"C\206\014\030\374\026)G\237l!l\034\270\2327U\335\231\360\267\203\340r\255\n\310\222p\340\242\224\374n#\214\377|b\245\225\263W4UZsF\346z\255\375/\250\264h\016\223U\365\360\302B\222\332\251T`\241)\344\221\367\375\2052\032\370\256$\310\025\3769\024\2624\016\022.\230\240l\251\204\250n9\262\260\204\350'\262,t\2024D^\024~yf\204\223Z\206\t\024\271\221\317s\312\332e\236C>\341\345\246;\334\311\324~\032\343\212\232\022\224\356\310\201\340\314\374\016n@\316I5>\335\353\021\201@4\312\\ \020\215 \034\tLb\010\201\225\250\320\r\243\363\261\314\347\276\\\241\020\2010\225(Lb\030\t\370\356\244\333\334X\013\323v-\314\313\203\n\340h\255v\377 tg\375VY\370\375\036\271\014\023\006\241\215\r!\032\272\2540n\336\326\326\214\376""\344\316\245*\307X\036\003\215\234\274\343;\300\320\236\335*\236<\n\242M\210\223\337\371E(n\321\016\r\337\261,Z*\332AG}!\005\245\303\360\201Efz;\202\243\205\017\014\223\322y\204\314tY\351V\3652\267'Z\225\237\275\003\372\362\000=\365\242{\236\247cH\267\346k2E\276\365\003\301O\256$\2448jV\206^\030\201\\';\341Y\265R\225\223'\004\346v\023\243\344-\r;\210MX\204\025\200\303\202\210\306\222Z\023\352\315\016\371\260\0259\024\224\223*l\305J\205\244\311\212\021\216$\002x\0255\246x\004\014\260\302W\211\262\240\276J\013\250\355\0325#|p@\202\2036\215*p\217Pc[\336\217\340:b'\247\342<E#Xh\254RA+(\375\354\200\370\336\375\346\305\201\300\344\37417\300\234]\0058\303[\020N?\215\022\212\310F\034\240\244\0171\034a\257\350c\010\356\225Rh\342\356\322t\202\003\331\266\356\256.,\322)d3A\247\204\274r\370\373I\355\203X\021\023p\031+P\256)\021\207\247\2549\342,Me\247H\322\303\001~Lfc\321\030\3332\nR\352,\336V\004\230,\004\303\016\210\212zJ\244\225b\376eD\311\332.6d\267e\032\367q\246\223\356n\221\004~{\303\220(\336\020\034\r\177;\274(\315m\337\255\007\025\365\335\300G\330\333\030\223\377\205|E\344\264\354\030\023E\355\016\362\214\026\273 %.d/h\254\204z\264\032";
+    PyObject *data = __Pyx_DecompressString(cstring, 2456, 3);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #elif (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (2355 bytes) */
-const char* const cstring = "BZh91AY&SY+p=\024\000\002O\377\377\377\377\377\377\377\357\177\375\377\377\377\367\377\377\377\377\300@@@@@@@@@@@@\000@\000`\010\177Y`s\252\364\306\326\243Zd\322\354\215\341A\341\2745=!(\237\2514h\003M4m\006j21=O\022\236\246M\030\32446\202\032z\2324hb4\036\204\323FFG\250\331OS\324\032\022d\031\023hCLI\350\032\232\024z\232z\215\036\220\000\000h\000\320\032=M\032\000\0324\003 \3654\003@\t\023F\242\207\223P`LM\030\324\365\0004dbh`\200\323\324f\204\3103Pb1\000\r\032a\006\231\021D\364\215\023e1=C\324i\223G\251\240i\265\031\032\001\240\r\r\000\000\000\000\000\320\000\000\203\000\004\300\001\014L\023\000\000F\000L\230&L\000\010\310\304\304`!\200\000\004\212\206\232\247\246\201\t\351=M\006\214F\201\220\000\323M\r\006 \000\000\000\000\000\320\000\320h\177\201\n\200\246\305BV\\\271\236s\"%#\001uZbi\031\237s5\254\325\"\207\022\252\261\200W\252\261]\202\310\020\260H5\312\303Uf\300\305\250\262\255\037\336u\035/\037\243\245\323\344\372\372\235n\277U\357\252\261C\361O<\323\317<\363O=\024\373)\355\267?\325\324\375n\315\232\276\213\232\326\265\255w\372_\3602#3\0066\003\006Fhd\224Z\336\227\321'Y\265\025EP!V\306\265\255kZ\351\n\274\257\355\215\263\267\275\372\267\255`u\205\243\256\272\353\256\272\355\244 \004\247\276\363\326w2\334q\307\034\262\331\335\266\346(R\212U\361u\030\306\272/\320\214\026\233\0206\201\260*\014-\213\034\247\024\211\013\335>\361\024)\306\302mAf(\n\243\023\032\006\333\003\t\264\\\021\014WC\005Q\212\274[MO\220A\326\205\211R\337RF\200\230M'4\222\r\2621@\252\260\214`\024\2211\332\222\026*N8\025Qx\020VLY\tn\340c\222\314JI$\3064\245I\350\236r\205`\264B\253\"0i\327\252\024\021E\313\005\t\306\321\n\244\345C$\211j\340\236|\244@\242\025\3122\311\2210\3135\304*k\256\267\024^\n\351\260\270\354x\263\030\202\343\306(M,\274\200\303\023\303\033\013\303b+\031\030\325\n\313\206\001\206y\266G\313\357\207,\315\230a\360\027\357\245\247\251\321B\334\364\275\216\337=\220z\034$\001\242Nw(\207\270`S\034\244c\033aS^a\354\001\340j-\"\030M\236\245\226\020\323\276\0222\261\232\022\"0A\261""\371C\004\\\252<y&\003\014\215nl[iC\372Q\254\373kx\035\001\030tqj\021\216OhI5\024~P\337~\335B\362\330\232\227\236\270\301JdG@\304&.(\014\326\206A\002\":\254\263\207C6\033\2561HP\345\020\205\325\351\304\020p\034\\$\250\024\346\304\2011 \226\255\303\270\204*q\235U\221\255\2024G\243;\252)\212\242\344D=@P\301\207d\ndc\344\002\035\010\202\355\027Z\0205\372\332\027\201\002 ]8\035\264\350Q\n*\002$\363x\334/\312\247\355\236w\351\355gK\360\363\005\013\224\362\352\354\352C\322\r\201\214\377\211\004\346\354\221K{K\356HJ\030\275fM\204#\252ct\300\016\034\214\221\244s\202q\014A\344\226\336\212b0(\324bJ\016\243s\273\330C\271\354\206\034\321V\367\311'>IOL5\302'\2429)\216\336\336\000\301\320]/^\250'\226Q\030\313\272\306-q\342\275\232i\"J\272\344\242\326WeP\337\037\002\021h\327\240\303t)9rIf-\002`I\321\034\323H\316\022\221wE\361\343\023\367\265\374\313\207=K`\314\357r\024\265\344X\344P\036\340b\215{~XpQ\007\007\014\341\001\t\026\202\324\357\005\031\004\303\001\005\204\312\230W4-\375\000E1I\026\271\246\\,\2310T\030\215\370\350\375\031\320\013\024\302!\306<\256\036\300\314\302\345\346\370Q\353i )\263d\034\021\356,\010\010\317\002\346ml1\273r\302\366\245 \330\270\244ZkV\204~\034vL\340M\314\313\023\356(\366\332\022\355\234\240d\323t\301\262\211\271\203\016-\033\344\006G\231\224\31285#\3058\013aC\340X\013\0325\254\016!M#\222\216\003\346\275\2463\226\t\375\341UW.\363\004oY\211\002\314,\300[\310<\203\356\323\242 \3544\352\203z\300\024\2143C\240\320\324ff\265\223\025\026\217y\345R\300Q\204\364\233E_R\306\001\232N\202\034\230\310^Q\331\254Gm\263\3447\201\006\013\026\270\230\036\267Jb \233\030\034\014\314\201\231*\010\032\t\0317\315\236\3007\255\323\307\271\306\340/\211\250b\270a\0205\206\212\242\335:\362r\326\231\206\030@M\256\360\253\212gK:\256\3440Q\202\200\020\325M'\307h\246\341\323P\272\242\002\200\340.\210\"\246\312\010A\000\210H#6V`\236\302&n\201\002A\026Ia\235\346\370/\212C++\356\335HX\2517\002GH\265\010\313g\201\020\261\330\274K\200\260\224\016\272\005\231H\3348\016\255\235\275<\370""\247\244\000\315\021\t\001\213\342\255\261\252*2*#\330J)\222\0311\207P\345\242\224'H\344\212b\306\336\014\301\206\004-\032\345\333\3332QP\021\231\226\221\201!b\262Af\213\007i8\021\232\353\272a}yxN\265\t\265s2g\317(\304\014\2202\350\330\0063\"\215\333\333\263\241\030\274\026\330\013\204HB\221\226[\314\261\0170C\211\226\010\214b\367CF\300\221Y\210\277\r{\026f\234\305\343*\204Q\210\257\021\214dT\007\2011PSW2\023\235j\022\220@\212\33179\3426\034AO\212\204\024\030C\301\3240\030\221\02700`\032G\373\230M\370u\252\261P\252\334\013\314S\203D5\305\366\236\375\231\321\255\210\216\005\200\223\242X\202\330\324C\001E\304\3243\023C\242K\311U\240b-\340\242`\255\242 \224b@/i\222\260BP\276u\240H\341=Z\364\002+@\264k\272\313]\330\234`\0061\266\225A\214\354\331H\262\260\343\312\202\244\270\301]\n`\274\241P\002Ls\343\316\303\"y\221$C*\362\236\323\354\353\340\220\\\001\200rW\271\220\217=\220\270J ]\"\255W\207\2056\021\211Z\334\321\273t_\347`feI\227L\274\377\246K\275qm\310\310<\224q\316\351\210z\300\351\214\356\022$\273,\031\303;\326\2149\022\262s\2330\006\010\3533\233).C\033[\367xd\310\255\261\254\371\251$3\301\366\233\303\312=\263\230\300A2\326\263X\260\217\225\014$\350c\255\200,K1\220\376\220\373\3143\330N\001Yi\213\0035hH\314\214R\360q{\306\016\327\340\035?\245;\362\332\277|\004@)\002\241$\206p\300\030\3053@\"\003\267,\035b\244D\032\023f\205\211\245\205\t.\014 =\222\301\255\251\253\266\033\217\303U\365\265\2134\"E\215m\210\010\250*\010L-\200n\026$\345\234\250`n\351R\353\037L\350\234\335\211*12\313\215\234\037\372\350\240\212\263\002\003\213<|\230\0349\321C\270F\363'\240D\004/O\324-\344\027\031 \230wp\340\3458\316\030Y9%\r\213xsS\215\246jt8\255\220s\266YD.\226(l\350pq\"\344\004#7=\037\031\321\320DT\263\013\r\250k\004\020{\250\216K\355^\303\034l\374:\263U\000 \342?Bf\0356.\216\036\3713q\037b\031_\311\223\002\362\337L\031\224\255\177\262k\t#Hw.^\033W\267b\372\364X\311\302\217\3764\205\330\321\217\221`\310+\362\371\036\355\337\322\"\305\001}\253&\202\246\340de\t#\265#&\240\310\224\300""\3669\030\330\327\357$\271\037i\0030\274\365\351\027\302|a\227\025\307\017@A\0077R\031|q\336\027\031\370\272\216o=t\241#\235)h\224\202\265\306\274\246\333\247\317+\227\026\277N5\014\313\253+e4r\244\307bj.\373\207;\231$q\340\232\353\213\004\322\323\236En\343\177\320\306\334\014#T\335lw]sNK_\275~\215\340\314^\331\014f\312\031Po\303 \211\030\304\300\2100)\014Z\\I\253\230T\225\202\203u\021R\260\305B\025\336\251\2060\260p\202\211\214k\363\320\203\375\006o\027\272]\004j\005\314\261s8\\\352\307\234\344\033\347\335\006\367E\303\001\201\204\337\035\352\201\202svs,Y\313\030\350\331\210|\305\006\021R\223\270\224\0071\002\t\202\360`\235\261\251ajJq\234\322\270eP\010\273\031\007\376.\344\212p\241 V\340z(";
-    PyObject *data = __Pyx_DecompressString(cstring, 2355, 2);
+    #elif (CYTHON_COMPRESS_STRINGS) == 2 /* compression: bz2 (2532 bytes) */
+const char* const cstring = "BZh91AY&SY\030\3442\371\000\002\240\377\377\377\377\377\377\377\357\377\375\377\377\377\337\377\377\377\377\300@@@@@@@@@@@@\000@\000`\t<\303\346\036z\367c\r\226\364\335\267gN\355\233^\271\250\001\343^\032\230\224\365\024\315OQ\223F\236\223L\232mO\0024\324\375\031\r\020\217Sb\t\351\246\246\215\036\243A\211\3524b\006\t\2202\030 h\204\304\310\320I\264jl\231\023B\236\231@zz\220\032\031\006\200\032\000\323\324\320\323j\003@\310\364\215=#\32446Pi\240!\021O\322P\311\243A\232\236\240\320\310d\032\000\000\000\000h6\240\000d\000\000\000\004\210\204\232MS\364hi\225\017P\361F\032G\222i\2404\000\323FM\000\304\320\000\000\000\0004\036\210\365\004\0310\002`\023\023&L\000\t\2010\023\023\004\300\000\000\000\t\221\200\230\020\302\000H\244\002)\372Q\247\223S\324\361OS\321\000\3652\000\006\200\000\000\000\000\000\000\000\001\240\003\376\000\013\303CG\n\226\262Lo\224.@C\022^\273\006&\205\373t\277\225\274\326\360@\272k\251\277Z\242:\222\267\350\\2F\323\206o\270*\022I\010\323\375z\376\367\371\275\322\372\272\332\235~\016\311\361p\314&\252\241<\360\232hM4\004\320\232\212\006\366\377\313\367\211%\227\265^,UD\367=\341\317[\344\343\003\220\214\210\301\231\030\314\014\214\214\320d\216\256\377wW\361v7\361TU\025@\205\330\263\302\022\313,\262\313\r\202\330o^<|<_\367w\220b\346\023\234\3479\316s\367H\217k\263\251\303\305\334\261kZ\326\266g\3547\202}\310a\005\234\204\305\230xNs\234\347>\222-\000\201l\031\031\244\r\210l\0177\253\341\365\311\256Y\226Ye\226ab\245\2670\362\0252gw)VR\r\204Y\354r\336D\350Eq\211\246\201\266\304i[EB\201m]Q\211Tb\321\271\2615c\224\252\361\225\322\220<}\002\353\302\2000\035\"\006\331u\302\304\320\206\321j#AX\360\3343\217\223kB\341\325cE\002\241\2468\332\2022\325x\212h\245DP\313-\341\265\363k\027\255\023Y[\0230\014 \205\030\361\n\362\344dbU\260\332+\240\255\204\362K\215l\005\255\315EK\353\214\277\312*U\020\2054\326\024\013>\0061\343\213\204\305\013\246\r\364R\356F<\201d\317\311\276\305K\333\020\361\345\010\033\014\\Y\236\342\331h4\260\266\275Y\007\034\321|\343W\234!5\360#x5y""\351\270\365\231\021\255\032\233\326\311\343\323Y\214~C\001\370\266\221\310\036\321`F?Cc-\357\025u\325\202<\340F\300WF\225Fw\3507\007P\026\222\211TUW\n9\347\365D\006|\333o\225I\000g\224cuq\251\331\243\017\347(|\215\316\212z\242)\232\373\304c\177\246\025-4\373\014\266\335{\305\245\235\027\305m\330\234\2266\223\3244\215\025\233\215Wf\341\203\"\"\3237\322\303\253\033\242\363\025\210\035\"\025\027\346\370&PJ\t\030\024\215`\223(\t\001\204\016\0335p\340;\213S\014\267Z\033E\245\3478<\255Z\363\316\343X\303\207l\320\251\004C\2521H*9 A@\205v\227/ZXG7\200\216\035\305\353\327\352\350R\nJ\003\033]\007w\371\232\023\226\357\205\350\317+\027\263\323PPSi\354'\251\304\346\205a>\201\330\241\252\232\316c5\0264\355otb\025\031`\245\220\375\256\240\277H\250Te\033\242\217\267\036}\270\306S\033fD\033\023\236\001\340\005 )\305D\213\363\241+B\302M&\203\362\022\031\374f\246Al\320kz*c\026\260\371i\242\355,\014U\375$^i[\331\034W\2529\005\037\014*h\320\016S\312yMQ\262\244a\"\211f\276\341(\270\013\267ej\035\370\372\020#g\272\201\034\222\351d\261\261\244\325\013\005f\031\320w;R\"\256f\033\006\334\377{\257\362`A\354-\233\274E\325)\360\020i\3332\010\300\"\305\275\276\304)H\t2d\303\300PB\251\0300R\372\014\273rIt\001\312\n+!k\013\341\340T\300\256P\326,\016H\315\235\347\037\t\355\360\342-v\233\325\317\227\370\266\371SZ\342\350\316swx\305\214.>_}\320{\310\310\010YX\272;\n\365\201\021\212A\244\330ZA\034\3512\030.\225N\203I\214\315\t\200\300G\003\266\344\210\222) \r\375\024\365\356\020\273c\270\026o\334\254U\244@s\306\267.\356P\005\206\2032\202MY\221@\301\240db\017n \"\027\250\r%M\"y\340\323\025\226d}\231\250\242\\y\030Di\210\303\204G\3145\230\013\234\204\344'\025\365)\345`\312\361?e\330lS\203\325\204\305\233\207\254\341\313o\335\212\331\253\234\337\261\364eW\332\201\201\220\377\272k\271\2165\310\004\255s\352h\214\323\2526{\241\276\334fbD\220\232m\332F\326z\253\014#\n\320\301 32\006d\225*@H\\<\354\371Hl\334,\335\315\317\220\n\014\336j\324\004J\243[\217\r\374\215\023w\016[\245\256\"Ev\311,\311\\,\246\007""\263]\031\226\"X\243\021\217p\302\272yb.\322\202\261@]\234\204Up\304G\0319P\241\313e\212\262\310\227\266\002\220\246\323+\023P\254*\344\244\364\265\3067\017%\273\234\356l~!\272\030\203\2064k\004O\210\256\265$\202\327\302D\034n+\236\005\244o\r@Zl\003\025\252$\007\2600\006*-\234(\273\322\200n\245\231\221A\032\252\327\341^\311b\211d=\025+\024R \301\010HLE\225-\014y\264\211\255\263%\322\345>m\3423\005A>a\263F\336\226PX\300q\231d\033D\202\256\327\013l\205\240\300i\252\306\3101\350\273\025\366\210d\335\303}\360\023\203$\022\362F\261ei_\213\214\373=\274\220\014\332\027\022\213l\251H\253\257.l\323\034\330d\026b\203l\325\305\n\306\201\r\226\0233(+\307\233\255\204\313\352\324D\364\023N\257\250\026B\024\225\000\246\002\222\205pAI%\250\t@R\023\257\017\036\201\032\315\24146\224\nL \366(b\323\201\230b\270\3060q\177M\221\260\356\314jju\230\366\355\235`\325\340e\253m\260\244\274\234\030z\331\310\211\206\323\032\355\360Q\006\033\355\024I\273\335\361\253+P\030\2139\304F\024\333$Ji\211\005j\254)\t\"\014\323\246DA\314\3611o$\255\242\331\230d\031\237\326\230h\003Pl\322\225j\035z\324\212\361\024\206U `FC\005\221\210\321\025A*\005LV\013\367\357L\304J\3064Buj\\l\306\013\245\t\203\025\230Q\013\326\021\371\266\017\202\203\320\004{\220\253\310\020\013\016\355\235%\335\024\222g: L+\305\336\254?,'\017\265\013{,\036T\344\341\344\357\336#\231\267\033\211\222:\342\331\035\343L\275\200t\306wT\020\035\226\330\232\340\237\036c\265\2002/M\263\206\232H\366\331\321\225'%\215\207)\346\\\270Y\332k1\270\241j\213z\236\177\315\316?+\217\000\363\231$\250\356\000\327\327\207\321\203\201\023\007\026;\304\323%\000O\006\331\004\225\014\265\r\002\210\352\032\320\013U\326\204B\304\"8c\213`E\225\263\370\005\351\374\376\255\307_\307\353\335\210\007\352\020\227\025\224\351GvR\025:\n \177g\034g\302\302\"\016{g1\262#\006\td\014\2308\345\200MK\004v\265\013d~I\201\314\365\373\334F-\n\260#\023\365\246\220\340\034\002|\371\251=\352\n;o\321\201\361\321:n\316|7\tI\306ZT\035f\353\247\256\263\313&<t<ot\247\027\032\004\005\215@g"",0\263\247M\332!\270\272\010\201\020\202ih\251\271\304\202\213\240\311\342\321\002\002Z\017\250\256\353\245B\032\247\001\257`\323\025\362\020\316T\342\255>\211\004\373\342\243\312\023\360\333w\240\014\205\207M\222\305\210\206&\222\220\234Ys\303\305\206\345h\327\031W\023\030\263v]o\354\265M\004\010\234n\253S>(\265\2576f\371Ki\306\326e'\205\246\202f8r\232h\340sI\342\022E@\235x\3026\254HC\345\017\212\324\250c\3060F\204*\\\245\020\223\222\313^H\365c\331!\313TC\365\341TU8\224\304\201\221\026\237\010\246#\254\024h\334\2461\351G\214e\211\027z0\257\3343\221\"!\010\242\207d\026c\227\334\320C\231>\251\315?\267\030\325\205\375\375\366}Z[\37051\036\310 DPQ\014\354\205j\213\325\345[\355\\\301\237S\331\233\200\312\225\364>\027 D\027X\222\026n%.h\017\266\037\000l\027d\232\252\266Q\336\266\367\302\373\266\312vn4\312\333\300\327\\\223\r\203\226Y>-\253\031\361\247\341\031\202Fo\250\2157\201\331S\277GT\232M\223R&HK)\027\250\024Z\010e\246\220$\303)\233S83\000XT\305\252\206\311i2\242\310\035T|~\302\201i\367\216\026\326\312\226\251\n\260L\225\247'\202r`\322\366\252\212s\376\r\322\274\303AcX\357\205>,brUD\217I\353\3636{\221\362'\235\n\374\031g\231\2112\341bX\222bD\202\362Q\340\263KC\007\016\260\261\377D\276I\241\211\010\204\250\000\305qE\253\027\376.\344\212p\241 1\310e\362";
+    PyObject *data = __Pyx_DecompressString(cstring, 2532, 2);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (2261 bytes) */
-const char* const cstring = "x\332\275VKW\333\326\026\306\266\014&\330\t\006\363JH\220\023nIWS\3265%i\233t\335[\207GJ\232\0076N\223\233\225T\221\245c#0\222\255\007\301I\037\031zx\206g\250\241\206\0322d\330\241\206\032\372'\360\023\356\336G6\201^\222\341e\231\363\355\363\332\257\263\037\272\367\304\260\211ho\313\266\270\322\266\267\r]\324,Q%\r\255JL\331&\215\266h\331\246\246\330\304\304C\272\270\271\266\371\365\362w\313\242\254\253\242Iv\210b[\242\345T\225\206lY\304\022\215\232Xu\264\206\255\351\242\335n\022kQ\334\250\211m\303\021uBT\3216\304&\234;}\301\336&\272h\021\033\tqA\326u\303\226m\315\320%\270\256\351\365\005Q\325L\020\242\355\023\274\275.7,\262\270\370oYU%8IT\315\222\253\rBt\034\353\212fE\224\332\224\355\355\232\246\253\213\315\366\201E\032\265E\2114\310>gl\241\201pW|b\350D4L1\332\257\177b\335\326\032dOn\236\336\374\001=\242\327-\3031\025\362\257\315\236(b~\244\026%\311$\252\243\020I\341>\225\2443{`\256\005V\236\273\333\327|\323\320t\033v\332\007\360\277\n\017 =!\007v\231\324\2425E6M\271-\325LcOj\266\245\223\263\347\255K\267\253\322\222t[\225\316\034\261\215\363.\236Z\375\3445\333i6\310y7Om\234\\\336\002/J\225\215Gk\322\323\365\365\255\265\312\226l\265uE3\026\025\3034\034\210\023bU\r\333\006u\025\271\2418\r\356\026Y\267\225\206\266W\225\370\010\203\216l%\333\224\025R\225\225]U\266eU\223\353\206.7\244\267D\253o\333\322\337\347\260\240\240\"\010'\217\177B\364O}z\001BI%\272\263\307\323\240&7\032\022\0165\003\336\\\222j\216\256\000\357z\235\350<B\244]\322\256\023\020\307\007>~\344\214\323\350\275\245\272\ti\2006[gHK\332\336\216\304\367\000\254\325\220\221fI'~\322l\262g5\210^\267\267\033\232\005\273{2\370\004\306\003H\005\225X@\032\252\003\272\300\237.\357\001\352\310\254j\230H\275\225\370)\303\250\356\030\265\032D`?\320\244>\3214\232\315v\035..F\251'A$\300\353n\023e\327r\366\242\231I,\247aGt\317$$1\325#\312\321\233\232\262\013J|\014\351\317l\200\032\247\331\354\333\230\274\250\177\313\221\033\221\r'\231$\375ON\235,\220\003N#7E\006\205Mb;\246\216\371\033\211\220\"\210\030\002\245\302{r3N""\022Q:')afFK\220\3572\177\226^\214\374}.\341\021\251_*\372\030y\321iB\260\022\307\"'\002\366\367\345\206C\370`}\210\035\247\006\222\303\235\021Z\240\305PHu\222\235g4O\013aj\224\306h\226~\311\200\314\002\221\017S\327\230\314,\367\206[\n\205\221N!\030\270\302\n]\240\226:\245\016\241wX\226\335`%F\334\202\273\346Mz-?\341\027\374b\237\377\005\316\364\363\374\257\302u\305\035w\213\021\177Atc\307\243\003\231Y\266\314\376\364d\257\025\246/\263y\320\241\005,\207G;6\375\236\255\2721w\326+y\333\276\354\267\302\324Hg\271\263OK\264\306~v\017\360\3028H\312\300@W\250\315\356\270Y7\217k\313\264\355\n ft\226\335g\252\233w\227]\333+x+\236\351O\372\255\303X7}\t\270\243E_\270#\336w~!\034\235\242\255so~\343V\275AP\316\366\227?ws\202VX\266\033A\230\022\201\307S\360\316\303\303\352Q\014\265\276G\253,\026\246'\351\256;\006\312\264\302\3144\213\243\255az\212\276w\257\273\253\336\260?\206\"\302\324\245N+\020.\263\374\361\205\201\341t\3476M\200\211 \265uJ\307\267\240\032\336\031\002\203r~)L\315\303$\346\201\344\274\233sK\256\2142\341V&\034\235c&8\260\354\275\365\253\207\261p4GW\331\020\263\335B\230\233\006\302t\347\374\270\177\013\324\024\216\212\307\203\003\231\213\321\215)/\356\315{\362\307\363Kn\305\233\202\243\363\276\374\241\030^\233\013S\351 \r\357\007\2239\221O\362n\026&\3439\230t6h\t\350\334\004\322\017)\336\230\230D\372g\332\002zr\n\351G,\026\010\363\340j\356\255G\276\340\027\321\222\221\316]\272\205\276\232\306\001\235\215q\013\246\333\354{n\344\254_\362\325\303\374!x~\234\336\006\345Za\0169\024\335\227\2217|p\352(M\263\"{\001\221\214\356\004\2313\227Q\346SV@\355\027\\\356f`\335\323\246O\243\226}\032\265\357\323hU\237F\333\3734\232\336\247Q\002\247\003\001UOM3\001\242\027\365\342V-u\266h\014\025\343\203@\213\364\005+\365\036\033\\\207\332=\300\254\341J\006\003\233\301&d\341h0\232w\257xE\257\342\317\036\276<z\037\224\267\202\255\347\301s%P\336\036\017\014\034\304V\342\000+\361U\204\325\370O\010?\305+\010\225\270\206\240\305m\004;\356 8\3616B;\276\226\000XKT\020*\t\tAJ\274Ax\223P\021""\324D\023\241\231h#\264\023\253\002J\020\326\020\326\204\r\204\r\341\031\3023AEP\005\003\301\020\232\010M\301F\260\205\037\223\000?&\037 <H\226\021\312\311-\204\255\344s\204\347I\005AI\352\010z\262\215\320N\276Cx\227\374\003\341\217\344\303A\200\207\203\277\"\374:\250!h\203;\010;\203:\202>\370\016\341\335\340\372\020\300\372P\t\2414TF(\017m\r\205\002\326\036\335{|\230\345\317\203\005\346B\230\301\272\264\300r\260U\205:3\356\336w\353\336\226\037\203L\204\312\026f\242\350{\000\345\251\345\306{\265`\310\263\374\274\277\024\205\331\305\216\nu\255\007\220+O\2416B\260\216\321yj\3604\274\310\237:\274\220\356\254\322XT*/v*A\026\323\364?\236\032,\255\035U\202\215\327\301k9\220\215\300\260\002\353}\360\376OtY\374\t\276\324\223x\031\241\034\177\201\360\"\376\n\341U\274\206P\213\357 \354\304\177G\370=^\304\227*&\356'B\201\307\022]g\267@\005a\350\303~\3479]C3\303\324\030\326a\250#\335\024\006)\354a&\004\227\276\362\226\241\240\017\371\357\217\026\376\312v\317\256\344?\304\302g\277\204<\252\205$F\350J\247\205a\214l\200\203\331\031\357\024\243\345\003\250\2361\010f\310[\223\216c\336\002\235\341\355\243\320M\203\267O\355\360\333\230\016\251\341\020\336\002\234\250\300>P\3308@\344\033\371\377+2\020\240\375A\t\374b!\204\337\215\371.\260\177\314\262X\024g\331\267\330Wf\330\024\344\363\212\333\202 \200B\014\021\005%:s\225\025\217/b\245\276Cs\264\024\246\261b\306P7xq:\003e|p`\370\022h\263L-\226\207\032\006\367\273p\250\210e \003O\302Kl\014\272\006\224\263%Z\206\022\237\233eP~\240\371\242\352\016t\266V\027T\337g\025\336\336x\325K\300&?\2016\201\270\321IJ\3307\320N`1\352\202\274\274\267\334X\257k`\034Fb\242V\222\243\367\241%\t\274\277\236\026}\ry\334\200\366\300\373\014\260F\373\263\364\002\357U\\\364`\357#\341\027h\250\274J\002\257\307\356\204+CQ\205\331\364\014\233\340\215s\t\022@\361\306\274;~\326\317\2073\327\316Y\234\236\351\346\246\340\375\022 oz\206\337\236e+\\\353i\374\022\330\205\2166{\335\275\351}\345\277<l\201&\023\323\3647\310B\325\273\001\237\0042\277\203e\266\310^\301\311""\034\364L\366\003j\001a\303f\335W\274\241Z\320*\356\036\225z\rq\234\267n\376\215\200m%=F\377\201\317\022r\377\226\030ox\017X\001\374\317\277,x\363\200\020\274\t}\007\276x>\304\272\302\034k\005\342?\375\221\303{G\273A\251\034\n\343\364.6\232(\323~\243\337\002\267\324-(\331\257\017\027\377\212\365>t0\360\240o\\\275\206\277\205\233\370\273\371ex\035\330v\261uB$EEd\236\312\320\347\260\334\3407\010_\372\372\364\344\314>\006V\006\333h\257\263\366\232m\257\377\366\033\364\031\3545\032\3540\250\023p\200\016\006?pr>\352^w\301\013u\367\231\267\340_9,\376\027\022\334\343\232";
-    PyObject *data = __Pyx_DecompressString(cstring, 2261, 1);
+    #elif (CYTHON_COMPRESS_STRINGS) != 0 /* compression: zlib (2460 bytes) */
+const char* const cstring = "x\332\275V\313[\323\332\026\247%\245U\212\362(/\017j*(\236\357x\270\267\210z||\367\236*\202\002\n\025\024\276\003\367\2064\331-\265!i\223\024)x=\016;\334\303=\3140\303\014\0312t\230a\206\375\023\374\023\316Z;-\242\027\035\036\276\262\177+\373\261\036{\257\327\303\227\206MD{G\266\305'u{\307\320\305\222%\252D+\345\211)\333D\253\213\226m\226\024\233\230\270I\027W\236\256\374:\363\333\214(\353\252h\222\267D\261-\321\252\345\025M\266,b\211FA\314\327J\232]\322E\273^!\326\224\370\274 \326\215\232\250\023\242\212\266!V`\337\351\003\366\016\321E\213\330H\210\223\262\256\033\266l\227\014]\202\343%\2758)\252%\023\204\224\366\010\236\236\2235\213LM\375[VU\tv\022\265d\311y\215\020\035\307\242R\262BJ\255\310\366N\241\244\253S\225\372\276E\264\302\224D4\262\307\031[h \234\025_\032:\021\rS\014\327\213\337\231\267K\032\331\225+\247\027\037\341\215\350E\313\250\231\n\371\227\224}9\277\364tu\245%\221\230_\250)I2\211ZS\210\244\360\253\225\244\257\326\300j\013\214=s\265m\300\212Q\322mX\251\357\303\377,\274\203\364\222\354\333\257H!\234Sd\323\224\353R\3014v\245\n\240f\310\366\231+'\\\316\232\227\356\344\245i\351\216*}\265\3056\316f\031\316\177\313\360\324\354w\331\331\265\212F\316\346\030.\235\301\364\324\302\t\337Ux\031i\355\371\322Siynn\365\351\332\252\254\0275\"[u])\031S\212a\0325p@b\345\r\333\0063\025YSj\032\277hY\267\025\255\264\233\227\370\010\203\216\274%\333\224\025\222\227\225\262*\333\262Z\222\213\206.k\322;R*\356\330\322\267\3370\241\2406\010'^uB\264w}\177\002|T%zm\227\307WA\3264\t\207\202\001\316$I\205\232\256\000\357b\221\350\334\365\2442\251\027\t\210\343\003\037\277p\306\317\320\203\244\242\t\361\2056[_\221\226\264\263\023\212o\001X[BF%K:\271\247\222Mv-\215\350E{G+Y\260\272+\303\235\300\270\0171\246\022\013\t\273f\352\322\t!\355\032j\r\224\203?]\336\005\324\221{\3360\221z'\361c\272a\356\312Z\351\200H*A\225,\303\310\2775\n\005\360\372\266sKm\242bT*\365\"p\232\n\243^\002_\002'\330!J\331\252\355\206_&\261j\232\035\322-\243\221\304,\023R5\275RR\312\240\325\2270\372\301\002""\250q\232\315\236\215y\003\r\252\326d-4\352$z\245\377\213\343\223\t\262\317i\344\246\310\240\260I\360\2020u\204\"\244\020B\206@\251\360\342\334\214\223\340\227\316H\004\360e\206S\220jd\376p-/\372\366[\302-R;K\2651\274\305Z\005\334\231\324,r\"`oO\326j\204\017V]~\3671\3629\321\021;\327\350\246\031\232\r\204D#\326xM\3234\023$zi\204\366\321\237\031\220}@\244\203\304\025&3\313\031wr\201\320\335\310\370\035?\261L\023\250\351F\256A\350]\326\307\306Y\216\021'\343<u\207\334\252\327\351e\274l\233\377y\316\364\307\374/\303q\305\031p\262!\177At\"\237{;z\306\330\014\373\323\225\335j\220\274\304&@\207*\260<\327\333\260\351}6\353D\23417\347\356x\262W\r\022\335\215\231\306\036\315\321\002[t\366\361\300\000H\352\201\201>\2416\273\353\3649i\234\233\241uG\0001\275c\3541S\235\2643\343\330n\306}\342\232\336\220W=\2124\223\027\201;Zt\303\351v\177\3632A\3570\255\236y\362\266\223w\273@9\333\233\371\321\311A\272\306\372\232!\004\t\021x,\303\355,\034\345\217#\250\365C\232g\221 9D\313N?(S\rzFX\024m\r\222\303\364\320\271\346\314\272\347\274~\024\021$.6\252\276p\211\245?\237\3578\227l\334\241\235`\"H\255\236\322\361\035\250\206g\342`P\312\313\005\211\t\370\210\270 9\355\244\234\234#\243L8\325\023\364^e&\\\340+\367\235\227?\212\004\275):\313\342\314v2Aj\004\010\323\271\352E\275[\240\246p\234\375\334\325\321s!<1\354F\335\tW\376\262\177\332Ys\207a\353\204'\177\314\006W\256\006\211\244\237\204\367\203\217\253\"\377H;}~\307\030\3136\205dc\216^\243OY?\274\253\351\364\301\226\201\024li<\2479\240S\203H/P\34438\204\364\"\255\002=4\214\364\022\213\370\302\004<\000\277\303%O\360\262h_w\343\001]\305\033\034\301\001\237\000\275\031.\304f\367\271\351c^\316S\217\322G\360\036\003\364\016\250\\\rR\310!\353\374\021\336\221\007W\335K\223,\3136\300\277\361\222A\346\360\010\312|\301P\307\321KH/\263\014\3327\351\360\207\0001-\315\3324j\334\246\321\2226\215\026\266i\274\2356\215\227\323\246QB\233F\311\234\366\0054)1\302\004\360u\324\227[;\335X\245\021T\230\017\002\315\322\r\226k\271\006\\4j:\2171\306\025\366;V\374""\025\210\331^\332\315\036:2\270\372#\377\336\263O\335\376\352\232\277\266\341o\250\276\252\373z\335\257\037\370\007\037>wt\374\031Y\214\002,F%\004)\372\026\341m\264\214P\216\032\010F\364\020\3410\272\322\t\260\322\271\211\260\331\271\205\260\325\271\215\260\335\251!h\235\207\010\207\235s\002\300\2340\2170/,\",\n\353\010\353\3026\302\266PF(\013\032\202&T\020*\302{\204\367\302b\014\017\304\336 \274\211\255#\254\3076\0216cE\204bLG\320cu\204z\354\000\341 \366\001\341Cl\241\013`\241\3535\302\353\256m\204\355.\031A\356\"\010\244\253\212P\355\372\200\360\241\353y\034\340y|\001a!\276\214\260\034\337D\330\214\033\010F\374\000\341 ~\210p\030\377=\001\360{b\ta)\261\201\260\221P\020\224\204\212\240&H\"\0200\307\351\356\213\243>\376\260\230\310\316\007=\230\377&Y\n\226\362\220\317\006\234\307N\321]\365\"\020\361\220A\203\236\320\237\347!\\\252N\264\225s\342\256\345\245\275\351\320q/4T\310\237-\200\230\\\206\034\014\356\337O'\250\301\303\375\002w\222\340|\2621K#aJ\276\320X\243\227\330\214\177\365\037\220\273\356\037\315\372\277\257\372\253\353\376z\331/\033\276\361?\274\204\310c|\344\307\321\005\204\205\350K\204\227\321-\204\255\3506\302v\264\200Ph\373\210\215`G\367\021\366\243\263\370\362\263\235\317\020\236\265}DB\220\300G\002\201;)\235c\267@C!\376q\257\261\016Y!\205\216\334\217\345\000\322Y3\201\336\017k\030n\376\305_\334\031\250+q\357\360x\362S_\363\353\231\364\307H\360\372M\300\303E\210\241\353?iT1>\220\rp0\033\003\215l8\275\017I<\002Q\002\211\302\244\003\230(\200\356\341U,\323L\302c\234Z\341\2471\316\022\347\002x*\270c\005\326\201\302\372\005\"\3277\376v\221\333\362\337+\322\027\240\360\203\313\334\230\014\3407>\321\014s\"\226\203Kl\330\001\341?\261{XXG\341Kp\2368U\360N\250D\340\352\237/t\364\\fY\000(Uwi\212\346\202$\226\214\010\252\010\256HG\241\216uu\234\273\010J\315P\213\245!]\303\371&l\312bf\353\001g\3405&\002e\0232\3674}\0055.\005e$HA\367\201\026\324\240\264W\233`\301\036[\343\365\235'\370NX\344;\3204\020\327;D\t\273\r\365\024&\3036\200\327\267*h\037\226M\014\220PLXKS""\3641\324d\2017\030\247E_A\036\343P\037y\241\005\326x\r}4F_\203\362 n\024\034\370\277\320K\264\252\017hq\035\"PuoB\264\336\206\032\033?\262\2173\307\263\237\"\340\300\\\323\260\314C\255\000\221/\234A\310\317U\374\032\031e\203\274\301\230\206\343\212\333\357\336\365\372\274t0z\345\214\311\221\321fj\030^\273\023\324\032\031\345\247\307\330\023n\334\010vLe\250\374c\327\234\233\356/\336\037GUPxp\204\276\207,\242\272\343\320:\311\374\014\026\230,\333\202\235)\350-\330#\324\002\234\214\215\300e\335p\005\367\031/\264|j\314\331\342\275\210\005\365\364\301q\256\325K\014\360\256\207\267WX{\223\375\364:>h\300_&\307x\2570\3172\360r\274)\343\025\026|\370&\024gh\026?F\232\302UV\365\305\177z\335G\017\217\313~\356U \014\320\007X\215\303\354\360\236\336\003n\211[n\326\375\317\321\324\247H\253GD\317\205\202z\371\n\376&o\342\357\346\317\301\265\361@\204\032\335\304\306\003\3340L\215\023T\206\027\301$\212\035\034\237\372\365\364\307W\353\350\225=\330z`\373x\007<\250\007C.\244\303\265\245\320\213qK\330\260\264z\230v\353\363\025\266\212\3622\313\264:\n\2569\004\0254\000\360\203\327I\207\005\377\001o\241\357\271\327\241#+\037\367\375\005\037\030\221\242";
+    PyObject *data = __Pyx_DecompressString(cstring, 2460, 1);
     if (unlikely(!data)) __PYX_ERR(0, 1, __pyx_L1_error)
     const char* const bytes = __Pyx_PyBytes_AsString(data);
     #if !CYTHON_ASSUME_SAFE_MACROS
     if (likely(bytes)); else { Py_DECREF(data); __PYX_ERR(0, 1, __pyx_L1_error) }
     #endif
-    #else /* compression: none (4026 bytes) */
-const char* const bytes = ";Note that Cython is deliberately stricter than PEP-484 and rejects subclasses of builtin types. If you need to pass subclasses then set the 'annotation_typing' directive to False..?add_notedisableenablegcisenabledpathfind.pyxself._elevations is not None or self._gs is not None or self._tilemap is not None<stringsource>PathfinderPathfinder.__reduce_cython__Pathfinder.__setstate_cython__Pathfinder.pathfindPoint__Pyx_PyDict_NextRef__Pyx_carray_from_py_int__Pyx_carray_from_py_int___5b_2_5d___Pyx_carray_to_py_int__Pyx_carray_to_py_int___5b_2_5d___Pyx_carray_to_tuple_int__Pyx_carray_to_tuple_int___5b_2_5d_Self_TILE_OFFSETSasyncio.coroutinesbottom_calculate_cantclimb_climbcline_in_tracebackdatadiagonal_weight_diagonal_weight__dict___dictelevationelevation_weight_elevation_weight_elevationsendenumeratefall_fallforce__func___ggen_tile_keyget__get___get_elevation__getstate__greediness_greediness_gs_hheight_height__init___is_coroutineitemslengthlist__main__max_nodes__module____name__neighbor__new__nodeoobjoffsetpathfind_pathfindpoppygame.typing__pyx_checksum__pyx_result__pyx_state__pyx_type__pyx_unpickle_Pathfinder__pyx_unpickle_Pathfinder__set_state__pyx_vtable____qualname____reduce____reduce_cython____reduce_ex___reset_cachereturnself__set____set_name__setdefault__setstate____setstate_cython__startstatestraight_weight_straight_weight__test__tilemap_tilemaptypingupdateuse_setstatevvaluevalues\200\001\360\010\000\005\t\210\013\2201\220A\330\004\010\210\005\210U\220!\2201\330\010\020\220\001\220\021\220)\2301\330\010\021\220\021\220!\330\010\036\230a\230s\240#\240Q\330\004\013\2101\320\000\033\2301\340\004\013\2102\210Q\210e\2206\230\021\230#\230Q\230e\2401\240E\250\026\250q\260\003\2601\260A\200\001\360\010\000\005\t\210\n\220!\2201\330\004\010\210\005\210U\220!\2201\330\010\020\220\001\220\021\220)\2301\330\010\021\220\021\220!\330\010\035\230Q\230c\240\023\240A\330\004\013\2101\320\004 \240\001\360\020\000\r\034\2304\230\177\250a\250q\330\014\032\230$\230a\230q\360\010\000""\t\020\210t\2209\230D\240\001\240\034\250Q\250h\260a\260q\330\010\013\2104\210v\220Q\220f\230K\240x\250q\330\014\023\2201\330\r\023\2201\220C\220t\2306\240\021\240!\330\014\023\2204\220y\240\004\240A\330\020\034\230B\230d\240!\2404\240t\2501\250C\250r\260\026\260q\270\001\340\014\017\210t\2206\230\021\230&\240\013\2508\2601\330\020\027\220q\330\014\023\2204\220y\240\004\240A\330\020\034\230B\230d\240!\2403\240b\250\006\250a\250t\2604\260q\270\001\340\014\017\210t\2206\230\021\230&\240\013\2508\2601\330\020\027\220q\330\014\025\220T\230\021\340\014\025\220T\230\021\330\010 \240\004\240O\2601\260J\270b\300\001\330\010\013\210;\220b\230\001\330\014\026\220k\240\022\2404\240q\330\r\030\230\002\230$\230a\330\014\027\220{\240\"\240D\250\t\260\022\2604\260q\330\010\017\210q\320\004\032\230!\360\n\000\t\014\2105\220\003\2201\330\014\017\210q\330\020\027\220q\330\014\023\2204\220w\230d\240\"\240D\250\007\250r\260\024\260Q\330\010$\240D\250\001\250\021\330\010!\240\024\240Q\240a\330\010\013\2101\330\014\r\330\020\037\230r\240\034\250R\250w\260b\270\001\330\020\024\220D\230\007\230t\2401\330\024\030\230\007\230r\240\037\260\002\260,\270b\300\004\300A\360\006\000\r\016\330\020\037\230r\240\027\250\002\250$\250a\330\020\024\220D\230\007\230t\2402\240T\250\027\260\002\260$\260a\200A\330\036\037\330\010\014\320\014 \240\001\200A\330\037 \330\010\014\320\014!\240\021\200A\330\023\024\330\010\014\210I\220Q\200A\330\024\025\330\010\014\210J\220a\200A\330\025\026\330\010\014\210K\220q\200A\330\026\027\330\010\014\210L\230\001\320\004$\240A\330\010 \240\004\240L\260\004\260A\260Q\330\010\013\210:\220S\230\001\330\014\030\230\001\330\014\017\210t\2201\220A\330\020\027\220t\2309\240D\250\001\250\034\260Q\260d\270!\2701\330\020\023\2205\230\007\230q\330\024 \240\004\240A\240Z\250r\260\024\260Q\260a\330\014\020\220\014\230A\230X\240Q\330\010\017\210q\200A\330\031\032\330\010\014\210O\2301\200A\330\036'\240q\330\010\017\210t\2201\200A\330\026\027\330\010\017\210t\2201\200A\330\025\026\330""\010\017\210t\2201\200A\330\024\025\330\010\017\210t\2201\200A\330\023\024\330\010\017\210t\2201\200A\330\036\037\330\010\017\210t\2201\200A\330\037 \330\010\017\210t\2201\200A\330\031\032\330\010\017\210t\2201\320\004\030\230\001\330\010\030\230\004\230D\240\004\240A\240Q\330\010\013\2102\210S\220\001\330\014\020\220\001\330\014\020\220\004\220A\220X\230Q\330\010\017\210q\320\004!\240\021\330\010\014\210G\2201\330\010\014\210O\2301\320\000P\320PQ\330\004\020\320\020!\240\033\250A\250T\260\034\270Z\300{\320RS\320SW\320Wc\320cw\360\000\000x\001C\002\360\000\000C\002D\002\360\000\000D\002H\002\360\000\000H\002T\002\360\000\000T\002i\002\360\000\000i\002t\002\360\000\000t\002u\002\360\000\000u\002y\002\360\000\000y\002E\003\360\000\000E\003T\003\360\000\000T\003_\003\360\000\000_\003`\003\360\000\000`\003d\003\360\000\000d\003p\003\360\000\000p\003y\003\360\000\000y\003D\004\360\000\000D\004E\004\360\000\000E\004I\004\360\000\000I\004U\004\360\000\000U\004d\004\360\000\000d\004o\004\360\000\000o\004p\004\360\000\000p\004t\004\360\000\000t\004@\005\360\000\000@\005G\005\360\000\000G\005R\005\360\000\000R\005S\005\360\000\000S\005W\005\360\000\000W\005c\005\360\000\000c\005n\005\360\000\000n\005y\005\360\000\000y\005z\005\360\000\000z\005~\005\360\000\000~\005J\006\360\000\000J\006^\006\360\000\000^\006i\006\360\000\000i\006j\006\360\000\000j\006n\006\360\000\000n\006z\006\360\000\000z\006F\007\360\000\000F\007Q\007\360\000\000Q\007R\007\360\000\000R\007S\007\330\004\035\230Q\230n\250M\270\021\320\004\030\230\001\360\010\000\t\n\330\r\021\220\021\220'\230\024\230Q\230b\240\001\240\023\240B\240g\250S\260\001\260\022\2601\260A\330\r\017\210t\2201\220G\2304\230q\240\002\240!\2403\240b\250\007\250s\260!\2602\260Q\260a\330\014\016\210d\220!\330\014\016\210d\220!\330\020\024\220O\2401\240A\330\020\022\220$\220o\240Q\240a\330\016\020\220\004\220A\330\n\014\210D\220\001\200\001\360\010\000\005\016\210T\320\021!\240\024\240Y\250d\3202E\300T\320I]\320]a\320ao\320os\320s{\320{\177""\360\000\000@\002N\002\360\000\000N\002R\002\360\000\000R\002X\002\360\000\000X\002\\\002\360\000\000\\\002f\002\360\000\000f\002j\002\360\000\000j\002}\002\360\000\000}\002A\003\360\000\000A\003B\003\330\004\014\210G\2201\220F\230,\240a\330\004\007\200v\210W\220E\230\024\230Q\330\010\022\220!\330\010\027\220q\340\010\030\230\001\330\004\007\200q\330\010\017\320\017+\2504\250q\260\007\260{\300'\310\021\340\010\017\320\017+\2504\250q\260\007\260{\300!\200\001\330UV\330\004\030\230\001\330\004\005\330\010\014\210C\210q\220\001\330\014\027\220q\340\004\007\200r\210\023\210A\330\010\014\210C\210x\220y\240\001\240\021\330\014\017\210r\220\023\220A\330\020\021\330\014\r\210Q\210e\2201\340\014\021\220\021\330\014\017\210r\220\023\220A\330\020\027\220q\340\004\020\220\001\330\010\t\330\t\n\330\014\016\210c\220\021\330\t\n\330\010\020\220\001\200\001\330`a\330\004\030\230\001\330\004\005\330\010\014\210C\210q\220\001\330\014\027\220q\340\004\007\200r\210\023\210A\330\010\014\210C\210x\220y\240\001\240\021\330\014\017\210r\220\023\220A\330\020\021\330\014\r\210Q\210e\2201\340\014\021\220\021\330\014\017\210r\220\023\220A\330\020\027\220q\340\004\020\220\001\330\010\t\330\t\n\330\014\016\210c\220\021\330\t\n\330\010\020\220\001\320\004\036\230a\360\006\000&'\330&'\330#$\340\010\014\210M\230\021\360\006\000\r\034\2307\240!\330\014\031\230\027\240\004\240C\240q\250\007\250q\330\014\035\230Q\360\n\000\r\035\230A\360\016\000\t\014\2106\220\024\220Q\330\014\024\220D\230\001\330\010\014\210D\220\001\220\031\230!\360\006\000\t\017\210e\2204\220s\230!\2309\240C\240q\340\014\024\220A\330\014\020\220\r\230Q\330\020\024\220D\230\001\230\021\330\020\023\2202\220R\220q\330\024\034\230A\330\024\033\2301\330\014\017\210u\220C\220q\340\020\027\220v\230T\240\021\240!\330\020\023\2205\230\003\2301\330\024\033\2301\330\020\027\220q\230\001\330\020\026\220e\2303\230a\330\024\033\2306\240\021\240!\330\024\030\230\007\230q\240\001\330\020\027\220q\330\014\020\220\004\220D\230\001\230\021\330\014""\017\210q\330\020\024\220B\220b\230\004\230D\240\001\240\021\330\020\023\2202\220R\220q\330\024\036\230a\330\024#\2401\330\014\023\2204\220q\230\001\360\006\000\r\021\220\n\230$\230a\330\020\023\2205\230\006\230a\230s\240#\240V\2501\250A\330\024\025\330\020\024\220M\240\025\240a\240q\330\024\025\330\030\031\230\025\230d\240!\2402\240Q\240c\250\022\2506\260\021\260!\330\031\036\230d\240!\2402\240Q\240c\250\022\2506\260\021\260!\330\030\031\340\024\027\220y\240\003\2401\330\030\031\330\024\025\330\030\034\230C\230q\240\001\330\030\032\230$\230k\250\021\330\034\"\240(\250+\260Z\270q\360\006\000\025\030\220|\2403\240d\250#\250Q\250a\330\030\031\330\024\030\230\004\230A\230\\\250\021\330\024\032\230!\230<\240q\330\024\030\230\001\230\034\240\\\260\022\2604\260s\270!\270:\300Q\330\010\013\2101\330\014\023\2206\230\021\230!\330\014\023\2201\220A\330\014\022\220%\220s\230!\330\020\027\220v\230Q\230a\330\020\024\220G\2301\230A\330\014\023\2201\330\010\017\210q\200\001\330\004(\250\001\250\026\250q\200\001\340\004\037\230q\320 0\260\013\270;\300k\320QR\330\004\023\220:\230X\240Q\240a\330\004\007\200|\2207\230!\330\010,\250A\250]\270.\310\001\330\004\013\2101\320\004\027\220q\340\036\037\330\035\036\330\035\036\330'(\330'(\330()\330\"(\250\001\340\010\014\320\014\035\230Q\330\014\016\210d\220$\220a\220t\2304\230q\240\004\240A\330\014\016\210d\220-\230q\240\004\240A\330\014\016\210d\220$\220a\220t\2304\230q\240\004\240A\360\006\000\t\r\210L\230\001\330\010\014\210K\220q\330\010\014\210J\220a\330\010\014\210I\220Q\330\010\014\320\014 \240\001\330\010\014\320\014 \240\001\330\010\014\320\014!\240\021\330\010\014\210O\2301\320\004\027\220q\360\006\000\037 \330\037 \330\034\"\240!\330\010\017\210t\220:\230Q\230g\240U\250'\260\033\270A";
+    #else /* compression: none (4507 bytes) */
+const char* const bytes = ";Note that Cython is deliberately stricter than PEP-484 and rejects subclasses of builtin types. If you need to pass subclasses then set the 'annotation_typing' directive to False..?add_notedisableenablegcisenabledpathfind.pyxself._elevations is not None or self._gs is not None or self._tilemap is not None<stringsource>_ANGLESPathfinderPathfinder.__reduce_cython__Pathfinder.__setstate_cython__Pathfinder.pathfindPoint__Pyx_PyDict_NextRef__Pyx_carray_from_py_float__Pyx_carray_from_py_int__Pyx_carray_from_py_int___5b_2_5d___Pyx_carray_to_py_float__Pyx_carray_to_py_int__Pyx_carray_to_py_int___5b_2_5d___Pyx_carray_to_tuple_float__Pyx_carray_to_tuple_int__Pyx_carray_to_tuple_int___5b_2_5d_Self_TILE_OFFSETSangleasyncio.coroutinesbottom_calculate_cantclimb_climbcline_in_tracebackdatadiagonal_weight_diagonal_weight__dict___dictelevationelevation_weight_elevation_weight_elevationsendenumeratefall_fallforce__func___ggen_tile_keyget__get___get_elevation__getstate__greediness_greediness_gs_hheight_height__init___is_coroutineitemslengthlist__main__max_nodesmax_turn_max_turn__module____name__neighbor__new__nodenormalize_degreesoobjoffsetpathfind_pathfindpoppygame.typing__pyx_checksum__pyx_result__pyx_state__pyx_type__pyx_unpickle_Pathfinder__pyx_unpickle_Pathfinder__set_state__pyx_vtable____qualname____reduce____reduce_cython____reduce_ex___reset_cachereturnself__set____set_name__setdefault__setstate____setstate_cython__startstatestraight_weight_straight_weight__test__tilemap_tilemaptypingupdateuse_setstatevvaluevaluesyaw\200\001\360\010\000\005\t\210\013\2201\220A\330\004\010\210\005\210U\220!\2201\330\010\020\220\001\220\021\220)\2301\330\010\021\220\021\220!\330\010\036\230a\230s\240#\240Q\330\004\013\2101\320\000\033\2301\340\004\013\2102\210Q\210e\2206\230\021\230#\230Q\230e\2401\240E\250\026\250q\260\003\2601\260A\200\001\360\010\000\005\t\210\n\220!\2201\330\004\010\210\005\210U\220!\2201\330\010\020\220\001\220\021\220)\2301\330\010\021\220\021\220!\330\010\035\230Q\230c""\240\023\240A\330\004\013\2101\320\004 \240\001\360\020\000\r\034\2304\230\177\250a\250q\330\014\032\230$\230a\230q\360\010\000\t\020\210t\2209\230D\240\001\240\034\250Q\250h\260a\260q\330\010\013\2104\210v\220Q\220f\230K\240x\250q\330\014\023\2201\330\r\023\2201\220C\220t\2306\240\021\240!\330\014\023\2204\220y\240\004\240A\330\020\034\230B\230d\240!\2404\240t\2501\250C\250r\260\026\260q\270\001\340\014\017\210t\2206\230\021\230&\240\013\2508\2601\330\020\027\220q\330\014\023\2204\220y\240\004\240A\330\020\034\230B\230d\240!\2403\240b\250\006\250a\250t\2604\260q\270\001\340\014\017\210t\2206\230\021\230&\240\013\2508\2601\330\020\027\220q\330\014\025\220T\230\021\340\014\025\220T\230\021\330\010 \240\004\240O\2601\260J\270b\300\001\330\010\013\210;\220b\230\001\330\014\026\220k\240\022\2404\240q\330\r\030\230\002\230$\230a\330\014\027\220{\240\"\240D\250\t\260\022\2604\260q\330\010\017\210q\320\004\032\230!\360\n\000\t\014\2105\220\003\2201\330\014\017\210q\330\020\027\220q\330\014\023\2204\220w\230d\240\"\240D\250\007\250r\260\024\260Q\330\010$\240D\250\001\250\021\330\010!\240\024\240Q\240a\330\010\013\2101\330\014\r\330\020\037\230r\240\034\250R\250w\260b\270\001\330\020\024\220D\230\007\230t\2401\330\024\030\230\007\230r\240\037\260\002\260,\270b\300\004\300A\360\006\000\r\016\330\020\037\230r\240\027\250\002\250$\250a\330\020\024\220D\230\007\230t\2402\240T\250\027\260\002\260$\260a\200A\330\036\037\330\010\014\320\014 \240\001\200A\330\037 \330\010\014\320\014!\240\021\320\000\034\230A\340\004\014\210F\220\"\220E\230\022\2304\230r\240\021\200A\330\023\024\330\010\014\210I\220Q\200A\330\024\025\330\010\014\210J\220a\200A\330\025\026\330\010\014\210K\220q\200A\330\026\027\330\010\014\210L\230\001\320\004$\240A\330\010 \240\004\240L\260\004\260A\260Q\330\010\013\210:\220S\230\001\330\014\030\230\001\330\014\017\210t\2201\220A\330\020\027\220t\2309\240D\250\001\250\034\260Q\260d\270!\2701\330\020\023\2205\230\007\230q\330\024 \240\004\240A\240Z\250r\260\024\260Q""\260a\330\014\020\220\014\230A\230X\240Q\330\010\017\210q\200A\330\027\030\330\010\014\210M\230\021\200A\330\031\032\330\010\014\210O\2301\200A\330\036'\240q\330\010\017\210t\2201\200A\330\026\027\330\010\017\210t\2201\200A\330\025\026\330\010\017\210t\2201\200A\330\024\025\330\010\017\210t\2201\200A\330\023\024\330\010\017\210t\2201\200A\330\036\037\330\010\017\210t\2201\200A\330\037 \330\010\017\210t\2201\200A\330\031\032\330\010\017\210t\2201\200A\330\027\030\330\010\017\210t\2201\320\004\030\230\001\330\010\030\230\004\230D\240\004\240A\240Q\330\010\013\2102\210S\220\001\330\014\020\220\001\330\014\020\220\004\220A\220X\230Q\330\010\017\210q\320\004!\240\021\330\010\014\210G\2201\330\010\014\210O\2301\320\000P\320PQ\330\004\020\220\013\230;\240a\240t\250<\3207H\310\013\320ST\320TX\320Xd\320dn\320ny\320yz\320z~\360\000\000\177\001K\002\360\000\000K\002_\002\360\000\000_\002j\002\360\000\000j\002k\002\360\000\000k\002o\002\360\000\000o\002{\002\360\000\000{\002P\003\360\000\000P\003[\003\360\000\000[\003\\\003\360\000\000\\\003`\003\360\000\000`\003l\003\360\000\000l\003{\003\360\000\000{\003F\004\360\000\000F\004G\004\360\000\000G\004K\004\360\000\000K\004W\004\360\000\000W\004`\004\360\000\000`\004k\004\360\000\000k\004l\004\360\000\000l\004p\004\360\000\000p\004|\004\360\000\000|\004K\005\360\000\000K\005V\005\360\000\000V\005W\005\360\000\000W\005[\005\360\000\000[\005g\005\360\000\000g\005n\005\360\000\000n\005y\005\360\000\000y\005z\005\360\000\000z\005~\005\360\000\000~\005J\006\360\000\000J\006U\006\360\000\000U\006`\006\360\000\000`\006a\006\360\000\000a\006e\006\360\000\000e\006q\006\360\000\000q\006~\006\360\000\000~\006I\007\360\000\000I\007J\007\360\000\000J\007O\007\360\000\000O\007[\007\360\000\000[\007o\007\360\000\000o\007z\007\360\000\000z\007{\007\360\000\000{\007@\010\360\000\000@\010L\010\360\000\000L\010X\010\360\000\000X\010c\010\360\000\000c\010d\010\360\000\000d\010e\010\330\004\035\230Q\230n\250M\270\021\320\004\030\230\001\360\010\000""\t\n\330\r\021\220\021\220'\230\024\230Q\230b\240\001\240\023\240B\240g\250S\260\001\260\022\2601\260A\330\r\017\210t\2201\220G\2304\230q\240\002\240!\2403\240b\250\007\250s\260!\2602\260Q\260a\330\014\016\210d\220!\330\014\016\210d\220!\330\020\024\220O\2401\240A\330\020\022\220$\220o\240Q\240a\330\016\020\220\004\220A\330\n\014\210D\220\001\200\001\360\010\000\005\016\210T\220\032\2304\320\037/\250t\2609\270D\320@S\320SW\320Wk\320ko\320o}\360\000\000~\001B\002\360\000\000B\002J\002\360\000\000J\002N\002\360\000\000N\002\\\002\360\000\000\\\002`\002\360\000\000`\002f\002\360\000\000f\002j\002\360\000\000j\002t\002\360\000\000t\002x\002\360\000\000x\002D\003\360\000\000D\003H\003\360\000\000H\003[\003\360\000\000[\003_\003\360\000\000_\003`\003\330\004\014\210G\2201\220F\230,\240a\330\004\007\200v\210W\220E\230\024\230Q\330\010\022\220!\330\010\027\220q\340\010\030\230\001\330\004\007\200q\330\010\017\320\017+\2504\250q\260\007\260{\300'\310\021\340\010\017\320\017+\2504\250q\260\007\260{\300!\200\001\330UV\330\004\030\230\001\330\004\005\330\010\014\210C\210q\220\001\330\014\027\220q\340\004\007\200r\210\023\210A\330\010\014\210C\210x\220y\240\001\240\021\330\014\017\210r\220\023\220A\330\020\021\330\014\r\210Q\210e\2201\340\014\021\220\021\330\014\017\210r\220\023\220A\330\020\027\220q\340\004\020\220\001\330\010\t\330\t\n\330\014\016\210c\220\021\330\t\n\330\010\020\220\001\200\001\330WX\330\004\030\230\001\330\004\005\330\010\014\210C\210q\220\001\330\014\027\220q\340\004\007\200r\210\023\210A\330\010\014\210C\210x\220y\240\001\240\021\330\014\017\210r\220\023\220A\330\020\021\330\014\r\210Q\210e\2201\340\014\021\220\021\330\014\017\210r\220\023\220A\330\020\027\220q\340\004\020\220\001\330\010\t\330\t\n\330\014\016\210c\220\021\330\t\n\330\010\020\220\001\200\001\330`a\330\004\030\230\001\330\004\005\330\010\014\210C\210q\220\001\330\014\027\220q\340\004\007\200r\210\023\210A\330\010\014\210C\210x\220y\240\001\240\021\330\014\017\210r\220\023\220A\330\020\021""\330\014\r\210Q\210e\2201\340\014\021\220\021\330\014\017\210r\220\023\220A\330\020\027\220q\340\004\020\220\001\330\010\t\330\t\n\330\014\016\210c\220\021\330\t\n\330\010\020\220\001\320\004\036\230a\360\010\000&'\330&'\330#$\340\010\014\210M\230\021\360\006\000\r\032\230\027\240\001\330\014\033\2307\240!\330\014\031\230\027\240\004\240C\240q\250\007\250q\330\014\035\230Q\360\016\000\r\035\230A\360\016\000\t\014\2106\220\024\220Q\330\014\024\220D\230\001\330\010\014\210D\220\001\220\031\230!\360\006\000\t\017\210e\2204\220s\230!\2309\240C\240q\340\014\024\220A\330\014\020\220\r\230Q\330\020\024\220D\230\001\230\021\330\020\023\2202\220R\220q\330\024\034\230A\330\024\033\2301\330\014\017\210u\220C\220q\340\020\027\220v\230T\240\021\240!\330\020\023\2205\230\003\2301\330\024\033\2301\330\020\027\220q\230\001\330\020\026\220e\2303\230a\330\024\033\2306\240\021\240!\330\024\030\230\007\230q\240\001\330\020\027\220q\330\014\020\220\004\220D\230\001\230\021\330\014\017\210q\330\020\024\220B\220b\230\004\230D\240\001\240\021\330\020\023\2202\220R\220q\330\024\036\230a\330\024#\2401\330\014\023\2204\220q\230\001\360\006\000\r\021\220\005\220U\230!\2301\330\020\031\230\024\230^\2501\250A\330\020\027\220t\2301\330\024%\240Q\240d\250(\260!\2603\260b\270\007\270t\3001\300D\310\001\310\021\340\020\023\2205\230\002\230$\230a\330\024\025\330\020\024\220M\240\025\240a\240q\330\024\025\330\030\031\230\025\230d\240!\2402\240Q\240c\250\022\2506\260\021\260!\330\031\036\230d\240!\2402\240Q\240c\250\022\2506\260\021\260!\330\030\031\340\024\027\220y\240\003\2401\330\030\031\330\024\025\330\030\034\230C\230q\240\001\330\030\032\230$\230k\250\021\330\034\"\240(\250+\260Z\270q\360\006\000\025\030\220|\2403\240d\250#\250Q\250a\330\030\031\330\024\030\230\004\230A\230\\\250\021\330\024\032\230!\230<\240q\330\024\030\230\001\230\030\240\021\240&\250\004\250H\260A\260Q\330\024\030\230\001\230\034\240\\\260\022\2604\260s\270!\270:\300Q\330\010\013\2101\330\014\023\2206\230\021\230!\330\014""\023\2201\220A\330\014\022\220%\220s\230!\330\020\027\220v\230Q\230a\330\020\024\220G\2301\230A\330\014\023\2201\330\010\017\210q\200\001\330\004(\250\001\250\026\250q\200\001\340\004\037\230q\320 0\260\013\270;\300k\320QR\330\004\023\220:\230X\240Q\240a\330\004\007\200|\2207\230!\330\010,\250A\250]\270.\310\001\330\004\013\2101\320\004\027\220q\340\036\037\330\035\036\330\035\036\330'(\330'(\330()\330\"#\330 '\240q\340\010\014\320\014\035\230Q\330\014\016\210d\220$\220a\220t\2304\230q\240\004\240A\330\014\016\210d\220-\230q\240\004\240A\330\014\016\210d\220$\220a\220t\2304\230q\240\004\240A\360\006\000\t\r\210K\220q\330\r\023\2205\230\001\330\r\030\230\001\330\r\023\2205\230\001\360\006\000\t\r\210L\230\001\330\010\014\210K\220q\330\010\014\210J\220a\330\010\014\210I\220Q\330\010\014\320\014 \240\001\330\010\014\320\014 \240\001\330\010\014\320\014!\240\021\330\010\014\210O\2301\330\010\014\210M\230\021\320\004\027\220q\360\010\000\037 \330\037 \330\034\"\240!\330\010\017\210t\220:\230Q\230e\2407\250%\250w\260k\300\021";
     PyObject *data = NULL;
     CYTHON_UNUSED_VAR(__Pyx_DecompressString);
     #endif
     PyObject **stringtab = __pyx_mstate->__pyx_string_tab;
     Py_ssize_t pos = 0;
-    for (int i = 0; i < 111; i++) {
+    for (int i = 0; i < 120; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyUnicode_DecodeUTF8(bytes + pos, bytes_length, NULL);
       if (likely(string) && i >= 12) PyUnicode_InternInPlace(&string);
@@ -10347,7 +11308,7 @@ const char* const bytes = ";Note that Cython is deliberately stricter than PEP-4
       stringtab[i] = string;
       pos += bytes_length;
     }
-    for (int i = 111; i < 144; i++) {
+    for (int i = 120; i < 157; i++) {
       Py_ssize_t bytes_length = index[i].length;
       PyObject *string = PyBytes_FromStringAndSize(bytes + pos, bytes_length);
       stringtab[i] = string;
@@ -10358,15 +11319,15 @@ const char* const bytes = ";Note that Cython is deliberately stricter than PEP-4
       }
     }
     Py_XDECREF(data);
-    for (Py_ssize_t i = 0; i < 144; i++) {
+    for (Py_ssize_t i = 0; i < 157; i++) {
       if (unlikely(PyObject_Hash(stringtab[i]) == -1)) {
         __PYX_ERR(0, 1, __pyx_L1_error)
       }
     }
     #if CYTHON_IMMORTAL_CONSTANTS
     {
-      PyObject **table = stringtab + 111;
-      for (Py_ssize_t i=0; i<33; ++i) {
+      PyObject **table = stringtab + 120;
+      for (Py_ssize_t i=0; i<37; ++i) {
         #if CYTHON_COMPILING_IN_CPYTHON_FREETHREADING
         Py_SET_REFCNT(table[i], _Py_IMMORTAL_REFCNT_LOCAL);
         #else
@@ -10387,7 +11348,7 @@ const char* const bytes = ";Note that Cython is deliberately stricter than PEP-4
   {
     PyObject **numbertab = __pyx_mstate->__pyx_number_tab + 1;
     int8_t const cint_constants_1[] = {0,100};
-    int32_t const cint_constants_4[] = {182674040L,2147483647L};
+    int32_t const cint_constants_4[] = {154910771L,2147483647L};
     for (int i = 0; i < 4; i++) {
       numbertab[i] = PyLong_FromLong((i < 2 ? cint_constants_1[i - 0] : cint_constants_4[i - 2]));
       if (unlikely(!numbertab[i])) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -10435,182 +11396,212 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
   {
     const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 113};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_v, __pyx_mstate->__pyx_n_u_length};
-    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_Pyx_carray_to_py_int, __pyx_mstate->__pyx_kp_b_iso88591_1_U_1_1_Qc_A_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_Pyx_carray_to_py_float, __pyx_mstate->__pyx_kp_b_iso88591_1_U_1_1_Qc_A_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 125};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_v, __pyx_mstate->__pyx_n_u_length};
-    __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_Pyx_carray_to_tuple_int, __pyx_mstate->__pyx_kp_b_iso88591_1A_U_1_1_as_Q_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_Pyx_carray_to_tuple_float, __pyx_mstate->__pyx_kp_b_iso88591_1A_U_1_1_as_Q_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 78};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_o, __pyx_mstate->__pyx_n_u_v, __pyx_mstate->__pyx_n_u_length};
+    __pyx_mstate_global->__pyx_codeobj_tab[2] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_Pyx_carray_from_py_float, __pyx_mstate->__pyx_kp_b_iso88591_WX_Cq_q_r_A_Cxy_r_A_Qe1_r_A_q_c, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[2])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 113};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_v, __pyx_mstate->__pyx_n_u_length};
-    __pyx_mstate_global->__pyx_codeobj_tab[2] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_Pyx_carray_to_py_int___5b_2_5d, __pyx_mstate->__pyx_kp_b_iso88591_1_U_1_1_Qc_A_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[2])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[3] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_Pyx_carray_to_py_int, __pyx_mstate->__pyx_kp_b_iso88591_1_U_1_1_Qc_A_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[3])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 125};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_v, __pyx_mstate->__pyx_n_u_length};
-    __pyx_mstate_global->__pyx_codeobj_tab[3] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_Pyx_carray_to_tuple_int___5b_2, __pyx_mstate->__pyx_kp_b_iso88591_1A_U_1_1_as_Q_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[3])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[4] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_Pyx_carray_to_tuple_int, __pyx_mstate->__pyx_kp_b_iso88591_1A_U_1_1_as_Q_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[4])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 113};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_v, __pyx_mstate->__pyx_n_u_length};
+    __pyx_mstate_global->__pyx_codeobj_tab[5] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_Pyx_carray_to_py_int___5b_2_5d, __pyx_mstate->__pyx_kp_b_iso88591_1_U_1_1_Qc_A_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[5])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 125};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_v, __pyx_mstate->__pyx_n_u_length};
+    __pyx_mstate_global->__pyx_codeobj_tab[6] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_Pyx_carray_to_tuple_int___5b_2, __pyx_mstate->__pyx_kp_b_iso88591_1A_U_1_1_as_Q_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[6])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 78};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_o, __pyx_mstate->__pyx_n_u_v, __pyx_mstate->__pyx_n_u_length};
-    __pyx_mstate_global->__pyx_codeobj_tab[4] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_Pyx_carray_from_py_int, __pyx_mstate->__pyx_kp_b_iso88591_UV_Cq_q_r_A_Cxy_r_A_Qe1_r_A_q_c, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[4])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[7] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_Pyx_carray_from_py_int, __pyx_mstate->__pyx_kp_b_iso88591_UV_Cq_q_r_A_Cxy_r_A_Qe1_r_A_q_c, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[7])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 78};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_o, __pyx_mstate->__pyx_n_u_v, __pyx_mstate->__pyx_n_u_length};
-    __pyx_mstate_global->__pyx_codeobj_tab[5] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_Pyx_carray_from_py_int___5b_2, __pyx_mstate->__pyx_kp_b_iso88591_a_Cq_q_r_A_Cxy_r_A_Qe1_r_A_q_c, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[5])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[8] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_Pyx_carray_from_py_int___5b_2, __pyx_mstate->__pyx_kp_b_iso88591_a_Cq_q_r_A_Cxy_r_A_Qe1_r_A_q_c, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[8])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 14};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_obj};
-    __pyx_mstate_global->__pyx_codeobj_tab[6] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_gen_tile_key, __pyx_mstate->__pyx_kp_b_iso88591_1_2Qe6_Qe1E_q_1A, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[6])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[9] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_gen_tile_key, __pyx_mstate->__pyx_kp_b_iso88591_1_2Qe6_Qe1E_q_1A, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[9])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {9, 0, 0, 9, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 34};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_tilemap, __pyx_mstate->__pyx_n_u_height, __pyx_mstate->__pyx_n_u_climb, __pyx_mstate->__pyx_n_u_fall, __pyx_mstate->__pyx_n_u_straight_weight, __pyx_mstate->__pyx_n_u_diagonal_weight, __pyx_mstate->__pyx_n_u_elevation_weight, __pyx_mstate->__pyx_n_u_greediness};
-    __pyx_mstate_global->__pyx_codeobj_tab[7] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_init, __pyx_mstate->__pyx_kp_b_iso88591_q_Q_d_at4q_A_d_q_A_d_at4q_A_L_K, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[7])) goto bad;
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 19};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_angle};
+    __pyx_mstate_global->__pyx_codeobj_tab[10] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_normalize_degrees, __pyx_mstate->__pyx_kp_b_iso88591_A_F_E_4r, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[10])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 59};
+    const __Pyx_PyCode_New_function_description descr = {10, 0, 0, 10, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 41};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_tilemap, __pyx_mstate->__pyx_n_u_height, __pyx_mstate->__pyx_n_u_climb, __pyx_mstate->__pyx_n_u_fall, __pyx_mstate->__pyx_n_u_straight_weight, __pyx_mstate->__pyx_n_u_diagonal_weight, __pyx_mstate->__pyx_n_u_elevation_weight, __pyx_mstate->__pyx_n_u_greediness, __pyx_mstate->__pyx_n_u_max_turn};
+    __pyx_mstate_global->__pyx_codeobj_tab[11] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_init, __pyx_mstate->__pyx_kp_b_iso88591_q_q_Q_d_at4q_A_d_q_A_d_at4q_A_K, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[11])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 74};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[8] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_get_2, __pyx_mstate->__pyx_kp_b_iso88591_A_t1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[8])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[12] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_get_2, __pyx_mstate->__pyx_kp_b_iso88591_A_t1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[12])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 63};
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 78};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_value};
-    __pyx_mstate_global->__pyx_codeobj_tab[9] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_set, __pyx_mstate->__pyx_kp_b_iso88591_A_L, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[9])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[13] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_set, __pyx_mstate->__pyx_kp_b_iso88591_A_L, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[13])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 67};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 82};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[10] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_get_2, __pyx_mstate->__pyx_kp_b_iso88591_A_t1_2, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[10])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[14] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_get_2, __pyx_mstate->__pyx_kp_b_iso88591_A_t1_2, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[14])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 71};
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 86};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_value, __pyx_mstate->__pyx_n_u_value};
-    __pyx_mstate_global->__pyx_codeobj_tab[11] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_set, __pyx_mstate->__pyx_kp_b_iso88591_A_Kq, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[11])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[15] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_set, __pyx_mstate->__pyx_kp_b_iso88591_A_Kq, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[15])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 75};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 90};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[12] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_get_2, __pyx_mstate->__pyx_kp_b_iso88591_A_t1_3, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[12])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[16] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_get_2, __pyx_mstate->__pyx_kp_b_iso88591_A_t1_3, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[16])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 79};
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 94};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_value, __pyx_mstate->__pyx_n_u_value};
-    __pyx_mstate_global->__pyx_codeobj_tab[13] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_set, __pyx_mstate->__pyx_kp_b_iso88591_A_Ja, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[13])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[17] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_set, __pyx_mstate->__pyx_kp_b_iso88591_A_Ja, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[17])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 83};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 98};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[14] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_get_2, __pyx_mstate->__pyx_kp_b_iso88591_A_t1_4, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[14])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[18] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_get_2, __pyx_mstate->__pyx_kp_b_iso88591_A_t1_4, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[18])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 87};
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 102};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_value, __pyx_mstate->__pyx_n_u_value};
-    __pyx_mstate_global->__pyx_codeobj_tab[15] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_set, __pyx_mstate->__pyx_kp_b_iso88591_A_IQ, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[15])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[19] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_set, __pyx_mstate->__pyx_kp_b_iso88591_A_IQ, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[19])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 91};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 106};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[16] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_get_2, __pyx_mstate->__pyx_kp_b_iso88591_A_t1_5, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[16])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[20] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_get_2, __pyx_mstate->__pyx_kp_b_iso88591_A_t1_5, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[20])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 95};
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 110};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_value, __pyx_mstate->__pyx_n_u_value};
-    __pyx_mstate_global->__pyx_codeobj_tab[17] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_set, __pyx_mstate->__pyx_kp_b_iso88591_A, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[17])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[21] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_set, __pyx_mstate->__pyx_kp_b_iso88591_A, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[21])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 99};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 114};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[18] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_get_2, __pyx_mstate->__pyx_kp_b_iso88591_A_q_t1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[18])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[22] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_get_2, __pyx_mstate->__pyx_kp_b_iso88591_A_q_t1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[22])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 103};
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 118};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_value, __pyx_mstate->__pyx_n_u_value};
-    __pyx_mstate_global->__pyx_codeobj_tab[19] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_set, __pyx_mstate->__pyx_kp_b_iso88591_A, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[19])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[23] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_set, __pyx_mstate->__pyx_kp_b_iso88591_A, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[23])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 107};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 122};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[20] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_get_2, __pyx_mstate->__pyx_kp_b_iso88591_A_t1_6, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[20])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[24] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_get_2, __pyx_mstate->__pyx_kp_b_iso88591_A_t1_6, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[24])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 111};
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 126};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_value, __pyx_mstate->__pyx_n_u_value};
-    __pyx_mstate_global->__pyx_codeobj_tab[21] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_set, __pyx_mstate->__pyx_kp_b_iso88591_A_2, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[21])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[25] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_set, __pyx_mstate->__pyx_kp_b_iso88591_A_2, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[25])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 115};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 130};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
-    __pyx_mstate_global->__pyx_codeobj_tab[22] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_get_2, __pyx_mstate->__pyx_kp_b_iso88591_A_t1_7, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[22])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[26] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_get_2, __pyx_mstate->__pyx_kp_b_iso88591_A_t1_7, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[26])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 119};
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 134};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_value, __pyx_mstate->__pyx_n_u_value};
-    __pyx_mstate_global->__pyx_codeobj_tab[23] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_set, __pyx_mstate->__pyx_kp_b_iso88591_A_O1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[23])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[27] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_set, __pyx_mstate->__pyx_kp_b_iso88591_A_O1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[27])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 12, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 123};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_TILE_OFFSETS, __pyx_mstate->__pyx_n_u_tilemap_2, __pyx_mstate->__pyx_n_u_gs, __pyx_mstate->__pyx_n_u_elevations, __pyx_mstate->__pyx_n_u_height_2, __pyx_mstate->__pyx_n_u_climb_2, __pyx_mstate->__pyx_n_u_fall_2, __pyx_mstate->__pyx_n_u_straight_weight_2, __pyx_mstate->__pyx_n_u_diagonal_weight_2, __pyx_mstate->__pyx_n_u_elevation_weight_2, __pyx_mstate->__pyx_n_u_greediness_2};
-    __pyx_mstate_global->__pyx_codeobj_tab[24] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_reset_cache, __pyx_mstate->__pyx_kp_b_iso88591_G1_O1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[24])) goto bad;
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 138};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
+    __pyx_mstate_global->__pyx_codeobj_tab[28] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_get_2, __pyx_mstate->__pyx_kp_b_iso88591_A_t1_8, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[28])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 13, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 127};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_node, __pyx_mstate->__pyx_n_u_TILE_OFFSETS, __pyx_mstate->__pyx_n_u_tilemap_2, __pyx_mstate->__pyx_n_u_gs, __pyx_mstate->__pyx_n_u_elevations, __pyx_mstate->__pyx_n_u_height_2, __pyx_mstate->__pyx_n_u_climb_2, __pyx_mstate->__pyx_n_u_fall_2, __pyx_mstate->__pyx_n_u_straight_weight_2, __pyx_mstate->__pyx_n_u_diagonal_weight_2, __pyx_mstate->__pyx_n_u_elevation_weight_2, __pyx_mstate->__pyx_n_u_greediness_2};
-    __pyx_mstate_global->__pyx_codeobj_tab[25] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_g, __pyx_mstate->__pyx_kp_b_iso88591_D_AQ_2S_AXQ_q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[25])) goto bad;
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 3, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 142};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_value, __pyx_mstate->__pyx_n_u_value};
+    __pyx_mstate_global->__pyx_codeobj_tab[29] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_set, __pyx_mstate->__pyx_kp_b_iso88591_A_M, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[29])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 14, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 134};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_node, __pyx_mstate->__pyx_n_u_end, __pyx_mstate->__pyx_n_u_TILE_OFFSETS, __pyx_mstate->__pyx_n_u_tilemap_2, __pyx_mstate->__pyx_n_u_gs, __pyx_mstate->__pyx_n_u_elevations, __pyx_mstate->__pyx_n_u_height_2, __pyx_mstate->__pyx_n_u_climb_2, __pyx_mstate->__pyx_n_u_fall_2, __pyx_mstate->__pyx_n_u_straight_weight_2, __pyx_mstate->__pyx_n_u_diagonal_weight_2, __pyx_mstate->__pyx_n_u_elevation_weight_2, __pyx_mstate->__pyx_n_u_greediness_2};
-    __pyx_mstate_global->__pyx_codeobj_tab[26] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_h, __pyx_mstate->__pyx_kp_b_iso88591_Qb_BgS_1A_t1G4q_3b_s_2Qa_d_d_O1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[26])) goto bad;
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 14, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 146};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_TILE_OFFSETS, __pyx_mstate->__pyx_n_u_ANGLES, __pyx_mstate->__pyx_n_u_tilemap_2, __pyx_mstate->__pyx_n_u_gs, __pyx_mstate->__pyx_n_u_elevations, __pyx_mstate->__pyx_n_u_height_2, __pyx_mstate->__pyx_n_u_climb_2, __pyx_mstate->__pyx_n_u_fall_2, __pyx_mstate->__pyx_n_u_straight_weight_2, __pyx_mstate->__pyx_n_u_diagonal_weight_2, __pyx_mstate->__pyx_n_u_elevation_weight_2, __pyx_mstate->__pyx_n_u_greediness_2, __pyx_mstate->__pyx_n_u_max_turn_2};
+    __pyx_mstate_global->__pyx_codeobj_tab[30] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_reset_cache, __pyx_mstate->__pyx_kp_b_iso88591_G1_O1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[30])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 13, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 148};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_node, __pyx_mstate->__pyx_n_u_TILE_OFFSETS, __pyx_mstate->__pyx_n_u_tilemap_2, __pyx_mstate->__pyx_n_u_gs, __pyx_mstate->__pyx_n_u_elevations, __pyx_mstate->__pyx_n_u_height_2, __pyx_mstate->__pyx_n_u_climb_2, __pyx_mstate->__pyx_n_u_fall_2, __pyx_mstate->__pyx_n_u_straight_weight_2, __pyx_mstate->__pyx_n_u_diagonal_weight_2, __pyx_mstate->__pyx_n_u_elevation_weight_2, __pyx_mstate->__pyx_n_u_greediness_2};
-    __pyx_mstate_global->__pyx_codeobj_tab[27] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_get_elevation, __pyx_mstate->__pyx_kp_b_iso88591_A_L_AQ_S_t1A_t9D_Qd_1_5_q_AZr_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[27])) goto bad;
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 15, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 150};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_node, __pyx_mstate->__pyx_n_u_TILE_OFFSETS, __pyx_mstate->__pyx_n_u_ANGLES, __pyx_mstate->__pyx_n_u_tilemap_2, __pyx_mstate->__pyx_n_u_gs, __pyx_mstate->__pyx_n_u_elevations, __pyx_mstate->__pyx_n_u_height_2, __pyx_mstate->__pyx_n_u_climb_2, __pyx_mstate->__pyx_n_u_fall_2, __pyx_mstate->__pyx_n_u_straight_weight_2, __pyx_mstate->__pyx_n_u_diagonal_weight_2, __pyx_mstate->__pyx_n_u_elevation_weight_2, __pyx_mstate->__pyx_n_u_greediness_2, __pyx_mstate->__pyx_n_u_max_turn_2};
+    __pyx_mstate_global->__pyx_codeobj_tab[31] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_g, __pyx_mstate->__pyx_kp_b_iso88591_D_AQ_2S_AXQ_q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[31])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {5, 0, 0, 16, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 159};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_data, __pyx_mstate->__pyx_n_u_elevation, __pyx_mstate->__pyx_n_u_bottom, __pyx_mstate->__pyx_n_u_climb, __pyx_mstate->__pyx_n_u_TILE_OFFSETS, __pyx_mstate->__pyx_n_u_tilemap_2, __pyx_mstate->__pyx_n_u_gs, __pyx_mstate->__pyx_n_u_elevations, __pyx_mstate->__pyx_n_u_height_2, __pyx_mstate->__pyx_n_u_climb_2, __pyx_mstate->__pyx_n_u_fall_2, __pyx_mstate->__pyx_n_u_straight_weight_2, __pyx_mstate->__pyx_n_u_diagonal_weight_2, __pyx_mstate->__pyx_n_u_elevation_weight_2, __pyx_mstate->__pyx_n_u_greediness_2};
-    __pyx_mstate_global->__pyx_codeobj_tab[28] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_cant, __pyx_mstate->__pyx_kp_b_iso88591_5_1_q_q_4wd_D_r_Q_D_Qa_1_r_Rwb, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[28])) goto bad;
+    const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 16, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 157};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_node, __pyx_mstate->__pyx_n_u_end, __pyx_mstate->__pyx_n_u_TILE_OFFSETS, __pyx_mstate->__pyx_n_u_ANGLES, __pyx_mstate->__pyx_n_u_tilemap_2, __pyx_mstate->__pyx_n_u_gs, __pyx_mstate->__pyx_n_u_elevations, __pyx_mstate->__pyx_n_u_height_2, __pyx_mstate->__pyx_n_u_climb_2, __pyx_mstate->__pyx_n_u_fall_2, __pyx_mstate->__pyx_n_u_straight_weight_2, __pyx_mstate->__pyx_n_u_diagonal_weight_2, __pyx_mstate->__pyx_n_u_elevation_weight_2, __pyx_mstate->__pyx_n_u_greediness_2, __pyx_mstate->__pyx_n_u_max_turn_2};
+    __pyx_mstate_global->__pyx_codeobj_tab[32] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_h, __pyx_mstate->__pyx_kp_b_iso88591_Qb_BgS_1A_t1G4q_3b_s_2Qa_d_d_O1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[32])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {6, 0, 0, 17, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 182};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_node, __pyx_mstate->__pyx_n_u_offset, __pyx_mstate->__pyx_n_u_elevation, __pyx_mstate->__pyx_n_u_neighbor, __pyx_mstate->__pyx_n_u_climb, __pyx_mstate->__pyx_n_u_TILE_OFFSETS, __pyx_mstate->__pyx_n_u_tilemap_2, __pyx_mstate->__pyx_n_u_gs, __pyx_mstate->__pyx_n_u_elevations, __pyx_mstate->__pyx_n_u_height_2, __pyx_mstate->__pyx_n_u_climb_2, __pyx_mstate->__pyx_n_u_fall_2, __pyx_mstate->__pyx_n_u_straight_weight_2, __pyx_mstate->__pyx_n_u_diagonal_weight_2, __pyx_mstate->__pyx_n_u_elevation_weight_2, __pyx_mstate->__pyx_n_u_greediness_2};
-    __pyx_mstate_global->__pyx_codeobj_tab[29] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_calculate, __pyx_mstate->__pyx_kp_b_iso88591_4_aq_aq_t9D_Qhaq_4vQfKxq_1_1Ct6, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[29])) goto bad;
+    const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 15, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 171};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_node, __pyx_mstate->__pyx_n_u_TILE_OFFSETS, __pyx_mstate->__pyx_n_u_ANGLES, __pyx_mstate->__pyx_n_u_tilemap_2, __pyx_mstate->__pyx_n_u_gs, __pyx_mstate->__pyx_n_u_elevations, __pyx_mstate->__pyx_n_u_height_2, __pyx_mstate->__pyx_n_u_climb_2, __pyx_mstate->__pyx_n_u_fall_2, __pyx_mstate->__pyx_n_u_straight_weight_2, __pyx_mstate->__pyx_n_u_diagonal_weight_2, __pyx_mstate->__pyx_n_u_elevation_weight_2, __pyx_mstate->__pyx_n_u_greediness_2, __pyx_mstate->__pyx_n_u_max_turn_2};
+    __pyx_mstate_global->__pyx_codeobj_tab[33] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_get_elevation, __pyx_mstate->__pyx_kp_b_iso88591_A_L_AQ_S_t1A_t9D_Qd_1_5_q_AZr_Q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[33])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {6, 0, 0, 17, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 219};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_start, __pyx_mstate->__pyx_n_u_end, __pyx_mstate->__pyx_n_u_climb, __pyx_mstate->__pyx_n_u_max_nodes, __pyx_mstate->__pyx_n_u_force, __pyx_mstate->__pyx_n_u_TILE_OFFSETS, __pyx_mstate->__pyx_n_u_tilemap_2, __pyx_mstate->__pyx_n_u_gs, __pyx_mstate->__pyx_n_u_elevations, __pyx_mstate->__pyx_n_u_height_2, __pyx_mstate->__pyx_n_u_climb_2, __pyx_mstate->__pyx_n_u_fall_2, __pyx_mstate->__pyx_n_u_straight_weight_2, __pyx_mstate->__pyx_n_u_diagonal_weight_2, __pyx_mstate->__pyx_n_u_elevation_weight_2, __pyx_mstate->__pyx_n_u_greediness_2};
-    __pyx_mstate_global->__pyx_codeobj_tab[30] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_pathfind_2, __pyx_mstate->__pyx_kp_b_iso88591_a_M_7_Cq_q_Q_A_6_Q_D_D_e4s_9Cq, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[30])) goto bad;
+    const __Pyx_PyCode_New_function_description descr = {5, 0, 0, 18, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 182};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_data, __pyx_mstate->__pyx_n_u_elevation, __pyx_mstate->__pyx_n_u_bottom, __pyx_mstate->__pyx_n_u_climb, __pyx_mstate->__pyx_n_u_TILE_OFFSETS, __pyx_mstate->__pyx_n_u_ANGLES, __pyx_mstate->__pyx_n_u_tilemap_2, __pyx_mstate->__pyx_n_u_gs, __pyx_mstate->__pyx_n_u_elevations, __pyx_mstate->__pyx_n_u_height_2, __pyx_mstate->__pyx_n_u_climb_2, __pyx_mstate->__pyx_n_u_fall_2, __pyx_mstate->__pyx_n_u_straight_weight_2, __pyx_mstate->__pyx_n_u_diagonal_weight_2, __pyx_mstate->__pyx_n_u_elevation_weight_2, __pyx_mstate->__pyx_n_u_greediness_2, __pyx_mstate->__pyx_n_u_max_turn_2};
+    __pyx_mstate_global->__pyx_codeobj_tab[34] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_cant, __pyx_mstate->__pyx_kp_b_iso88591_5_1_q_q_4wd_D_r_Q_D_Qa_1_r_Rwb, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[34])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {6, 0, 0, 6, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 306};
-    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_start, __pyx_mstate->__pyx_n_u_end, __pyx_mstate->__pyx_n_u_climb, __pyx_mstate->__pyx_n_u_max_nodes, __pyx_mstate->__pyx_n_u_force};
-    __pyx_mstate_global->__pyx_codeobj_tab[31] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_pathfind, __pyx_mstate->__pyx_kp_b_iso88591_q_t_QgU_A, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[31])) goto bad;
+    const __Pyx_PyCode_New_function_description descr = {6, 0, 0, 19, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 205};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_node, __pyx_mstate->__pyx_n_u_offset, __pyx_mstate->__pyx_n_u_elevation, __pyx_mstate->__pyx_n_u_neighbor, __pyx_mstate->__pyx_n_u_climb, __pyx_mstate->__pyx_n_u_TILE_OFFSETS, __pyx_mstate->__pyx_n_u_ANGLES, __pyx_mstate->__pyx_n_u_tilemap_2, __pyx_mstate->__pyx_n_u_gs, __pyx_mstate->__pyx_n_u_elevations, __pyx_mstate->__pyx_n_u_height_2, __pyx_mstate->__pyx_n_u_climb_2, __pyx_mstate->__pyx_n_u_fall_2, __pyx_mstate->__pyx_n_u_straight_weight_2, __pyx_mstate->__pyx_n_u_diagonal_weight_2, __pyx_mstate->__pyx_n_u_elevation_weight_2, __pyx_mstate->__pyx_n_u_greediness_2, __pyx_mstate->__pyx_n_u_max_turn_2};
+    __pyx_mstate_global->__pyx_codeobj_tab[35] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_calculate, __pyx_mstate->__pyx_kp_b_iso88591_4_aq_aq_t9D_Qhaq_4vQfKxq_1_1Ct6, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[35])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {7, 0, 0, 20, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 242};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_yaw, __pyx_mstate->__pyx_n_u_start, __pyx_mstate->__pyx_n_u_end, __pyx_mstate->__pyx_n_u_climb, __pyx_mstate->__pyx_n_u_max_nodes, __pyx_mstate->__pyx_n_u_force, __pyx_mstate->__pyx_n_u_TILE_OFFSETS, __pyx_mstate->__pyx_n_u_ANGLES, __pyx_mstate->__pyx_n_u_tilemap_2, __pyx_mstate->__pyx_n_u_gs, __pyx_mstate->__pyx_n_u_elevations, __pyx_mstate->__pyx_n_u_height_2, __pyx_mstate->__pyx_n_u_climb_2, __pyx_mstate->__pyx_n_u_fall_2, __pyx_mstate->__pyx_n_u_straight_weight_2, __pyx_mstate->__pyx_n_u_diagonal_weight_2, __pyx_mstate->__pyx_n_u_elevation_weight_2, __pyx_mstate->__pyx_n_u_greediness_2, __pyx_mstate->__pyx_n_u_max_turn_2};
+    __pyx_mstate_global->__pyx_codeobj_tab[36] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_pathfind_2, __pyx_mstate->__pyx_kp_b_iso88591_a_M_7_Cq_q_Q_A_6_Q_D_D_e4s_9Cq, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[36])) goto bad;
+  }
+  {
+    const __Pyx_PyCode_New_function_description descr = {7, 0, 0, 7, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 338};
+    PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_yaw, __pyx_mstate->__pyx_n_u_start, __pyx_mstate->__pyx_n_u_end, __pyx_mstate->__pyx_n_u_climb, __pyx_mstate->__pyx_n_u_max_nodes, __pyx_mstate->__pyx_n_u_force};
+    __pyx_mstate_global->__pyx_codeobj_tab[37] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_pathfind_pyx, __pyx_mstate->__pyx_n_u_pathfind, __pyx_mstate->__pyx_kp_b_iso88591_q_t_Qe7_wk, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[37])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 4, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 1};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_state, __pyx_mstate->__pyx_n_u_dict_2, __pyx_mstate->__pyx_n_u_use_setstate};
-    __pyx_mstate_global->__pyx_codeobj_tab[32] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_reduce_cython, __pyx_mstate->__pyx_kp_b_iso88591_T_Yd2ETI_aaooss_N_N_R_R_X_X_f_f, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[32])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[38] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_reduce_cython, __pyx_mstate->__pyx_kp_b_iso88591_T_4_t9D_SSWWkkoo_B_B_J_J_N_N_f, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[38])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 16};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self, __pyx_mstate->__pyx_n_u_pyx_state};
-    __pyx_mstate_global->__pyx_codeobj_tab[33] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_setstate_cython, __pyx_mstate->__pyx_kp_b_iso88591_q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[33])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[39] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_setstate_cython, __pyx_mstate->__pyx_kp_b_iso88591_q, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[39])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {3, 0, 0, 4, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 4};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_pyx_type, __pyx_mstate->__pyx_n_u_pyx_checksum, __pyx_mstate->__pyx_n_u_pyx_state, __pyx_mstate->__pyx_n_u_pyx_result};
-    __pyx_mstate_global->__pyx_codeobj_tab[34] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_pyx_unpickle_Pathfinder, __pyx_mstate->__pyx_kp_b_iso88591_q_0_kQR_XQa_7_A_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[34])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[40] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_pyx_unpickle_Pathfinder, __pyx_mstate->__pyx_kp_b_iso88591_q_0_kQR_XQa_7_A_1, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[40])) goto bad;
   }
   {
     const __Pyx_PyCode_New_function_description descr = {2, 0, 0, 2, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 11};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_pyx_result, __pyx_mstate->__pyx_n_u_pyx_state};
-    __pyx_mstate_global->__pyx_codeobj_tab[35] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_pyx_unpickle_Pathfinder__set_s, __pyx_mstate->__pyx_kp_b_iso88591_PPQ_AT_Z_RSSWWccw_x_C_C_D_D_H_H, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[35])) goto bad;
+    __pyx_mstate_global->__pyx_codeobj_tab[41] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_stringsource, __pyx_mstate->__pyx_n_u_pyx_unpickle_Pathfinder__set_s, __pyx_mstate->__pyx_kp_b_iso88591_PPQ_at_7H_STTXXddnnyyzz_K_K, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[41])) goto bad;
   }
   Py_DECREF(tuple_dedup_map);
   return 0;

@@ -16,10 +16,16 @@ cdef str gen_tile_key(obj: Point):
     return f'{<int>floorf(obj[0])};{<int>floorf(obj[1])}'
 
 
+cdef float normalize_degrees(float angle):
+    # + 180, then + 360
+    return (angle + 540) % 360 - 180
+
+
 # A* pathfinder; points are in the format tuple[Point, int]
 cdef class Pathfinder:
     cdef: 
         int[8][2] _TILE_OFFSETS
+        float[8] _ANGLES
         dict _tilemap
         dict _gs
         dict _elevations
@@ -30,6 +36,7 @@ cdef class Pathfinder:
         float _diagonal_weight
         float _elevation_weight
         float _greediness
+        float _max_turn
 
     def __init__(self: Self,
                  dict tilemap,
@@ -46,6 +53,12 @@ cdef class Pathfinder:
             [-1,  1], [0,  1], [1,  1],
             [-1,  0],          [1,  0],
             [-1, -1], [0, -1], [1, -1],
+        ]
+
+        self._ANGLES = [
+            -45,   0,   45,
+            -90,        90,
+            -135, -180, 135,
         ]
         
         self._tilemap = tilemap
@@ -237,10 +250,13 @@ cdef class Pathfinder:
         self._reset_cache()
         cdef:
             list path # final path
+            dict yaws = {start: yaw}
             dict parent = {start: start}
             dict will = {start: self._h(start, end)} # open
             set visited = set() # closed
             int elevation
+            int[2] offset
+            float turn
             float f
             float h
             float least
@@ -283,7 +299,13 @@ cdef class Pathfinder:
             visited.add(node)
 
             # Check Neighbor
-            for offset in self._TILE_OFFSETS:
+            for i in range(8):
+                offset = self._TILE_OFFSETS[i]
+                turn = fabs(
+                    normalize_degrees(self._ANGLES[i] - <float>yaws[node[0]])
+                )
+                if turn > self._max_turn:
+                    continue 
                 for elevation in range(2): # 0 is ground; 1 is atop tile
                     neighbor = (
                         (<int>node[0][0] + offset[0],
@@ -302,6 +324,7 @@ cdef class Pathfinder:
                         continue
                     self._gs[neighbor] = tentative_g
                     parent[neighbor] = node
+                    yaws[neighbor[0]] = self._ANGLES[i]
                     will[neighbor] = tentative_g + self._h(neighbor, end)
         if force:
             node = parent[closest_node]
@@ -313,10 +336,11 @@ cdef class Pathfinder:
         return []
 
     def pathfind(self: Self,
+                 float yaw,
                  tuple start,
                  tuple end,
                  float climb=-1,
                  int max_nodes=100,
                  bint force=0) -> list:
-        return self._pathfind(start, end, climb, max_nodes, force)
+        return self._pathfind(yaw, start, end, climb, max_nodes, force)
 

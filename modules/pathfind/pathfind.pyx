@@ -283,7 +283,6 @@ cdef class Pathfinder:
                 if f < least:
                     least = f
                     node = tentative
-            print(node, least, parent[node])
             if node == end:
                 # Trace path back
                 node = parent.get(end)
@@ -322,7 +321,6 @@ cdef class Pathfinder:
                             node, offset, elevation, neighbor, climb,
                         )
                     )
-                    print(tentative_g, self._g(neighbor), offset, node, neighbor, yaw, turn, tentative_g + self._h(neighbor, end))
                     if tentative_g >= self._g(neighbor):
                         continue
                     self._gs[neighbor] = tentative_g

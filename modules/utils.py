@@ -238,11 +238,17 @@ def gen_data_path(*args: str):
 def gen_img_path(*args: str):
     return gen_data_path('images', *args)
 
+def gen_fnt_path(*args: str):
+    return gen_data_path('fonts', *args)
+
 def gen_sfx_path(*args: str):
     return gen_data_path('audio', 'sfx', *args)
 
 def gen_mus_path(*args: str):
     return gen_data_path('audio', 'music', *args)
+
+def gen_map_path(*args: str):
+    return gen_data_path('maps', *args)
 
 def normalize_degrees(angle: Real) -> Real:
     return (angle + 180) % 360 - 180

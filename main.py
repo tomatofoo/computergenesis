@@ -21,6 +21,7 @@ from modules.menu import Menu
 from modules.pathfind import Pathfinder
 from modules.utils import SMALL
 from modules.utils import gen_tile_key
+from modules.utils import gen_fnt_path
 from modules.utils import gen_img_path
 
 PATHFINDER = Pathfinder(
@@ -103,12 +104,12 @@ class Game(object):
         # Menu
         self._fonts = {
             'normal': [
-                pg.Font('data/fonts/Pixbob.ttf', 10),
-                pg.Font('data/fonts/Pixbob.ttf', 20),
+                pg.Font(gen_fnt_path('Pixbob.ttf'), 10),
+                pg.Font(gen_fnt_path('Pixbob.ttf'), 20),
             ],
             'bold': [
-                pg.Font('data/fonts/Pixbob Bold.ttf', 10),
-                pg.Font('data/fonts/Pixbob Bold.ttf', 20),
+                pg.Font(gen_fnt_path('Pixbob Bold.ttf'), 10),
+                pg.Font(gen_fnt_path('Pixbob Bold.ttf'), 20),
             ],
         }
         main = Menu(

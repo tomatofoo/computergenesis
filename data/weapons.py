@@ -11,21 +11,21 @@ from modules.weapons import MissileWeapon
 
 textures = {
     'fist': [
-        pg.image.load(gen_img_path('fist/1.png')),
-        pg.image.load(gen_img_path('fist/2.png')),
-        pg.image.load(gen_img_path('fist/3.png')),
-        pg.image.load(gen_img_path('fist/4.png')),
+        pg.image.load(gen_img_path('fist', '1.png')),
+        pg.image.load(gen_img_path('fist', '2.png')),
+        pg.image.load(gen_img_path('fist', '3.png')),
+        pg.image.load(gen_img_path('fist', '4.png')),
     ],
     'shotgun': [
-        pg.image.load(gen_img_path('shotgun/1.png')),
-        pg.image.load(gen_img_path('shotgun/2.png')),
-        pg.image.load(gen_img_path('shotgun/3.png')),
-        pg.image.load(gen_img_path('shotgun/4.png')),
-        pg.image.load(gen_img_path('shotgun/ground.png')),
+        pg.image.load(gen_img_path('shotgun', '1.png')),
+        pg.image.load(gen_img_path('shotgun', '2.png')),
+        pg.image.load(gen_img_path('shotgun', '3.png')),
+        pg.image.load(gen_img_path('shotgun', '4.png')),
+        pg.image.load(gen_img_path('shotgun', 'ground.png')),
     ],
     'launcher': [
-        pg.image.load(gen_img_path('missile_launcher/1.png')),
-        pg.image.load(gen_img_path('missile_launcher/2.png')),
+        pg.image.load(gen_img_path('missile_launcher', '1.png')),
+        pg.image.load(gen_img_path('missile_launcher', '2.png')),
     ],
 }
 

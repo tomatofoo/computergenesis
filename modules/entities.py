@@ -1631,4 +1631,7 @@ class EntityManager(object):
 
 
 # CUSTOM
-
+class Keyboard(Stalker):
+    def __init__(self: Self) -> None:
+        pass
+ 

@@ -118,7 +118,8 @@ entities = {
         states={'default': EntityExState(textures, 60)},
     ),
     Entity(
-        pos=(6.5, 6),
+        pos=(9.5, 4.5),
+        elevation=1,
         width=0.25,
         height=0.6,
         attack_width=0.4,

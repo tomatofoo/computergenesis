@@ -21,6 +21,7 @@ from modules.entities import EntityManager
 from modules.inventory import Collectible
 from modules.inventory import Inventory
 from modules.utils import gen_img_path
+from modules.utils import gen_map_path
 
 
 # LEVEL 0
@@ -121,16 +122,17 @@ entities = {
         width=0.25,
         height=0.6,
         attack_width=0.4,
-        render_width=0.5,
+        render_width=0.75,
+        render_height=1.0,
         textures=[
-            pg.image.load(gen_img_path('vassago', '1.png')),
-            pg.image.load(gen_img_path('vassago', '2.png')),
-            pg.image.load(gen_img_path('vassago', '3.png')),
-            pg.image.load(gen_img_path('vassago', '4.png')),
-            pg.image.load(gen_img_path('vassago', '5.png')),
-            pg.image.load(gen_img_path('vassago', '6.png')),
-            pg.image.load(gen_img_path('vassago', '7.png')),
-            pg.image.load(gen_img_path('vassago', '8.png')),
+            pg.image.load(gen_img_path('speaker', '1.png')),
+            pg.image.load(gen_img_path('speaker', '2.png')),
+            pg.image.load(gen_img_path('speaker', '3.png')),
+            pg.image.load(gen_img_path('speaker', '4.png')),
+            pg.image.load(gen_img_path('speaker', '5.png')),
+            pg.image.load(gen_img_path('speaker', '6.png')),
+            pg.image.load(gen_img_path('speaker', '7.png')),
+            pg.image.load(gen_img_path('speaker', '8.png')),
         ]
     ),
     Entity(
@@ -234,7 +236,7 @@ specials = SpecialManager()
 level0 = Level(
     floor=Floor(pg.image.load(gen_img_path('tilesets', 'main', 'wood.png'))),
     ceiling=Sky(pg.image.load(gen_img_path('nightsky.png'))),
-    walls=Walls.load(gen_map_path(demo2.json'), wall_textures),
+    walls=Walls.load(gen_map_path('demo2.json'), wall_textures),
     specials=specials,
     entities=entities,
     sounds=SOUNDS,

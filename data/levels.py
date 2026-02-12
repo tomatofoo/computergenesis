@@ -123,7 +123,7 @@ entities = {
         width=0.25,
         height=0.6,
         attack_width=0.4,
-        render_width=1.016,
+        render_width=1512 / 1486,
         render_height=1.0,
         textures=[
             pg.image.load(gen_img_path('speaker', '1.png')),

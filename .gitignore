@@ -210,7 +210,7 @@ __marimo__/
 # MacOS
 .DS_Store
 
-# Cython
+# Cython Modules
 modules/camera/camera.c
 modules/camera/camera.html
 modules/pathfind/pathfind.c

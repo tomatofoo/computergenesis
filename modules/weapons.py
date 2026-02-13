@@ -429,6 +429,8 @@ class MissileWeapon(AmmoWeapon):
                        attacker: Entity,
                        foa: Real,
                        roa: Real) -> None:
+
+        # TEMPORARY
         attacker.boost = -attacker._yaw * 0.5
         attacker._elevation_velocity += 0.1
 

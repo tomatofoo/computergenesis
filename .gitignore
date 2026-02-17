@@ -216,3 +216,6 @@ modules/camera/camera.html
 modules/pathfind/pathfind.c
 modules/pathfind/pathfind.html
 
+# Data
+data/
+

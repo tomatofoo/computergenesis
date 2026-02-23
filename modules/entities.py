@@ -45,7 +45,8 @@ class Entity(object):
                  attack_width: Optional[Real]=None,
                  attack_height: Optional[Real]=None,
                  render_width: Optional[Real]=None,
-                 render_height: Optional[Real]=None) -> None:
+                 render_height: Optional[Real]=None,
+                 render_offset: Real=0) -> None:
 
         self.yaw = 0
         self.velocity2 = (0, 0)
@@ -67,6 +68,7 @@ class Entity(object):
             self._attack_height = height
         self._render_width = render_width
         self._render_height = render_height
+        self._render_offset = render_offset
         if render_width is None:
             self._render_width = width
         if render_height is None:
@@ -221,6 +223,14 @@ class Entity(object):
     @render_height.setter
     def render_height(self: Self, value: Real) -> None:
         self._render_height = value
+
+    @property
+    def render_offset(self: Self) -> Real:
+        return self._render_offset
+
+    @render_offset.setter
+    def render_offset(self: Self, value: Real) -> None:
+        self._render_offset = value
 
     @property
     def top(self: Self) -> Real:

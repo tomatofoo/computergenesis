@@ -1013,7 +1013,11 @@ cdef class Camera:
                     obj = entity.vector3 - self._player._render_vector3
                     # rotation
                     obj.rotate_y_ip(self._player._yaw_value)
-                    rel_vector = [obj[0], obj[1], obj[2]]
+                    rel_vector = [
+                        obj[0],
+                        <float>obj[1] + <float>entity._render_offset,
+                        obj[2],
+                    ]
 
                     if rel_vector[2] >= self._min_entity_depth:
                         # taking ratio of x:z and y:z

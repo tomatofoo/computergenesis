@@ -684,7 +684,8 @@ class EntityEx(Entity):
                  attack_width: Optional[Real]=None,
                  attack_height: Optional[Real]=None,
                  render_width: Optional[Real]=None,
-                 render_height: Optional[Real]=None) -> None:
+                 render_height: Optional[Real]=None,
+                 render_offset: Real=0) -> None:
 
         super().__init__(
             pos=pos,
@@ -698,6 +699,7 @@ class EntityEx(Entity):
             attack_height=attack_height,
             render_width=render_width,
             render_height=render_height,
+            render_offset=render_offset,
         )
         self._state = state
         self._states = states
@@ -771,7 +773,8 @@ class Stalker(EntityEx):
                  attack_width: Optional[Real]=None,
                  attack_height: Optional[Real]=None,
                  render_width: Optional[Real]=None,
-                 render_height: Optional[Real]=None) -> None:
+                 render_height: Optional[Real]=None,
+                 render_offset: Real=0) -> None:
         super().__init__(
             pos=pos,
             elevation=elevation,
@@ -786,6 +789,7 @@ class Stalker(EntityEx):
             attack_height=attack_height,
             render_width=render_width,
             render_height=render_height,
+            render_offset=render_offset,
         )
         self._enemy = enemy # the entity to stalk
         self._stalk_speed = stalk_speed
@@ -938,7 +942,8 @@ class Missile(EntityEx):
                  attack_width: Optional[Real]=None,
                  attack_height: Optional[Real]=None,
                  render_width: Optional[Real]=None,
-                 render_height: Optional[Real]=None) -> None:
+                 render_height: Optional[Real]=None,
+                 render_offset: Real=0) -> None:
         super().__init__(
             width=width,
             height=height,
@@ -948,6 +953,7 @@ class Missile(EntityEx):
             attack_height=attack_height,
             render_width=render_width,
             render_height=render_height,
+            render_offset=render_offset,
         )
         self._damage = damage
         self._blast_radius = blast_radius
@@ -1035,7 +1041,8 @@ class Item(EntityEx):
                  gravity: Real=0,
                  loop: Real=-1,
                  render_width: Optional[Real]=None,
-                 render_height: Optional[Real]=None) -> None:
+                 render_height: Optional[Real]=None,
+                 render_offset: Real=0) -> None:
 
         super().__init__(
             pos=pos,
@@ -1045,6 +1052,7 @@ class Item(EntityEx):
             gravity=gravity,
             render_width=render_width,
             render_height=render_height,
+            render_offset=render_offset,
         )
         self._obj = obj
         self._loop = loop
@@ -1092,7 +1100,8 @@ class CollectibleItem(Item):
                  gravity: Real=0,
                  loop: Real=-1,
                  render_width: Optional[Real]=None,
-                 render_height: Optional[Real]=None) -> None:
+                 render_height: Optional[Real]=None,
+                 render_offset: Real=0) -> None:
 
         super().__init__(
             obj=collectible,
@@ -1104,6 +1113,7 @@ class CollectibleItem(Item):
             loop=loop,
             render_width=render_width,
             render_height=render_height,
+            render_offset=render_offset,
         )
 
     @property
@@ -1130,7 +1140,8 @@ class WeaponItem(Item):
                  gravity: Real=0,
                  loop: Real=-1,
                  render_width: Optional[Real]=None,
-                 render_height: Optional[Real]=None) -> None:
+                 render_height: Optional[Real]=None,
+                 render_offset: Real=0) -> None:
 
         super().__init__(
             obj=weapon,
@@ -1142,6 +1153,7 @@ class WeaponItem(Item):
             loop=loop,
             render_width=render_width,
             render_height=render_height,
+            render_offset=render_offset,
         )
         self._number = number
 

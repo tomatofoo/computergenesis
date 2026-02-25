@@ -6,7 +6,7 @@ DIR=$PWD
 MODULES=("pathfind" "camera")
 
 # Compile Cython Modules
-for module in $MODULES; do
+for module in "${MODULES[@]}"; do
     cd $DIR/modules/$module
     python3 setup.py build_ext --build-lib=../
 done

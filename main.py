@@ -82,7 +82,7 @@ class Game(object):
         
         # Level
         self._level = LEVELS[0]
-        self._level.sounds = SOUNDS
+        self._level.sounds = SOUNDS # in levels.py SOUNDS._manager gets changed
         self._player = self._level.entities.player
         self._player.weapon = WEAPONS['launcher']
         

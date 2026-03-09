@@ -271,7 +271,7 @@ class Level(object):
                  walls: Walls,
                  specials: SpecialManager,
                  entities: EntityManager,
-                 sounds: SoundManager,
+                 sounds: Optional[SoundManager]=None,
                  ceiling_elevation: Real=1) -> None:
 
         self._floor = floor
@@ -285,8 +285,9 @@ class Level(object):
         self._sounds = sounds
         specials._level = self
         entities._level = self
-        sounds._level = self
-        sounds.update()
+        if sounds is not None:
+            sounds._level = self
+            sounds.update()
 
     @property
     def floor(self: Self) -> Optional[Floor | Sky]:
@@ -333,18 +334,21 @@ class Level(object):
         value._level = self
 
     @property
-    def sounds(self: Self) -> SoundManager:
+    def sounds(self: Self) -> Optional[SoundManager]:
         return self._sounds
 
     @sounds.setter
-    def sounds(self: Self, value: SoundManager) -> None:
-        self._sounds._level = None
+    def sounds(self: Self, value: Optional[SoundManager]) -> None:
+        if self._sounds is not None:
+            self._sounds._level = None
         self._sounds = value
-        value._level = self
-        value.update()
+        if value is not None:
+            value._level = self
+            value.update()
 
     def update(self: Self, rel_game_speed: Real, level_timer: Real) -> None:
-        self._sounds.update()
+        if self._sounds is not None:
+            self._sounds.update()
         self._entities.update(rel_game_speed, level_timer)
         self._specials.update(rel_game_speed, level_timer)
 

@@ -275,7 +275,7 @@ class Game(object):
                         elif event.key == pg.K_3:
                             self._player.weapon = WEAPONS['launcher']
                         elif event.key == pg.K_0:
-                            # SOUNDS['water'].play(pos=(9, 0.25, 9)) 
+                            # sSOUNDS['water'].play(pos=(9, 0.25, 9)) 
                             data = self._level.walls.tilemap.get(gen_tile_key(self._player.pos))
                             if data is not None:
                                 elevation = self._player.elevation >= data['height'] + data['elevation']

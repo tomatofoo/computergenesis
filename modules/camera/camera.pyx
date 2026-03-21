@@ -400,6 +400,9 @@ cdef class Camera:
         # intersection between ground and ray is behind the plane
         # (not in front); we use this multiplier
         ray_mult = mult / offsets
+        # x_pixels passed as an argument instead of generated in function
+        # because you don't have to generate the array twice when both floors
+        # have to be rendered
 
         start_points_x = ray_mult * left_ray[0]
         start_points_y = ray_mult * left_ray[1]

@@ -1274,7 +1274,7 @@ class Player(Entity):
 
     @property
     def friction(self: Self) -> Real:
-        return self._fricion
+        return self._friction
 
     @friction.setter
     def friction(self: Self, value: Real) -> None:

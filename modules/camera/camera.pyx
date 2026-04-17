@@ -464,7 +464,7 @@ cdef class Camera:
                     width,
                     sky_height,
                 ).subsurface(rect)
-        elif obj:
+        elif obj is not None:
             # Floor Casting
             difference = height - horizon
 
@@ -514,7 +514,7 @@ cdef class Camera:
                     width,
                     sky_height,
                 ).subsurface(rect)
-        elif obj:
+        elif obj is not None:
             if horizon > 0:
                 offsets = np.linspace(
                     horizon,
@@ -1147,7 +1147,7 @@ cdef class Camera:
                 else:
                     self._walls_and_entities.blit(*obj._args)
 
-    def _render_weapon(self: Self, int width, int height, surf: pg.Surface):
+    cdef void _render_weapon(self: Self, int width, int height, surf: pg.Surface):
         cdef:
             object weapon_surf = self._player._weapon_surf
             int weapon_surf_width = weapon_surf.width * self._weapon_scale

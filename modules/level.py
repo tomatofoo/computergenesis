@@ -46,8 +46,8 @@ class Floor(object):
                  surf: pg.Surface=FALLBACK_SURF,
                  scale: Point=(1, 1)) -> None:
 
-        self.surf = surf
-        self.scale = scale
+        self._surf = surf
+        self._scale = tuple(scale)
         self._array = pg.surfarray.array3d(surf)
     
     def __getitem__(self: Self, dex: tuple):
@@ -80,11 +80,18 @@ class Floor(object):
 
 class Sky(object):
     def __init__(self: Self, surf: pg.Surface=FALLBACK_SURF) -> None:
+        self.surf = surf
 
-        self._surf = surf
-        self._width = surf.width
-        self._height = surf.height
-    
+    @property
+    def surf(self: Self) -> pg.Surface:
+        return self._surf
+
+    @surf.setter
+    def surf(self: Self, value: pg.Surface) -> None:
+        self._surf = value
+        self._width = value.width
+        self._height = value.height
+
     def scroll(self: Self,
                offset: Real,
                width: int,

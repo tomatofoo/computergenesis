@@ -9,7 +9,7 @@ import pygame as pg
 from pygame.typing import Point
 
 
-SMALL = 0.00001
+EPSILON = 0.00001
 
 FALLBACK_SURF = pg.Surface((2, 2))
 pg.draw.rect(FALLBACK_SURF, (255, 0, 255), pg.Rect(1, 0, 1, 1))

@@ -17,7 +17,7 @@ from modules.hud import HUDElement
 from modules.hud import HUD
 from modules.menu import Menu
 from modules.pathfind import Pathfinder
-from modules.utils import SMALL
+from modules.utils import EPSILON
 from modules.utils import gen_tile_key
 from modules.utils import gen_fnt_path
 from modules.utils import gen_img_path
@@ -299,7 +299,7 @@ class Game(object):
                         elif not sliding:
                             if (event.key == self._settings['keys']['slide']
                                 and jumping):
-                                sliding = SMALL
+                                sliding = EPSILON
                                 mult = (
                                     keys[self._settings['keys']['forward']]
                                     - keys[self._settings['keys']['backward']]
@@ -315,7 +315,7 @@ class Game(object):
                             elif (event.key == self._settings['keys']['crouch']
                                   and not jumping
                                   and not crouching):
-                                crouching = SMALL
+                                crouching = EPSILON
                 elif event.type == pg.KEYDOWN:
                     menu = self._menus[self._state]
                     if event.key == self._settings['keys']['menu_up']:
@@ -361,7 +361,7 @@ class Game(object):
                     if sliding >= self._slide_time:
                         sliding = 0
                         if not jumping:
-                            crouching = SMALL
+                            crouching = EPSILON
                 if crouching:
                     if keys[self._settings['keys']['crouch']]:
                         crouching = min(

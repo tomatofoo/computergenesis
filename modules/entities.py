@@ -19,7 +19,7 @@ from .weapons import HitscanWeapon
 from .weapons import MissileWeapon
 from .inventory import Collectible
 from .inventory import Inventory 
-from .utils import SMALL
+from .utils import EPSILON
 from .utils import FALLBACK_SURF
 from .utils import gen_tile_key
 from .utils import normalize_degrees
@@ -493,7 +493,7 @@ class Entity(object):
 
         # Boost
         vel_mult = self._boost_friction**rel_game_speed
-        if self._boost.magnitude() >= SMALL:
+        if self._boost.magnitude() >= EPSILON:
             self._boost *= vel_mult
         else:
             self._boost.update(0, 0)
@@ -523,10 +523,10 @@ class Entity(object):
                             self._collisions['x'][0] = 2
                 if collision:
                     if velocity2[0] > 0:
-                        entity_rect.right = rect.left - SMALL
+                        entity_rect.right = rect.left - EPSILON
                         self._collisions['x'][1] = 1
                     elif velocity2[0] < 0:
-                        entity_rect.left = rect.right + SMALL
+                        entity_rect.left = rect.right + EPSILON
                         self._collisions['x'][0] = 1
                     self._pos[0] = entity_rect.centerx
 
@@ -554,10 +554,10 @@ class Entity(object):
                             self._collisions['y'][0] = 2
                 if collision:
                     if velocity2[1] > 0:
-                        entity_rect.bottom = rect.top - SMALL
+                        entity_rect.bottom = rect.top - EPSILON
                         self._collisions['y'][1] = 1
                     elif velocity2[1] < 0:
-                        entity_rect.top = rect.bottom + SMALL
+                        entity_rect.top = rect.bottom + EPSILON
                         self._collisions['y'][0] = 1
                     self._pos[1] = entity_rect.centery
 
@@ -1352,7 +1352,7 @@ class Player(Entity):
             self._right_velocity.update(self._semiplane * right)
         self._velocity2 = self._forward_velocity + self._right_velocity
         speed = self._velocity2.magnitude()
-        bob_update = speed >= SMALL
+        bob_update = speed >= EPSILON
         if up is not None:
             self._elevation_velocity = up
         
@@ -1361,11 +1361,11 @@ class Player(Entity):
         
         # Friction
         vel_mult = self._friction**rel_game_speed
-        if self._forward_velocity.magnitude() >= SMALL:
+        if self._forward_velocity.magnitude() >= EPSILON:
             self._forward_velocity *= vel_mult
         else:
             self._forward_velocity.update(0, 0)
-        if self._right_velocity.magnitude() >= SMALL:
+        if self._right_velocity.magnitude() >= EPSILON:
             self._right_velocity *= vel_mult
         else:
             self._right_velocity.update(0, 0)
@@ -1381,7 +1381,7 @@ class Player(Entity):
             difference = elevation - self._render_elevation
             mult = (1 - (1 - self._settings['climb_speed'])**rel_game_speed)
             self._render_elevation += difference * mult
-            if difference < SMALL:
+            if difference < EPSILON:
                 self._climbing = 0
         else:
             self._render_elevation = elevation

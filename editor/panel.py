@@ -1,3 +1,4 @@
+from numbers import Real
 from typing import Self
 from typing import Optional
 from typing import Callable

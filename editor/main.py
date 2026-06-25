@@ -11,8 +11,8 @@ from typing import Self
 import pygame as pg
 
 from data.levels import LEVELS
-from modules.utils import FALLBACK_SURF
-from modules.utils import gen_tile_key
+from ract.utils import FALLBACK_SURF
+from ract.utils import gen_tile_key
 
 from panel import Surface
 from panel import Label

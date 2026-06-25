@@ -12,15 +12,15 @@ from data.weapons import WEAPONS
 from data.levels import LEVELS
 from data.levels import TEST
 from data.levels import ENEMY
-from modules.camera import Camera
-from modules.hud import HUDElement
-from modules.hud import HUD
-from modules.menu import Menu
-from modules.pathfind import Pathfinder
-from modules.utils import EPSILON
-from modules.utils import gen_tile_key
-from modules.utils import gen_fnt_path
-from modules.utils import gen_img_path
+from ract.camera import Camera
+from ract.hud import HUDElement
+from ract.hud import HUD
+from ract.menu import Menu
+from ract.pathfind import Pathfinder
+from ract.utils import EPSILON
+from ract.utils import gen_tile_key
+from ract.utils import gen_fnt_path
+from ract.utils import gen_img_path
 
 PATHFINDER = Pathfinder(
     TEST._manager._level._walls._tilemap,

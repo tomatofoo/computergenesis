@@ -2,4 +2,5 @@ pygame-ce==2.5.6
 numpy==2.4.2
 setuptools==82.0.1
 Cython==3.2.4
-cx_Freeze==8.5.3
+# cx_Freeze==8.5.3
+

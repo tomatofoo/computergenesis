@@ -7,7 +7,7 @@ MODULES=("pathfind" "camera")
 
 # Compile Cython Modules
 for module in "${MODULES[@]}"; do
-    cd $DIR/modules/$module
+    cd $DIR/ract/$module
     python3 setup.py build_ext --build-lib=../
 done
 

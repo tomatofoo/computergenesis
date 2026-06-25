@@ -1,0 +1,3 @@
+[submodule "ract"]
+	path = ract
+	url = git@github.com:tomatofoo/ract

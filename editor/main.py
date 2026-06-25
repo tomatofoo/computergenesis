@@ -6,7 +6,9 @@ import time
 import math
 import json
 import copy
+from numbers import Real
 from typing import Self
+from typing import Optional
 
 import pygame as pg
 
